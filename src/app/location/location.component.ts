@@ -14,7 +14,7 @@ export class LocationComponent implements OnInit {
   mapCenter = null;
   map: Map = null;
 
-  @ViewChild("marker") marker;
+  @ViewChild("marker", {static: false}) marker;
 
   constructor(public dialogRef: MatDialogRef<LocationComponent>,
               public dialog: MatDialog,
