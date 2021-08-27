@@ -1,0 +1,140 @@
+<div fxLayout="column" fxLayoutAlign="center center" class="full" fxLayoutGap="12px">
+  <ng-container>
+    <div class="example-full-width" fxLayout="row" *ngIf="!loading && !isSmallScreen" fxLayoutAlign="center center">
+      <div fxLayout="row" fxFlex="1 0 5%" *ngIf="item">
+        <button mat-icon-button color="primary" (click)="onBack()"><mat-icon>arrow_back</mat-icon></button>
+      </div>
+      <div fxLayout="row"  fxFlex="1 1 15%" fxLayoutAlign="center center" fxLayoutGap="5px" *ngIf="item">
+        <mat-icon>{{item.Type.icon}}</mat-icon>
+        <div>{{item.name}}</div>
+      </div>
+      <div fxLayout="row" fxFlex="1 0 88%">
+        <mat-form-field fxFlexFill>
+          <mat-label>Enter search</mat-label>
+          <span matPrefix><mat-icon matSuffix>search</mat-icon>&nbsp;</span>
+          <textarea matInput
+                    cdkTextareaAutosize
+                    #autosize="cdkTextareaAutosize"
+                    cdkAutosizeMinRows="1"
+                    cdkAutosizeMaxRows="5"
+                    (click)="onEditQueryClick($event)" [value]="getQueryString()" ></textarea>
+        </mat-form-field>
+      </div>
+      <div fxLayout="row" fxFlex fxLayoutAlign="end center"  fxFlex="1 1 2%">
+        <button mat-icon-button color="primary" [matMenuTriggerFor]="menuMore"><mat-icon>more_vert</mat-icon></button>
+      </div>
+    </div>
+    <div class="example-full-width" fxLayout="row" *ngIf="!loading && isSmallScreen && item" fxLayoutAlign="center center">
+      <div fxLayout="row" fxFlex="0 1 40px" *ngIf="item" fxLayoutAlign="center center">
+        <button mat-icon-button color="primary" (click)="onBack()"><mat-icon>arrow_back</mat-icon></button>
+      </div>
+      <div fxLayout="row"  fxFlex="1 0 auto" fxLayoutAlign="center center" fxLayoutGap="5px">
+        <mat-icon>{{item.Type.icon}}</mat-icon>
+        <div>{{item.name}}</div>
+      </div>
+      <div fxLayout="row" fxFlex fxLayoutAlign="center center"  fxFlex="0 1 40px">
+        <button mat-icon-button color="primary" [matMenuTriggerFor]="menuMore"><mat-icon>more_vert</mat-icon></button>
+      </div>
+    </div>
+    <div class="example-full-width" fxLayout="row" *ngIf="!loading && isSmallScreen && item" fxLayoutAlign="center center">
+      <div fxLayout="row" fxFlex="1 1 96%">
+        <mat-form-field fxFlexFill>
+          <mat-label>Enter search</mat-label>
+          <span matPrefix><mat-icon matSuffix>search</mat-icon>&nbsp;</span>
+          <textarea matInput
+                    cdkTextareaAutosize
+                    #autosize="cdkTextareaAutosize"
+                    cdkAutosizeMinRows="1"
+                    cdkAutosizeMaxRows="5"
+                    (click)="onEditQueryClick($event)" [value]="getQueryString()" ></textarea>
+        </mat-form-field>
+      </div>
+    </div>
+    <div class="example-full-width" fxLayout="row" *ngIf="!loading && isSmallScreen && !item" fxLayoutAlign="center center">
+        <div fxLayout="row" fxFlex="1 1 92%">
+          <mat-form-field fxFlexFill>
+            <mat-label>Enter search</mat-label>
+            <span matPrefix><mat-icon matSuffix>search</mat-icon>&nbsp;</span>
+            <textarea matInput
+                      cdkTextareaAutosize
+                      #autosize="cdkTextareaAutosize"
+                      cdkAutosizeMinRows="1"
+                      cdkAutosizeMaxRows="5"
+                      (click)="onEditQueryClick($event)" [value]="getQueryString()" ></textarea>
+          </mat-form-field>
+        </div>
+        <div fxLayout="row" fxFlex fxLayoutAlign="center center"  fxFlex="0 1 40px">
+          <button mat-icon-button color="primary" [matMenuTriggerFor]="menuMore"><mat-icon>more_vert</mat-icon></button>
+        </div>
+    </div>
+    <mat-menu #menuMore="matMenu" xPosition="before">
+      <button *ngIf="canAddItem()" mat-menu-item (click)="onAdd($event)">
+        <mat-icon>add</mat-icon>
+        <span>Add Item</span>
+      </button>
+      <button *ngIf="canAddView()" mat-menu-item (click)="onAddView($event)">
+        <mat-icon>add</mat-icon>
+        <span>Add View</span>
+      </button>
+      <button *ngIf="canEditOrDeleteItem()" mat-menu-item (click)="onEdit($event)">
+        <mat-icon>edit</mat-icon>
+        <span>Edit</span>
+      </button>
+      <button *ngIf="canEditOrDeleteItem()" mat-menu-item (click)="onDelete($event)">
+        <mat-icon>delete</mat-icon>
+        <span>Delete</span>
+      </button>
+      <button mat-menu-item (click)="onRefreshClick()">
+        <mat-icon>refresh</mat-icon>
+        <span>Refresh</span>
+      </button>
+    </mat-menu>
+    <div fxLayout="row" *ngIf="uploading">
+      <mat-spinner></mat-spinner>
+    </div>
+    <div fxLayout="row" fxLayoutAlign="center center" *ngIf="uploadingFile" class="upload-progress">
+      <mat-progress-bar mode="determinate" [value]="uploadProgress"></mat-progress-bar>
+    </div>
+    <div class="example-full-width" fxLayout="row" fxLayoutAlign="center center" *ngIf="!loading && views.length > 0">
+
+      <app-item-view  class="view-tabs" *ngIf="views.length === 1" [view]="views[0]" [items]="items" [item]="item" [loading]="loading"></app-item-view>
+      <mat-tab-group [selectedIndex]="selectedView.value" class="view-tabs"
+                     (selectedTabChange)="onChangeTab($event)"
+                     (selectedIndexChange)="selectedView.setValue($event)" *ngIf="views.length > 1">
+
+        <mat-tab *ngFor="let view of views; let index = index" [label]="view.name">
+          <ng-template mat-tab-label>
+            <mat-icon class="tab-icon">{{view.icon}}</mat-icon>
+            {{view.name}}
+            <button mat-icon-button color="primary" *ngIf="allowEditingViews" [matMenuTriggerFor]="viewMenu"><mat-icon>more_vert</mat-icon></button>
+            <mat-menu #viewMenu="matMenu" xPosition="before">
+              <button  mat-menu-item (click)="onEditView(index)">
+                <mat-icon>edit</mat-icon>
+                <span>Edit</span>
+              </button>
+              <button *ngIf="allowEditingViews" mat-menu-item (click)="onDeleteView(index)">
+                <mat-icon>delete</mat-icon>
+                <span>Delete</span>
+              </button>
+            </mat-menu>
+          </ng-template>
+          <app-item-view [view]="view" [items]="items" [item]="item" [loading]="loading" [activeTab]="selectedTab === index"  (onRefresh)="refresh()"></app-item-view>
+        </mat-tab>
+      </mat-tab-group>
+    </div>
+
+
+    <div fxLayout="row" fxLayoutAlign="center center" *ngIf="!loading">
+      <div class="paginator mat-elevation-z4" *ngIf="items.length !== 0">
+        <mat-paginator
+          [length]="paginatorSize"
+          [pageSize]="numberOfProductsDisplayedInPage"
+          [pageSizeOptions]="[12, 24]"
+          (page)="updateProductsDisplayedInPage($event)">
+        </mat-paginator>
+      </div>
+    </div>
+  </ng-container>
+
+
+</div>

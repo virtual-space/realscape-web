@@ -1,0 +1,51 @@
+.example-container {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+}
+
+.example-events {
+  width: 300px;
+  height: 200px;
+  overflow: auto;
+  border: 1px solid #555;
+}
+
+.toolbar-button {
+  font-size: 12px;
+  font-weight: 700;
+  padding: 6px;
+  line-height: 1;
+  margin-left: 12px;
+  margin-right: 12px;
+  border-radius: 1px;
+}
+
+.holder {
+  max-height: 24px;
+}
+
+.button-active {
+  color: red;
+}
+
+.sidenav-menu {
+  width: 160px;
+  margin-top: 12px;
+}
+
+.sidenav-menu-item {
+  width: 96px;
+}
+
+.sidenav-ident {
+  margin-left: 12px;
+}
+
+.view-menu-item {
+}
+
+.view-menu-item-container {
+}

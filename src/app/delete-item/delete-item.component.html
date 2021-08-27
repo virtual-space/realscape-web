@@ -1,0 +1,66 @@
+<h1 mat-dialog-title>
+  Delete item
+</h1>
+
+<div mat-dialog-content>
+  Are you sure you want to delete {{data.name}}? Please note that this operation cannot be undone.
+  <!--
+  <mat-form-field>
+    <input matInput [placeholder]="'Name'" [(ngModel)]="name">
+  </mat-form-field>
+  <mat-form-field>
+    <input matInput [placeholder]="'Url'"  [(ngModel)]="url">
+  </mat-form-field>
+  <mat-form-field class="example-chip-list">
+    <mat-chip-list #chipList aria-label="Tags">
+      <mat-chip *ngFor="let tag of tags" [selectable]="selectable"
+                [removable]="removable" (removed)="remove(tag)">
+        {{tag.name}}
+        <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
+      </mat-chip>
+      <input placeholder="Tags"
+             [matChipInputFor]="chipList"
+             [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+             [matChipInputAddOnBlur]="addOnBlur"
+             (matChipInputTokenEnd)="add($event)">
+    </mat-chip-list>
+  </mat-form-field>
+  <div fxLayout="row" fxLayoutGap="8px" fxLayoutAlign="center center">
+    <mat-slide-toggle [(ngModel)]="public">Public</mat-slide-toggle>
+    <button mat-raised-button color="primary" (click)="onLocation()">Location</button>
+  </div>
+  -->
+  <!--
+  <mat-tab-group>
+    <mat-tab label="Video" fxLayout="column">
+      <mat-form-field>
+        <input matInput [placeholder]="'Name'" [(ngModel)]="name">
+      </mat-form-field>
+      <mat-form-field>
+        <input matInput [placeholder]="'Url'"  [(ngModel)]="url">
+      </mat-form-field>
+    </mat-tab>
+    <mat-tab label="Image" fxLayout="column">
+      <mat-form-field>
+        <input matInput [placeholder]="'Name'" [(ngModel)]="name">
+      </mat-form-field>
+      <mat-form-field>
+        <input matInput [placeholder]="'Url'"  [(ngModel)]="url">
+      </mat-form-field>
+    </mat-tab>
+    <mat-tab label="Document" fxLayout="column">
+
+    </mat-tab>
+  </mat-tab-group>
+  -->
+  <!--
+  <p>What's your favorite animal?</p>
+  <mat-form-field>
+    <input matInput [(ngModel)]="data.animal">
+  </mat-form-field>
+  -->
+</div>
+<div mat-dialog-actions>
+  <button mat-button (click)="onNoClick()">Cancel</button>
+  <button mat-button (click)="onOkClick()" cdkFocusInitial>Ok</button>
+</div>

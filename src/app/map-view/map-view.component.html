@@ -1,0 +1,28 @@
+<div class="view-container">
+  <div class="map">
+    <mgl-map
+      [style]="'mapbox://styles/mapbox/streets-v9'"
+      [center]="location"
+      (load)="onLoadMap($event)"
+      (zoomEnd)="onCenterChange($event)"
+      (boxZoomEnd)="onCenterChange($event)"
+      (moveEnd)="onCenterChange($event)"
+      [zoom]="[16]">
+      <!--
+      <mgl-marker *ngFor="let item of items;let i = index"
+                  [lngLat]="item && item.point && item.point.coordinates" #marker1>
+        <div fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="2px" >
+          <div fxLayout="center center"><mat-icon>{{item.icon}}</mat-icon></div>
+          <div fxLayout="center center"><h6>{{item.name}}</h6></div>
+        </div>
+        <mgl-popup
+          [marker]="marker1"
+        >
+          <app-list-item [item]="item"></app-list-item>
+        </mgl-popup>
+      </mgl-marker>
+      -->
+    </mgl-map>
+  </div>
+
+</div>

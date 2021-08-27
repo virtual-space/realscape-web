@@ -1,0 +1,7 @@
+#!/bin/bash
+./build
+cd k8s
+./api-start
+./worker-start
+./web-start
+cd ..

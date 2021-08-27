@@ -1,0 +1,40 @@
+<mat-card *ngIf="item">
+
+  <mat-card-header fxLayoutAlign="center center">
+    <mat-card-title class="item-title" matTooltip="{{ item.name }}">{{item.name}}</mat-card-title>
+  </mat-card-header>
+
+
+  <!--<img mat-card-image [src]="cardImagePath">-->
+
+  <mat-card-content>
+    <div fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="4px">
+      <div fxLayoutAlign="center center" class="card-content-center">
+        <mat-icon mat-card-image class="logo">{{item.icon}}</mat-icon>
+      </div>
+      <div class="card-text-content">
+        {{item.Type.name}}
+      </div>
+    </div>
+  </mat-card-content>
+
+  <mat-card-actions fxLayout="row" fxLayoutAlign="end center">
+    <button mat-button [matMenuTriggerFor]="menuMore"><mat-icon class="menu">more_vert</mat-icon></button>
+    <mat-menu #menuMore="matMenu">
+      <button mat-menu-item (click)="editDialog()">
+        <mat-icon>edit</mat-icon>
+        <span>Edit</span>
+      </button>
+      <button mat-menu-item  (click)="deleteDialog()">
+        <mat-icon>delete_forever</mat-icon>
+        <span>Delete</span>
+      </button>
+    </mat-menu>
+    <button mat-button (click)="onQRCode()">QRCode</button>
+    <button *ngIf="!isLink() && !isItemLink()" mat-button [routerLink]="['/items', item.id]">Open</button>
+    <button *ngIf="isLink() && isItemLink()" mat-button [routerLink]="['/items', getLinkedItemId()]">Open</button>
+    <a *ngIf="isLink() && !isItemLink()" mat-button [href]="getLink()" target="_blank">Open</a>
+  </mat-card-actions>
+
+</mat-card>
+

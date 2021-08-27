@@ -1,0 +1,6 @@
+#!/bin/bash
+cd k8s
+./api-stop
+./worker-stop
+./web-stop
+cd ..

@@ -1,0 +1,7 @@
+#!/bin/bash
+docker build -t server server
+docker tag server gcr.io/intense-pier-247407/server
+docker push gcr.io/intense-pier-247407/server
+docker build -t web .
+docker tag web gcr.io/intense-pier-247407/web
+docker push gcr.io/intense-pier-247407/web

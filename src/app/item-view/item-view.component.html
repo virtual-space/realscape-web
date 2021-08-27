@@ -1,0 +1,35 @@
+<div fxLayout="row" *ngIf="loading">
+  <mat-spinner></mat-spinner>
+</div>
+<ng-container [ngSwitch]="view.type" *ngIf="!loading">
+  <div *ngSwitchCase="'Content'">
+    <app-item-content [item]="item"></app-item-content>
+  </div>
+  <div *ngSwitchCase="'Properties'">
+    <app-properties-view></app-properties-view>
+  </div>
+  <div fxLayout="row wrap" class="card-deck-container" fxLayoutAlign="center center" *ngSwitchCase="'Cards'">
+    <app-card-view [items]="items" (onRefresh)="refresh()"></app-card-view>
+  </div>
+  <div *ngSwitchCase="'List'">
+    <app-list-view [items]="items" (onRefresh)="refresh()"></app-list-view>
+  </div>
+  <div *ngSwitchCase="'Map'">
+    <app-map-view [item]="item"  [items]="items" [events]="eventsSubject.asObservable()" (centerChanged)="onCenterChanged($event)"></app-map-view>
+  </div>
+  <div *ngSwitchCase="'Calendar'">
+    <app-calendar-view [items]="items" (onRefresh)="refresh()" (onAdd)="add($event)"></app-calendar-view>
+  </div>
+  <div *ngSwitchCase="'Board'" >
+    <app-board-view [items]="items" (onRefresh)="refresh()"></app-board-view>
+  </div>
+  <div *ngSwitchCase="'Panel'">
+    <app-panel-view></app-panel-view>
+  </div>
+  <div *ngSwitchCase="'Scene'">
+    <app-scene-view></app-scene-view>
+  </div>
+  <div *ngSwitchDefault>
+    Nothing
+  </div>
+</ng-container>

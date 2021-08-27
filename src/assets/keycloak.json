@@ -1,0 +1,8 @@
+{
+  "realm": "realnet",
+  "auth-server-url": "https://auth.realnet.io/auth",
+  "ssl-required": "external",
+  "resource": "realnet",
+  "public-client": true,
+  "confidential-port": 0
+}

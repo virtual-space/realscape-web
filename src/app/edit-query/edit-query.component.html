@@ -1,0 +1,8 @@
+<h1 mat-dialog-title>
+  <div fxLayoutAlign="center end" fxFlex="0 1 auto" fxLayout="row" class="type_select">
+    <div  fxFlex="0 1 auto">
+      <mat-label>Edit Query:</mat-label>
+    </div>
+  </div>
+</h1>
+<app-query [query]="data.query" (onClose)="onClose()" (onSave)="onSave($event)" (onRun)="onRun($event)"></app-query>

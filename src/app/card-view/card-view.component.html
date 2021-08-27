@@ -1,0 +1,3 @@
+<div fxFlex *ngFor="let i of items" class="card-item"  fxLayoutAlign="center center">
+  <app-list-item [item]="i" (onRefresh)="refresh()"></app-list-item>
+</div>

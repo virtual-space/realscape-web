@@ -1,0 +1,12 @@
+<ng-container>
+  <div cdkDropListGroup fxLayout="row" fxLayoutAlign="center center">
+    <div class="example-container" *ngFor="let column of columns">
+      <h2>{{column.name}}</h2>
+      <div class="example-list" cdkDropList [cdkDropListData]="column.status" (cdkDropListDropped)="drop($event)">
+        <div class="example-box" *ngFor="let item of tasks[column.status]" cdkDrag>
+          <app-board-item [item]="item"></app-board-item>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-container>
