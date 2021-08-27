@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { AroundViewComponent } from './around-view.component';
 
@@ -6,7 +6,7 @@ describe('AroundViewComponent', () => {
   let component: AroundViewComponent;
   let fixture: ComponentFixture<AroundViewComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [ AroundViewComponent ]
     })
