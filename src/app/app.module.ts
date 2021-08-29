@@ -28,8 +28,7 @@ import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {FlexLayoutModule} from "@angular/flex-layout";
 import { ImageViewerModule } from "ngx-image-viewer";
 import { MatVideoModule } from 'mat-video';
-import { KeycloakService, KeycloakAngularModule } from 'keycloak-angular';
-import {HttpClientModule} from '@angular/common/http';
+import {HTTP_INTERCEPTORS, HttpClientModule} from '@angular/common/http';
 import {NgxMapboxGLModule} from "ngx-mapbox-gl";
 import { MapViewComponent } from './map-view/map-view.component';
 import { ListViewComponent } from './list-view/list-view.component';
@@ -47,7 +46,6 @@ import { LocationComponent } from './location/location.component';
 import { EditItemComponent } from './edit-item/edit-item.component';
 import { DeleteItemComponent } from './delete-item/delete-item.component';
 import { EngineComponent } from './engine/engine.component';
-import {HttpModule} from "@angular/http";
 import { ContentViewComponent } from './content-view/content-view.component';
 import { HomeViewComponent } from './home-view/home-view.component';
 import { MainViewComponent } from './main-view/main-view.component';
@@ -87,8 +85,10 @@ import { BoardItemComponent } from './board-item/board-item.component';
 import { AppViewComponent } from './app-view/app-view.component';
 import { AppViewHeaderComponent } from './app-view-header/app-view-header.component';
 import { TopicViewComponent } from './topic-view/topic-view.component';
+import { CallbackComponent } from './callback/callback.component';
+import {AuthInterceptor} from "./auth-interceptor";
 
-const EMBEDLY_KEY = 'EMBEDLY_KEY'
+const EMBEDLY_KEY = 'EMBEDLY_KEY';
 
 @NgModule({
   declarations: [
@@ -137,6 +137,7 @@ const EMBEDLY_KEY = 'EMBEDLY_KEY'
     AppViewComponent,
     AppViewHeaderComponent,
     TopicViewComponent,
+    CallbackComponent,
   ],
   imports: [
     BrowserModule,
@@ -145,7 +146,6 @@ const EMBEDLY_KEY = 'EMBEDLY_KEY'
     DragDropModule,
     FlexLayoutModule,
     FormsModule,
-    HttpModule,
     MatAutocompleteModule,
     HttpClientModule,
     MatExpansionModule,
@@ -174,7 +174,6 @@ const EMBEDLY_KEY = 'EMBEDLY_KEY'
     MatProgressSpinnerModule,
     MatProgressBarModule,
     MatSnackBarModule,
-    KeycloakAngularModule,
     ReactiveFormsModule,
     QRCodeModule,
     NgxMapboxGLModule.withConfig({
@@ -189,7 +188,7 @@ const EMBEDLY_KEY = 'EMBEDLY_KEY'
     CalendarModule.forRoot({
       provide: DateAdapter,
       useFactory: adapterFactory,
-    }),
+    })
   ],
   entryComponents: [
     CreateItemComponent,
@@ -204,7 +203,8 @@ const EMBEDLY_KEY = 'EMBEDLY_KEY'
     ScheduleItemComponent
   ],
   providers: [
-    { provide: APP_INITIALIZER, useFactory: initializer, multi: true, deps: [KeycloakService]}
+    { provide: APP_INITIALIZER, useFactory: initializer, multi: true, deps: []},
+    { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi:true }
   ],
   bootstrap: [AppComponent],
   schemas: [ CUSTOM_ELEMENTS_SCHEMA ]

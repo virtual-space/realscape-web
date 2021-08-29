@@ -4,7 +4,8 @@ import { environment } from '../../environments/environment';
 import {HttpClient} from '@angular/common/http';
 import {Router} from '@angular/router';
 import {catchError} from 'rxjs/operators';
-import {KeycloakService} from "keycloak-angular";
+import {AuthService} from './auth.service';
+
 
 
 export abstract class Service<T> {
@@ -12,7 +13,7 @@ export abstract class Service<T> {
   protected constructor(protected path: string,
                         protected http: HttpClient,
                         protected router: Router,
-                        protected keycloakService: KeycloakService) {}
+                        protected authService: AuthService) {}
 
   protected getEndpoint() {
     return (environment['api'] || '') + '/' + this.path;
@@ -27,19 +28,16 @@ export abstract class Service<T> {
   protected handleError(operation = 'operation', result?: any) {
     return (error: any): Observable<any> => {
       if (error.status === 401 || error.status === 403) {
-        //navigate /delete cookies or whatever
+        // navigate /delete cookies or whatever
         if (error.status === 401) {
-          return of(this.keycloakService.login());
+          return of(this.authService.tryLogin());
         } else if(error.status === 403) {
-          this.keycloakService.isLoggedIn().then(loggedIn => {
-            if (loggedIn) {
-              //redirect to 403
-              this.router.navigateByUrl(`/error`);
-              return of(error);
-            } else {
-              return of(this.keycloakService.login());
-            }
-          });
+          if (this.authService.isLoggedIn()) {
+            this.router.navigateByUrl(`/error`);
+            return of(error);
+          } else {
+            return of(this.authService.tryLogin());
+          }
         }
         // if you've caught / handled the error, you don't want to rethrow it unless you also want downstream consumers to have to handle it as well.
         return of(error); // or EMPTY may be appropriate here

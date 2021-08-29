@@ -1,14 +1,13 @@
-import { KeycloakService } from 'keycloak-angular';
 
-export function initializer(keycloak: KeycloakService): () => Promise<any> {
-  console.log("*** Keycloak Init ***");
-  /*
-  return (): Promise<any> => keycloak.init({ config: 'assets/keycloak.json',
-    bearerExcludedUrls: [{url: '/v1/public', httpMethods: ['GET', 'POST']}]});*/
-  return (): Promise<any> => keycloak.init({
-    config: 'assets/keycloak.json',
-    bearerExcludedUrls: ['/v1/public'],
-    initOptions: { checkLoginIframe: false}}).then(res => {
-      console.log('initialized');
-  });
+export function initializer(): () => Promise<any> {
+  console.log("*** App Init ***");
+  return (): Promise<any> => {
+    return new Promise((resolve, reject) => {
+      console.log(`initializeApp2 called`);
+      setTimeout(() => {
+        console.log(`initializeApp2 Finished`);
+        resolve();
+      }, 2000);
+    });
+  };
 }

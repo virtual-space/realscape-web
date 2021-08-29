@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { Subscription } from 'rxjs';
-import {KeycloakService} from "keycloak-angular";
 import {MediaChange, MediaObserver} from '@angular/flex-layout';
+import {AuthService} from "../services/auth.service";
 
 @Component({
   selector: 'app-layout',
@@ -19,9 +19,7 @@ export class LayoutComponent implements OnInit {
   watcher: Subscription;
   isMobile = false;
 
-  constructor(
-    private keycloakService: KeycloakService,
-    mediaObserver: MediaObserver)
+  constructor(private authService: AuthService, mediaObserver: MediaObserver)
   {
     this.watcher = mediaObserver.media$.subscribe((change: MediaChange) => {
       if ( change.mqAlias == 'xs') {
@@ -33,23 +31,16 @@ export class LayoutComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.keycloakService.isLoggedIn().then(res1 => {
-      this.loggedIn = res1;
-      if (this.loggedIn) {
-        this.keycloakService.loadUserProfile().then(up => {
-          this.firstName = up['firstName'];
-          this.lastName = up['lastName'];
-        });
-      }
-    });
+    this.loggedIn = this.authService.isLoggedIn();
   }
 
   login() {
-    this.keycloakService.login();
+    this.authService.login();
   }
 
   logout() {
-    this.keycloakService.logout(window.location.origin + `/items/search`);
+    this.authService.logout();
+    // this.keycloakService.logout(window.location.origin + `/items/search`);
   }
 
   account() {

@@ -1,7 +1,6 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {FormControl} from "@angular/forms";
 import {Item, ItemService, Query} from "../services/item.service";
-import {KeycloakService} from "keycloak-angular";
 import {MatDialog} from "@angular/material/dialog";
 import {EditQueryComponent} from "../edit-query/edit-query.component";
 import {EditViewComponent} from "../edit-view/edit-view.component";
@@ -12,6 +11,8 @@ import {ActivatedRoute, Router} from "@angular/router";
 import {LayoutComponent} from "../layout/layout.component";
 import {EditItemComponent} from "../edit-item/edit-item.component";
 import {BreakpointObserver} from "@angular/cdk/layout";
+import {AuthService} from "../services/auth.service";
+
 
 @Component({
   selector: 'app-app-view',
@@ -54,8 +55,8 @@ export class AppViewComponent implements OnInit {
   isSmallScreen = this.breakpointObserver.isMatched('(max-width: 599px)');
 
   constructor(private itemService: ItemService,
-              private keycloakService: KeycloakService,
               private route: ActivatedRoute,
+              private authService: AuthService,
               private router: Router,
               private layoutComponent: LayoutComponent,
               private breakpointObserver: BreakpointObserver,
@@ -63,38 +64,27 @@ export class AppViewComponent implements OnInit {
               public dialog: MatDialog) { }
 
   ngOnInit() {
-    this.keycloakService.isLoggedIn().then(res1 => {
-      this.loggedIn = res1;
-      if (this.loggedIn) {
-        console.log('Logged in');
-        this.keycloakService.loadUserProfile().then(up => {
-          console.log('got user details');
-        });
-      } else {
-        console.log('Not logged in');
-      }
-
-      if (this.itemContainer) {
-        this.route.paramMap.subscribe(params => {
-          this.id = params.get('id');
-          if (this.id) {
-            this.getItem(this.id);
+    this.loggedIn = this.authService.isLoggedIn();
+    if (this.itemContainer) {
+      this.route.paramMap.subscribe(params => {
+        this.id = params.get('id');
+        if (this.id) {
+          this.getItem(this.id);
+        }
+      });
+    } else {
+      if (this.detectLocation && navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition((position) => {
+          if (position) {
+            this.query.lat = position.coords.latitude;
+            this.query.lng = position.coords.longitude;
+            this.getItems();
           }
         });
       } else {
-        if (this.detectLocation && navigator.geolocation) {
-          navigator.geolocation.getCurrentPosition((position) => {
-            if (position) {
-              this.query.lat = position.coords.latitude;
-              this.query.lng = position.coords.longitude;
-              this.getItems();
-            }
-          });
-        } else {
-          this.getItems();
-        }
+        this.getItems();
       }
-    });
+    }
   }
 
   getItems() {

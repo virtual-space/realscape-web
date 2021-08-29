@@ -3,8 +3,9 @@ import {Service} from "./service";
 import {HttpClient, HttpParams, HttpEvent, HttpEventType} from "@angular/common/http";
 import {Observable, from, of, throwError, scheduled} from "rxjs";
 import {catchError, map, flatMap, concatMap, mergeMap} from 'rxjs/operators';
-import {KeycloakService} from "keycloak-angular";
+
 import {Router} from "@angular/router";
+import {AuthService} from "./auth.service";
 
 
 @Injectable({
@@ -16,8 +17,8 @@ export class ItemService extends Service<Item> {
 
   constructor(protected http: HttpClient,
               protected router: Router,
-              protected keycloak: KeycloakService) {
-    super('', http, router, keycloak);
+              protected authService: AuthService) {
+    super('', http, router, authService);
   }
 
   public create(params, progressFn=null): Observable<Item> {
@@ -112,48 +113,16 @@ export class ItemService extends Service<Item> {
     const httpOptions = {
       params: this.getParams(query)
     };
-    return from(this.keycloak.isLoggedIn()).pipe(
-      concatMap(loggedIn => {
-        if (loggedIn) {
-          return this.http.get(this.getEndpoint() + 'items', httpOptions).pipe(
-            catchError(this.handleError(this.path, []))
-          );
-        } else {
-          return this.http.get(this.getEndpoint() + 'public/items', httpOptions).pipe(
-            catchError(this.handleError(this.path, []))
-          );
-        }
-      })
-    );
 
-    /*
-    return from(this.keycloak.isLoggedIn()).pipe(
-      flatMap(loggedIn => {
-        if (loggedIn) {
-          return this.http.get(this.getEndpoint() + 'items', {params: this.getParams(query)}).pipe(
-            catchError(this.handleError(this.path, []))
-          );
-        } else {
-          return this.http.get(this.getEndpoint() + 'public/items', {params: this.getParams(query)}).pipe(
-            catchError(this.handleError(this.path, []))
-          );
-        }
-      })
-    );*/
-
-    /*
-    return this.keycloak.isLoggedIn().then(loggedIn => {
-      if (loggedIn) {
-        return this.http.get(this.getEndpoint() + 'public/items').pipe(
-          catchError(this.handleError(this.path, []))
-        );
-      } else {
-        return this.http.get(this.getEndpoint() + 'public/items').pipe(
-          catchError(this.handleError(this.path, []))
-        );
-      }
-    });
-    */
+    if (this.authService.isLoggedIn()) {
+      return this.http.get(this.getEndpoint() + 'items', httpOptions).pipe(
+        catchError(this.handleError(this.path, []))
+      );
+    } else {
+      return this.http.get(this.getEndpoint() + 'public/items', httpOptions).pipe(
+        catchError(this.handleError(this.path, []))
+      );
+    }
   }
 
   public types(): Observable<[Type]> {
@@ -163,19 +132,15 @@ export class ItemService extends Service<Item> {
   }
 
   public getItem(id): Observable<Item> {
-    return from(this.keycloak.isLoggedIn()).pipe(
-      concatMap(loggedIn => {
-        if (loggedIn) {
-          return this.http.get(this.getEndpoint() + 'items/' + id).pipe(
-            catchError(this.handleError(this.path, []))
-          );
-        } else {
-          return this.http.get(this.getEndpoint() + 'public/items/' + id).pipe(
-            catchError(this.handleError(this.path, []))
-          );
-        }
-      })
-    );
+    if (this.authService.isLoggedIn()) {
+      return this.http.get(this.getEndpoint() + 'items/' + id).pipe(
+        catchError(this.handleError(this.path, []))
+      );
+    } else {
+      return this.http.get(this.getEndpoint() + 'public/items/' + id).pipe(
+        catchError(this.handleError(this.path, []))
+      );
+    }
   }
 
   public uploadFile(id, file: File): Observable<any> {

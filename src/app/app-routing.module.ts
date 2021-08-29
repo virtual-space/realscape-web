@@ -13,9 +13,11 @@ import {AroundViewComponent} from "./around-view/around-view.component";
 import {RealScapeComponent} from "./real-scape/real-scape.component";
 import { LayoutComponent } from './layout/layout.component';
 import {ErrorViewComponent} from "./error-view/error-view.component";
+import {CallbackComponent} from "./callback/callback.component";
 
 const routes: Routes = [
   { path: '',  redirectTo: 'items/search', pathMatch: 'full' },
+  { path: 'callback',  component: CallbackComponent },
   { path: 'real-scape',  component: RealScapeComponent },
   { path: '', component: LayoutComponent, children: [
     { path: 'items', component: MainViewComponent, children: [

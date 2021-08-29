@@ -5,7 +5,7 @@
 export const environment = {
   production: false,
   // api: 'https://api.realnet.io/v1',
-  api: 'http://localhost:8080/v1',
+  api: 'http://localhost:8080',
 };
 
 /*

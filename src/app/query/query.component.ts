@@ -9,7 +9,8 @@ import {MatDialog} from "@angular/material/dialog";
 import {MatAutocomplete, MatAutocompleteSelectedEvent} from "@angular/material/autocomplete";
 import {Observable} from "rxjs";
 import {map, startWith} from "rxjs/operators";
-import {KeycloakService} from "keycloak-angular";
+import {AuthService} from "../services/auth.service";
+
 
 @Component({
   selector: 'app-query',
@@ -54,7 +55,7 @@ export class QueryComponent implements OnInit {
   });
 
   constructor(private itemService: ItemService,
-              private keycloakService: KeycloakService,
+              private authService: AuthService,
               public dialog: MatDialog) {
     this.filteredTypes = this.typesControl.valueChanges.pipe(
       startWith(null),
@@ -66,9 +67,7 @@ export class QueryComponent implements OnInit {
       this.query = new Query();
     }
 
-    this.keycloakService.isLoggedIn().then(res1 => {
-      this.loggedIn = res1;
-    });
+    this.loggedIn = this.authService.isLoggedIn();
 
     this.itemService.types().subscribe(types => {
       this.allTypes = types;

@@ -1,8 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {TestService} from './services/test.service';
-import { KeycloakProfile } from 'keycloak-js';
-import { KeycloakService } from 'keycloak-angular';
 import {Router} from "@angular/router";
 import {MatDialog} from "@angular/material";
 import {CreateItemComponent} from "./create-item/create-item.component";
@@ -10,6 +8,8 @@ import {ItemService} from "./services/item.service";
 import {ApplicationService} from "./services/application.service";
 import {DeleteItemComponent} from "./delete-item/delete-item.component";
 import {EditItemComponent} from "./edit-item/edit-item.component";
+import {AuthService} from "./services/auth.service";
+
 
 @Component({
   selector: 'app-root',
@@ -18,27 +18,24 @@ import {EditItemComponent} from "./edit-item/edit-item.component";
 })
 export class AppComponent implements OnInit {
 
-  constructor(private keycloakService: KeycloakService,
+  constructor(private authService: AuthService,
               protected testService: TestService,
               protected itemService: ItemService,
               protected appService: ApplicationService,
               protected router: Router,
-              public dialog: MatDialog) { }
+              public dialog: MatDialog) {
+  }
 
   ngOnInit() {
-
+    console.log('app-component init')
   }
 
   login() {
-    this.keycloakService.login().then(res => {
-      console.log(res);
-    });
+    //this.authService.login()
   }
 
   logout() {
-    this.keycloakService.logout().then( res => {
-      console.log(res);
-    });
+    //this.authService.logOut();
   }
 
   account() {
