@@ -3,6 +3,8 @@ import { Subscription } from 'rxjs';
 import {MediaChange, MediaObserver} from '@angular/flex-layout';
 import {AuthService} from "../services/auth.service";
 import {Router} from "@angular/router";
+import {MatDialog} from "@angular/material/dialog";
+import {LoginComponent} from "../login/login.component";
 
 @Component({
   selector: 'app-layout',
@@ -21,6 +23,7 @@ export class LayoutComponent implements OnInit {
   isMobile = false;
 
   constructor(private authService: AuthService,
+              public dialog: MatDialog,
               mediaObserver: MediaObserver,
               private router: Router)
   {
@@ -34,11 +37,22 @@ export class LayoutComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.loggedIn = this.authService.isLoggedIn();
+  }
+
+  isLoggedIn() {
+    return this.authService.isLoggedIn();
   }
 
   login() {
-    this.authService.login();
+    const dialogRef = this.dialog.open(LoginComponent, {
+      width: '400px',
+      height: '600px',
+      data: {  }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+
+    });
   }
 
   logout() {

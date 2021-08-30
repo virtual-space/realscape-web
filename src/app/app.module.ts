@@ -87,6 +87,7 @@ import { AppViewHeaderComponent } from './app-view-header/app-view-header.compon
 import { TopicViewComponent } from './topic-view/topic-view.component';
 import { CallbackComponent } from './callback/callback.component';
 import {AuthInterceptor} from "./auth-interceptor";
+import { LoginComponent } from './login/login.component';
 
 const EMBEDLY_KEY = 'EMBEDLY_KEY';
 
@@ -138,6 +139,7 @@ const EMBEDLY_KEY = 'EMBEDLY_KEY';
     AppViewHeaderComponent,
     TopicViewComponent,
     CallbackComponent,
+    LoginComponent,
   ],
   imports: [
     BrowserModule,
@@ -199,6 +201,7 @@ const EMBEDLY_KEY = 'EMBEDLY_KEY';
     QrCodeViewComponent,
     QRCodeComponent,
     LocationComponent,
+    LoginComponent,
     ListItemComponent,
     ScheduleItemComponent
   ],

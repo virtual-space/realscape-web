@@ -3,11 +3,11 @@
     <nav mat-tab-nav-bar>
       <button mat-flat-button (click)="setCurrent('/items/search')" color="primary" routerLinkActive="nav-active" [routerLink]="['/items/search']">Find</button>
       <button mat-flat-button (click)="setCurrent('/items/around')" color="primary" routerLinkActive="nav-active" [routerLink]="['/items/around']">Around</button>
-      <button mat-flat-button (click)="setCurrent('/items/home')"   color="primary" routerLinkActive="nav-active" [routerLink]="['/items/home']" *ngIf="loggedIn">Home</button>
+      <button mat-flat-button (click)="setCurrent('/items/home')"   color="primary" routerLinkActive="nav-active" [routerLink]="['/items/home']" *ngIf="isloggedIn()">Home</button>
     </nav>
     <div fxLayoutAlign="center center">
-      <span><button mat-flat-button *ngIf="!loggedIn" (click)="login()">Log In</button></span>
-      <span><button mat-flat-button *ngIf="loggedIn" [matMenuTriggerFor]="menu">{{username}}<mat-icon>keyboard_arrow_down</mat-icon></button></span>
+      <span><button mat-flat-button *ngIf="!isLoggedIn()" (click)="login()">Log In</button></span>
+      <span><button mat-flat-button *ngIf="isLoggedIn()" [matMenuTriggerFor]="menu">{{username}}<mat-icon>keyboard_arrow_down</mat-icon></button></span>
       <mat-menu #menu="matMenu">
         <button mat-menu-item (click)="account()">
           <mat-icon>account_circle</mat-icon>

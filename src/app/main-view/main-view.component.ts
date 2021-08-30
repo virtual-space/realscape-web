@@ -48,16 +48,5 @@ export class MainViewComponent implements OnInit {
 
     this.loggedIn = this.authService.isLoggedIn();
   }
-  login() {
-    this.authService.login();
-  }
-
-  logout() {
-    this.authService.logout();
-  }
-
-  account() {
-    window.location.href = 'https://auth.realnet.io/auth/realms/realnet/account';
-  }
 
 }

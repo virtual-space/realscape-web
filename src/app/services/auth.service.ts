@@ -1,16 +1,25 @@
 import { Injectable } from '@angular/core';
 import {Observable} from "rxjs";
 import { of } from 'rxjs';
+import {catchError} from "rxjs/operators";
+import {HttpClient} from "@angular/common/http";
+import {environment} from "../../environments/environment";
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
 
-  constructor() { }
+  constructor(protected http: HttpClient) { }
+
+  protected getEndpoint() {
+    return (environment['api'] || '');
+  }
 
   public isLoggedIn(): boolean {
-    return localStorage.getItem('access_token') != null;
+    const res = localStorage.getItem('access_token') != null;
+    console.log('logged_in: ', res);
+    return res;
   }
 
   public getAccessToken() {
@@ -25,11 +34,24 @@ export class AuthService {
     return of(false);
   }
 
-  public login() {
-    window.location.href = 'http://localhost:8080/tenants/public/login/google?client_id=realscape';
+  public login(auth) {
+    window.location.href = this.getEndpoint() + '/tenants/public/login/' + auth.name + '?client_id=realscape';
   }
 
   public logout() {
-    this.setAccessToken(null);
+    localStorage.removeItem('access_token');
+  }
+
+  public authenticators(): Observable<any> {
+    return this.http.get(this.getEndpoint() + '/tenants/public/auth');
+    return this.http.get(this.getEndpoint() + '/tenants/public/auth').pipe(
+      catchError(this.handleError('/tenants/public/auth', []))
+    );
+  }
+
+  protected handleError(operation = 'operation', result?: any) {
+    return (error: any): Observable<any> => {
+      return of(error);
+    };
   }
 }
