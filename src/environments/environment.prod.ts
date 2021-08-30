@@ -1,4 +1,4 @@
 export const environment = {
   production: true,
-  api: 'https://api.realnet.io/v1',
+  api: 'https://api.realnet.io',
 };
