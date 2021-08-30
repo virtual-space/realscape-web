@@ -126,7 +126,7 @@ export class ItemService extends Service<Item> {
   }
 
   public types(): Observable<[Type]> {
-    return this.http.get(this.getEndpoint() + 'public/types').pipe(
+    return this.http.get(this.getEndpoint() + 'types').pipe(
       catchError(this.handleError(this.path, []))
     );
   }
@@ -235,12 +235,12 @@ export class Type {
 
 export class Item {
   id: string;
-  properties: object;
+  attributes: object;
   description: string;
   name: string;
   link: string;
   public: boolean;
-  Type: object;
+  type: object;
   parent_id: string;
   tags?: string[];
   point: object;

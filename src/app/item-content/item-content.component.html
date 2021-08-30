@@ -1,4 +1,4 @@
-<ng-container [ngSwitch]="item.Type['name']" *ngIf="item">
+<ng-container [ngSwitch]="item.type['name']" *ngIf="item">
   <div fxLayout="row" fxLayoutAlign="center center" *ngSwitchCase="'Image'" class="image-container">
     <app-image [src]="getContentUrl()" ></app-image>
   </div>
@@ -27,7 +27,7 @@
     <div fxLayout="column" fxLayoutAlign="start center">
       <!-- <img src="https://therumpus.net/wp-content/uploads/2014/08/Quick-brown-fox.jpg">-->
       <div>
-        <mat-icon class="icon-display">{{item.Type.icon}}</mat-icon>
+        <mat-icon class="icon-display">{{item.type.icon}}</mat-icon>
       </div>
     </div>
     <div fxLayout="column"  fxLayoutAlign="center center">

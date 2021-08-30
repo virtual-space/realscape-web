@@ -108,7 +108,7 @@ export class AppViewComponent implements OnInit {
 
         let defaultViews = [{name: 'Content', type: 'Content', icon: 'preview' }, {name: 'Items', type: 'List', icon: 'view_list'}];
 
-        switch (item.Type['name']) {
+        switch (item.type['name']) {
           case 'Image':
             defaultViews = [{name: 'Content', type: 'Content', icon: 'preview' }];
             break;
@@ -122,11 +122,11 @@ export class AppViewComponent implements OnInit {
             defaultViews = [{name: 'Content', type: 'Content', icon: 'preview' }];
             break;
           default:
-            if (item && item.properties && item.properties['query']) {
-              this.query = item.properties['query'];
+            if (item && item.attributes && item.attributes['query']) {
+              this.query = item.attributes['query'];
             }
 
-            if (item.Type['name'] === 'Folder') {
+            if (item.type['name'] === 'Folder') {
               defaultViews = [{name: 'Items', type: 'List', icon: 'view_list'}];
             }
 
@@ -141,9 +141,9 @@ export class AppViewComponent implements OnInit {
             break;
         }
         this.item = item;
-        if (this.item && this.item.properties) {
-          if (this.item.properties['views']) {
-            this.views = this.item.properties['views'];
+        if (this.item && this.item.attributes) {
+          if (this.item.attributes['views']) {
+            this.views = this.item.attributes['views'];
           } else {
             this.views = defaultViews;
           }
@@ -207,8 +207,8 @@ export class AppViewComponent implements OnInit {
   }
 
   getQuery() {
-    if (this.item && this.item.properties && this.item.properties['query']) {
-      return this.item.properties['query'];
+    if (this.item && this.item.attributes && this.item.attributes['query']) {
+      return this.item.attributes['query'];
     } else {
       return this.query;
     }
@@ -358,7 +358,7 @@ export class AppViewComponent implements OnInit {
 
   onSaveViews() {
     if (this.item && (this.allowAddingViews || this.allowEditingViews)) {
-      const props = Object.assign(this.item.properties || {}, { views: this.views });
+      const props = Object.assign(this.item.attributes || {}, { views: this.views });
       this.itemService.update(this.item.id, {properties: props}).subscribe(res => {
         this.refresh();
       });

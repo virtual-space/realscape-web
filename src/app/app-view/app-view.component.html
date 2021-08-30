@@ -5,7 +5,7 @@
         <button mat-icon-button color="primary" (click)="onBack()"><mat-icon>arrow_back</mat-icon></button>
       </div>
       <div fxLayout="row"  fxFlex="1 1 15%" fxLayoutAlign="center center" fxLayoutGap="5px" *ngIf="item">
-        <mat-icon>{{item.Type.icon}}</mat-icon>
+        <mat-icon>{{item.type.icon}}</mat-icon>
         <div>{{item.name}}</div>
       </div>
       <div fxLayout="row" fxFlex="1 0 88%">
@@ -29,7 +29,7 @@
         <button mat-icon-button color="primary" (click)="onBack()"><mat-icon>arrow_back</mat-icon></button>
       </div>
       <div fxLayout="row"  fxFlex="1 0 auto" fxLayoutAlign="center center" fxLayoutGap="5px">
-        <mat-icon>{{item.Type.icon}}</mat-icon>
+        <mat-icon>{{item.type.icon}}</mat-icon>
         <div>{{item.name}}</div>
       </div>
       <div fxLayout="row" fxFlex fxLayoutAlign="center center"  fxFlex="0 1 40px">
