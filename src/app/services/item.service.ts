@@ -156,7 +156,7 @@ export class ItemService extends Service<Item> {
 
   public async canUserEditItem(id) : Promise<boolean> {
     try {
-      await this.http.get(this.getEndpoint() + 'items/' + id + '/isMine', {observe: 'response'}).toPromise();
+      // await this.http.get(this.getEndpoint() + 'items/' + id + '/isMine', {observe: 'response'}).toPromise();
       return true;
     }
     catch(e) {

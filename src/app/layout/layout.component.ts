@@ -2,6 +2,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { Subscription } from 'rxjs';
 import {MediaChange, MediaObserver} from '@angular/flex-layout';
 import {AuthService} from "../services/auth.service";
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-layout',
@@ -19,7 +20,9 @@ export class LayoutComponent implements OnInit {
   watcher: Subscription;
   isMobile = false;
 
-  constructor(private authService: AuthService, mediaObserver: MediaObserver)
+  constructor(private authService: AuthService,
+              mediaObserver: MediaObserver,
+              private router: Router)
   {
     this.watcher = mediaObserver.media$.subscribe((change: MediaChange) => {
       if ( change.mqAlias == 'xs') {
@@ -40,6 +43,7 @@ export class LayoutComponent implements OnInit {
 
   logout() {
     this.authService.logout();
+    this.router.navigate(['']);
     // this.keycloakService.logout(window.location.origin + `/items/search`);
   }
 

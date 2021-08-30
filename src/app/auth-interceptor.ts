@@ -25,7 +25,8 @@ export class AuthInterceptor implements HttpInterceptor {
       });
       return next.handle(clonedReq).pipe(
         tap(succ => {}, err => {
-          if (err.status === 401) {
+          // TODO: remove hack below when server gets fixes (returns 500 now instead of 401)
+          if (err.status === 401 || err.status === 500) {
             this.authService.login();
           }
         })
