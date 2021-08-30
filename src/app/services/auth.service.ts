@@ -17,9 +17,7 @@ export class AuthService {
   }
 
   public isLoggedIn(): boolean {
-    const res = localStorage.getItem('access_token') != null;
-    console.log('logged_in: ', res);
-    return res;
+    return localStorage.getItem('access_token') != null;
   }
 
   public getAccessToken() {
