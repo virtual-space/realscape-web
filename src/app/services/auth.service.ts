@@ -16,6 +16,10 @@ export class AuthService {
     return (environment['api'] || '');
   }
 
+  protected getClientId() {
+    return (environment['client_id'] || null);
+  }
+
   public isLoggedIn(): boolean {
     return localStorage.getItem('access_token') != null;
   }
@@ -33,7 +37,7 @@ export class AuthService {
   }
 
   public login(auth) {
-    window.location.href = this.getEndpoint() + '/tenants/public/login/' + auth.name + '?client_id=realscape';
+    window.location.href = this.getEndpoint() + '/public/login/' + auth.name + '?client_id=' + this.getClientId();
   }
 
   public logout() {
@@ -41,9 +45,9 @@ export class AuthService {
   }
 
   public authenticators(): Observable<any> {
-    return this.http.get(this.getEndpoint() + '/tenants/public/auth');
-    return this.http.get(this.getEndpoint() + '/tenants/public/auth').pipe(
-      catchError(this.handleError('/tenants/public/auth', []))
+    return this.http.get(this.getEndpoint() + '/public/auth');
+    return this.http.get(this.getEndpoint() + '/public/auth').pipe(
+      catchError(this.handleError('/public/auth', []))
     );
   }
 
