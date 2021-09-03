@@ -37,7 +37,11 @@ export class AuthService {
   }
 
   public login(auth) {
-    window.location.href = this.getEndpoint() + '/public/login/' + auth.name + '?client_id=' + this.getClientId();
+    if (auth.type === 'password') {
+      window.location.href = this.getEndpoint() + '/public/login?client_id=' + this.getClientId() + '&response_type=token';
+    } else {
+      window.location.href = this.getEndpoint() + '/public/login/' + auth.name + '?client_id=' + this.getClientId();
+    }
   }
 
   public logout() {
