@@ -5,7 +5,7 @@
 export const environment = {
   production: false,
   // api: 'https://api.realnet.io',
-  client_id: 'realscape-dev',
+  client_id: 'lfeRIH8mNoK3m7zxgFId5mD4',
   api: 'http://localhost:8080',
 };
 
