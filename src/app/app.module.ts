@@ -33,12 +33,8 @@ import {NgxMapboxGLModule} from "ngx-mapbox-gl";
 import { MapViewComponent } from './map-view/map-view.component';
 import { ListViewComponent } from './list-view/list-view.component';
 import { ListItemComponent } from './list-item/list-item.component';
-import { MapItemComponent } from './map-item/map-item.component';
-import { DashboardViewComponent } from './dashboard-view/dashboard-view.component';
-import { DashboardItemComponent } from './dashboard-item/dashboard-item.component';
 import { ItemComponent } from './item/item.component';
 import { VisualViewComponent } from './visual-view/visual-view.component';
-import { VisualItemComponent } from './visual-item/visual-item.component';
 import { CreateItemComponent } from './create-item/create-item.component';
 import {QRCodeComponent, QRCodeModule} from 'angularx-qrcode';
 import { QrCodeViewComponent } from './qr-code/qr-code.component';
@@ -69,13 +65,10 @@ import {NgxExtendedPdfViewerModule} from "ngx-extended-pdf-viewer";
 import { ItemContentComponent } from './item-content/item-content.component';
 import { ItemViewComponent } from './item-view/item-view.component';
 import { CardViewComponent } from './card-view/card-view.component';
-import { PropertiesViewComponent } from './properties-view/properties-view.component';
 import { CalendarViewComponent } from './calendar-view/calendar-view.component';
 import { BoardViewComponent } from './board-view/board-view.component';
-import { PanelViewComponent } from './panel-view/panel-view.component';
 import { SceneViewComponent } from './scene-view/scene-view.component';
 import {DragDropModule} from "@angular/cdk/drag-drop";
-import { ErrorViewComponent } from './error-view/error-view.component';
 import { ScheduleItemComponent } from './schedule-item/schedule-item.component';
 import {NgxMaterialTimepickerModule} from "ngx-material-timepicker";
 import {MatDatepickerModule} from "@angular/material/datepicker";
@@ -83,8 +76,6 @@ import {MatNativeDateModule} from "@angular/material/core";
 import {MatDividerModule} from "@angular/material/divider";
 import { BoardItemComponent } from './board-item/board-item.component';
 import { AppViewComponent } from './app-view/app-view.component';
-import { AppViewHeaderComponent } from './app-view-header/app-view-header.component';
-import { TopicViewComponent } from './topic-view/topic-view.component';
 import { CallbackComponent } from './callback/callback.component';
 import {AuthInterceptor} from "./auth-interceptor";
 import { LoginComponent } from './login/login.component';
@@ -97,12 +88,8 @@ const EMBEDLY_KEY = 'EMBEDLY_KEY';
     MapViewComponent,
     ListViewComponent,
     ListItemComponent,
-    MapItemComponent,
-    DashboardViewComponent,
-    DashboardItemComponent,
     ItemComponent,
     VisualViewComponent,
-    VisualItemComponent,
     CreateItemComponent,
     QrCodeViewComponent,
     LocationComponent,
@@ -127,17 +114,12 @@ const EMBEDLY_KEY = 'EMBEDLY_KEY';
     ItemContentComponent,
     ItemViewComponent,
     CardViewComponent,
-    PropertiesViewComponent,
     CalendarViewComponent,
     BoardViewComponent,
-    PanelViewComponent,
     SceneViewComponent,
-    ErrorViewComponent,
     ScheduleItemComponent,
     BoardItemComponent,
     AppViewComponent,
-    AppViewHeaderComponent,
-    TopicViewComponent,
     CallbackComponent,
     LoginComponent,
   ],

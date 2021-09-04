@@ -193,7 +193,9 @@ export class ItemService extends Service<Item> {
   }
 
   isLink(item: Item): boolean {
-    return item && item.link !== null;
+    console.log(item);
+    console.log(item && 'link' in item && 'link' != null);
+    return item && 'link' in item && 'link' != null;
   }
 
   getQueryString(query: Query): string {
