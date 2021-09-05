@@ -24,7 +24,7 @@ export class AppViewComponent implements OnInit {
   loading = false;
   loggedIn = false;
 
-  defaultQuery = { radius: 500, around: true, myItems: true };
+  defaultQuery = { myItems: true };
 
 
   selectedView = new FormControl(0);
@@ -78,6 +78,7 @@ export class AppViewComponent implements OnInit {
           if (position) {
             this.query.lat = position.coords.latitude;
             this.query.lng = position.coords.longitude;
+            this.query.radius = 100;
             this.getItems();
           }
         });
@@ -101,7 +102,6 @@ export class AppViewComponent implements OnInit {
     this.itemService.getItem(id).subscribe(async item => {
       this.loading = false;
       if (!('ok' in item)) {
-        console.log(item);
 
         if (this.loggedIn) {
           this.ownItem = await this.itemService.canUserEditItem(item.id);
@@ -130,15 +130,6 @@ export class AppViewComponent implements OnInit {
             if (item.type['name'] === 'Folder') {
               defaultViews = [{name: 'Items', type: 'List', icon: 'view_list'}];
             }
-
-            const query = Object.assign({}, this.query);
-            query.parentId = item.id;
-            this.loading = true;
-            this.itemService.items(query).subscribe(items => {
-              // console.log(items);
-              this.items = items;
-              this.loading = false;
-            });
             break;
         }
         this.item = item;

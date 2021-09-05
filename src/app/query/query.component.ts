@@ -45,13 +45,12 @@ export class QueryComponent implements OnInit {
     types: this.typesControl,
     tags: new FormControl(),
     name: new FormControl(),
-    public: new FormControl(true),
-    around: new FormControl(),
-    myItems: new FormControl(true),
+    public: new FormControl(),
+    myItems: new FormControl(),
     parentId: new FormControl(),
     lat: new FormControl({value: '', disabled: true}),
     lng: new FormControl({value: '', disabled: true}),
-    radius: new FormControl(50)
+    radius: new FormControl(100)
   });
 
   constructor(private itemService: ItemService,
@@ -75,7 +74,7 @@ export class QueryComponent implements OnInit {
         startWith(null),
         map((fruit: string | null) => fruit ? this._filter(fruit) : this.allTypes.slice()));
       this.queryForm.patchValue(this.query);
-      if (this.query.around && this.query.lat && this.query.lng) {
+      if (this.query.lat && this.query.lng) {
         this.locationMode = 'custom';
         this.queryForm.patchValue({lat: this.query.lat});
         this.queryForm.patchValue({lng: this.query.lng});
@@ -163,7 +162,6 @@ export class QueryComponent implements OnInit {
           dialogRef.afterClosed().subscribe(result => {
             console.log(result);
             if (result) {
-              this.query.around = true;
               this.location = new LngLat(result.location.lng, result.location.lat);
               this.queryForm.patchValue({lat: result.location.lat});
               this.queryForm.patchValue({lng: result.location.lng});
@@ -181,7 +179,6 @@ export class QueryComponent implements OnInit {
 
       dialogRef.afterClosed().subscribe(result => {
         if (result) {
-          this.query.around = true;
           this.location = new LngLat(result.location.lng, result.location.lat);
           this.queryForm.patchValue({lat: result.location.lat});
           this.queryForm.patchValue({lng: result.location.lng});
@@ -194,11 +191,12 @@ export class QueryComponent implements OnInit {
     const result = Object.assign({}, this.queryForm.value);
     result.tags = this.query.tags || null;
     result.types = this.query.types || null;
-    result.around = this.query.around;
     if (this.location) {
       const pos = this.location.toArray();
       result.lat = pos[1];
       result.lng = pos[0];
+    } else {
+      delete result.radius;
     }
 
     this.query = result;
@@ -218,7 +216,6 @@ export class QueryComponent implements OnInit {
     const result = Object.assign({}, this.queryForm.value);
     result.tags = this.query.tags || null;
     result.types = this.query.types || null;
-    result.around = this.query.around;
     if (this.location) {
       const pos = this.location.toArray();
       result.lat = pos[1];
@@ -234,7 +231,6 @@ export class QueryComponent implements OnInit {
 
   onAny() {
     //console.log('on-any');
-    this.query.around = false;
   }
 
   onCurrent() {
@@ -244,7 +240,6 @@ export class QueryComponent implements OnInit {
         if (position) {
           //console.log(position);
           this.location = new LngLat(position.coords.longitude, position.coords.latitude);
-          this.query.around = true;
           this.queryForm.patchValue({lat: position.coords.latitude});
           this.queryForm.patchValue({lng: position.coords.longitude});
         }

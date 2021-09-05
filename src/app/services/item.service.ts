@@ -81,9 +81,6 @@ export class ItemService extends Service<Item> {
       if (query.public) {
         params = params.append('public', query.public.toString());
       }
-      if (query.around) {
-        params = params.append('around', query.around.toString());
-      }
       if (query.myItems) {
         params = params.append('my_items', query.myItems.toString());
       }
@@ -232,7 +229,7 @@ export class ItemService extends Service<Item> {
     if (query.tags && query.tags.length > 0) {
       result += ' tagged with ' + query.tags.join(', ');
     }
-    if (query.around && query.lat && query.lng) {
+    if (query.lat && query.lng) {
       result += ' in ' + query.radius + ' m radius around ' + query.lat.toFixed(4) + ', ' + query.lng.toFixed(4);
     }
     return result;
@@ -265,7 +262,6 @@ export class Query {
   tags?: string[];
   name?: string;
   public?: boolean;
-  around?: boolean;
   myItems?: boolean;
   parentId?: string;
   lat?: number;

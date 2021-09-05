@@ -51,10 +51,12 @@ export class MapViewComponent implements OnInit, OnDestroy {
               private dynamicComponentService: DynamicComponentService) { }
 
   ngOnInit() {
-    this.eventsSubscription = this.events.subscribe(() => {
-      console.log("MapRedraw");
-      setTimeout(() => this.onRefreshMap());
-    });
+    if (this.events) {
+      this.eventsSubscription = this.events.subscribe(() => {
+        console.log("MapRedraw");
+        setTimeout(() => this.onRefreshMap());
+      });
+    }
     if (this.item && this.item.point) {
       //this.mapObject.flyTo({ center: this.item.point['coordinates'] });
       this.location = new LngLat(this.item.point['coordinates'][0], this.item.point['coordinates'][1]);
@@ -62,7 +64,9 @@ export class MapViewComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.eventsSubscription.unsubscribe();
+    if (this.eventsSubscription) {
+      this.eventsSubscription.unsubscribe();
+    }
   }
 
   onLoadMap(mapInstance: Map) {
