@@ -252,6 +252,7 @@ export class Item {
   name: string;
   link: string;
   public: boolean;
+  visibility: string;
   type: object;
   parent_id: string;
   tags?: string[];

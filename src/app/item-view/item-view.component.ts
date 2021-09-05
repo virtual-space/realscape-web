@@ -137,6 +137,9 @@ export class ItemViewComponent implements OnInit {
 
       const createData = {};
 
+      createData['parent_id'] = this.item.id;
+      createData['public'] = this.item.visibility === 'visible';
+
       if (options['valid_from']) {
         createData['valid_from'] = options['valid_from'];
       }
