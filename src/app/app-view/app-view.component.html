@@ -1,4 +1,4 @@
-<div fxLayout="column" fxLayoutAlign="center center" class="full" fxLayoutGap="12px">
+<div fxLayout="column" fxLayoutAlign="center center" class="full">
   <ng-container>
     <div class="spinner row" *ngIf="loading" fxLayoutAlign="center center">
       <mat-spinner></mat-spinner>
@@ -61,7 +61,7 @@
     <div class="example-full-width" fxLayout="row" fxLayoutAlign="center center" *ngIf="!loading && views.length > 0 && !itemContainer">
       <mat-tab-group [selectedIndex]="selectedView.value" class="view-tabs"
                      (selectedTabChange)="onChangeTab($event)"
-                     (selectedIndexChange)="selectedView.setValue($event)">
+                     (selectedIndexChange)="selectedView.setValue($event)" *ngIf="views.length > 1">
 
         <mat-tab *ngFor="let view of views; let index = index" [label]="view.name">
           <ng-template mat-tab-label>
@@ -99,9 +99,28 @@
               View not supported
             </div>
           </ng-container>
-          <!-- <app-item-view [view]="view" [items]="items" [item]="item" [loading]="loading" [activeTab]="selectedTab === index"  (onRefresh)="refresh()"></app-item-view>-->
         </mat-tab>
       </mat-tab-group>
+      <div [ngSwitch]="views[0].type"  *ngIf="views.length === 1" class="view-tabs">
+        <div fxLayout="row wrap" class="card-deck-container" fxLayoutAlign="center center" *ngSwitchCase="'Cards'">
+          <app-card-view [items]="items" (onRefresh)="refresh()"></app-card-view>
+        </div>
+        <div *ngSwitchCase="'List'">
+          <app-list-view [items]="items" (onRefresh)="refresh()"></app-list-view>
+        </div>
+        <div *ngSwitchCase="'Map'">
+          <app-map-view  [items]="items"  (centerChanged)="onCenterChanged($event)"></app-map-view>
+        </div>
+        <div *ngSwitchCase="'Calendar'">
+          <app-calendar-view [items]="items" (onRefresh)="refresh()" ></app-calendar-view>
+        </div>
+        <div *ngSwitchCase="'Board'" >
+          <app-board-view [items]="items" (onRefresh)="refresh()"></app-board-view>
+        </div>
+        <div *ngSwitchDefault>
+          View not supported
+        </div>
+      </div>
     </div>
 
 

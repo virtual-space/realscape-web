@@ -4,7 +4,15 @@
 <ng-container [ngSwitch]="view.type" *ngIf="!loading">
   <mat-card>
     <mat-card-subtitle>{{item.type.name}}</mat-card-subtitle>
-    <mat-card-title>{{item.name}}</mat-card-title>
+    <mat-card-title>
+      <div fxLayout="row">
+        <div fxLayout="column">{{item.name}}</div>
+        <div fxLayout="column" fxFlex fxLayoutAlign="end center"  fxFlex="1 1 2%">
+          <button mat-icon-button color="primary" [matMenuTriggerFor]="menuMore"><mat-icon>more_vert</mat-icon></button>
+        </div>
+      </div>
+    </mat-card-title>
+
     <mat-card-content>
       <div *ngIf="item && items.length === 0">
         <app-item-content [item]="item"></app-item-content>
@@ -32,7 +40,7 @@
           <app-scene-view></app-scene-view>
         </div>
         <div *ngSwitchDefault>
-          Nothing
+          <app-list-view [items]="items" (onRefresh)="refresh()"></app-list-view>
         </div>
       </div>
       <!--
@@ -86,3 +94,25 @@
   </mat-card>
 
 </ng-container>
+<mat-menu #menuMore="matMenu" xPosition="before">
+  <button *ngIf="canAddItem()" mat-menu-item (click)="onAdd($event)">
+    <mat-icon>add</mat-icon>
+    <span>Add Item</span>
+  </button>
+  <button *ngIf="canAddView()" mat-menu-item (click)="onAddView($event)">
+    <mat-icon>add</mat-icon>
+    <span>Add View</span>
+  </button>
+  <button *ngIf="canEditOrDeleteItem()" mat-menu-item (click)="onEdit($event)">
+    <mat-icon>edit</mat-icon>
+    <span>Edit</span>
+  </button>
+  <button *ngIf="canEditOrDeleteItem()" mat-menu-item (click)="onDelete($event)">
+    <mat-icon>delete</mat-icon>
+    <span>Delete</span>
+  </button>
+  <button mat-menu-item (click)="onRefreshClick()">
+    <mat-icon>refresh</mat-icon>
+    <span>Refresh</span>
+  </button>
+</mat-menu>
