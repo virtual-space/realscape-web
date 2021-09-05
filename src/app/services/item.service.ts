@@ -109,6 +109,18 @@ export class ItemService extends Service<Item> {
     return params;
   }
 
+  public children(id): Observable<[Item]> {
+    if (this.authService.isLoggedIn()) {
+      return this.http.get(this.getEndpoint() + 'items?parent_id=' + id).pipe(
+        catchError(this.handleError(this.path, []))
+      );
+    } else {
+      return this.http.get(this.getEndpoint() + 'public/items?parent_id=' + id).pipe(
+        catchError(this.handleError(this.path, []))
+      );
+    }
+  }
+
   public items(query: Query): Observable<[Item]> {
     const httpOptions = {
       params: this.getParams(query)
@@ -193,8 +205,6 @@ export class ItemService extends Service<Item> {
   }
 
   isLink(item: Item): boolean {
-    console.log(item);
-    console.log(item && 'link' in item && 'link' != null);
     return item && 'link' in item && 'link' != null;
   }
 

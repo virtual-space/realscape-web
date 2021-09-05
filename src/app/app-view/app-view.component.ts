@@ -85,6 +85,7 @@ export class AppViewComponent implements OnInit {
         this.getItems();
       }
     }
+    this.isSmallScreen = this.breakpointObserver.isMatched('(max-width: 599px)');
   }
 
   getItems() {
@@ -155,15 +156,6 @@ export class AppViewComponent implements OnInit {
           this.location = this.item.point['coordinates'];
           this.center = this.location;
         }
-        // console.log(iframely);
-        // iframely.load(this.link.nativeElement, this.item.link);
-        //this.appService.setTitle(item.name);
-        /*
-        this.appService.setItem(item);
-        this.itemService.items(this.appService.getQuery()).subscribe(items => {
-          this.appService.setItems(items);
-        });
-         */
       }
     });
   }
