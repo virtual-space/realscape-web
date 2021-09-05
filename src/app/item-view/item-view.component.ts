@@ -166,6 +166,7 @@ export class ItemViewComponent implements OnInit {
             (res) => {
               if (res && res['id']) {
                 console.log(`Success created item id: ${res['id']}`);
+                this.refresh();
               }
             },
             (err) => {
