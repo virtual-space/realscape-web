@@ -3,7 +3,6 @@ import {Service} from "./service";
 import {HttpClient, HttpParams, HttpEvent, HttpEventType} from "@angular/common/http";
 import {Observable, from, of, throwError, scheduled} from "rxjs";
 import {catchError, map, flatMap, concatMap, mergeMap} from 'rxjs/operators';
-
 import {Router} from "@angular/router";
 import {AuthService} from "./auth.service";
 
@@ -13,16 +12,14 @@ import {AuthService} from "./auth.service";
 })
 export class ItemService extends Service<Item> {
 
-  endpoint = this.getEndpoint();
-
   constructor(protected http: HttpClient,
               protected router: Router,
               protected authService: AuthService) {
-    super('', http, router, authService);
+    super('items', http, router, authService);
   }
 
   public create(params, progressFn=null): Observable<Item> {
-    return this.http.post(this.getEndpoint() + 'items', params).pipe(
+    return this.http.post(this.getEndpoint(), params).pipe(
       mergeMap(created => {
         if (params.file && created) {
           return this.uploadFile(created['id'], params.file).pipe(
@@ -57,17 +54,13 @@ export class ItemService extends Service<Item> {
   }
 
   public update(id, params): Observable<Item> {
-    return this.http.put(this.getEndpoint() + 'items/' + id, params).pipe(
+    return this.http.put(this.getEndpoint() + '/' + id, params).pipe(
       catchError(this.handleError(this.path, []))
     );
-    /*
-    return this.http.get(this.getEndpoint() + 'public').pipe(
-      catchError(this.handleError('public', []))
-    );*/
   }
 
   public delete(id): Observable<Item> {
-    return this.http.delete(this.getEndpoint() + 'items/' + id).pipe(
+    return this.http.delete(this.getEndpoint()  + '/' + id).pipe(
       catchError(this.handleError(this.path, []))
     );
   }
@@ -107,15 +100,9 @@ export class ItemService extends Service<Item> {
   }
 
   public children(id): Observable<[Item]> {
-    if (this.authService.isLoggedIn()) {
-      return this.http.get(this.getEndpoint() + 'items?parent_id=' + id).pipe(
-        catchError(this.handleError(this.path, []))
-      );
-    } else {
-      return this.http.get(this.getEndpoint() + 'public/items?parent_id=' + id).pipe(
-        catchError(this.handleError(this.path, []))
-      );
-    }
+    return this.http.get(this.getAccessibleEndpoint() + '?parent_id=' + id).pipe(
+      catchError(this.handleError(this.path, []))
+    );
   }
 
   public items(query: Query): Observable<[Item]> {
@@ -123,40 +110,32 @@ export class ItemService extends Service<Item> {
       params: this.getParams(query)
     };
 
-    if (this.authService.isLoggedIn()) {
-      return this.http.get(this.getEndpoint() + 'items', httpOptions).pipe(
-        catchError(this.handleError(this.path, []))
-      );
-    } else {
-      return this.http.get(this.getEndpoint() + 'public/items', httpOptions).pipe(
-        catchError(this.handleError(this.path, []))
-      );
-    }
+    return this.http.get(this.getAccessibleEndpoint(), httpOptions).pipe(
+      catchError(this.handleError(this.path, []))
+    );
   }
 
   public types(): Observable<[Type]> {
-    return this.http.get(this.getEndpoint() + 'types').pipe(
+    return this.http.get(this.getAccessibleEndpoint(true) + 'types').pipe(
       catchError(this.handleError(this.path, []))
     );
   }
 
   public getItem(id): Observable<Item> {
-    if (this.authService.isLoggedIn()) {
-      return this.http.get(this.getEndpoint() + 'items/' + id).pipe(
-        catchError(this.handleError(this.path, []))
-      );
-    } else {
-      return this.http.get(this.getEndpoint() + 'public/items/' + id).pipe(
-        catchError(this.handleError(this.path, []))
-      );
-    }
+    return this.http.get(this.getAccessibleEndpoint() + '/' + id).pipe(
+      catchError(this.handleError(this.path, []))
+    );
+  }
+
+  public getDataLink(id) {
+    return this.getAccessibleEndpoint() + '/' + id + '/data';
   }
 
   public uploadFile(id, file: File): Observable<any> {
     const formData: FormData = new FormData();
     formData.append('file', file, file.name);
     return this.http
-      .put(this.getEndpoint() + 'items/' + id + '/data', formData, {
+      .put(this.getEndpoint() + '/' + id + '/data', formData, {
         reportProgress: true,
         observe: 'events'
       })

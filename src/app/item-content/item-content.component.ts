@@ -1,5 +1,5 @@
 import {Component, Input, OnInit} from '@angular/core';
-import {Item} from "../services/item.service";
+import {Item, ItemService} from "../services/item.service";
 import {environment} from "../../environments/environment";
 
 @Component({
@@ -11,7 +11,7 @@ export class ItemContentComponent implements OnInit {
 
   @Input() item: Item = null;
 
-  constructor() { }
+  constructor(private itemService: ItemService) { }
 
   ngOnInit() {
   }
@@ -19,7 +19,7 @@ export class ItemContentComponent implements OnInit {
   getContentUrl(): string {
     let result = null;
     if (this.item) {
-      result = environment.api + (this.item.public ? '/public/items/' : '/items/') + this.item.id + '/data';
+      result = this.itemService.getDataLink(this.item.id);
     }
     return result;
   }

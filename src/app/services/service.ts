@@ -19,6 +19,31 @@ export abstract class Service<T> {
     return (environment['api'] || '') + '/' + this.path;
   }
 
+  protected getAccessibleEndpoint(excludePath= false) {
+    if (this.authService.isLoggedIn()) {
+      if (excludePath) {
+        const p = environment['api'];
+        if (p) {
+          if (p.endsWith('/')) {
+            return p;
+          } else {
+            return p + '/';
+          }
+        } else {
+          return '';
+        }
+      } else {
+        return (environment['api'] || '') + '/' + this.path;
+      }
+    } else {
+      if (excludePath) {
+        return environment['api'] || '/public/';
+      } else {
+        return (environment['api'] || '') + '/public/' + this.path;
+      }
+    }
+  }
+
   protected handleErrorAndRethrow(operation = 'operation', result?: any) {
     return (error: any): Observable<any> => {
       console.log(error);

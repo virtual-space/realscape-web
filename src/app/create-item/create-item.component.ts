@@ -43,23 +43,26 @@ export class CreateItemComponent implements OnInit {
               @Inject(MAT_DIALOG_DATA) public data: any) { }
 
   ngOnInit() {
-    this.itemService.types().subscribe(types => { this.types = types; });
-    if (this.data) {
-      if (this.data.parent_id) {
-        this.parent_id = this.data.parent_id;
+    this.itemService.types().subscribe(types => {
+      this.types = types;
+      console.log(types);
+      if (this.data) {
+        if (this.data.parent_id) {
+          this.parent_id = this.data.parent_id;
+        }
+        if (this.data.public !== undefined) {
+          this.public = this.data.public;
+          this.shouldDisablePublic = true;
+        }
+        if (this.data.location) {
+          this.location = new LngLat(this.data.location[0], this.data.location[1]);
+        }
+        if (this.data.valid_from) {
+          this.valid_from = this.data.valid_from;
+        }
       }
-      if (this.data.public !== undefined) {
-        this.public = this.data.public;
-        this.shouldDisablePublic = true;
-      }
-      if (this.data.location) {
-        this.location = new LngLat(this.data.location[0], this.data.location[1]);
-      }
-      if (this.data.valid_from) {
-        this.valid_from = this.data.valid_from;
-      }
-    }
-    console.log(this);
+      console.log(this);
+    });
   }
 
   onNoClick(): void {
