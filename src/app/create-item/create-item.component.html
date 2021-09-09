@@ -88,11 +88,9 @@
         </mat-tab>
       </mat-tab-group>
     </div>
-    <div *ngSwitchDefault fxLayout="row" fxLayoutGap="8px" fxLayoutAlign="center center">
-      <mat-form-field>
-        <input matInput [placeholder]="'Name'" [(ngModel)]="name">
-      </mat-form-field>
-      <mat-form-field>
+    <div *ngSwitchDefault fxLayout="column" fxLayoutGap="8px" fxLayoutAlign="center center">
+      <mat-form-field fxFlexFill>
+        <mat-label>Enter url</mat-label>
         <input matInput [placeholder]="'Url'"  [(ngModel)]="url">
       </mat-form-field>
     </div>
