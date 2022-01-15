@@ -1,5 +1,5 @@
 export const environment = {
   production: true,
   api: 'https://api.realnet.io',
-  client_id: 'CyTMEe2dF9rQ3X3Y0bsoKHWU'
+  client_id: 'UGPjNavCMkMZUt21O5EZld6n'
 };
