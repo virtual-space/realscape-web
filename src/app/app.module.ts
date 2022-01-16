@@ -79,6 +79,7 @@ import { AppViewComponent } from './app-view/app-view.component';
 import { CallbackComponent } from './callback/callback.component';
 import {AuthInterceptor} from "./auth-interceptor";
 import { LoginComponent } from './login/login.component';
+import { FooterComponent } from './footer/footer.component';
 
 const EMBEDLY_KEY = 'EMBEDLY_KEY';
 
@@ -122,6 +123,7 @@ const EMBEDLY_KEY = 'EMBEDLY_KEY';
     AppViewComponent,
     CallbackComponent,
     LoginComponent,
+    FooterComponent,
   ],
   imports: [
     BrowserModule,
