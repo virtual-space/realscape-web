@@ -17,7 +17,7 @@
       <div *ngIf="item && items.length === 0">
         <app-item-content [item]="item"></app-item-content>
       </div>
-      <div *ngIf="item && items.length > 0">
+      <div *ngIf="item && items.length > 0 && views.length === 1">
         <div fxLayout="row wrap" class="card-deck-container" fxLayoutAlign="center center" *ngSwitchCase="'Cards'">
           <app-card-view [items]="items" (onRefresh)="refresh()"></app-card-view>
         </div>
@@ -43,35 +43,50 @@
           <app-list-view [items]="items" (onRefresh)="refresh()"></app-list-view>
         </div>
       </div>
-      <!--
-          <div *ngSwitchCase="'Content'">
-            <app-item-content [item]="item"></app-item-content>
-          </div>
-          <div fxLayout="row wrap" class="card-deck-container" fxLayoutAlign="center center" *ngSwitchCase="'Cards'">
-            <app-card-view [items]="items" (onRefresh)="refresh()"></app-card-view>
-          </div>
-          <div *ngSwitchCase="'List'">
-            <app-list-view [items]="items" (onRefresh)="refresh()"></app-list-view>
-          </div>
-          <div *ngSwitchCase="'Map'">
-            <app-map-view [item]="item"  [items]="items" [events]="eventsSubject.asObservable()" (centerChanged)="onCenterChanged($event)"></app-map-view>
-          </div>
-          <div *ngSwitchCase="'Calendar'">
-            <app-calendar-view [items]="items" (onRefresh)="refresh()" (onAdd)="add($event)"></app-calendar-view>
-          </div>
-          <div *ngSwitchCase="'Board'" >
-            <app-board-view [items]="items" (onRefresh)="refresh()"></app-board-view>
-          </div>
-          <div *ngSwitchCase="'Panel'">
-            <app-panel-view></app-panel-view>
-          </div>
-          <div *ngSwitchCase="'Scene'">
-            <app-scene-view></app-scene-view>
-          </div>
-          <div *ngSwitchDefault>
-            Nothing
-          </div>
-    -->
+      <div *ngIf="item && items.length > 0 && views.length > 1">
+        <mat-tab-group [selectedIndex]="selectedView.value" class="view-tabs"
+                       (selectedTabChange)="onChangeTab($event)"
+                       (selectedIndexChange)="selectedView.setValue($event)" *ngIf="views.length > 1">
+
+          <mat-tab *ngFor="let view of views; let index = index" [label]="view.name">
+            <ng-template mat-tab-label>
+              <mat-icon class="tab-icon">{{view.icon}}</mat-icon>
+              {{view.name}}
+              <button mat-icon-button color="primary" *ngIf="allowEditingViews" [matMenuTriggerFor]="viewMenu"><mat-icon>more_vert</mat-icon></button>
+              <mat-menu #viewMenu="matMenu" xPosition="before">
+                <button  mat-menu-item (click)="onEditView(index)">
+                  <mat-icon>edit</mat-icon>
+                  <span>Edit</span>
+                </button>
+                <button *ngIf="allowEditingViews" mat-menu-item (click)="onDeleteView(index)">
+                  <mat-icon>delete</mat-icon>
+                  <span>Delete</span>
+                </button>
+              </mat-menu>
+            </ng-template>
+            <ng-container [ngSwitch]="view.type">
+              <div fxLayout="row wrap" class="card-deck-container" fxLayoutAlign="center center" *ngSwitchCase="'Cards'">
+                <app-card-view [items]="items" (onRefresh)="refresh()"></app-card-view>
+              </div>
+              <div *ngSwitchCase="'List'">
+                <app-list-view [items]="items" (onRefresh)="refresh()"></app-list-view>
+              </div>
+              <div *ngSwitchCase="'Map'">
+                <app-map-view  [items]="items"  (centerChanged)="onCenterChanged($event)"></app-map-view>
+              </div>
+              <div *ngSwitchCase="'Calendar'">
+                <app-calendar-view [items]="items" (onRefresh)="refresh()" ></app-calendar-view>
+              </div>
+              <div *ngSwitchCase="'Board'" >
+                <app-board-view [items]="items" (onRefresh)="refresh()"></app-board-view>
+              </div>
+              <div *ngSwitchDefault>
+                View not supported
+              </div>
+            </ng-container>
+          </mat-tab>
+        </mat-tab-group>
+      </div>
     </mat-card-content>
     <mat-divider inset></mat-divider>
     <mat-card-actions>
