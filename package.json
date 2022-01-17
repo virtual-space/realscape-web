@@ -1,9 +1,8 @@
 {
   "name": "pesak",
-  "version": "0.0.1",
+  "version": "0.0.61",
   "scripts": {
     "ng": "ng",
-    "prestart": "cp scripts/pre-commit .git/hooks/ && chmod +x .git/hooks/pre-commit && echo 'hook copied'",
     "artifact-build": "ng build --aot --prod  --configuration=production",
     "artifact-build-dev": "ng build --aot --prod  --configuration=development",
     "start": "ng serve",
