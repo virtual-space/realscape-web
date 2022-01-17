@@ -1,0 +1,11 @@
+#!/bin/sh
+
+echo "*****Running version patch******"
+
+git stash -q --keep-index
+
+npm run next-version
+
+git stash pop -q
+
+exit 0

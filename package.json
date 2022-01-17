@@ -3,18 +3,16 @@
   "version": "0.0.1",
   "scripts": {
     "ng": "ng",
+    "prestart": "cp scripts/pre-commit .git/hooks/ && chmod +x .git/hooks/pre-commit && echo 'hook copied'",
     "artifact-build": "ng build --aot --prod  --configuration=production",
     "artifact-build-dev": "ng build --aot --prod  --configuration=development",
     "start": "ng serve",
-    "next-version": "npm version patch ",
+    "next-version": "npm --force version patch ",
     "build": "ng build",
     "test": "ng test",
     "lint": "ng lint",
-    "e2e": "ng e2e"    
+    "e2e": "ng e2e"
   },
-  "pre-commit": [
-    "next-version"
-  ],
   "private": true,
   "dependencies": {
     "@angular/animations": "^8.2.14",
@@ -70,7 +68,6 @@
     "protractor": "^5.4.3",
     "ts-node": "^8.5.4",
     "tslint": "^5.20.1",
-    "typescript": "~3.5.3",
-    "pre-commit" : "1.2.2"
+    "typescript": "~3.5.3"
   }
 }
