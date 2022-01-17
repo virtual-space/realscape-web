@@ -55,6 +55,11 @@ export class ItemViewComponent implements OnInit {
               public dialog: MatDialog) { }
 
   ngOnInit() {
+    if (this.item) {
+      if (this.item.attributes && this.item.attributes['views']) {
+        this.views = this.item.attributes['views'];
+      }
+    }
     this.getItems();
   }
 
@@ -203,11 +208,36 @@ export class ItemViewComponent implements OnInit {
   onSaveViews() {
     if (this.item && (this.allowAddingViews || this.allowEditingViews)) {
       const props = Object.assign(this.item.attributes || {}, { views: this.views });
-      this.itemService.update(this.item.id, {properties: props}).subscribe(res => {
+      this.itemService.update(this.item.id, {attributes: props}).subscribe(res => {
         this.refresh();
       });
     } else {
       this.refresh();
     }
+  }
+
+  onChangeTab(event) {
+    this.selectedTab = event.index;
+  }
+
+  onEditView(index: number) {
+    const view = this.views[index];
+
+    const dialogRef = this.dialog.open(EditViewComponent, {
+      width: '400px',
+      data: view
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.views[index] = result;
+        this.onSaveViews();
+      }
+    });
+  }
+
+  onDeleteView(index: number) {
+    this.views.splice(index, 1);
+    this.onSaveViews();
   }
 }
