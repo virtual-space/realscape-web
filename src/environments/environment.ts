@@ -5,8 +5,11 @@
 export const environment = {
   production: false,
   // api: 'https://api.realnet.io',
-  client_id: 'lfeRIH8mNoK3m7zxgFId5mD4',
-  api: 'http://localhost:8080',
+  //client_id: 'lfeRIH8mNoK3m7zxgFId5mD4',
+  //api: 'http://localhost:8080',
+  api: 'https://api-dev.realnet.io',
+  client_id: 'oMdAo3G9b8fnb3ivYbmMtLUX',
+  appVersion: require('../../package.json').version + '-local'
 };
 
 /*
