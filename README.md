@@ -21,7 +21,7 @@ There needs to be an API and database running for the interface to work correctl
 
 Run `nvm use v10.24.1` to swap to the node version required.
 
-If you want to use a locally run API the `client_id` in `environment.ts` will need to be changed to the client-id of root in the database your local API connects to.
+If you want to use a locally run API the `client_id` in `environment.ts` will need to be changed to the client-id of root_web in the database your local API connects to.
 
 Run `ng serve --configuration=dev` for a dev server. Use `--configuration=local` for local API. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
 
