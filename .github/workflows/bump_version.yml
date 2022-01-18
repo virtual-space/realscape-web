@@ -19,7 +19,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
         with:
-          ref: $
+          ref: dev
       - name: Install dependencies
         run: npm install
       - name: Run tests
