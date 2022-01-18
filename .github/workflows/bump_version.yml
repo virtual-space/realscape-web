@@ -13,8 +13,8 @@ on:
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-  Run-All-Tests:
-    name: "Run All Tests"
+  Bump-Version:
+    name: "Bump-Version"
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -22,7 +22,7 @@ jobs:
           ref: dev
       - name: Install dependencies
         run: npm install
-      - name: Run tests
+      - name: version-patch
         run: npm run next-version
       - uses: stefanzweifel/git-auto-commit-action@v4
         with:
