@@ -1,0 +1,32 @@
+# This is a basic workflow to help you get started with Actions
+
+name:  bump version
+
+# Controls when the action will run. 
+on:
+  # Triggers the workflow on push to the master branch
+  push:
+    branches: [ dev ]
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  Run-All-Tests:
+    name: "Run All Tests"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          ref: $
+      - name: Install dependencies
+        run: npm install
+      - name: Run tests
+        run: npm run next-version
+      - uses: stefanzweifel/git-auto-commit-action@v4
+        with:
+          commit_message: "[Bot] Update all the things!"
+          commit_user_name: Nitharsan
+          commit_user_email: nitharsan.puwanendran@l33tsystems.com
+          commit_author: Nitharsan <nitharsan.puwanendran@l33tsystems.com>       
