@@ -19,9 +19,9 @@ Navigate to the realscape-web directory to run `npm install`.
 
 There needs to be an API and database running for the interface to work correctly. See the `https://github.com/virtual-space/realnet-server` readme for how to set those up if you want a local development server.
 
-The local environment variables will need to be changed. `client_id` in `environment.ts` will need to be changed the client-id of the public row in app in your local database.
-
 Run `nvm use v10.24.1` to swap to the node version required.
+
+If you want to use the development API, run `export NODE_ENV=dev` before `ng serve`. If you want to use a locally run API, use `export NODE_ENV=local` and the `client_id` in `environment.ts` will need to be changed to the client-id of root in the database your local API connects to.
 
 Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
 
@@ -44,5 +44,3 @@ Run `ng e2e` to execute the end-to-end tests via [Protractor](http://www.protrac
 ## Further help
 
 To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI README](https://github.com/angular/angular-cli/blob/master/README.md).
-
-# Realscape-web
