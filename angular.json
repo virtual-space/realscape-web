@@ -119,6 +119,12 @@
           "configurations": {
             "production": {
               "browserTarget": "pesak:build:production"
+            },
+            "dev": {
+              "browserTarget": "pesak:build:dev"
+            },
+            "local": {
+              "browserTarget": "pesak:build:local"
             }
           }
         },
