@@ -163,7 +163,7 @@ const EMBEDLY_KEY = 'EMBEDLY_KEY';
     ReactiveFormsModule,
     QRCodeModule,
     NgxMapboxGLModule.withConfig({
-      accessToken: 'pk.eyJ1IjoidjFydHU0bHNwNGMzIiwiYSI6ImNqNHQ4ZzVrdTA0dDEzMnAwc28yZjk3eGsifQ.PSXsn_qF-GIK3kOrkgdIow', // Optionnal, can also be set per map (accessToken input of mgl-map)
+      accessToken: 'pk.eyJ1IjoidjFydHU0bHNwNGMzIiwiYSI6ImNreW1mZXI5ZzA2aHQydG5zY2hiNWh0ZjAifQ.BovKKecsXgBq1wu7PlAUHQ', // Optionnal, can also be set per map (accessToken input of mgl-map)
       //geocoderAccessToken: 'TOKEN' // Optionnal, specify if different from the map access token, can also be set per mgl-geocoder (accessToken input of mgl-geocoder)
     }),
     ImageViewerModule.forRoot(),
