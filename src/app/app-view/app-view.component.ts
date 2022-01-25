@@ -80,6 +80,8 @@ export class AppViewComponent implements OnInit {
             this.query.lng = position.coords.longitude;
             this.query.radius = 100;
             this.getItems();
+            this.location.lat = position.coords.latitude;
+            this.location.lng = position.coords.longitude;
           }
         });
       } else {

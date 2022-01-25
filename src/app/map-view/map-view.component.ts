@@ -123,7 +123,7 @@ export class MapViewComponent implements OnInit, OnDestroy {
   updateMarkers(map) {
 
     let bounds = new LngLatBounds(); // Instantiate LatLngBounds object
-    const itemsWithPositions = this.items.filter(i => i.point && i.point.coordinates);
+    const itemsWithPositions = this.items.filter(i => i.location && i.location.coordinates);
     if (itemsWithPositions.length > 0) {
       console.log("fitting map to bounds");
       itemsWithPositions.forEach(ip => {
@@ -133,9 +133,9 @@ export class MapViewComponent implements OnInit, OnDestroy {
         el.style.height = '5px';*/
         const m = new Marker();
         this.markers.push(m);
-        m.setLngLat(ip.point.coordinates);
+        m.setLngLat(ip.location.coordinates);
         this.attachPopup(m, ip);
-        bounds = bounds.extend(ip.point.coordinates);
+        bounds = bounds.extend(ip.location.coordinates);
         m.addTo(map);
       });
 

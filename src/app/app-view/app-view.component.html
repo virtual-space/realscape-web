@@ -87,7 +87,7 @@
               <app-list-view [items]="items" (onRefresh)="refresh()"></app-list-view>
             </div>
             <div *ngSwitchCase="'Map'">
-              <app-map-view  [items]="items"  (centerChanged)="onCenterChanged($event)"></app-map-view>
+              <app-map-view  [items]="items" [location]="location"  (centerChanged)="onCenterChanged($event)"></app-map-view>
             </div>
             <div *ngSwitchCase="'Calendar'">
               <app-calendar-view [items]="items" (onRefresh)="refresh()" ></app-calendar-view>
@@ -109,7 +109,7 @@
           <app-list-view [items]="items" (onRefresh)="refresh()"></app-list-view>
         </div>
         <div *ngSwitchCase="'Map'">
-          <app-map-view  [items]="items"  (centerChanged)="onCenterChanged($event)"></app-map-view>
+          <app-map-view  [items]="items" [location]="location"  (centerChanged)="onCenterChanged($event)"></app-map-view>
         </div>
         <div *ngSwitchCase="'Calendar'">
           <app-calendar-view [items]="items" (onRefresh)="refresh()" ></app-calendar-view>
