@@ -2,18 +2,35 @@
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 8.0.0.
 
-## Development environment
+## Development environment on WSL2
 
 Install WSL2: https://www.digitalocean.com/community/tutorials/how-to-install-the-windows-subsystem-for-linux-2-on-microsoft-windows-10
 
 Use ubuntu 18.04, which you can obtain from the microsoft store.
 
-Install nvm and node: https://docs.microsoft.com/en-us/windows/dev-environment/javascript/nodejs-on-wsl
+Install nvm: https://docs.microsoft.com/en-us/windows/dev-environment/javascript/nodejs-on-wsl
 
 Use the ubuntu terminal app rather than the windows terminal app (or opening a linux shell via shift-rightclick), otherwise it will break.
-Run `nvm install v10.24.1` to install the node.js version for this project.
+Then run the following before mounting:
+```
+nvm install 10.24.1
+nvm use 10.24.1
+npm install -g @angular/cli@11.0.2
+```
 
-Navigate to the realscape-web directory to run `npm install`.
+Clone out the repo, then navigate to the realscape-web directory to run `npm install`.
+
+## Development environment on Windows
+
+Install NVM: `https://github.com/coreybutler/nvm-windows/releases`
+
+Run powershell as administrator, then run the following:
+```
+nvm install 10.24.1
+nvm use 10.24.1
+npm install -g @angular/cli@11.0.2
+```
+Clone out the repo, then navigate to the realscape-web directory to run `npm install`.
 
 ## Development server
 
