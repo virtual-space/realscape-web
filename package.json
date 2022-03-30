@@ -1,6 +1,6 @@
 {
   "name": "pesak",
-  "version": "0.0.12",
+  "version": "0.0.13",
   "scripts": {
     "ng": "ng",
     "artifact-build": "ng build --aot --prod  --configuration=production",
