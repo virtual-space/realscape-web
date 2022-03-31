@@ -39,12 +39,12 @@ export class EditItemComponent implements OnInit {
   ngOnInit() {
     this.item = this.data.item || null;
     if (this.item) {
-      if (this.item['location']){
-        this.location = this.item['location']
+      if (this.item.point) {
+        this.location = new LngLat(this.item.point['coordinates'][0], this.item.point['coordinates'][1]);
       }
       this.status = this.item.status;
     }
-    console.log('item',this.item);
+    console.log(this.item);
   }
 
   onNoClick(): void {
@@ -52,7 +52,6 @@ export class EditItemComponent implements OnInit {
   }
 
   onOkClick(): void {
-    console.log("Submit Data")
     this.dialogRef.close({id: this.item.id,
       description: this.item.description,
       location: this.location,
@@ -66,7 +65,6 @@ export class EditItemComponent implements OnInit {
   }
 
   onLocation() {
-    console.log('location',this.location)
     const dialogRef = this.dialog.open(LocationComponent, {
       width: '400px',
       height: '600px',
