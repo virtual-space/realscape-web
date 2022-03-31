@@ -79,7 +79,7 @@ export class MapViewComponent implements OnInit, OnDestroy {
     if (this.items.length > 0) {
       this.updateMarkers(mapInstance);
     }
-    this.mapObject.resize();
+    //this.mapObject.resize();
     //console.log(this.mapObject);
     /*
     if (navigator.geolocation) {
@@ -121,6 +121,7 @@ export class MapViewComponent implements OnInit, OnDestroy {
   }
 
   updateMarkers(map) {
+
     let bounds = new LngLatBounds(); // Instantiate LatLngBounds object
     const itemsWithPositions = this.items.filter(i => i.location && i.location.coordinates);
     if (itemsWithPositions.length > 0) {
@@ -139,7 +140,6 @@ export class MapViewComponent implements OnInit, OnDestroy {
       });
 
       this.mapObject.fitBounds(bounds);
-      this.mapObject.resize();
     }
   }
 
