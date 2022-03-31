@@ -1,7 +1,11 @@
 import {Component, Inject, OnInit, ViewChild} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material";
-import {LngLat, Map, Marker} from "mapbox-gl";
+import {LngLat, Map, Marker, Point} from "mapbox-gl";
+// @ts-ignore
+import * as MapboxDraw from 'mapbox-gl-draw'; 
 import {MatDialog} from "@angular/material/dialog";
+import { features } from 'process';
+import { range } from 'rxjs';
 
 @Component({
   selector: 'app-location',
@@ -11,8 +15,11 @@ import {MatDialog} from "@angular/material/dialog";
 export class LocationComponent implements OnInit {
 
   location = null;
+  public geojson: any;
   mapCenter = null;
   map: Map = null;
+  public draw: any;
+  private canvas: any;
 
   @ViewChild("marker", {static: false}) marker;
 
@@ -35,24 +42,35 @@ export class LocationComponent implements OnInit {
       }
     } else {
       this.location = this.data.location;
-      this.mapCenter = this.location;
+      if(this.location['type'] === 'Point'){
+        this.mapCenter = this.location['coordinates'];
+      } else {
+        this.mapCenter = this.location['coordinates'][0][0];
+      }
     }
   }
 
   onOkClick(): void {
-    let loc = this.mapCenter;
-    if (this.marker) {
-      loc = this.marker.getLngLat();
+    console.log("Submit Location Data")
+    var featureCollection = this.draw.getAll()
+    if (featureCollection.features[0]){
+      this.dialogRef.close({location: featureCollection.features[0].geometry});
+    } else {
+      this.dialogRef.close({location: null});
     }
-    this.dialogRef.close({location: loc});
   }
 
   onCancelClick(): void {
+    console.log("Close Edit Dialog")
     this.dialogRef.close();
   }
 
   onClearClick(): void {
-
+    console.log("Clear Location Data")
+    var featureCollection = this.draw.getAll()
+    featureCollection.features = []
+    this.draw.set(featureCollection)
+    this.geojson = null
   }
 
   onDragEnd(event): void {
@@ -60,19 +78,92 @@ export class LocationComponent implements OnInit {
   }
 
   onLoad(event): void {
-    console.log("map load", event);
+    console.log("Map Load", event);
+    //in this case, map is init in the html, then passed to the code.
     this.map = event;
-    this.marker = new Marker({
+
+    //adding map controls
+    this.draw = new MapboxDraw({
+      displayControlsDefault: false,
+      controls: {
+        polygon: true,
+        point: true,
+        trash: true
+      }
+    });
+    this.map.addControl(this.draw)
+
+    if (this.location['type']){
+      var featureCollection = this.draw.getAll()
+      var feature = {
+        geometry: {
+          coordinates: this.location['coordinates'],
+          type: this.location['type']
+        },
+        id: 'initial64b3f1896dc2dc5eb642bfdb',
+        properties: {},
+        type: 'Feature'
+      }
+      this.geojson = feature
+      featureCollection.features.push(feature)
+      this.draw.set(featureCollection)
+    }
+
+    this.map.on('draw.create', this.createFunction);
+    this.map.on('draw.create', e => {
+      console.log('draw.create2',e)
+      var featureCollection = this.draw.getAll()
+      if (featureCollection.features.length !== 1){
+        featureCollection.features[0] = featureCollection.features.pop()
+        this.draw.set(featureCollection)
+      }
+    })
+
+    this.map.on('draw.delete', this.deleteFunction);
+  
+    this.map.on('draw.update', this.updateFunction);
+  
+    this.map.on('load', this.loadFunction);
+
+    this.canvas = this.map.getCanvasContainer();
+
+    /* this.marker = new Marker({
       draggable: true
     }).setLngLat(this.location)
       .on('dragend', this.onDragEnd)
-      .addTo(this.map);
+      .addTo(this.map); */
+  }
+
+  createFunction(e) {
+    console.log("createFunction",e);
+    if (this.geojson) {
+      this.geojson = null;
+    };
+    this.geojson = e.features[0];
+  }
+
+  deleteFunction(e) {
+    console.log("deleteFunction",e);
+    this.geojson = null;
+  }
+
+  updateFunction(e) {
+    console.log("updateFunction",e);
+    if(e.features.id === this.geojson.id){
+      this.geojson = e.features[0];
+    }
+  }
+
+  loadFunction(e) {
+    console.log('load function',e);
+    console.log('log geojson for the map',this.geojson);
+    this.draw.add(this.geojson);
   }
 
   onZoomEnd(event) {
 
     //console.log(this.marker);
-    const center = this.map.getCenter();
+    /* const center = this.map.getCenter();
     if (!this.marker) {
       this.marker = new Marker({
         draggable: true
@@ -81,7 +172,7 @@ export class LocationComponent implements OnInit {
         .addTo(this.map);
     } else {
       this.marker.setLngLat([center.lng, center.lat]);
-    }
+    } */
     /*
     const markerLngLat = this.marker.getLngLat();
     const center = this.map.getCenter();
