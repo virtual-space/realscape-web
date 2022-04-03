@@ -1,5 +1,5 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {Item, ItemService} from "../services/item.service";
+import {Item, ItemService, Query} from "../services/item.service";
 import {Subject} from "rxjs";
 import {CreateItemComponent} from "../create-item/create-item.component";
 import {EditViewComponent} from "../edit-view/edit-view.component";
@@ -25,7 +25,7 @@ export class ItemViewComponent implements OnInit {
   selectedView = new FormControl(0);
   selectedTab = 0;
   ownItem = false;
-  @Input() views = [{name: 'Items', type: 'List', icon: 'view_list'}];
+  @Input() views = []; //[{name: 'Items', type: 'List', icon: 'view_list'}];
   @Output() onRefresh: EventEmitter<any> = new EventEmitter();
   // @Output() onAdd: EventEmitter<any> = new EventEmitter();
   @Output() centerChanged = new EventEmitter<any>();
@@ -64,10 +64,55 @@ export class ItemViewComponent implements OnInit {
   }
 
   getItems() {
-    this.itemService.children(this.item.id).subscribe(children => {
-      this.items = children;
-    });
+    if (this.item.type['name'].endsWith("App")) {
+      this.itemService.children(this.item.id).subscribe(children => {
+        this.items = [];
+        children.forEach(item => {
+          if (item.type['name'].endsWith('Views')) {
+            this.itemService.children(item.id).subscribe(views => {
+              this.views = views;
+            });
+          } else if (item.type['name'] === 'Query') {
+            const query = {};
+            if (item.attributes) {
+              if ('name' in item.attributes) {
+                query['name'] = item.attributes['name'];
+              }
+
+              if ('my_items' in item.attributes) {
+                query['myItems'] = item.attributes['my_items'];
+              }
+
+              if ('types' in item.attributes) {
+                if(item.attributes['types'].length > 0) {
+                  query['types'] = item.attributes['types'];
+                }
+              }
+            }
+            console.log(query);
+            //"parent_id": "",
+            //    "name": "",
+            //    "my_items": "",
+            //    "public": "",
+            //    "types": [],
+            //    "tags": [],
+            //    "location": {},
+            //    "visibility": ""
+            //query['myItems'] = item.attributes["my_items"];
+            //query['name'] = item.attributes["name"];
+            this.itemService.items(query).subscribe(results => {
+              this.items = results;
+            });
+          }
+        });
+      });
+    } else {
+      this.itemService.children(this.item.id).subscribe(children => {
+        this.items = children;
+      });
+    }
   }
+
 
   refresh() {
     this.getItems();
@@ -142,6 +187,7 @@ export class ItemViewComponent implements OnInit {
 
       const createData = {};
 
+      createData['item'] = this.item;
       createData['parent_id'] = this.item.id;
       createData['public'] = this.item.visibility === 'visible';
 

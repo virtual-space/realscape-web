@@ -13,15 +13,10 @@ export class LoginComponent implements OnInit {
 
   authenticators = [];
 
-  constructor(private authService: AuthService,
-              public dialogRef: MatDialogRef<LoginComponent>,
-              public dialog: MatDialog,
-              @Inject(MAT_DIALOG_DATA) public data: any) { }
+  constructor(private authService: AuthService) { }
 
   ngOnInit() {
-    const ass = this.authService.authenticators();
-    console.log(ass);
-    ass.subscribe(auths => {
+    const ass = this.authService.authenticators().subscribe(auths => {
       this.authenticators = auths;
     });
   }
@@ -30,11 +25,4 @@ export class LoginComponent implements OnInit {
     this.authService.login(auth);
   }
 
-  onOkClick(): void {
-    this.dialogRef.close();
-  }
-
-  onCancelClick(): void {
-    this.dialogRef.close();
-  }
 }

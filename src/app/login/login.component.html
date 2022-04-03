@@ -1,11 +1,5 @@
-<h1 mat-dialog-title fxLayoutAlign="center center">Login</h1>
-<div mat-dialog-content fxLayoutAlign="center center">
-  <div fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="16px">
-    <button mat-flat-button color="primary" *ngFor="let auth of authenticators" (click)="openAuthLink(auth)">
-      {{auth.name}}
-    </button>
-  </div>
-</div>
-<div mat-dialog-actions fxLayoutAlign="center center">
-  <button mat-button color="warn" (click)="onCancelClick()">Close</button>
+<div fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="16px">
+  <button mat-flat-button color="primary" *ngFor="let auth of authenticators" (click)="openAuthLink(auth)">
+    {{auth.name}}
+  </button>
 </div>

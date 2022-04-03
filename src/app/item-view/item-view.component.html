@@ -1,7 +1,7 @@
 <div fxLayout="row" *ngIf="loading">
   <mat-spinner></mat-spinner>
 </div>
-<ng-container [ngSwitch]="view.type" *ngIf="!loading">
+<ng-container [ngSwitch]="view.type['name']" *ngIf="!loading">
   <mat-card>
     <mat-card-subtitle>{{item.type.name}}</mat-card-subtitle>
     <mat-card-title>
@@ -18,25 +18,25 @@
         <app-item-content [item]="item"></app-item-content>
       </div>
       <div *ngIf="item && items.length > 0 && views.length === 1">
-        <div fxLayout="row wrap" class="card-deck-container" fxLayoutAlign="center center" *ngSwitchCase="'Cards'">
+        <div fxLayout="row wrap" class="card-deck-container" fxLayoutAlign="center center" *ngSwitchCase="'CardsView'">
           <app-card-view [items]="items" (onRefresh)="refresh()"></app-card-view>
         </div>
-        <div *ngSwitchCase="'List'">
+        <div *ngSwitchCase="'ListView'">
           <app-list-view [items]="items" (onRefresh)="refresh()"></app-list-view>
         </div>
-        <div *ngSwitchCase="'Map'">
+        <div *ngSwitchCase="'MapView'">
           <app-map-view [item]="item"  [items]="items" [events]="eventsSubject.asObservable()" (centerChanged)="onCenterChanged($event)"></app-map-view>
         </div>
-        <div *ngSwitchCase="'Calendar'">
+        <div *ngSwitchCase="'CalendarView'">
           <app-calendar-view [items]="items" (onRefresh)="refresh()" (onAdd)="add($event)"></app-calendar-view>
         </div>
-        <div *ngSwitchCase="'Board'" >
+        <div *ngSwitchCase="'BoardView'" >
           <app-board-view [items]="items" (onRefresh)="refresh()"></app-board-view>
         </div>
-        <div *ngSwitchCase="'Panel'">
+        <div *ngSwitchCase="'PanelView'">
           <app-panel-view></app-panel-view>
         </div>
-        <div *ngSwitchCase="'Scene'">
+        <div *ngSwitchCase="'SceneView'">
           <app-scene-view></app-scene-view>
         </div>
         <div *ngSwitchDefault>
@@ -64,20 +64,20 @@
                 </button>
               </mat-menu>
             </ng-template>
-            <ng-container [ngSwitch]="view.type">
-              <div fxLayout="row wrap" class="card-deck-container" fxLayoutAlign="center center" *ngSwitchCase="'Cards'">
+            <ng-container [ngSwitch]="view.type['name']">
+              <div fxLayout="row wrap" class="card-deck-container" fxLayoutAlign="center center" *ngSwitchCase="'CardsView'">
                 <app-card-view [items]="items" (onRefresh)="refresh()"></app-card-view>
               </div>
-              <div *ngSwitchCase="'List'">
+              <div *ngSwitchCase="'ListView'">
                 <app-list-view [items]="items" (onRefresh)="refresh()"></app-list-view>
               </div>
-              <div *ngSwitchCase="'Map'">
+              <div *ngSwitchCase="'MapView'">
                 <app-map-view  [items]="items"  (centerChanged)="onCenterChanged($event)"></app-map-view>
               </div>
-              <div *ngSwitchCase="'Calendar'">
+              <div *ngSwitchCase="'CalendarView'">
                 <app-calendar-view [items]="items" (onRefresh)="refresh()" ></app-calendar-view>
               </div>
-              <div *ngSwitchCase="'Board'" >
+              <div *ngSwitchCase="'BoardView'" >
                 <app-board-view [items]="items" (onRefresh)="refresh()"></app-board-view>
               </div>
               <div *ngSwitchDefault>

@@ -1,9 +1,10 @@
 <mat-toolbar color="primary">
   <div fxLayout="row" fxLayoutGap="5px">
     <nav mat-tab-nav-bar>
-      <button mat-flat-button (click)="setCurrent('/items/search')" color="primary" routerLinkActive="nav-active" [routerLink]="['/items/search']">Find</button>
+      <button mat-flat-button *ngFor="let app of apps" color="primary" color="primary" routerLinkActive="nav-active" routerLink="/items/{{app.id}}">{{app.name}}</button>
+      <!-- <button mat-flat-button *ngFor="let app of apps" (click)="setCurrent('/items/search')" color="primary" routerLinkActive="nav-active" [routerLink]="['/items/search']">Find</button>
       <button mat-flat-button (click)="setCurrent('/items/around')" color="primary" routerLinkActive="nav-active" [routerLink]="['/items/around']">Around</button>
-      <button mat-flat-button (click)="setCurrent('/items/home')"   color="primary" routerLinkActive="nav-active" [routerLink]="['/items/home']" *ngIf="isLoggedIn()">Home</button>
+      <button mat-flat-button (click)="setCurrent('/items/home')"   color="primary" routerLinkActive="nav-active" [routerLink]="['/items/home']" *ngIf="isLoggedIn()">Home</button> -->
     </nav>
     <div fxLayoutAlign="center center">
       <span><button mat-flat-button *ngIf="!isLoggedIn()" (click)="login()">Log In</button></span>

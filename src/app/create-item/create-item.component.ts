@@ -44,8 +44,16 @@ export class CreateItemComponent implements OnInit {
 
   ngOnInit() {
     this.itemService.types().subscribe(types => {
-      this.types = types;
-      console.log(types);
+      if (this.data.item && this.data.item.attributes && 'creatable_types' in this.data.item.attributes) {
+          const includedTypeNames = new Set(this.data.item.attributes['creatable_types']);
+          const includedTypes = new Set(types.filter(t => includedTypeNames.has(t.name)).map(t => t['id']));
+          this.types = types.filter(t => includedTypes.has(t['id']) || includedTypes.has(t['base_id']) );
+      }
+      this.types = this.types.filter(t => t.attributes['creatable'] === 'true');
+      if (this.types.length > 0) {
+         this.selectedType = this.types[0]['name'];
+      }
+
       if (this.data) {
         if (this.data.parent_id) {
           this.parent_id = this.data.parent_id;

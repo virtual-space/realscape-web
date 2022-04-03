@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import {Router} from "@angular/router";
 import {AuthService} from "../services/auth.service";
+import { ItemService } from '../services/item.service';
 
 
 @Component({
@@ -16,6 +17,7 @@ export class MainViewComponent implements OnInit {
   activeLinkIndex = -1;
   loggedIn = false;
   username = null;
+  apps = [];
 
   constructor(private router: Router,
               private authService: AuthService) {

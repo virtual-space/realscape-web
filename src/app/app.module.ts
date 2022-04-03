@@ -80,6 +80,10 @@ import { CallbackComponent } from './callback/callback.component';
 import {AuthInterceptor} from "./auth-interceptor";
 import { LoginComponent } from './login/login.component';
 import { FooterComponent } from './footer/footer.component';
+import { RealscapeAppComponent } from './realscape-app/realscape-app.component';
+import { AppsViewComponent } from './apps-view/apps-view.component';
+import { LoginDialogComponent } from './login-dialog/login-dialog.component';
+
 
 const EMBEDLY_KEY = 'EMBEDLY_KEY';
 
@@ -124,6 +128,9 @@ const EMBEDLY_KEY = 'EMBEDLY_KEY';
     CallbackComponent,
     LoginComponent,
     FooterComponent,
+    RealscapeAppComponent,
+    AppsViewComponent,
+    LoginDialogComponent,
   ],
   imports: [
     BrowserModule,
@@ -185,7 +192,7 @@ const EMBEDLY_KEY = 'EMBEDLY_KEY';
     QrCodeViewComponent,
     QRCodeComponent,
     LocationComponent,
-    LoginComponent,
+    LoginDialogComponent,
     ListItemComponent,
     ScheduleItemComponent
   ],

@@ -2,6 +2,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { Subscription } from 'rxjs';
 import {MediaChange, MediaObserver} from '@angular/flex-layout';
 import {AuthService} from "../services/auth.service";
+import { AppService } from '../services/app.service';
 import {Router} from "@angular/router";
 import {MatDialog} from "@angular/material/dialog";
 import {LoginComponent} from "../login/login.component";
@@ -21,8 +22,10 @@ export class LayoutComponent implements OnInit {
   currentNavGroup = '';
   watcher: Subscription;
   isMobile = false;
+  apps = [];
 
   constructor(private authService: AuthService,
+              private appService: AppService,
               public dialog: MatDialog,
               mediaObserver: MediaObserver,
               private router: Router)
@@ -33,6 +36,9 @@ export class LayoutComponent implements OnInit {
       } else {
         this.isMobile = false;
       }
+    });
+    this.appService.apps().subscribe(apps => {
+      this.apps = apps;
     });
   }
 
