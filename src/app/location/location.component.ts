@@ -2,7 +2,7 @@ import {Component, Inject, OnInit, ViewChild} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material";
 import {LngLat, Map, Marker, Point} from "mapbox-gl";
 // @ts-ignore
-import * as MapboxDraw from 'mapbox-gl-draw'; 
+//marko import * as MapboxDraw from 'mapbox-gl-draw'; 
 import {MatDialog} from "@angular/material/dialog";
 import { features } from 'process';
 import { range } from 'rxjs';
@@ -83,6 +83,7 @@ export class LocationComponent implements OnInit {
     this.map = event;
 
     //adding map controls
+    /* Marko
     this.draw = new MapboxDraw({
       displayControlsDefault: false,
       controls: {
@@ -92,6 +93,7 @@ export class LocationComponent implements OnInit {
       }
     });
     this.map.addControl(this.draw)
+    
 
     if (this.location['type']){
       var featureCollection = this.draw.getAll()
@@ -126,7 +128,7 @@ export class LocationComponent implements OnInit {
     this.map.on('load', this.loadFunction);
 
     this.canvas = this.map.getCanvasContainer();
-
+    */
     /* this.marker = new Marker({
       draggable: true
     }).setLngLat(this.location)
