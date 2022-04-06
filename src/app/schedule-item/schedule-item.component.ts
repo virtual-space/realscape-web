@@ -5,12 +5,12 @@ import * as moment from 'moment';
 @Component({
   selector: 'app-schedule-item',
   templateUrl: './schedule-item.component.html',
-  styleUrls: ['./schedule-item.component.scss']
+  styleUrls: ['./schedule-item.component.sass']
 })
 export class ScheduleItemComponent implements OnInit {
 
-  dateFrom = moment().format();
-  timeFrom = moment().format("HH:mm");
+  dateFrom?: string = moment().format();
+  timeFrom?: string = moment().format("HH:mm");
   dateTo = this.dateFrom;
   timeTo = this.timeFrom;
 
@@ -24,21 +24,21 @@ export class ScheduleItemComponent implements OnInit {
         this.dateFrom = moment(this.data['valid_from']).local().format();
         this.timeFrom = moment(this.dateFrom).format("HH:mm");
       } else {
-        this.dateFrom = null;
-        this.timeFrom = null;
+        this.dateFrom = undefined;
+        this.timeFrom = undefined;
       }
       if ('valid_to' in this.data && this.data['valid_to'] != null) {
         this.dateTo = moment(this.data['valid_to']).local().format();
         this.timeTo = moment(this.dateTo).format("HH:mm");
       } else {
-        this.dateTo = null;
-        this.timeTo = null;
+        this.dateTo = undefined;
+        this.timeTo = undefined;
       }
     }
   }
 
   onOkClick(): void {
-    const result = {valid_from: null, valid_to: null};
+    const result: {[index: string]:any} = {};
 
     if (this.dateFrom) {
       if (this.timeFrom) {
@@ -74,10 +74,10 @@ export class ScheduleItemComponent implements OnInit {
   }
 
   onClearClick(): void {
-    this.dateFrom = null;
-    this.timeFrom = null;
-    this.dateTo = null;
-    this.timeTo = null;
+    this.dateFrom = undefined;
+    this.timeFrom = undefined;
+    this.dateTo = undefined;
+    this.timeTo = undefined;
   }
 
 }

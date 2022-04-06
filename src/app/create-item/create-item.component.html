@@ -1,153 +1,154 @@
 <h1 mat-dialog-title>
-  <div fxLayoutAlign="center end" fxFlex="0 1 auto" fxLayout="row" class="type_select">
-    <mat-form-field  fxFlex="0 1 auto">
-      <mat-label>New item type:</mat-label>
-      <div fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="8px">
-        <span matPrefix fxLayoutAlign="center center"><mat-icon>{{selectedIcon}}</mat-icon></span>
-        <mat-select [(value)]="selectedType" (selectionChange)="onTypeChange($event)">
-          <mat-select-trigger>{{selectedType}}</mat-select-trigger>
-          <mat-option *ngFor="let type of types" [value]="type.name">
-            <mat-icon>{{type.icon}}</mat-icon>{{type.name}}
-          </mat-option>
-        </mat-select>
+    <div fxLayoutAlign="center end" fxFlex="0 1 auto" fxLayout="row" class="type_select">
+      <mat-form-field  fxFlex="0 1 auto">
+        <mat-label>New item type:</mat-label>
+        <div fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="8px">
+          <span matPrefix fxLayoutAlign="center center"><mat-icon>{{selectedIcon}}</mat-icon></span>
+          <mat-select [(value)]="selectedType" (selectionChange)="onTypeChange($event)">
+            <mat-select-trigger>{{selectedType}}</mat-select-trigger>
+            <mat-option *ngFor="let type of types" [value]="type.name">
+              <mat-icon>{{type.icon}}</mat-icon>{{type.name}}
+            </mat-option>
+          </mat-select>
+        </div>
+      </mat-form-field>
+    </div>
+  </h1>
+  <div fxLayout="row" fxLayoutGap="8px" fxLayoutAlign="center end">
+    <mat-form-field>
+      <input matInput [placeholder]="'Name'" [(ngModel)]="name">
+    </mat-form-field>
+  </div>
+  
+  <div mat-dialog-content>
+    <ng-container [ngSwitch]="selectedType">
+      <div *ngSwitchCase="'Video'" fxLayout="row" fxLayoutGap="8px" fxLayoutAlign="center center">
+        <mat-tab-group>
+          <mat-tab label="Upload">
+            <div class="form-field">
+              <input type="file"
+                     id="file"
+                     (change)="handleFileInput($event)">
+            </div>
+          </mat-tab>
+          <mat-tab label="Link">
+            <mat-form-field>
+              <input matInput [placeholder]="'Url'"  [(ngModel)]="url">
+            </mat-form-field>
+          </mat-tab>
+        </mat-tab-group>
       </div>
+      <div *ngSwitchCase="'Scene'" fxLayout="row" fxLayoutGap="8px" fxLayoutAlign="center center">
+        <mat-tab-group>
+          <mat-tab label="Upload">
+            <div class="form-field">
+              <input type="file"
+                     id="file"
+                     (change)="handleFileInput($event)">
+            </div>
+          </mat-tab>
+          <mat-tab label="Link">
+            <mat-form-field>
+              <input matInput [placeholder]="'Url'"  [(ngModel)]="url">
+            </mat-form-field>
+          </mat-tab>
+        </mat-tab-group>
+      </div>
+      <div *ngSwitchCase="'Image'" fxLayout="row" fxLayoutGap="8px" fxLayoutAlign="center center">
+        <mat-tab-group>
+          <mat-tab label="Upload">
+            <div class="form-field">
+              <input type="file"
+                     id="file"
+                     accept="image/png, image/jpeg, image/gif"
+                     (change)="handleFileInput($event)">
+            </div>
+          </mat-tab>
+          <mat-tab label="Link">
+            <mat-form-field>
+              <input matInput [placeholder]="'Url'"  [(ngModel)]="url">
+            </mat-form-field>
+          </mat-tab>
+        </mat-tab-group>
+      </div>
+      <div *ngSwitchCase="'Document'" fxLayout="row" fxLayoutGap="8px" fxLayoutAlign="center center">
+        <mat-tab-group>
+          <mat-tab label="Upload">
+            <div class="form-field">
+              <input type="file"
+                     id="file"
+                     accept="application/pdf"
+                     (change)="handleFileInput($event)">
+            </div>
+          </mat-tab>
+          <mat-tab label="Link">
+            <mat-form-field>
+              <input matInput [placeholder]="'Url'"  [(ngModel)]="url">
+            </mat-form-field>
+          </mat-tab>
+        </mat-tab-group>
+      </div>
+      <div *ngSwitchDefault fxLayout="column" fxLayoutGap="8px" fxLayoutAlign="center center">
+        <mat-form-field fxFlexFill>
+          <mat-label>Enter url</mat-label>
+          <input matInput [placeholder]="'Url'"  [(ngModel)]="url">
+        </mat-form-field>
+      </div>
+    </ng-container>
+    <div fxLayout="row" fxLayoutGap="8px" fxLayoutAlign="center center">
+      <mat-form-field class="example-chip-list">
+        <mat-chip-list #chipList aria-label="Tags">
+          <mat-chip *ngFor="let tag of tags" [selectable]="selectable"
+                    [removable]="removable" (removed)="remove(tag)">
+            {{tag}}
+            <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
+          </mat-chip>
+          <input placeholder="Tags"
+                 [matChipInputFor]="chipList"
+                 [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                 [matChipInputAddOnBlur]="addOnBlur"
+                 (matChipInputTokenEnd)="add($event)">
+        </mat-chip-list>
+      </mat-form-field>
+    </div>
+    <div fxLayout="row" fxLayoutGap="8px" fxLayoutAlign="center center">
+      <!-- <mat-slide-toggle [disabled]="shouldDisablePublic" [(ngModel)]="public">Public</mat-slide-toggle> -->
+      <button mat-raised-button color="primary" (click)="onLocation()">Location</button>
+      <button mat-raised-button color="primary" (click)="onSchedule()">Schedule</button>
+    </div>
+  
+    <!--
+    <mat-tab-group>
+      <mat-tab label="Video" fxLayout="column">
+        <mat-form-field>
+          <input matInput [placeholder]="'Name'" [(ngModel)]="name">
+        </mat-form-field>
+        <mat-form-field>
+          <input matInput [placeholder]="'Url'"  [(ngModel)]="url">
+        </mat-form-field>
+      </mat-tab>
+      <mat-tab label="Image" fxLayout="column">
+        <mat-form-field>
+          <input matInput [placeholder]="'Name'" [(ngModel)]="name">
+        </mat-form-field>
+        <mat-form-field>
+          <input matInput [placeholder]="'Url'"  [(ngModel)]="url">
+        </mat-form-field>
+      </mat-tab>
+      <mat-tab label="Document" fxLayout="column">
+  
+      </mat-tab>
+    </mat-tab-group>
+    -->
+    <!--
+    <p>What's your favorite animal?</p>
+    <mat-form-field>
+      <input matInput [(ngModel)]="data.animal">
     </mat-form-field>
+    -->
   </div>
-</h1>
-<div fxLayout="row" fxLayoutGap="8px" fxLayoutAlign="center end">
-  <mat-form-field>
-    <input matInput [placeholder]="'Name'" [(ngModel)]="name">
-  </mat-form-field>
-</div>
-
-<div mat-dialog-content>
-  <ng-container [ngSwitch]="selectedType">
-    <div *ngSwitchCase="'Video'" fxLayout="row" fxLayoutGap="8px" fxLayoutAlign="center center">
-      <mat-tab-group>
-        <mat-tab label="Upload">
-          <div class="form-field">
-            <input type="file"
-                   id="file"
-                   (change)="handleFileInput($event.target.files)">
-          </div>
-        </mat-tab>
-        <mat-tab label="Link">
-          <mat-form-field>
-            <input matInput [placeholder]="'Url'"  [(ngModel)]="url">
-          </mat-form-field>
-        </mat-tab>
-      </mat-tab-group>
-    </div>
-    <div *ngSwitchCase="'Scene'" fxLayout="row" fxLayoutGap="8px" fxLayoutAlign="center center">
-      <mat-tab-group>
-        <mat-tab label="Upload">
-          <div class="form-field">
-            <input type="file"
-                   id="file"
-                   (change)="handleFileInput($event.target.files)">
-          </div>
-        </mat-tab>
-        <mat-tab label="Link">
-          <mat-form-field>
-            <input matInput [placeholder]="'Url'"  [(ngModel)]="url">
-          </mat-form-field>
-        </mat-tab>
-      </mat-tab-group>
-    </div>
-    <div *ngSwitchCase="'Image'" fxLayout="row" fxLayoutGap="8px" fxLayoutAlign="center center">
-      <mat-tab-group>
-        <mat-tab label="Upload">
-          <div class="form-field">
-            <input type="file"
-                   id="file"
-                   accept="image/png, image/jpeg, image/gif"
-                   (change)="handleFileInput($event.target.files)">
-          </div>
-        </mat-tab>
-        <mat-tab label="Link">
-          <mat-form-field>
-            <input matInput [placeholder]="'Url'"  [(ngModel)]="url">
-          </mat-form-field>
-        </mat-tab>
-      </mat-tab-group>
-    </div>
-    <div *ngSwitchCase="'Document'" fxLayout="row" fxLayoutGap="8px" fxLayoutAlign="center center">
-      <mat-tab-group>
-        <mat-tab label="Upload">
-          <div class="form-field">
-            <input type="file"
-                   id="file"
-                   accept="application/pdf"
-                   (change)="handleFileInput($event.target.files)">
-          </div>
-        </mat-tab>
-        <mat-tab label="Link">
-          <mat-form-field>
-            <input matInput [placeholder]="'Url'"  [(ngModel)]="url">
-          </mat-form-field>
-        </mat-tab>
-      </mat-tab-group>
-    </div>
-    <div *ngSwitchDefault fxLayout="column" fxLayoutGap="8px" fxLayoutAlign="center center">
-      <mat-form-field fxFlexFill>
-        <mat-label>Enter url</mat-label>
-        <input matInput [placeholder]="'Url'"  [(ngModel)]="url">
-      </mat-form-field>
-    </div>
-  </ng-container>
-  <div fxLayout="row" fxLayoutGap="8px" fxLayoutAlign="center center">
-    <mat-form-field class="example-chip-list">
-      <mat-chip-list #chipList aria-label="Tags">
-        <mat-chip *ngFor="let tag of tags" [selectable]="selectable"
-                  [removable]="removable" (removed)="remove(tag)">
-          {{tag.name}}
-          <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
-        </mat-chip>
-        <input placeholder="Tags"
-               [matChipInputFor]="chipList"
-               [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
-               [matChipInputAddOnBlur]="addOnBlur"
-               (matChipInputTokenEnd)="add($event)">
-      </mat-chip-list>
-    </mat-form-field>
+  <div mat-dialog-actions>
+    <button mat-button (click)="onNoClick()">Cancel</button>
+    <button mat-button (click)="onOkClick()" cdkFocusInitial>Ok</button>
   </div>
-  <div fxLayout="row" fxLayoutGap="8px" fxLayoutAlign="center center">
-    <mat-slide-toggle [disabled]="shouldDisablePublic" [(ngModel)]="public">Public</mat-slide-toggle>
-    <button mat-raised-button color="primary" (click)="onLocation()">Location</button>
-    <button mat-raised-button color="primary" (click)="onSchedule()">Schedule</button>
-  </div>
-
-  <!--
-  <mat-tab-group>
-    <mat-tab label="Video" fxLayout="column">
-      <mat-form-field>
-        <input matInput [placeholder]="'Name'" [(ngModel)]="name">
-      </mat-form-field>
-      <mat-form-field>
-        <input matInput [placeholder]="'Url'"  [(ngModel)]="url">
-      </mat-form-field>
-    </mat-tab>
-    <mat-tab label="Image" fxLayout="column">
-      <mat-form-field>
-        <input matInput [placeholder]="'Name'" [(ngModel)]="name">
-      </mat-form-field>
-      <mat-form-field>
-        <input matInput [placeholder]="'Url'"  [(ngModel)]="url">
-      </mat-form-field>
-    </mat-tab>
-    <mat-tab label="Document" fxLayout="column">
-
-    </mat-tab>
-  </mat-tab-group>
-  -->
-  <!--
-  <p>What's your favorite animal?</p>
-  <mat-form-field>
-    <input matInput [(ngModel)]="data.animal">
-  </mat-form-field>
-  -->
-</div>
-<div mat-dialog-actions>
-  <button mat-button (click)="onNoClick()">Cancel</button>
-  <button mat-button (click)="onOkClick()" cdkFocusInitial>Ok</button>
-</div>
+  

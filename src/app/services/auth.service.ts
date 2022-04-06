@@ -16,6 +16,10 @@ export class AuthService {
     return (environment['api'] || '');
   }
 
+  protected getHome() {
+    return (environment['home'] || '');
+  }
+
   protected getClientId() {
     return (environment['client_id'] || null);
   }
@@ -28,7 +32,7 @@ export class AuthService {
     return localStorage.getItem('access_token');
   }
 
-  public setAccessToken(token) {
+  public setAccessToken(token: string) {
     localStorage.setItem('access_token', token);
   }
 
@@ -36,7 +40,7 @@ export class AuthService {
     return of(false);
   }
 
-  public login(auth) {
+  public login(auth: Authenticator) {
     if (auth.type === 'password') {
       window.location.href = this.getEndpoint() + '/public/login?client_id=' + this.getClientId() + '&response_type=token';
     } else {
@@ -46,11 +50,11 @@ export class AuthService {
 
   public logout() {
     localStorage.removeItem('access_token');
+    window.location.href = this.getHome();
   }
 
-  public authenticators(): Observable<any> {
-    return this.http.get(this.getEndpoint() + '/public/auth');
-    return this.http.get(this.getEndpoint() + '/public/auth').pipe(
+  public authenticators(): Observable<[Authenticator]> {
+    return this.http.get<[Authenticator]>(this.getEndpoint() + '/public/auth').pipe(
       catchError(this.handleError('/public/auth', []))
     );
   }
@@ -59,5 +63,15 @@ export class AuthService {
     return (error: any): Observable<any> => {
       return of(error);
     };
+  }
+}
+
+export class Authenticator {
+  name: string;
+  type: string;
+
+  constructor(name: string, type: string) {
+    this.name = name;
+    this.type = type;
   }
 }

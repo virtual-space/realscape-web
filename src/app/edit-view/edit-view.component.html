@@ -1,28 +1,27 @@
 <h1 mat-dialog-title>
-  <div fxLayoutAlign="center end" fxFlex="0 1 auto" fxLayout="row" class="type_select">
-    <mat-form-field  fxFlex="0 1 auto">
-      <mat-label>New item type:</mat-label>
-      <div fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="8px">
-        <span matPrefix fxLayoutAlign="center center"><mat-icon>{{selectedType.icon}}</mat-icon></span>
-        <mat-select [(value)]="selectedTypeName" (selectionChange)="onTypeChange($event)">
-          <mat-select-trigger>{{selectedType.name}}</mat-select-trigger>
-          <mat-option *ngFor="let type of types" [value]="type.name">
-            <mat-icon>{{type.icon}}</mat-icon>{{type.name}}
-          </mat-option>
-        </mat-select>
-      </div>
-    </mat-form-field>
+    <div fxLayoutAlign="center end" fxFlex="0 1 auto" fxLayout="row" class="type_select">
+      <mat-form-field  fxFlex="0 1 auto">
+        <mat-label>New item type:</mat-label>
+        <div fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="8px">
+          <span matPrefix fxLayoutAlign="center center"><mat-icon>{{selectedType.icon}}</mat-icon></span>
+          <mat-select [(value)]="selectedTypeName" (selectionChange)="onTypeChange($event)">
+            <mat-select-trigger>{{selectedType.name}}</mat-select-trigger>
+            <mat-option *ngFor="let type of types" [value]="type.name">
+              <mat-icon>{{type.icon}}</mat-icon>{{type.name}}
+            </mat-option>
+          </mat-select>
+        </div>
+      </mat-form-field>
+    </div>
+  </h1>
+  <div mat-dialog-content>
+    <div fxLayout="row" fxLayoutGap="8px" fxLayoutAlign="center end">
+      <mat-form-field>
+        <input matInput [placeholder]="'Name'" [(ngModel)]="name">
+      </mat-form-field>
+    </div>
   </div>
-</h1>
-<div mat-dialog-content>
-  <div fxLayout="row" fxLayoutGap="8px" fxLayoutAlign="center end">
-    <mat-form-field>
-      <input matInput [placeholder]="'Name'" [(ngModel)]="name">
-    </mat-form-field>
+  <div mat-dialog-actions>
+    <button mat-button (click)="onCancelClick()">Cancel</button>
+    <button mat-button (click)="onOkClick()" cdkFocusInitial>Ok</button>
   </div>
-</div>
-<div mat-dialog-actions>
-  <button mat-button (click)="onCancelClick()">Cancel</button>
-  <button mat-button (click)="onOkClick()" cdkFocusInitial>Ok</button>
-</div>
-

@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { EditQueryComponent } from './edit-query.component';
 
@@ -6,12 +6,12 @@ describe('EditQueryComponent', () => {
   let component: EditQueryComponent;
   let fixture: ComponentFixture<EditQueryComponent>;
 
-  beforeEach(async(() => {
-    TestBed.configureTestingModule({
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
       declarations: [ EditQueryComponent ]
     })
     .compileComponents();
-  }));
+  });
 
   beforeEach(() => {
     fixture = TestBed.createComponent(EditQueryComponent);

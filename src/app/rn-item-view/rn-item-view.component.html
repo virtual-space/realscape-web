@@ -1,0 +1,34 @@
+<div fxFlex fxLayoutAlign="center center" *ngIf="item">
+    <!-- <app-rn-query-view *ngIf="query"></app-rn-query-view> -->
+    <ng-container *ngIf="views.length > 1">
+        <mat-tab-group [selectedIndex]="selectedView.value" class="view-tabs"
+                     (selectedTabChange)="onChangeTab($event)"
+                     (selectedIndexChange)="selectedView.setValue($event)">
+
+        <mat-tab *ngFor="let view of views; let index = index" [label]="view!.name!">
+          <ng-template mat-tab-label>
+            <mat-icon class="tab-icon">{{view!.type!.icon}}</mat-icon>
+            {{view.name}}
+            <button mat-icon-button color="primary" *ngIf="allowEditingViews" [matMenuTriggerFor]="viewMenu"><mat-icon>more_vert</mat-icon></button>
+            <mat-menu #viewMenu="matMenu" xPosition="before">
+              <button  mat-menu-item (click)="onEditView(index)">
+                <mat-icon>edit</mat-icon>
+                <span>Edit</span>
+              </button>
+              <button *ngIf="allowEditingViews" mat-menu-item (click)="onDeleteView(index)">
+                <mat-icon>delete</mat-icon>
+                <span>Delete</span>
+              </button>
+            </mat-menu>
+          </ng-template>
+          <app-rn-view [items]="items" [view]="view"></app-rn-view>
+        </mat-tab>
+      </mat-tab-group>
+    </ng-container>
+    <ng-container *ngIf="views.length === 1">
+        <app-rn-view [items]="items" [view]="views[0]"></app-rn-view>
+    </ng-container>
+</div>
+<div *ngIf="!item">
+    ...
+</div>
