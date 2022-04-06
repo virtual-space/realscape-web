@@ -5,7 +5,9 @@ import {Router} from '@angular/router';
 import {AuthService} from './services/auth.service';
 import {tap} from "rxjs/operators";
 
-@Injectable()
+@Injectable({
+    providedIn: 'root'
+  })
 export class AuthInterceptor implements HttpInterceptor {
 
   constructor(private router: Router,
@@ -27,7 +29,7 @@ export class AuthInterceptor implements HttpInterceptor {
         tap(succ => {}, err => {
           if (err.status === 401 || err.status === 403) {
             this.authService.logout();
-            this.authService.login({type: 'password'});
+            this.authService.login({name: 'password', type: 'password'});
           }
         })
       );

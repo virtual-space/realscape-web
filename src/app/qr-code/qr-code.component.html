@@ -1,9 +1,8 @@
 <h1 mat-dialog-title fxLayoutAlign="center center">{{name}}</h1>
 <div mat-dialog-content fxLayoutAlign="center center">
-  <qrcode *ngIf="qrdata" [qrdata]="qrdata" [size]="256" [level]="'M'"></qrcode>
+  <qrcode *ngIf="qrdata" [qrdata]="qrdata" [width]="256" [errorCorrectionLevel]="'M'"></qrcode>
 </div>
 <div mat-dialog-actions>
   <button mat-button (click)="onClick()">Print</button>
   <button mat-button (click)="onClick()" cdkFocusInitial>Ok</button>
 </div>
-

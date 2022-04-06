@@ -1,6 +1,6 @@
 import {Component, Inject, OnInit, ViewChild} from '@angular/core';
-import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material";
-import {LngLat, Map, Marker, Point} from "mapbox-gl";
+import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
+// import {LngLat, Map, Marker, Point} from "mapbox-gl";
 // @ts-ignore
 //marko import * as MapboxDraw from 'mapbox-gl-draw'; 
 import {MatDialog} from "@angular/material/dialog";
@@ -10,18 +10,18 @@ import { range } from 'rxjs';
 @Component({
   selector: 'app-location',
   templateUrl: './location.component.html',
-  styleUrls: ['./location.component.scss']
+  styleUrls: ['./location.component.sass']
 })
 export class LocationComponent implements OnInit {
 
-  location = null;
+  //location?: LngLat;
   public geojson: any;
   mapCenter = null;
-  map: Map = null;
+  //map?: Map;
   public draw: any;
   private canvas: any;
 
-  @ViewChild("marker", {static: false}) marker;
+  @ViewChild("marker", {static: false}) marker: any;
 
   constructor(public dialogRef: MatDialogRef<LocationComponent>,
               public dialog: MatDialog,
@@ -35,18 +35,21 @@ export class LocationComponent implements OnInit {
         console.log("getting the current location");
         navigator.geolocation.getCurrentPosition((position) => {
           console.log(position);
-          this.location = new LngLat(position.coords.longitude, position.coords.latitude);
-          this.mapCenter = this.location;
+          //this.location = new LngLat(position.coords.longitude, position.coords.latitude);
+          //this.mapCenter = this.location;
           console.log(this);
         });
       }
     } else {
-      this.location = this.data.location;
-      if(this.location['type'] === 'Point'){
-        this.mapCenter = this.location['coordinates'];
-      } else {
-        this.mapCenter = this.location['coordinates'][0][0];
-      }
+      // this.location = this.data.location;
+      /*if (this.location) {
+        
+        if(this.location['type'] === 'Point'){
+          this.mapCenter = this.location['coordinates'];
+        } else {
+          this.mapCenter = this.location['coordinates'][0][0];
+        }
+      }*/
     }
   }
 
@@ -73,14 +76,14 @@ export class LocationComponent implements OnInit {
     this.geojson = null
   }
 
-  onDragEnd(event): void {
+  onDragEnd(event: any): void {
     this.mapCenter = event.target.getLngLat();
   }
 
-  onLoad(event): void {
+  onLoad(event: any): void {
     console.log("Map Load", event);
     //in this case, map is init in the html, then passed to the code.
-    this.map = event;
+    //this.map = event;
 
     //adding map controls
     /* Marko
@@ -136,7 +139,7 @@ export class LocationComponent implements OnInit {
       .addTo(this.map); */
   }
 
-  createFunction(e) {
+  createFunction(e: any) {
     console.log("createFunction",e);
     if (this.geojson) {
       this.geojson = null;
@@ -144,25 +147,25 @@ export class LocationComponent implements OnInit {
     this.geojson = e.features[0];
   }
 
-  deleteFunction(e) {
+  deleteFunction(e: any) {
     console.log("deleteFunction",e);
     this.geojson = null;
   }
 
-  updateFunction(e) {
+  updateFunction(e: any) {
     console.log("updateFunction",e);
     if(e.features.id === this.geojson.id){
       this.geojson = e.features[0];
     }
   }
 
-  loadFunction(e) {
+  loadFunction(e: any) {
     console.log('load function',e);
     console.log('log geojson for the map',this.geojson);
     this.draw.add(this.geojson);
   }
 
-  onZoomEnd(event) {
+  onZoomEnd(event: any) {
 
     //console.log(this.marker);
     /* const center = this.map.getCenter();

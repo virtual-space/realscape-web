@@ -1,206 +1,142 @@
+import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { NgModule, APP_INITIALIZER  } from '@angular/core';
-import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
-import { initializer } from './app-init';
+import { FormsModule } from '@angular/forms';
+import { ReactiveFormsModule } from '@angular/forms';
+import {HTTP_INTERCEPTORS, HttpClientModule} from '@angular/common/http';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
+import { AuthInterceptor } from './auth-interceptor';
+import { MainComponent } from './main/main.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+
 import { CalendarModule, DateAdapter } from 'angular-calendar';
 import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
-import {
-  MatButtonModule,
-  MatButtonToggleModule, MatCardModule, MatCheckboxModule, MatChipsModule, MatDialogModule, MatFormFieldModule,
-  MatIconModule,
-  MatInputModule,
-  MatMenuModule, MatPaginatorModule, MatSelectModule,
-  MatSidenavModule,
-  MatSlideToggleModule,
-  MatSliderModule,
-  MatProgressSpinnerModule,
-  MatProgressBarModule,
-  MatTabsModule,
-  MatToolbarModule,
-  MatTooltipModule,
-  MatSnackBarModule
-} from "@angular/material";
-import {FormsModule, ReactiveFormsModule} from '@angular/forms';
-import {FlexLayoutModule} from "@angular/flex-layout";
-import { ImageViewerModule } from "ngx-image-viewer";
-import { MatVideoModule } from 'mat-video';
-import {HTTP_INTERCEPTORS, HttpClientModule} from '@angular/common/http';
-import {NgxMapboxGLModule} from "ngx-mapbox-gl";
-import { MapViewComponent } from './map-view/map-view.component';
-import { ListViewComponent } from './list-view/list-view.component';
-import { ListItemComponent } from './list-item/list-item.component';
-import { ItemComponent } from './item/item.component';
-import { VisualViewComponent } from './visual-view/visual-view.component';
-import { CreateItemComponent } from './create-item/create-item.component';
-import {QRCodeComponent, QRCodeModule} from 'angularx-qrcode';
-import { QrCodeViewComponent } from './qr-code/qr-code.component';
-import { LocationComponent } from './location/location.component';
-import { EditItemComponent } from './edit-item/edit-item.component';
-import { DeleteItemComponent } from './delete-item/delete-item.component';
-import { EngineComponent } from './engine/engine.component';
-import { ContentViewComponent } from './content-view/content-view.component';
-import { HomeViewComponent } from './home-view/home-view.component';
-import { MainViewComponent } from './main-view/main-view.component';
-import { SearchViewComponent } from './search-view/search-view.component';
-import { AroundViewComponent } from './around-view/around-view.component';
-import { RealScapeComponent } from './real-scape/real-scape.component';
-import { UploadFileComponent } from './upload-file/upload-file.component';
-import { ImageComponent } from './image/image.component';
-import { VideoComponent } from './video/video.component';
-import { QueryComponent } from './query/query.component';
-import { EditQueryComponent } from './edit-query/edit-query.component';
-import {MatAutocompleteModule} from "@angular/material/autocomplete";
-import {MatExpansionModule} from "@angular/material/expansion";
-import { ViewComponent } from './view/view.component';
-import {NgxDocViewerModule} from "ngx-doc-viewer";
-import { DocumentComponent } from './document/document.component';
-import { EditViewComponent } from './edit-view/edit-view.component';
-import {MatTableModule} from "@angular/material/table";
-import { LayoutComponent } from './layout/layout.component';
-import {NgxExtendedPdfViewerModule} from "ngx-extended-pdf-viewer";
-import { ItemContentComponent } from './item-content/item-content.component';
-import { ItemViewComponent } from './item-view/item-view.component';
-import { CardViewComponent } from './card-view/card-view.component';
-import { CalendarViewComponent } from './calendar-view/calendar-view.component';
-import { BoardViewComponent } from './board-view/board-view.component';
-import { SceneViewComponent } from './scene-view/scene-view.component';
-import {DragDropModule} from "@angular/cdk/drag-drop";
-import { ScheduleItemComponent } from './schedule-item/schedule-item.component';
-import {NgxMaterialTimepickerModule} from "ngx-material-timepicker";
-import {MatDatepickerModule} from "@angular/material/datepicker";
-import {MatNativeDateModule} from "@angular/material/core";
-import {MatDividerModule} from "@angular/material/divider";
-import { BoardItemComponent } from './board-item/board-item.component';
-import { AppViewComponent } from './app-view/app-view.component';
+
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatTableModule } from '@angular/material/table';
+import { MatDialogModule } from '@angular/material/dialog';
+import { MatChipsModule } from '@angular/material/chips';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatTabsModule } from '@angular/material/tabs';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatButtonToggleModule } from '@angular/material/button-toggle';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatNativeDateModule, MatOptionModule } from '@angular/material/core';
+import { MatDividerModule} from '@angular/material/divider';
+import { MatSliderModule } from '@angular/material/slider';
+
+import { QRCodeModule } from 'angularx-qrcode';
+
+
 import { CallbackComponent } from './callback/callback.component';
-import {AuthInterceptor} from "./auth-interceptor";
-import { LoginComponent } from './login/login.component';
-import { FooterComponent } from './footer/footer.component';
-import { RealscapeAppComponent } from './realscape-app/realscape-app.component';
-import { AppsViewComponent } from './apps-view/apps-view.component';
-import { LoginDialogComponent } from './login-dialog/login-dialog.component';
+import { HomeComponent } from './home/home.component';
+import { RnItemViewComponent } from './rn-item-view/rn-item-view.component';
+import { RnQueryViewComponent } from './rn-query-view/rn-query-view.component';
+import { RnLoginViewComponent } from './rn-login-view/rn-login-view.component';
+import { RnListViewComponent } from './rn-list-view/rn-list-view.component';
+import { RnCalendarViewComponent } from './rn-calendar-view/rn-calendar-view.component';
+import { RnViewComponent } from './rn-view/rn-view.component';
+import { RnMapViewComponent } from './rn-map-view/rn-map-view.component';
+import { RnPanelViewComponent } from './rn-panel-view/rn-panel-view.component';
+import { RnBoardViewComponent } from './rn-board-view/rn-board-view.component';
+import { RnDocumentViewComponent } from './rn-document-view/rn-document-view.component';
+import { RnImageViewComponent } from './rn-image-view/rn-image-view.component';
+import { RnVideoViewComponent } from './rn-video-view/rn-video-view.component';
+import { RnPageViewComponent } from './rn-page-view/rn-page-view.component';
+import { RnDrawingViewComponent } from './rn-drawing-view/rn-drawing-view.component';
+import { RnSceneViewComponent } from './rn-scene-view/rn-scene-view.component';
+import { RnPropertiesViewComponent } from './rn-properties-view/rn-properties-view.component';
+import { RnCardsViewComponent } from './rn-cards-view/rn-cards-view.component';
+import { RnTreeViewComponent } from './rn-tree-view/rn-tree-view.component';
+import { RnButtonViewComponent } from './rn-button-view/rn-button-view.component';
+import { RnLabelViewComponent } from './rn-label-view/rn-label-view.component';
+import { EditItemComponent } from './edit-item/edit-item.component';
+import { CreateItemComponent } from './create-item/create-item.component';
+import { EditViewComponent } from './edit-view/edit-view.component';
+import { LocationComponent } from './location/location.component';
+import { ScheduleItemComponent } from './schedule-item/schedule-item.component';
+import { MatSelectModule } from '@angular/material/select';
+import { EditQueryComponent } from './edit-query/edit-query.component';
+import { QrCodeComponent } from './qr-code/qr-code.component';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
 
-
-const EMBEDLY_KEY = 'EMBEDLY_KEY';
 
 @NgModule({
   declarations: [
     AppComponent,
-    MapViewComponent,
-    ListViewComponent,
-    ListItemComponent,
-    ItemComponent,
-    VisualViewComponent,
-    CreateItemComponent,
-    QrCodeViewComponent,
-    LocationComponent,
-    EditItemComponent,
-    DeleteItemComponent,
-    EngineComponent,
-    ContentViewComponent,
-    HomeViewComponent,
-    MainViewComponent,
-    SearchViewComponent,
-    AroundViewComponent,
-    RealScapeComponent,
-    UploadFileComponent,
-    ImageComponent,
-    VideoComponent,
-    QueryComponent,
-    EditQueryComponent,
-    ViewComponent,
-    DocumentComponent,
-    EditViewComponent,
-    LayoutComponent,
-    ItemContentComponent,
-    ItemViewComponent,
-    CardViewComponent,
-    CalendarViewComponent,
-    BoardViewComponent,
-    SceneViewComponent,
-    ScheduleItemComponent,
-    BoardItemComponent,
-    AppViewComponent,
+    MainComponent,
     CallbackComponent,
-    LoginComponent,
-    FooterComponent,
-    RealscapeAppComponent,
-    AppsViewComponent,
-    LoginDialogComponent,
+    HomeComponent,
+    RnItemViewComponent,
+    RnQueryViewComponent,
+    RnLoginViewComponent,
+    RnListViewComponent,
+    RnCalendarViewComponent,
+    RnViewComponent,
+    RnMapViewComponent,
+    RnPanelViewComponent,
+    RnBoardViewComponent,
+    RnDocumentViewComponent,
+    RnImageViewComponent,
+    RnVideoViewComponent,
+    RnPageViewComponent,
+    RnDrawingViewComponent,
+    RnSceneViewComponent,
+    RnPropertiesViewComponent,
+    RnCardsViewComponent,
+    RnTreeViewComponent,
+    RnButtonViewComponent,
+    RnLabelViewComponent,
+    EditItemComponent,
+    CreateItemComponent,
+    EditViewComponent,
+    LocationComponent,
+    ScheduleItemComponent,
+    EditQueryComponent,
+    QrCodeComponent
   ],
   imports: [
     BrowserModule,
-    AppRoutingModule,
-    BrowserAnimationsModule,
-    DragDropModule,
-    FlexLayoutModule,
     FormsModule,
-    MatAutocompleteModule,
-    HttpClientModule,
-    MatExpansionModule,
-    MatButtonModule,
-    MatButtonToggleModule,
-    MatCardModule,
-    MatChipsModule,
-    MatDialogModule,
-    MatDividerModule,
-    MatDatepickerModule,
-    MatFormFieldModule,
-    MatNativeDateModule,
-    MatMenuModule,
-    MatPaginatorModule,
-    MatSelectModule,
-    MatSidenavModule,
-    MatSliderModule,
-    MatSlideToggleModule,
-    MatTabsModule,
-    MatTableModule,
-    MatToolbarModule,
-    MatIconModule,
-    MatInputModule,
-    MatCheckboxModule,
-    MatTooltipModule,
-    MatProgressSpinnerModule,
-    MatProgressBarModule,
-    MatSnackBarModule,
     ReactiveFormsModule,
-    QRCodeModule,
-    NgxMapboxGLModule.withConfig({
-      accessToken: 'pk.eyJ1IjoidjFydHU0bHNwNGMzIiwiYSI6ImNreW1mZXI5ZzA2aHQydG5zY2hiNWh0ZjAifQ.BovKKecsXgBq1wu7PlAUHQ', // Optionnal, can also be set per map (accessToken input of mgl-map)
-      //geocoderAccessToken: 'TOKEN' // Optionnal, specify if different from the map access token, can also be set per mgl-geocoder (accessToken input of mgl-geocoder)
-    }),
-    ImageViewerModule.forRoot(),
-    MatVideoModule,
-    NgxDocViewerModule,
-    NgxExtendedPdfViewerModule,
-    NgxMaterialTimepickerModule,
+    AppRoutingModule,
+    HttpClientModule,
+    BrowserAnimationsModule,
     CalendarModule.forRoot({
       provide: DateAdapter,
       useFactory: adapterFactory,
-    })
-  ],
-  entryComponents: [
-    CreateItemComponent,
-    EditQueryComponent,
-    EditItemComponent,
-    EditViewComponent,
-    DeleteItemComponent,
-    QrCodeViewComponent,
-    QRCodeComponent,
-    LocationComponent,
-    LoginDialogComponent,
-    ListItemComponent,
-    ScheduleItemComponent
+    }),
+    MatToolbarModule,
+    MatButtonModule,
+    MatIconModule,
+    MatTableModule,
+    MatDialogModule,
+    MatChipsModule,
+    MatMenuModule,
+    MatTabsModule,
+    MatDatepickerModule,
+    MatButtonToggleModule,
+    MatSnackBarModule,
+    MatSlideToggleModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatOptionModule,
+    MatSelectModule,
+    MatNativeDateModule,
+    MatDividerModule,
+    MatAutocompleteModule,
+    MatSliderModule,
+    QRCodeModule
   ],
   providers: [
-    { provide: APP_INITIALIZER, useFactory: initializer, multi: true, deps: []},
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi:true }
   ],
-  bootstrap: [AppComponent],
-  schemas: [ CUSTOM_ELEMENTS_SCHEMA ]
+  bootstrap: [AppComponent]
 })
 export class AppModule { }

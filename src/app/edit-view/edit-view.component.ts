@@ -4,7 +4,7 @@ import {MAT_DIALOG_DATA, MatDialog, MatDialogRef} from "@angular/material/dialog
 @Component({
   selector: 'app-edit-view',
   templateUrl: './edit-view.component.html',
-  styleUrls: ['./edit-view.component.scss']
+  styleUrls: ['./edit-view.component.sass']
 })
 export class EditViewComponent implements OnInit {
 
@@ -34,7 +34,7 @@ export class EditViewComponent implements OnInit {
     }
   }
 
-  onTypeChange(event) {
+  onTypeChange(event: any) {
     console.log(event);
     const e = this.types.filter(t => t.name === event.value)[0];
     console.log(e);

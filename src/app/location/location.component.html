@@ -1,6 +1,7 @@
 <h1 mat-dialog-title fxLayoutAlign="center center">Location</h1>
 <div mat-dialog-content fxLayoutAlign="center center">
-  <div *ngIf="location">
+  <!-- <div *ngIf="location">
+      
     <mgl-map
       [style]="'mapbox://styles/mapbox/streets-v9'"
       [zoom]="[15]"
@@ -14,7 +15,8 @@
         mglGeolocate
       ></mgl-control>
     </mgl-map>
-  </div>
+    
+  </div> -->
 </div>
 <div mat-dialog-actions>
   <button mat-button (click)="onClearClick()">Clear</button>

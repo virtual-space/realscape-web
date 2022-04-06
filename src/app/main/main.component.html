@@ -1,0 +1,47 @@
+<div fxLayout="column" fxFlexFill>
+    <div fxFlex>
+        <mat-toolbar color="primary">
+            <div fxLayout="row" fxLayoutGap="5px">
+              <nav mat-tab-nav-bar fxLayout="row">
+                <button mat-fab [matMenuTriggerFor]="menu" color="primary" style="background: url('../assets/vslogo.png') center no-repeat;" center no-repeat>
+                </button>
+                <button mat-flat-button *ngIf="item" color="primary" ><mat-icon>{{item.type!.icon}}</mat-icon><span>{{item.name}}</span></button>
+                <mat-menu #menu="matMenu">
+                    <ng-container  *ngFor="let app of apps">
+                        <ng-container [ngSwitch]="app!.type!.name">
+                          <app-rn-login-view [login]="app" [button]="true" *ngSwitchCase="'LoginApp'"></app-rn-login-view>
+                          <button mat-menu-item color="primary" routerLinkActive="nav-active" routerLink="/items/{{app.id}}" *ngSwitchDefault><mat-icon>{{app.type!.icon}}</mat-icon><span>{{app.name}}</span></button>
+                        </ng-container>
+                    </ng-container>
+                </mat-menu>
+                <button mat-fab [matMenuTriggerFor]="menuMore" *ngIf="item" color="primary" ><mat-icon>more_vert</mat-icon></button>
+                <mat-menu #menuMore="matMenu" xPosition="before">
+                    <button *ngIf="canAddItem()" mat-menu-item (click)="onAdd($event)">
+                      <mat-icon>add</mat-icon>
+                      <span>Add Item</span>
+                    </button>
+                    <button *ngIf="canAddView()" mat-menu-item (click)="onAddView($event)">
+                      <mat-icon>add</mat-icon>
+                      <span>Add View</span>
+                    </button>
+                    <button *ngIf="canEditOrDeleteItem()" mat-menu-item (click)="onEdit($event)">
+                      <mat-icon>edit</mat-icon>
+                      <span>Edit Item</span>
+                    </button>
+                    <button *ngIf="canEditOrDeleteItem()" mat-menu-item (click)="onDelete($event)">
+                      <mat-icon>delete</mat-icon>
+                      <span>Delete Item</span>
+                    </button>
+                    <button mat-menu-item (click)="onRefreshClick()">
+                      <mat-icon>refresh</mat-icon>
+                      <span>Refresh</span>
+                    </button>
+                  </mat-menu>
+               </nav>
+            </div>
+        </mat-toolbar>
+    </div>
+    <div fxFlex>
+        <router-outlet></router-outlet> 
+    </div>
+</div>
