@@ -29,7 +29,6 @@ export class AuthInterceptor implements HttpInterceptor {
         tap(succ => {}, err => {
           if (err.status === 401 || err.status === 403) {
             this.authService.logout();
-            this.authService.login({name: 'password', type: 'password'});
           }
         })
       );
