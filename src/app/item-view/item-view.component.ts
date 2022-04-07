@@ -67,6 +67,7 @@ export class ItemViewComponent implements OnInit {
     this.itemService.children(this.item.id).subscribe(children => {
       this.items = children;
     });
+    console.log(this.items)
   }
 
   refresh() {
@@ -74,6 +75,7 @@ export class ItemViewComponent implements OnInit {
     if (this.onRefresh) {
       this.onRefresh.emit();
     }
+    console.log(this)
   }
 
   onCenterChanged(event) {
@@ -208,6 +210,7 @@ export class ItemViewComponent implements OnInit {
   onSaveViews() {
     if (this.item && (this.allowAddingViews || this.allowEditingViews)) {
       const props = Object.assign(this.item.attributes || {}, { views: this.views });
+      console.log('item service update should be called here')
       this.itemService.update(this.item.id, {attributes: props}).subscribe(res => {
         this.refresh();
       });
@@ -222,6 +225,7 @@ export class ItemViewComponent implements OnInit {
 
   onEditView(index: number) {
     const view = this.views[index];
+    console.log('before, view',view)
 
     const dialogRef = this.dialog.open(EditViewComponent, {
       width: '400px',
@@ -231,6 +235,7 @@ export class ItemViewComponent implements OnInit {
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
         this.views[index] = result;
+        console.log('after, view',view)
         this.onSaveViews();
       }
     });

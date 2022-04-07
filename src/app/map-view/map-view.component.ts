@@ -132,10 +132,63 @@ export class MapViewComponent implements OnInit, OnDestroy {
         el.style.height = '5px';*/
         const m = new Marker();
         this.markers.push(m);
-        m.setLngLat(ip.location.coordinates);
-        this.attachPopup(m, ip);
-        bounds = bounds.extend(ip.location.coordinates);
-        m.addTo(map);
+        if (ip.location.type === 'Point'){
+          m.setLngLat(ip.location.coordinates);
+          this.attachPopup(m, ip);
+          bounds = bounds.extend(ip.location.coordinates);
+          m.addTo(map);
+        } else if(ip.location.type === 'Polygon'){
+          //needs to find centre of the polygon for a marker, then also add a polygon to the map.
+          //adding the marker
+          var sumlat = 0
+          var sumlong = 0
+          var count = 0
+          //finding the center of the polygon.
+          ip.location.coordinates[0].forEach(coord => {
+            sumlat += coord[0]
+            sumlong += coord[1]
+            count += 1
+          })
+          console.log(sumlat,sumlong,count)
+          m.setLngLat([sumlat/count,sumlong/count]);
+          this.attachPopup(m, ip);
+          bounds = bounds.extend(m.getLngLat());
+          m.addTo(map);
+          //now add the polygon itself.
+          console.log('current polygon',ip)
+          map.addSource(ip.name,{
+            'type': 'geojson',
+            'data': {
+              'type': 'Feature',
+              'geometry': {
+                'type': 'Polygon',
+                'coordinates': ip.location.coordinates
+              }
+            }
+          })
+          map.addLayer({
+            'id': ip.name,
+            'type': 'fill',
+            'source': ip.name, // reference the data source
+            'layout': {},
+            'paint': {
+              'fill-color': '#0080ff', // blue color fill
+              'fill-opacity': 0.5
+            }
+          })
+          map.addLayer({
+            'id': ip.name+'outline',
+            'type': 'line',
+            'source': ip.name, // reference the data source
+            'layout': {},
+            'paint': {
+              'line-color': '#000',
+              'line-width': 3
+            }
+          })
+        } else {
+          console.log("Something has gone wrong with updateMarkers.")
+        }
       });
 
       this.mapObject.fitBounds(bounds);

@@ -44,6 +44,7 @@ export class EditViewComponent implements OnInit {
   }
 
   onOkClick(): void {
+    console.log({name: this.name, type: this.selectedType.type , icon: this.selectedType.icon});
     this.dialogRef.close({name: this.name, type: this.selectedType.type , icon: this.selectedType.icon});
   }
 

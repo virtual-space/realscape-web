@@ -1,3 +1,4 @@
+<title>debug line, is this even the right page</title>
 <div fxLayout="row" *ngIf="loading">
   <mat-spinner></mat-spinner>
 </div>
@@ -6,6 +7,7 @@
     <mat-card-subtitle>{{item.type.name}}</mat-card-subtitle>
     <mat-card-title>
       <div fxLayout="row" fxLayoutGap="16px">
+        <title>debug line, trying to find out what runs</title>
         <div fxLayout="column">{{item.name}}</div>
         <div fxLayout="column" fxFlex fxLayoutAlign="end center"  fxFlex="1 1 2%">
           <button mat-icon-button color="primary" [matMenuTriggerFor]="menuMore"><mat-icon>more_vert</mat-icon></button>
@@ -15,9 +17,11 @@
 
     <mat-card-content>
       <div *ngIf="item && items.length === 0">
+        <title>items.length === 0</title>
         <app-item-content [item]="item"></app-item-content>
       </div>
       <div *ngIf="item && items.length > 0 && views.length === 1">
+        <title>items.length > 0</title>
         <div fxLayout="row wrap" class="card-deck-container" fxLayoutAlign="center center" *ngSwitchCase="'Cards'">
           <app-card-view [items]="items" (onRefresh)="refresh()"></app-card-view>
         </div>
@@ -109,6 +113,7 @@
   </mat-card>
 
 </ng-container>
+<title>ng container for menu</title>
 <mat-menu #menuMore="matMenu" xPosition="before">
   <button *ngIf="canAddItem()" mat-menu-item (click)="onAdd($event)">
     <mat-icon>add</mat-icon>
