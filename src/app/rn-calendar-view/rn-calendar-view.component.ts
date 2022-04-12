@@ -1,7 +1,18 @@
 import { Component, OnInit, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { Item, ItemService } from '../services/item.service';
 import {Router} from '@angular/router';
+import { MatTableDataSource } from "@angular/material/table";
 import {CalendarEvent, CalendarEventAction, CalendarView} from 'angular-calendar';
+import {
+  startOfDay,
+  endOfDay,
+  subDays,
+  addDays,
+  endOfMonth,
+  isSameDay,
+  isSameMonth,
+  addHours,
+} from 'date-fns';
 
 @Component({
   selector: 'app-rn-calendar-view',
@@ -11,9 +22,10 @@ import {CalendarEvent, CalendarEventAction, CalendarView} from 'angular-calendar
 export class RnCalendarViewComponent implements OnInit {
 
   @Input() items: Item[] = [];
-
+  dataSource = new MatTableDataSource<any>(this.items);
   view: CalendarView = CalendarView.Month;
   viewDate: Date = new Date();
+  activeDayIsOpen: boolean = true;
 
   colors: any = {
     red: {
@@ -31,20 +43,20 @@ export class RnCalendarViewComponent implements OnInit {
   };
 
   actions: CalendarEventAction[] = [
-    {
+    /*{
       label: '<i class="material-icons">edit</i>',
       a11yLabel: 'Edit',
       onClick: ({ event }: { event: CalendarEvent }): void => {
         //this.onEditDialog(event['item']);
       },
-    },
+    },*//*
     {
       label: '<i class="material-icons">delete</i>',
       a11yLabel: 'Delete',
       onClick: ({ event }: { event: CalendarEvent }): void => {
         //this.onDeleteDialog(event['item']);
       },
-    },
+    },*/
     {
       label: '<i class="material-icons">qr_code</i>',
       a11yLabel: 'QRCode',
@@ -59,16 +71,58 @@ export class RnCalendarViewComponent implements OnInit {
   constructor(private itemService: ItemService, protected router: Router) { }
 
   ngOnInit(): void {
+    console.log('init',this.items)
+    this.dataSource.data = this.items;
+    this.dataSource.data.forEach(value => {
+      console.log(value)
+      if(value.valid_from){
+        this.events.push({
+          start: startOfDay(new Date()),
+          title: value.name,
+          color: this.colors.yellow,
+          actions: this.actions,
+        })
+      }
+    })
   }
 
   ngOnChanges(changes: SimpleChanges): void {
+    console.log('changes',this.items)
     if(changes['items']) {
-      //this.dataSource.data = this.items;
+      this.dataSource.data = this.items;
+      this.events = [];
+      this.dataSource.data.forEach(value => {
+        console.log(value)
+        if(value.attributes.valid_from){
+          console.log('has valid_from',value.attributes.valid_from)
+          if(value.attributes.valid_to){
+            console.log('has valid_to',value.attributes.valid_to)
+            this.events.push({
+              start: new Date(value.attributes.valid_from),
+              end: new Date(value.attributes.valid_to),
+              id: value.id,
+              title: value.name,
+              color: this.colors.yellow,
+              actions: this.actions,
+            })
+          } else {
+            this.events.push({
+              start: new Date(value.attributes.valid_from),
+              id: value.id,
+              title: value.name,
+              color: this.colors.yellow,
+              actions: this.actions,
+            })
+          }
+        } else {
+          console.log(value.id, "does not have a valid start date")
+        }
+      })
     }
   }
 
   onItemClick(item: any) {
-    /*
+    console.log(item)
     if (!this.isLink(item) && !this.isItemLink(item)) {
       //route to item
       this.router.navigate(['/items', item.id]);
@@ -78,7 +132,7 @@ export class RnCalendarViewComponent implements OnInit {
     } else if (this.isLink(item) && !this.isItemLink(item)) {
       //route to extenal link in a new window
       window.open(this.getLink(item), '_blank');
-    }*/
+    }
   }
 
   getLink(item: Item): string {
@@ -98,11 +152,15 @@ export class RnCalendarViewComponent implements OnInit {
   }
 
   onCalendarClick(event: any) {
-    /*
-    if (this.onAdd) {
-      const d = moment(event.date).utc().format();
-      this.onAdd.emit({valid_from: d});
-    }*/
+    console.log(event)
+    if (isSameMonth(event.date, this.viewDate)) {
+      if ((isSameDay(this.viewDate, event.date) && this.activeDayIsOpen) || event.events.length === 0) {
+        this.activeDayIsOpen = false;
+      } else {
+        this.activeDayIsOpen = true;
+      }
+      this.viewDate = event.date;
+    }
   }
 
 }

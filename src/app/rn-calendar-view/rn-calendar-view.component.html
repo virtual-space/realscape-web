@@ -30,7 +30,7 @@
           *ngSwitchCase="'month'"
           [viewDate]="viewDate"
           [events]="events"
-          [activeDayIsOpen]="true"
+          [activeDayIsOpen]="activeDayIsOpen"
           (dayClicked)="onCalendarClick($event.day)"
           (eventClicked)="onItemClick($event.event)"
         >
