@@ -1,9 +1,14 @@
-import { Component, OnInit } from '@angular/core';
-//import mapboxgl from "mapbox-gl";
-//import * as MapboxGl from 'mapbox-gl';
+import { Component, Input, OnInit } from '@angular/core';
+//import * as mapboxgl from "mapbox-gl";
 
-//const mapboxgl = require('mapbox-gl/dist/mapbox-gl.js');
-//const mapboxgl = require('mapbox-gl');
+import { Item } from '../services/item.service'
+//import * as MapboxGl from '!mapbox-gl';
+
+//const mapboxgl:any = require('mapbox-gl/dist/mapbox-gl.js');
+//const mapboxgl:any = require('mapbox-gl');
+
+import { Map, NavigationControl } from 'mapbox-gl';
+//import * as mapboxgl from "mapbox-gl";
 
 @Component({
   selector: 'app-rn-map-view',
@@ -12,7 +17,8 @@ import { Component, OnInit } from '@angular/core';
 })
 export class RnMapViewComponent implements OnInit {
 
-  //map?: MapboxGl.Map;
+  @Input() items: Item[] = []
+  map?: Map;
   style = 'mapbox://styles/mapbox/streets-v11';
   lat = 45.899977;
   lng = 6.172652;
@@ -23,14 +29,14 @@ export class RnMapViewComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    /*
-    this.map = new MapboxGl.Map({
+    this.map = new Map({
       accessToken: this.token,
       container: 'map',
       style: this.style,
       zoom: this.zoom,
       center: [this.lng, this.lat] 
-    });*/
+    });
+    this.map.addControl(new NavigationControl());
   }
 
 }
