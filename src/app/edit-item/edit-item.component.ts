@@ -52,12 +52,12 @@ export class EditItemComponent implements OnInit {
     let data: {[index: string]:any} = {};
 
     if (this.item && this.item.attributes) {
+      data['id'] = this.item.id;
       data['location'] = this.location;
       data['status'] = this.status;
       data['name'] = this.item.name;
       data['tags'] = this.item.tags;
-      data['valid_from'] = this.item.attributes['valid_from'];
-      data['valid_to'] = this.item.attributes['valid_to'];
+      data['attributes'] = this.item.attributes
     }
     this.dialogRef.close(data);
   }

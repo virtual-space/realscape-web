@@ -21,7 +21,7 @@
   <mat-label>To:</mat-label>
   <mat-form-field appearance="fill">
     <mat-label>Choose a date</mat-label>
-    <input matInput [matDatepicker]="datepicker2">
+    <input matInput [matDatepicker]="datepicker2"  [(ngModel)]="dateTo">
     <mat-datepicker-toggle matSuffix [for]="datepicker2"></mat-datepicker-toggle>
     <mat-datepicker #datepicker2></mat-datepicker> -->
   </mat-form-field>
