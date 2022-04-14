@@ -13,6 +13,8 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { CalendarModule, DateAdapter } from 'angular-calendar';
 import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
 
+import { FlexLayoutModule } from '@angular/flex-layout';
+
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatToolbarModule } from '@angular/material/toolbar';
@@ -78,6 +80,8 @@ import { RnLinkCtrlComponent } from './rn-link-ctrl/rn-link-ctrl.component';
 import { RnButtonCtrlComponent } from './rn-button-ctrl/rn-button-ctrl.component';
 import { RnLabelCtrlComponent } from './rn-label-ctrl/rn-label-ctrl.component';
 import { RnQrcodeCtrlComponent } from './rn-qrcode-ctrl/rn-qrcode-ctrl.component';
+import { RnItemCtrlComponent } from './rn-item-ctrl/rn-item-ctrl.component';
+import { RnCtrlComponent } from './rn-ctrl/rn-ctrl.component';
 
 
 @NgModule({
@@ -125,11 +129,14 @@ import { RnQrcodeCtrlComponent } from './rn-qrcode-ctrl/rn-qrcode-ctrl.component
     RnLinkCtrlComponent,
     RnButtonCtrlComponent,
     RnLabelCtrlComponent,
-    RnQrcodeCtrlComponent
+    RnQrcodeCtrlComponent,
+    RnItemCtrlComponent,
+    RnCtrlComponent
   ],
   imports: [
     BrowserModule,
     FormsModule,
+    FlexLayoutModule,
     ReactiveFormsModule,
     AppRoutingModule,
     HttpClientModule,

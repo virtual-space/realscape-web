@@ -1,1 +1,10 @@
-<p>rn-date-ctrl works!</p>
+
+<form *ngIf="item">
+    <mat-form-field appearance="fill">
+        <mat-label>{{item.name}}</mat-label>
+        <input matInput [matDatepicker]="datepicker1" [(ngModel)]="date">
+        <mat-datepicker-toggle matSuffix [for]="datepicker1"></mat-datepicker-toggle>
+        <mat-datepicker #datepicker1></mat-datepicker>
+    </mat-form-field>
+</form>
+

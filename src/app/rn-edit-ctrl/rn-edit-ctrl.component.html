@@ -1,1 +1,6 @@
-<p>rn-edit-ctrl works!</p>
+<form *ngIf="item">
+    <mat-form-field>
+        <mat-label>{{item.name!}}</mat-label>
+        <input matInput placeholder="" [formControl]="text" type="text">
+    </mat-form-field>
+</form>
