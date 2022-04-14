@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
 //import * as mapboxgl from "mapbox-gl";
 
 import { Item } from '../services/item.service'
@@ -18,6 +18,21 @@ import { Map, NavigationControl } from 'mapbox-gl';
 export class RnMapViewComponent implements OnInit {
 
   @Input() items: Item[] = []
+  
+  @ViewChild('mapElement') set content(content: ElementRef) {
+    if(content) {
+      console.log(content);
+      this.map = new Map({
+        accessToken: this.token,
+        container: 'map1',
+        style: this.style,
+        zoom: this.zoom,
+        center: [this.lng, this.lat] 
+      });
+      this.map.addControl(new NavigationControl());
+    }
+  }
+
   map?: Map;
   style = 'mapbox://styles/mapbox/streets-v11';
   lat = 45.899977;
@@ -29,14 +44,7 @@ export class RnMapViewComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.map = new Map({
-      accessToken: this.token,
-      container: 'map',
-      style: this.style,
-      zoom: this.zoom,
-      center: [this.lng, this.lat] 
-    });
-    this.map.addControl(new NavigationControl());
+    
   }
 
 }

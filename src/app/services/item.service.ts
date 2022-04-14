@@ -232,6 +232,17 @@ export class ItemService {
       .pipe(catchError(this.handleErrorAndRethrow('/items', [])));
   }
 
+  public importItems(id: string, file: File): Observable<any> {
+    const formData: FormData = new FormData();
+    formData.append('import', file, file.name);
+    return this.http
+      .put(this.getEndpoint() + '/import', formData, {
+        reportProgress: true,
+        observe: 'events'
+      })
+      .pipe(catchError(this.handleErrorAndRethrow('/items', [])));
+  }
+
   public async canUserEditItem(id: string) : Promise<boolean> {
     try {
       // await this.http.get(this.getEndpoint() + 'items/' + id + '/isMine', {observe: 'response'}).toPromise();
@@ -335,6 +346,7 @@ export class Type {
   name?: string;
   icon?: string;
   attributes?: {[index: string]:any};
+  base?: Type;
 }
 
 

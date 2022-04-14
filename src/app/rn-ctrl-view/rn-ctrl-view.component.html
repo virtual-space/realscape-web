@@ -1,0 +1,40 @@
+
+<div fxFlex fxLayoutAlign="center center" *ngIf="control">
+    <!-- <app-rn-query-view *ngIf="query"></app-rn-query-view> -->
+    <ng-container *ngIf="controls.length > 0">
+        <div *ngFor="let child of controls; let index = index">
+            <ng-container [ngSwitch]="child!.type!.name!">
+                <div *ngSwitchCase="'AttrsCtrl'">
+                    <app-rn-attrs-ctrl></app-rn-attrs-ctrl>
+                </div>
+                <div *ngSwitchCase="'TreeCtrl'">
+                    <app-rn-tree-ctrl></app-rn-tree-ctrl>
+                </div>
+                <div *ngSwitchCase="'QueryCtrl'">
+                    <app-rn-query-ctrl></app-rn-query-ctrl>
+                </div>
+                <div *ngSwitchCase="'EditCtrl'">
+                    <app-rn-edit-ctrl></app-rn-edit-ctrl>
+                </div>
+                <div *ngSwitchCase="'LocationCtrl'">
+                    <app-rn-location-ctrl></app-rn-location-ctrl>
+                </div>
+                <div *ngSwitchCase="'TagsCtrl'">
+                    <app-rn-tags-ctrl></app-rn-tags-ctrl>
+                </div>
+                <div *ngSwitchCase="'DateCtrl'">
+                    <app-rn-date-ctrl></app-rn-date-ctrl>
+                </div>
+                <div *ngSwitchDefault>
+                    Unhandled control type: {{child!.type!.name!}}
+                </div>
+            </ng-container>
+        </div>
+    </ng-container>
+</div>
+<div *ngIf="!control">
+    ...
+</div>
+
+  
+  

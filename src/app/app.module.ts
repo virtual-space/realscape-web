@@ -65,6 +65,19 @@ import { MatSelectModule } from '@angular/material/select';
 import { EditQueryComponent } from './edit-query/edit-query.component';
 import { QrCodeComponent } from './qr-code/qr-code.component';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { RnCtrlViewComponent } from './rn-ctrl-view/rn-ctrl-view.component';
+import { RnEditCtrlComponent } from './rn-edit-ctrl/rn-edit-ctrl.component';
+import { RnAttrsCtrlComponent } from './rn-attrs-ctrl/rn-attrs-ctrl.component';
+import { RnLocationCtrlComponent } from './rn-location-ctrl/rn-location-ctrl.component';
+import { RnTagsCtrlComponent } from './rn-tags-ctrl/rn-tags-ctrl.component';
+import { RnDateCtrlComponent } from './rn-date-ctrl/rn-date-ctrl.component';
+import { RnTreeCtrlComponent } from './rn-tree-ctrl/rn-tree-ctrl.component';
+import { RnQueryCtrlComponent } from './rn-query-ctrl/rn-query-ctrl.component';
+import { RnSelectCtrlComponent } from './rn-select-ctrl/rn-select-ctrl.component';
+import { RnLinkCtrlComponent } from './rn-link-ctrl/rn-link-ctrl.component';
+import { RnButtonCtrlComponent } from './rn-button-ctrl/rn-button-ctrl.component';
+import { RnLabelCtrlComponent } from './rn-label-ctrl/rn-label-ctrl.component';
+import { RnQrcodeCtrlComponent } from './rn-qrcode-ctrl/rn-qrcode-ctrl.component';
 
 
 @NgModule({
@@ -99,7 +112,20 @@ import { MatAutocompleteModule } from '@angular/material/autocomplete';
     LocationComponent,
     ScheduleItemComponent,
     EditQueryComponent,
-    QrCodeComponent
+    QrCodeComponent,
+    RnCtrlViewComponent,
+    RnEditCtrlComponent,
+    RnAttrsCtrlComponent,
+    RnLocationCtrlComponent,
+    RnTagsCtrlComponent,
+    RnDateCtrlComponent,
+    RnTreeCtrlComponent,
+    RnQueryCtrlComponent,
+    RnSelectCtrlComponent,
+    RnLinkCtrlComponent,
+    RnButtonCtrlComponent,
+    RnLabelCtrlComponent,
+    RnQrcodeCtrlComponent
   ],
   imports: [
     BrowserModule,

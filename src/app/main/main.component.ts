@@ -60,6 +60,10 @@ export class MainComponent implements OnInit, OnDestroy {
     return true;
   }
 
+  importFile(event: any) {
+    console.log(event.target.files[0]);
+  }
+
   onAdd(event: any) {
     if (this.canAddItem()) {
 
