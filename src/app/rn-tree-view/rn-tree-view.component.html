@@ -1,1 +1,40 @@
-<p>rn-tree-view works!</p>
+<div fxLayout="row">
+    <div>
+        <mat-tree [dataSource]="dataSource" [treeControl]="treeControl">
+            <!-- Leaf node -->
+            <mat-tree-node *matTreeNodeDef="let node" matTreeNodePadding>
+                <button mat-icon-button disabled></button>
+                <button mat-flat-button (click)="onSelectItem(node.item)">{{node.item.name}}</button>
+            </mat-tree-node>
+    
+            <!-- expandable node -->
+            <mat-tree-node *matTreeNodeDef="let node; when: hasChild" matTreeNodePadding>
+                <button mat-icon-button
+                        [attr.aria-label]="'Toggle ' + node.item.name"
+                        matTreeNodeToggle>
+                <mat-icon class="mat-icon-rtl-mirror">
+                    {{treeControl.isExpanded(node) ? 'expand_more' : 'chevron_right'}}
+                </mat-icon>
+                </button>
+                {{node.item.name}}
+            </mat-tree-node>
+    
+        </mat-tree>
+    </div>
+    <div fxFlexFill>
+        <ng-container *ngIf="selectedItem">
+            <app-rn-item-ctrl [item]="selectedItem"></app-rn-item-ctrl>
+        </ng-container>
+    </div>
+</div>
+<!-- 
+<mat-sidenav-container>
+    <mat-sidenav  mode="side" opened>
+        
+    </mat-sidenav>
+    <mat-sidenav-content>
+        
+    </mat-sidenav-content>
+</mat-sidenav-container>
+-->
+

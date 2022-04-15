@@ -340,12 +340,20 @@ export class ItemService {
   }
 }
 
+export class Instance {
+  id?: string;
+  name?: string;
+  attributes?: {[index: string]:any};
+  type?: Type;
+}
+
 export class Type {
   id?: string;
   base_id?: string;
   name?: string;
   icon?: string;
   attributes?: {[index: string]:any};
+  instances?: [Instance];
   base?: Type;
 }
 

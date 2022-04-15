@@ -32,6 +32,8 @@ import { MatInputModule } from '@angular/material/input';
 import { MatNativeDateModule, MatOptionModule } from '@angular/material/core';
 import { MatDividerModule} from '@angular/material/divider';
 import { MatSliderModule } from '@angular/material/slider';
+import { MatTreeModule } from '@angular/material/tree';
+import { MatSidenavModule } from '@angular/material/sidenav';
 
 import { QRCodeModule } from 'angularx-qrcode';
 
@@ -165,6 +167,8 @@ import { RnCtrlComponent } from './rn-ctrl/rn-ctrl.component';
     MatDividerModule,
     MatAutocompleteModule,
     MatSliderModule,
+    MatTreeModule,
+    MatSidenavModule,
     QRCodeModule
   ],
   providers: [

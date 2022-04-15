@@ -1,4 +1,4 @@
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges } from '@angular/core';
 import { Subscription } from 'rxjs';
 import {ActivatedRoute, Router} from '@angular/router';
 import { Item, ItemService } from '../services/item.service';
@@ -11,7 +11,7 @@ import {FormControl} from "@angular/forms";
   templateUrl: './rn-item-view.component.html',
   styleUrls: ['./rn-item-view.component.sass']
 })
-export class RnItemViewComponent implements OnInit, OnDestroy {
+export class RnItemViewComponent implements OnInit, OnDestroy, OnChanges {
 
   @Input() id?: string;
   @Input() item?: Item;
@@ -33,16 +33,20 @@ export class RnItemViewComponent implements OnInit, OnDestroy {
               private route: ActivatedRoute) { }
 
   ngOnInit(): void {
-    this.route.paramMap.subscribe(params => {
-      const id = params.get('id');
-      if(id && (!this.item || id != this.id)) {
-        this.subscription = this.sessionService.refreshed$.subscribe(
-          () => {
+    if (this.item) {
+        this.reloadItem(this.item, false);
+    } else {
+        this.route.paramMap.subscribe(params => {
+          const id = params.get('id');
+          if(id && (!this.item || id != this.id)) {
+            this.subscription = this.sessionService.refreshed$.subscribe(
+              () => {
+                this.refresh(id);
+            });
             this.refresh(id);
+          }
         });
-        this.refresh(id);
-      }
-    });
+    }
   }
 
   ngOnDestroy() {
@@ -54,10 +58,18 @@ export class RnItemViewComponent implements OnInit, OnDestroy {
 
   refresh(id: string): void {
     this.itemService.getItem(id).subscribe(item => {
-      this.id = item.id;  
-      this.item = item;
-      this.sessionService.activateItem(item);
-      this.itemService.children(id).subscribe(children => {
+      if (item) {
+        this.reloadItem(item, true);
+      }
+    });
+  }
+
+  reloadItem(item: Item, activate: boolean): void {
+    this.id = item.id;  
+    this.item = item;
+    
+    if (this.id) {
+      this.itemService.children(this.id).subscribe(children => {
         this.children = children.filter(child => !child.type!.name!.endsWith("View"));
         this.views = children.filter(child => child.type!.name!.endsWith("View"));
         this.query = this.children.find(child => {
@@ -70,12 +82,27 @@ export class RnItemViewComponent implements OnInit, OnDestroy {
         if(this.query) {
             this.itemService.items(this.query.attributes!).subscribe(items => {
               this.items = items;
+              if (activate) {
+                this.sessionService.activateItem(item);
+              }
             });
         } else {
           this.items = this.children;
+          if (activate) {
+            this.sessionService.activateItem(item);
+          }
         }
       });
-    });
+    }
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if(changes['item']) {
+      if (this.item) {
+        this.reloadItem(this.item, false);
+      }
+      
+    }
   }
 
   onChangeTab(event: any) {
