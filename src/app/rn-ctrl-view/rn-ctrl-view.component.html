@@ -9,7 +9,7 @@
                     [fxFlexOffset]="getControlAttribute('offset', '1%', child)"
                     [fxFlexAlign]="getControlAttribute('align', 'center', child)">
                         <ng-container *ngSwitchCase="'AttrsCtrl'">
-                            <app-rn-attrs-ctrl [item]="child"></app-rn-attrs-ctrl>
+                            <app-rn-attrs-ctrl [item]="item" [control]="child"></app-rn-attrs-ctrl>
                         </ng-container>
                         <ng-container *ngSwitchCase="'TreeCtrl'">
                             <app-rn-tree-ctrl></app-rn-tree-ctrl>
@@ -28,6 +28,9 @@
                         </ng-container>
                         <ng-container *ngSwitchCase="'DateCtrl'">
                             <app-rn-date-ctrl  [item]="child"></app-rn-date-ctrl>
+                        </ng-container>
+                        <ng-container *ngSwitchCase="'LabelCtrl'">
+                            <app-rn-label-ctrl [item]="child"></app-rn-label-ctrl>
                         </ng-container>
                         <ng-container *ngSwitchCase="'ItemCtrl'">
                             <app-rn-item-ctrl></app-rn-item-ctrl>

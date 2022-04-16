@@ -2,7 +2,7 @@ import {Component, Inject, OnInit} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialog, MatDialogRef} from "@angular/material/dialog";
 import { MatChipInputEvent } from '@angular/material/chips';
 import { MatSelectChange } from '@angular/material/select';
-import {ItemService, Item, Type } from "../services/item.service";
+import {ItemService, Item, Type, itemIsInstanceOf, isInstanceOf } from "../services/item.service";
 import {COMMA, ENTER} from "@angular/cdk/keycodes";
 import {LocationComponent} from "../location/location.component";
 import * as MapboxGl from 'mapbox-gl';
@@ -46,9 +46,22 @@ export class CreateItemComponent implements OnInit {
     this.itemService.types().subscribe(types => {
       this.types = types.filter(t => t.attributes && t.attributes['creatable'] === 'true');
       if (this.data.item && this.data.item.attributes && 'creatable_types' in this.data.item.attributes) {
-          const includedTypeNames = new Set(this.data.item.attributes['creatable_types']);
-          const includedTypes = new Set(types.filter(t => includedTypeNames.has(t.name)).map(t => t['id']));
-          this.types = this.types.filter(t => includedTypes.has(t['id']) || includedTypes.has(t['base_id']) );
+          const includedTypeNames: Set<string> = new Set(this.data.item.attributes['creatable_types']);
+          console.log('************************* included type names ', includedTypeNames);
+          //const includedTypes = new Set(types.filter(t => includedTypeNames.has(t.name)).map(t => t['id']));
+          //this.types = this.types.filter(t => includedTypes.has(t['id']) || includedTypes.has(t['base_id']) );
+          const includedTypes:Type[] = [];
+          for (let type of this.types) {
+            for(let type_name of includedTypeNames) {
+              if (isInstanceOf(type, type_name)) {
+                console.log('************************* found instance ', type.name, type_name);
+                includedTypes.push(type);  
+                break;
+              }
+            }
+          } 
+          this.types = includedTypes;
+          console.log('************************* resulting types ', includedTypes);
       }
       
       if (this.types.length > 0) {
@@ -60,7 +73,7 @@ export class CreateItemComponent implements OnInit {
 
       if (this.data) {
         if (this.data.parent_id) {
-          if (this.data.item && this.data['item'] && this.data['item']['type']['name'].endsWith("App")) {
+          if (this.data.item && this.data['item'] && itemIsInstanceOf(this.data['item'],"App")) {
 
           } else {
             this.parent_id = this.data.parent_id;

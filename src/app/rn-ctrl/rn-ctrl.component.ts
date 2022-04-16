@@ -8,9 +8,14 @@ import { Item } from '../services/item.service';
 })
 export class RnCtrlComponent implements OnInit {
   @Input() item?: Item;
+  @Input() control?: Item;
   constructor() { }
 
   ngOnInit(): void {
+    if(!this.item) {
+      this.item = this.control;
+    }
+    console.log(this.item);
   }
 
   getAttribute(key: string, def: string): string {

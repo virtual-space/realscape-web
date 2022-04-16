@@ -48,6 +48,9 @@
   <div *ngSwitchCase="'TreeView'">
     <app-rn-tree-view [items]="items"></app-rn-tree-view>
   </div>
+  <div *ngSwitchCase="'ItemView'">
+    <app-rn-item-view [item]="getItemViewTarget(items)"></app-rn-item-view>
+  </div>
   <!--
       <ng-container [ngSwitch]="view.type">
 
@@ -94,7 +97,7 @@
   -->
   <div *ngSwitchDefault>
     <div *ngIf="isControl">
-      <app-rn-ctrl-view [control]="view"></app-rn-ctrl-view>
+      <app-rn-ctrl-view [control]="view" [item]="item"></app-rn-ctrl-view>
     </div>
     <div *ngIf="!isControl">
       Unhandled type: {{view!.type!.name!}}

@@ -19,7 +19,7 @@ export class RnListViewComponent implements OnInit, OnChanges {
               public dialog: MatDialog) { }
 
   ngOnInit() {
-    console.log(this.items);
+    //console.log(this.items);
     this.dataSource.data = this.items;
   }
 

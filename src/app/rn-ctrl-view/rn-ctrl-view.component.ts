@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit , OnChanges, SimpleChanges} from '@angular/core';
 import { Item, ItemService } from '../services/item.service';
 
 @Component({
@@ -6,8 +6,9 @@ import { Item, ItemService } from '../services/item.service';
   templateUrl: './rn-ctrl-view.component.html',
   styleUrls: ['./rn-ctrl-view.component.sass']
 })
-export class RnCtrlViewComponent implements OnInit {
+export class RnCtrlViewComponent implements OnInit, OnChanges {
   @Input() control?: Item;
+  @Input() item?: Item;
   @Input() layout?: string = "column";
   @Input() align?: string = "center center";
   @Input() gap?: string = "1%";
@@ -17,6 +18,8 @@ export class RnCtrlViewComponent implements OnInit {
   constructor(private itemService: ItemService) { }
 
   ngOnInit(): void {
+    //console.log('*************************************** hello from ctrl view init');
+    //console.log(this.item);
     if(this.control) {
       if(this.control.id) {
         this.itemService.children(this.control.id).subscribe(children => {
@@ -52,6 +55,13 @@ export class RnCtrlViewComponent implements OnInit {
     } 
 
     return def;
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if(changes['item']) {
+      //console.log('*************************************** hello from ctrl view changed!!!');
+      //console.log(this.item);
+    }
   }
 
 }

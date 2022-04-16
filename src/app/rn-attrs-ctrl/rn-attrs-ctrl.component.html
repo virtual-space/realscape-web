@@ -1,6 +1,9 @@
 <form *ngIf="item && attributes">
-    <mat-form-field *ngFor="let attribute of attributes; let index = index">
-        <mat-label>{{attribute[0]}}</mat-label>
-        <input matInput placeholder="" [value]="attribute[1]" type="text">
-    </mat-form-field>
+    <div fxLayout="column">
+        <mat-form-field *ngFor="let attribute of attributes; let index = index">
+            <mat-label>{{attribute[0]}}</mat-label>
+            <input matInput placeholder="" [value]="attribute[1]" type="text">
+        </mat-form-field>
+    </div>
 </form>
+

@@ -21,12 +21,12 @@
               </button>
             </mat-menu>
           </ng-template>
-          <app-rn-view [items]="items" [view]="view"></app-rn-view>
+          <app-rn-view [items]="items" [view]="view" [item]="item"></app-rn-view>
         </mat-tab>
       </mat-tab-group>
     </div>
     <ng-container *ngIf="views.length === 1">
-        <app-rn-view [items]="items" [view]="views[0]"></app-rn-view>
+        <app-rn-view [items]="items" [view]="views[0]" [item]="item"></app-rn-view>
     </ng-container>
 </div>
 <div *ngIf="!item">

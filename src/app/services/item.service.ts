@@ -374,6 +374,25 @@ export class Item {
   tags?: string[];
 }
 
+export function isInstanceOf(type: Type, type_name: string): boolean {
+  if (type.name === type_name) {
+    return true;
+  }
+
+  if (type.base) {
+    return isInstanceOf(type.base, type_name);
+  }
+
+  return false;
+}
+
+export function itemIsInstanceOf(item: Item, type_name: string): boolean {
+  if (item.type) {
+    return isInstanceOf(item.type, type_name);
+}
+return false;
+}
+
 export class Query {
   types?: string[];
   tags?: string[];

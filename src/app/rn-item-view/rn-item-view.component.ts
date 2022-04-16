@@ -1,7 +1,7 @@
 import { Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges } from '@angular/core';
 import { Subscription } from 'rxjs';
 import {ActivatedRoute, Router} from '@angular/router';
-import { Item, ItemService } from '../services/item.service';
+import { Item, ItemService, itemIsInstanceOf } from '../services/item.service';
 import { SessionService } from '../services/session.service';
 
 import {FormControl} from "@angular/forms";
@@ -67,14 +67,14 @@ export class RnItemViewComponent implements OnInit, OnDestroy, OnChanges {
   reloadItem(item: Item, activate: boolean): void {
     this.id = item.id;  
     this.item = item;
-    
+
     if (this.id) {
       this.itemService.children(this.id).subscribe(children => {
-        this.children = children.filter(child => !child.type!.name!.endsWith("View"));
-        this.views = children.filter(child => child.type!.name!.endsWith("View"));
+        this.children = children.filter(child => !itemIsInstanceOf(child, "View"));
+        this.views = children.filter(child => itemIsInstanceOf(child, "View"));
         this.query = this.children.find(child => {
           if (child) {
-            return child.type!.name!.endsWith("Query");
+            return itemIsInstanceOf(child, "Query");
           } else {
             return false;
           }

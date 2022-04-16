@@ -47,7 +47,7 @@ export class MainComponent implements OnInit, OnDestroy {
   refresh(): void {
     this.itemService.apps().subscribe(apps => {
       if (apps) {
-        console.log('apps:',apps);
+        //console.log('apps:',apps);
         this.apps = apps;
       } else {
         this.apps = [];
