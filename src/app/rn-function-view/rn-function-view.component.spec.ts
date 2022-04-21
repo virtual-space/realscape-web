@@ -1,20 +1,20 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ScheduleItemComponent } from './schedule-item.component';
+import { RnFunctionViewComponent } from './rn-function-view.component';
 
-describe('ScheduleItemComponent', () => {
-  let component: ScheduleItemComponent;
-  let fixture: ComponentFixture<ScheduleItemComponent>;
+describe('RnFunctionViewComponent', () => {
+  let component: RnFunctionViewComponent;
+  let fixture: ComponentFixture<RnFunctionViewComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ ScheduleItemComponent ]
+      declarations: [ RnFunctionViewComponent ]
     })
     .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(ScheduleItemComponent);
+    fixture = TestBed.createComponent(RnFunctionViewComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

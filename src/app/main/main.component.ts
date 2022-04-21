@@ -6,9 +6,9 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { Item, ItemService } from '../services/item.service';
 import { SessionService } from '../services/session.service';
 
-import { CreateItemComponent } from '../create-item/create-item.component';
-import { EditItemComponent } from '../edit-item/edit-item.component';
 import { EditViewComponent } from '../edit-view/edit-view.component';
+import { RnCreateItemViewComponent } from '../rn-create-item-view/rn-create-item-view.component';
+import { RnEditItemViewComponent } from '../rn-edit-item-view/rn-edit-item-view.component';
 
 @Component({
   selector: 'app-main',
@@ -32,6 +32,7 @@ export class MainComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.subscription = this.sessionService.itemActivated$.subscribe(
       item => {
+        console.log('itemActivated subscription assigning item', item);
         this.item = item;
     });
     this.refresh();
@@ -47,8 +48,9 @@ export class MainComponent implements OnInit, OnDestroy {
   refresh(): void {
     this.itemService.apps().subscribe(apps => {
       if (apps) {
-        //console.log('apps:',apps);
+        console.log('apps:',apps);
         this.apps = apps;
+        console.log('apps items', this.apps);
       } else {
         this.apps = [];
       }
@@ -85,7 +87,7 @@ export class MainComponent implements OnInit, OnDestroy {
         }
       }
       
-      const dialogRef = this.dialog.open(CreateItemComponent, {
+      const dialogRef = this.dialog.open(RnCreateItemViewComponent, {
         width: '400px',
         data: createData
       });
@@ -144,7 +146,8 @@ export class MainComponent implements OnInit, OnDestroy {
   }
 
   onEdit(event: any) {
-    const dialogRef = this.dialog.open(EditItemComponent, {
+    
+    const dialogRef = this.dialog.open(RnEditItemViewComponent, {
       width: '400px',
       data: {item: this.item}
     });

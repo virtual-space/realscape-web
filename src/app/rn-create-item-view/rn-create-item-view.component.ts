@@ -1,4 +1,4 @@
-import {Component, Inject, OnInit} from '@angular/core';
+import {Component, Inject, Input, OnInit} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialog, MatDialogRef} from "@angular/material/dialog";
 import { MatChipInputEvent } from '@angular/material/chips';
 import { MatSelectChange } from '@angular/material/select';
@@ -6,20 +6,20 @@ import {ItemService, Item, Type, itemIsInstanceOf, isInstanceOf } from "../servi
 import {COMMA, ENTER} from "@angular/cdk/keycodes";
 import {LocationComponent} from "../location/location.component";
 import * as MapboxGl from 'mapbox-gl';
-import {ScheduleItemComponent} from "../schedule-item/schedule-item.component";
 
 @Component({
-  selector: 'app-create-item',
-  templateUrl: './create-item.component.html',
-  styleUrls: ['./create-item.component.sass']
+  selector: 'app-rn-create-item-view',
+  templateUrl: './rn-create-item-view.component.html',
+  styleUrls: ['./rn-create-item-view.component.sass']
 })
-export class CreateItemComponent implements OnInit {
+export class RnCreateItemViewComponent implements OnInit {
 
+  @Input() item?: Item;
   name?: string;
   url?: Event;
   types: Type[] = [];
   public = false;
-  parent_id = null;
+  parent_id? :string;
   shouldDisablePublic = false;
 
   fileToUpload?: File | null = null;
@@ -37,17 +37,15 @@ export class CreateItemComponent implements OnInit {
   readonly separatorKeysCodes: number[] = [ENTER, COMMA];
   tags: string[] = [];
 
-  constructor(public dialogRef: MatDialogRef<CreateItemComponent>,
-              private itemService: ItemService,
-              public dialog: MatDialog,
-              @Inject(MAT_DIALOG_DATA) public data: any) { }
+  constructor(private itemService: ItemService,
+              public dialog: MatDialog) { }
 
   ngOnInit() {
     this.itemService.types().subscribe(types => {
       this.types = types.filter(t => t.attributes && t.attributes['creatable'] === 'true');
-      if (this.data.item && this.data.item.attributes && 'creatable_types' in this.data.item.attributes) {
-          const includedTypeNames: Set<string> = new Set(this.data.item.attributes['creatable_types']);
-          console.log('************************* included type names ', includedTypeNames);
+      if (this.item && this.item.attributes && 'creatable_types' in this.item.attributes) {
+          const includedTypeNames: Set<string> = new Set(this.item.attributes['creatable_types']);
+          //console.log('************************* included type names ', includedTypeNames);
           //const includedTypes = new Set(types.filter(t => includedTypeNames.has(t.name)).map(t => t['id']));
           //this.types = this.types.filter(t => includedTypes.has(t['id']) || includedTypes.has(t['base_id']) );
           const includedTypes:Type[] = [];
@@ -71,15 +69,10 @@ export class CreateItemComponent implements OnInit {
         }
       }
 
-      if (this.data) {
-        if (this.data.parent_id) {
-          if (this.data.item && this.data['item'] && itemIsInstanceOf(this.data['item'],"App")) {
-
-          } else {
-            this.parent_id = this.data.parent_id;
-          }
-        }
-        if (this.data.public !== undefined) {
+      if (this.item) {
+        this.parent_id = this.item.id;
+        /*
+        if (this.item.public !== undefined) {
           this.public = this.data.public;
           this.shouldDisablePublic = true;
         }
@@ -88,14 +81,14 @@ export class CreateItemComponent implements OnInit {
         }
         if (this.data.valid_from) {
           this.valid_from = this.data.valid_from;
-        }
+        }*/
       }
       console.log(this);
     });
   }
 
   onNoClick(): void {
-    this.dialogRef.close();
+    //this.dialogRef.close();
   }
 
   onTypeChange(event: MatSelectChange) {
@@ -127,7 +120,7 @@ export class CreateItemComponent implements OnInit {
     }
     d.file = this.fileToUpload;
     console.log(d);
-    this.dialogRef.close(d);
+    //this.dialogRef.close(d);
   }
 
   add(event: MatChipInputEvent): void {
@@ -169,6 +162,7 @@ export class CreateItemComponent implements OnInit {
   }
 
   onSchedule() {
+    /*
     const dialogRef = this.dialog.open(ScheduleItemComponent, {
       width: '400px',
       height: '600px',
@@ -181,5 +175,7 @@ export class CreateItemComponent implements OnInit {
         this.valid_to = result['valid_to'];
       }
     });
+    */
   }
+
 }

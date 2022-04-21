@@ -11,6 +11,12 @@
                         <ng-container *ngSwitchCase="'AttrsCtrl'">
                             <app-rn-attrs-ctrl [item]="item" [control]="child"></app-rn-attrs-ctrl>
                         </ng-container>
+                        <ng-container *ngSwitchCase="'ItemSelectCtrl'">
+                            <app-rn-item-select-ctrl [item]="item" [control]="child"></app-rn-item-select-ctrl>
+                        </ng-container>
+                        <ng-container *ngSwitchCase="'TypeSelectCtrl'">
+                            <app-rn-type-select-ctrl [item]="item" [control]="child"></app-rn-type-select-ctrl>
+                        </ng-container>
                         <ng-container *ngSwitchCase="'TreeCtrl'">
                             <app-rn-tree-ctrl></app-rn-tree-ctrl>
                         </ng-container>
@@ -30,13 +36,18 @@
                             <app-rn-date-ctrl  [item]="child"></app-rn-date-ctrl>
                         </ng-container>
                         <ng-container *ngSwitchCase="'LabelCtrl'">
-                            <app-rn-label-ctrl [item]="child"></app-rn-label-ctrl>
+                            <app-rn-label-ctrl [item]="item" [control]="child"></app-rn-label-ctrl>
                         </ng-container>
                         <ng-container *ngSwitchCase="'ItemCtrl'">
                             <app-rn-item-ctrl></app-rn-item-ctrl>
                         </ng-container>
                         <div *ngSwitchDefault>
-                            Control: {{child!.type!.name!}}
+                            <div *ngIf="isButton(child)">
+                                <app-rn-button-ctrl [item]="item" [control]="child"></app-rn-button-ctrl>
+                            </div>
+                            <div *ngIf="!isButton(child)">
+                                Control: {{child!.type!.name!}}
+                            </div>
                         </div>
                     </div>
                 </ng-container>

@@ -1,4 +1,4 @@
-<ng-container [ngSwitch]="view!.type!.name!">
+<div [ngSwitch]="view!.type!.name!">
   <div *ngSwitchCase="'ListView'">
       <app-rn-list-view [items]="items"></app-rn-list-view>
   </div>
@@ -48,60 +48,25 @@
   <div *ngSwitchCase="'TreeView'">
     <app-rn-tree-view [items]="items"></app-rn-tree-view>
   </div>
+  <div *ngSwitchCase="'FuncView'">
+    <app-rn-function-view [items]="items"></app-rn-function-view>
+  </div>
+  <div *ngSwitchCase="'EditView'">
+    <app-rn-edit-item-view [item]="item"></app-rn-edit-item-view>
+  </div>
+  <div *ngSwitchCase="'CreateView'">
+    <app-rn-create-item-view [item]="item"></app-rn-create-item-view>
+  </div>
   <div *ngSwitchCase="'ItemView'">
     <app-rn-item-view [item]="getItemViewTarget(items)"></app-rn-item-view>
   </div>
-  <!--
-      <ng-container [ngSwitch]="view.type">
-
-          <div fxLayout="row wrap" class="card-deck-container" fxLayoutAlign="center center" *ngSwitchCase="'CardsView'">
-            <app-card-view [items]="items" (onRefresh)="refresh()"></app-card-view>
-          </div>
-          <div *ngSwitchCase="'List'">
-            <app-list-view [items]="items" (onRefresh)="refresh()"></app-list-view>
-          </div>
-          <div *ngSwitchCase="'Map'">
-            <app-map-view  [items]="items" [location]="location"  (centerChanged)="onCenterChanged($event)"></app-map-view>
-          </div>
-          <div *ngSwitchCase="'Calendar'">
-            <app-calendar-view [items]="items" (onRefresh)="refresh()" ></app-calendar-view>
-          </div>
-          <div *ngSwitchCase="'Board'" >
-            <app-board-view [items]="items" (onRefresh)="refresh()"></app-board-view>
-          </div>
-
-          <div *ngSwitchDefault>
-              View not supported
-            </div>
-          </ng-container>
-  -->
-  <!--
-      <div fxLayout="row wrap" class="card-deck-container" fxLayoutAlign="center center" *ngSwitchCase="'CardsView'">
-        <app-card-view [items]="items" (onRefresh)="refresh()"></app-card-view>
-      </div>
-      <div *ngSwitchCase="'ListView'">
-        <app-list-view [items]="items" (onRefresh)="refresh()"></app-list-view>
-      </div>
-      <div *ngSwitchCase="'MapView'">
-        <app-map-view  [items]="items"  (centerChanged)="onCenterChanged($event)"></app-map-view>
-      </div>
-      <div *ngSwitchCase="'CalendarView'">
-        <app-calendar-view [items]="items" (onRefresh)="refresh()" ></app-calendar-view>
-      </div>
-      <div *ngSwitchCase="'BoardView'" >
-        <app-board-view [items]="items" (onRefresh)="refresh()"></app-board-view>
-      </div>
-      <div *ngSwitchDefault>
-        View not supported
-      </div>
-  -->
   <div *ngSwitchDefault>
     <div *ngIf="isControl">
-      <app-rn-ctrl-view [control]="view" [item]="item"></app-rn-ctrl-view>
+      <app-rn-ctrl-view [control]="view" [item]="item" (onEvents)="onEventHandler($event)"></app-rn-ctrl-view>
     </div>
     <div *ngIf="!isControl">
       Unhandled type: {{view!.type!.name!}}
     </div>
   </div>
-</ng-container>
+</div>
 

@@ -157,6 +157,7 @@ export class ItemService {
 */
   private getParams(query: Query): HttpParams {
     let params = new HttpParams();
+    console.log(query);
     if (query) {
       if (query.name) {
         params = params.append('name', query.name);
@@ -180,10 +181,14 @@ export class ItemService {
         params = params.append('radius', query.radius.toString());
       }
       if (query.types && query.types.length > 0) {
-        params = params.append('types', query.types.join(', '));
+        query.types.forEach(t => {
+          params = params.append('types', t);
+        });
       }
       if (query.tags && query.tags.length > 0) {
-        params = params.append('tags', query.tags.join(', '));
+        query.tags.forEach(t => {
+          params = params.append('tags', t);
+        });
       }
     }
     return params;
@@ -288,6 +293,7 @@ export class ItemService {
 
   getQueryString(query: Query): string {
     let result = 'Show ';
+    console.log(query);
 
     if (query.public && query.myItems) {
       result += ' items ';
@@ -300,7 +306,10 @@ export class ItemService {
     }
 
     if (query.types && query.types.length > 0) {
-      result += ' of type ' + query.types.join(',');
+      result += ' of type ';
+      query.types.forEach(t => {
+        result += t + ',';
+      });
     } else {
       result += ' of any type';
     }
@@ -308,7 +317,10 @@ export class ItemService {
       result += ' named ' + query.name;
     }
     if (query.tags && query.tags.length > 0) {
-      result += ' tagged with ' + query.tags.join(', ');
+      result += ' tagged with ';
+      query.tags.forEach(t => {
+        result += t + ',';
+      });
     }
     if (query.lat && query.lng) {
       result += ' in ' + query.radius + ' m radius around ' + query.lat.toFixed(4) + ', ' + query.lng.toFixed(4);
@@ -372,25 +384,87 @@ export class Item {
   type?: Type;
   type_id?: string;
   tags?: string[];
+  items?: Item[];
+}
+/*
+export function getTypeAttributes(type: Type): {[index: string]:any} {
+  if (type.attributes) {
+    return type.attributes;
+  }
+  return {};
 }
 
+export function buildChildItem(instance: Instance, attributes: {[index: string]:any}): Item {
+  const target = new Item();
+  target.name = instance.name;
+  target.type = instance.type;
+  const items:Item[] = []; 
+  if (instance.type) {
+    if (instance.type.instances) {
+      instance.type.instances.forEach(instance => {
+          let mergedAttributes = getTypeAttributes(instance.type!);
+          if (instance.attributes) {
+            mergedAttributes = Object.assign({}, mergedAttributes, instance.attributes)
+          }
+          items.push(buildChildItem(instance, mergedAttributes));
+      });
+    }
+  }
+  target.items = items;
+  return target;
+}
+
+export function expandItem(item: Item): Item {
+  
+  if (item.items) {
+    return item;
+  }
+
+  const target = new Item();
+  target.id = item.id;
+  target.group_id = item.group_id;
+  target.owner_id = item.owner_id;
+  target.parent_id = item.parent_id;
+  target.attributes = item.attributes;
+  target.name = item.name;
+  target.location = item.location;
+  target.visibility = item.visibility;
+  target.point = item.point;
+  target.link = item.link;
+  target.type = item.type;
+  target.type_id = item.type_id;
+
+  const items:Item[] = []; 
+  if (target.type) {
+    if (target.type.instances) {
+      target.type.instances.forEach(instance => {
+        items.push(buildChildItem(instance));
+      });
+    }
+  }
+  target.items = items;
+  return target;
+}
+*/
 export function isInstanceOf(type: Type, type_name: string): boolean {
+  
   if (type.name === type_name) {
+    //console.log('*** ', type.name, ' is instance of ', type_name)
     return true;
   }
 
   if (type.base) {
     return isInstanceOf(type.base, type_name);
   }
-
+  //console.log('*** ', type.name, ' is NOT an instance of ', type_name)
   return false;
 }
 
 export function itemIsInstanceOf(item: Item, type_name: string): boolean {
   if (item.type) {
     return isInstanceOf(item.type, type_name);
-}
-return false;
+  }
+  return false;
 }
 
 export class Query {
@@ -404,3 +478,9 @@ export class Query {
   lng?: number;
   radius?: number;
 }
+
+export class ItemEvent {
+  event?: string;
+  item?: Item;
+}
+

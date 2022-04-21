@@ -18,7 +18,7 @@ export class RnAttrsCtrlComponent extends RnCtrlComponent implements OnInit, OnC
     if (this.item) {
       if (this.item.attributes) {
         this.attributes = Object.entries(this.item.attributes).map(([k, v]) => [k, v]);
-        console.log(this.attributes);
+        //console.log(this.attributes);
       }
     }
   }

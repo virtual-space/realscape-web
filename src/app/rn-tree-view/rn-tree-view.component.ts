@@ -1,7 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { FlatTreeControl } from '@angular/cdk/tree';
 import {MatTreeFlatDataSource, MatTreeFlattener} from '@angular/material/tree';
-import {BehaviorSubject, map, Observable} from 'rxjs';
+import {BehaviorSubject, map, Observable, of} from 'rxjs';
 
 import { Item, Type, ItemService } from '../services/item.service'
 
@@ -11,6 +11,9 @@ export class ItemNode {
               protected itemService: ItemService,
               public parentItem?: Item) {}
   get children(): Observable<ItemNode[]> {
+    if (this.item.items) {
+      return of(this.item.items.map(i => new ItemNode(i, this.getNumberOfChildren(i.type) > 0, this.itemService, this.item)));
+    }
     return this.itemService.children(this.item.id!).pipe(
       map(items => items.map(i => new ItemNode(i, this.getNumberOfChildren(i.type) > 0, this.itemService, this.item)))
     );

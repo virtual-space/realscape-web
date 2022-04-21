@@ -1,20 +1,20 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { CreateItemComponent } from './create-item.component';
+import { RnItemSelectCtrlComponent } from './rn-item-select-ctrl.component';
 
-describe('CreateItemComponent', () => {
-  let component: CreateItemComponent;
-  let fixture: ComponentFixture<CreateItemComponent>;
+describe('RnItemSelectCtrlComponent', () => {
+  let component: RnItemSelectCtrlComponent;
+  let fixture: ComponentFixture<RnItemSelectCtrlComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ CreateItemComponent ]
+      declarations: [ RnItemSelectCtrlComponent ]
     })
     .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(CreateItemComponent);
+    fixture = TestBed.createComponent(RnItemSelectCtrlComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

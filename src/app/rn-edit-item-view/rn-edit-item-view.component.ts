@@ -1,19 +1,19 @@
-import {Component, Inject, OnInit} from '@angular/core';
+import {Component, Inject, Input, OnInit} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialog, MatDialogRef} from "@angular/material/dialog";
 import {Item, ItemService} from "../services/item.service";
 import {LocationComponent} from "../location/location.component";
 import {LngLat} from "mapbox-gl";
 import {MatChipInputEvent} from "@angular/material/chips";
 import {COMMA, ENTER} from "@angular/cdk/keycodes";
-import {ScheduleItemComponent} from "../schedule-item/schedule-item.component";
 
 @Component({
-  selector: 'app-edit-item',
-  templateUrl: './edit-item.component.html',
-  styleUrls: ['./edit-item.component.sass']
+  selector: 'app-rn-edit-item-view',
+  templateUrl: './rn-edit-item-view.component.html',
+  styleUrls: ['./rn-edit-item-view.component.sass']
 })
-export class EditItemComponent implements OnInit {
-  item?: Item;
+export class RnEditItemViewComponent implements OnInit {
+  @Input() items: Item[] = [];
+  @Input() item?: Item;
   /*
   name = null;
   description = null;
@@ -28,14 +28,11 @@ export class EditItemComponent implements OnInit {
   addOnBlur = true;
   readonly separatorKeysCodes: number[] = [ENTER, COMMA];
 
-  constructor(public dialogRef: MatDialogRef<EditItemComponent>,
-              private itemService: ItemService,
-              public dialog: MatDialog,
-              @Inject(MAT_DIALOG_DATA) public data: any) {
+  constructor(private itemService: ItemService,
+              public dialog: MatDialog) {
   }
 
   ngOnInit() {
-    this.item = this.data.item || null;
     if (this.item) {
       this.location = this.item.location
       //this.status = this.item.status;
@@ -44,7 +41,7 @@ export class EditItemComponent implements OnInit {
   }
 
   onNoClick(): void {
-    this.dialogRef.close();
+    //this.dialogRef.close();
   }
 
   onOkClick(): void {
@@ -59,11 +56,12 @@ export class EditItemComponent implements OnInit {
       data['tags'] = this.item.tags;
       data['attributes'] = this.item.attributes
     }
-    this.dialogRef.close(data);
+    //this.dialogRef.close(data);
   }
 
   onLocation() {
     console.log('location',this.location)
+    
     const dialogRef = this.dialog.open(LocationComponent, {
       width: '400px',
       height: '600px',
@@ -84,7 +82,7 @@ export class EditItemComponent implements OnInit {
         data['valid_from'] = this.item.attributes['valid_from'];
         data['valid_to'] = this.item.attributes['valid_to'];
     }
-
+    /*
     const dialogRef = this.dialog.open(ScheduleItemComponent, {
       width: '400px',
       height: '600px',
@@ -98,9 +96,9 @@ export class EditItemComponent implements OnInit {
           this.item.attributes['valid_to'] = result['valid_to'];
         }
       }
-    });
+    });*/
   }
-
+  
   addTag(event: MatChipInputEvent): void {
     const input = event.input;
     const value = event.value;

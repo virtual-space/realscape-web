@@ -1,0 +1,47 @@
+<div fxLayout="column" *ngIf="item">
+  <mat-form-field>
+    <input matInput [placeholder]="'Name'" [(ngModel)]="item.name">
+  </mat-form-field>
+  <mat-form-field>
+    <textarea matInput [placeholder]="'Description'"></textarea>
+  </mat-form-field>
+  <mat-form-field>
+    <input matInput [placeholder]="'Url'"  [(ngModel)]="item.link">
+  </mat-form-field>
+  <mat-form-field class="example-chip-list">
+    <mat-chip-list #chipListTags aria-label="Tags">
+      <mat-chip *ngFor="let fruit of item.tags" [selectable]="selectable"
+                [removable]="removable" (removed)="removeTag(fruit)">
+        {{fruit}}
+        <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
+      </mat-chip>
+      <input placeholder="Tags"
+             [matChipInputFor]="chipListTags"
+             [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+             [matChipInputAddOnBlur]="addOnBlur"
+             (matChipInputTokenEnd)="addTag($event)">
+    </mat-chip-list>
+  </mat-form-field>
+  <div fxLayout="row">
+    <mat-form-field appearance="fill">
+      <mat-label>Status</mat-label>
+      <mat-select [(value)]="status">
+        <mat-option *ngFor="let status of statuses" [value]="status.status">
+          {{status.name}}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+  </div>
+  <div fxLayout="row" fxLayoutGap="8px" fxLayoutAlign="center center">
+    <!-- <mat-slide-toggle [(ngModel)]="item.public">Public</mat-slide-toggle> -->
+    <button mat-raised-button color="primary" (click)="onLocation()">Location</button>
+    <button mat-raised-button color="primary" (click)="onSchedule()">Schedule</button>
+  </div>
+  <div fxLayout="row">
+    <button mat-button (click)="onNoClick()">Cancel</button>
+    <button mat-button (click)="onOkClick()" cdkFocusInitial>Ok</button>
+  </div>
+</div>
+
+
+  

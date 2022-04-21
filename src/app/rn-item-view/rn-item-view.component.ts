@@ -1,7 +1,7 @@
 import { Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges } from '@angular/core';
 import { Subscription } from 'rxjs';
 import {ActivatedRoute, Router} from '@angular/router';
-import { Item, ItemService, itemIsInstanceOf } from '../services/item.service';
+import { Item, ItemService, itemIsInstanceOf, ItemEvent } from '../services/item.service';
 import { SessionService } from '../services/session.service';
 
 import {FormControl} from "@angular/forms";
@@ -33,14 +33,17 @@ export class RnItemViewComponent implements OnInit, OnDestroy, OnChanges {
               private route: ActivatedRoute) { }
 
   ngOnInit(): void {
+    console.log('item-view init ', this.item);
     if (this.item) {
         this.reloadItem(this.item, false);
     } else {
         this.route.paramMap.subscribe(params => {
           const id = params.get('id');
           if(id && (!this.item || id != this.id)) {
+            console.log('subscribing ',id);
             this.subscription = this.sessionService.refreshed$.subscribe(
               () => {
+                console.log('subscription requesting refresh for ',id);
                 this.refresh(id);
             });
             this.refresh(id);
@@ -57,52 +60,65 @@ export class RnItemViewComponent implements OnInit, OnDestroy, OnChanges {
   }
 
   refresh(id: string): void {
+    console.log('refreshing ',id);
     this.itemService.getItem(id).subscribe(item => {
       if (item) {
+        this.item = item;
         this.reloadItem(item, true);
       }
     });
   }
 
   reloadItem(item: Item, activate: boolean): void {
+    console.log('reloading ',item);
     this.id = item.id;  
-    this.item = item;
-
-    if (this.id) {
+    if (item.items) {
+      this.activateItem(item, item.items, activate);
+    } else if (this.id) {
       this.itemService.children(this.id).subscribe(children => {
-        this.children = children.filter(child => !itemIsInstanceOf(child, "View"));
-        this.views = children.filter(child => itemIsInstanceOf(child, "View"));
-        this.query = this.children.find(child => {
-          if (child) {
-            return itemIsInstanceOf(child, "Query");
-          } else {
-            return false;
-          }
-        });
-        if(this.query) {
-            this.itemService.items(this.query.attributes!).subscribe(items => {
-              this.items = items;
-              if (activate) {
-                this.sessionService.activateItem(item);
-              }
-            });
-        } else {
-          this.items = this.children;
+        this.activateItem(item, children, activate);
+      });
+    }
+  }
+
+  activateItem(item: Item, children: Item[], activate: boolean) {
+    console.log('activating ',item);
+    this.children = children.filter(child => !itemIsInstanceOf(child, "View"));
+    this.views = children.filter(child => itemIsInstanceOf(child, "View"));
+    this.query = this.children.find(child => {
+      if (child) {
+        return itemIsInstanceOf(child, "Query");
+      } else {
+        return false;
+      }
+    });
+    if(this.query) {
+        this.itemService.items(this.query.attributes!).subscribe(items => {
+          this.items = items;
           if (activate) {
             this.sessionService.activateItem(item);
           }
-        }
-      });
+        });
+    } else {
+      this.items = this.children;
+      if (activate) {
+        this.sessionService.activateItem(item);
+      }
     }
   }
 
   ngOnChanges(changes: SimpleChanges): void {
     if(changes['item']) {
       if (this.item) {
+        console.log('item view reloading item', this.item);
         this.reloadItem(this.item, false);
       }
       
     }
+  }
+
+  onEvent(event: ItemEvent) {
+    console.log(event);
   }
 
   onChangeTab(event: any) {

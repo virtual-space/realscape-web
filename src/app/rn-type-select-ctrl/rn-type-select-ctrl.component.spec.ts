@@ -1,20 +1,20 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { EditItemComponent } from './edit-item.component';
+import { RnTypeSelectCtrlComponent } from './rn-type-select-ctrl.component';
 
-describe('EditItemComponent', () => {
-  let component: EditItemComponent;
-  let fixture: ComponentFixture<EditItemComponent>;
+describe('RnTypeSelectCtrlComponent', () => {
+  let component: RnTypeSelectCtrlComponent;
+  let fixture: ComponentFixture<RnTypeSelectCtrlComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ EditItemComponent ]
+      declarations: [ RnTypeSelectCtrlComponent ]
     })
     .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(EditItemComponent);
+    fixture = TestBed.createComponent(RnTypeSelectCtrlComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

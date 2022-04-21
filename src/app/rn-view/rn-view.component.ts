@@ -1,7 +1,7 @@
 import { L } from '@angular/cdk/keycodes';
-import { Component, OnInit, Input, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, OnInit, Input, OnChanges, SimpleChanges, Output, EventEmitter } from '@angular/core';
 import { stringify } from 'querystring';
-import { Item } from '../services/item.service';
+import { Item, ItemEvent, itemIsInstanceOf } from '../services/item.service';
 
 @Component({
   selector: 'app-rn-view',
@@ -13,6 +13,7 @@ export class RnViewComponent implements OnInit, OnChanges {
   @Input() view?: Item;
   @Input() items: Item[] = [];
   @Input() item?: Item;
+  @Output() onEvent = new EventEmitter<ItemEvent>();
 
   public isControl: boolean = false;
 
@@ -21,21 +22,14 @@ export class RnViewComponent implements OnInit, OnChanges {
   ngOnInit(): void {
     //console.log('*************************************** hello from view');
     //console.log(this.item);
+    
     if (this.view) {
-      if (this.view.type) {
-        if (this.view.type.base) {
-          if (this.view.type.base.name) {
-            if (this.view.type.base.name === "CtrlView") {
-              this.isControl = true;
-            }
-          }
-        }
-      }
+      this.isControl = itemIsInstanceOf(this.view, "CtrlView");
     }
   }
 
   getItemViewTarget(items: Item[]): Item | undefined {
-    console.log(this);
+    //console.log(this);
     if (this.view && this.view.attributes) {
       //console.log(this.view.attributes);
       //console.log('select_name' in this.view.attributes);
@@ -61,6 +55,13 @@ export class RnViewComponent implements OnInit, OnChanges {
     if(changes['item']) {
       //console.log('*************************************** hello from view changed!!!');
       //console.log(this.item);
+    }
+  }
+
+  onEventHandler(event: ItemEvent) {
+    console.log(event);
+    if(this.onEvent) {
+      this.onEvent.emit(event);
     }
   }
 

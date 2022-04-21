@@ -1,0 +1,7 @@
+<mat-select [(value)]="selectedId" (selectionChange)="onSelectChange($event)">
+    <mat-select-trigger>{{selectedName}}</mat-select-trigger>
+    <mat-option *ngFor="let item of items" [value]="item.id">
+      <mat-icon>{{getItemIcon(item)}}</mat-icon>{{item.name}}
+    </mat-option>
+</mat-select>
+

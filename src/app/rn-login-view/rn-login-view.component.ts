@@ -24,7 +24,7 @@ export class RnLoginViewComponent implements OnInit {
 
   doLogin(): void  {
     if (this.login) {
-      console.log(this.login);
+      //console.log(this.login);
       this.authService.login(new Authenticator(this.login!.attributes!['authenticator_name']!.toString(), 
                                                this.login!.attributes!['authenticator_type']!.toString(),
                                                this.login!.attributes!['client_id']!.toString(),

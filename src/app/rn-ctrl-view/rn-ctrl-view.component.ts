@@ -1,5 +1,5 @@
-import { Component, Input, OnInit , OnChanges, SimpleChanges} from '@angular/core';
-import { Item, ItemService } from '../services/item.service';
+import { Component, Input, OnInit , OnChanges, SimpleChanges, EventEmitter, Output} from '@angular/core';
+import { Item, ItemEvent, ItemService, itemIsInstanceOf } from '../services/item.service';
 
 @Component({
   selector: 'app-rn-ctrl-view',
@@ -12,8 +12,8 @@ export class RnCtrlViewComponent implements OnInit, OnChanges {
   @Input() layout?: string = "column";
   @Input() align?: string = "center center";
   @Input() gap?: string = "1%";
+  @Output() onEvents = new EventEmitter<ItemEvent>();
   controls: Item[] = [];
-  
   
   constructor(private itemService: ItemService) { }
 
@@ -21,7 +21,9 @@ export class RnCtrlViewComponent implements OnInit, OnChanges {
     //console.log('*************************************** hello from ctrl view init');
     //console.log(this.item);
     if(this.control) {
-      if(this.control.id) {
+      if(this.control.items) {
+          this.controls = this.control.items;
+      } else if(this.control.id) {
         this.itemService.children(this.control.id).subscribe(children => {
           //this.controls = children.filter(child => !child.type!.name!.endsWith("Ctrl"));
           this.controls = children;
@@ -62,6 +64,10 @@ export class RnCtrlViewComponent implements OnInit, OnChanges {
       //console.log('*************************************** hello from ctrl view changed!!!');
       //console.log(this.item);
     }
+  }
+
+  isButton(item: Item) {
+    return itemIsInstanceOf(item, "ButtonCtrl");
   }
 
 }

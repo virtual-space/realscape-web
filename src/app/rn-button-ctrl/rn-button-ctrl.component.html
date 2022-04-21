@@ -1,1 +1,4 @@
-<p>rn-button-ctrl works!</p>
+<div *ngIf="control">
+    <button mat-button color="primary" (click)="onClick($event)">{{control.name}}</button>
+</div>
+

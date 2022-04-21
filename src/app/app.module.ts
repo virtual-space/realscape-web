@@ -36,7 +36,7 @@ import { MatTreeModule } from '@angular/material/tree';
 import { MatSidenavModule } from '@angular/material/sidenav';
 
 import { QRCodeModule } from 'angularx-qrcode';
-
+import { CodemirrorModule } from '@ctrl/ngx-codemirror';
 
 import { CallbackComponent } from './callback/callback.component';
 import { HomeComponent } from './home/home.component';
@@ -60,11 +60,8 @@ import { RnCardsViewComponent } from './rn-cards-view/rn-cards-view.component';
 import { RnTreeViewComponent } from './rn-tree-view/rn-tree-view.component';
 import { RnButtonViewComponent } from './rn-button-view/rn-button-view.component';
 import { RnLabelViewComponent } from './rn-label-view/rn-label-view.component';
-import { EditItemComponent } from './edit-item/edit-item.component';
-import { CreateItemComponent } from './create-item/create-item.component';
 import { EditViewComponent } from './edit-view/edit-view.component';
 import { LocationComponent } from './location/location.component';
-import { ScheduleItemComponent } from './schedule-item/schedule-item.component';
 import { MatSelectModule } from '@angular/material/select';
 import { EditQueryComponent } from './edit-query/edit-query.component';
 import { QrCodeComponent } from './qr-code/qr-code.component';
@@ -77,13 +74,19 @@ import { RnTagsCtrlComponent } from './rn-tags-ctrl/rn-tags-ctrl.component';
 import { RnDateCtrlComponent } from './rn-date-ctrl/rn-date-ctrl.component';
 import { RnTreeCtrlComponent } from './rn-tree-ctrl/rn-tree-ctrl.component';
 import { RnQueryCtrlComponent } from './rn-query-ctrl/rn-query-ctrl.component';
-import { RnSelectCtrlComponent } from './rn-select-ctrl/rn-select-ctrl.component';
 import { RnLinkCtrlComponent } from './rn-link-ctrl/rn-link-ctrl.component';
 import { RnButtonCtrlComponent } from './rn-button-ctrl/rn-button-ctrl.component';
 import { RnLabelCtrlComponent } from './rn-label-ctrl/rn-label-ctrl.component';
 import { RnQrcodeCtrlComponent } from './rn-qrcode-ctrl/rn-qrcode-ctrl.component';
 import { RnItemCtrlComponent } from './rn-item-ctrl/rn-item-ctrl.component';
 import { RnCtrlComponent } from './rn-ctrl/rn-ctrl.component';
+import { RnTypeSelectCtrlComponent } from './rn-type-select-ctrl/rn-type-select-ctrl.component';
+import { RnItemSelectCtrlComponent } from './rn-item-select-ctrl/rn-item-select-ctrl.component';
+import { RnFunctionViewComponent } from './rn-function-view/rn-function-view.component';
+import { RnCreateViewComponent } from './rn-create-view/rn-create-view.component';
+import { RnEditItemViewComponent } from './rn-edit-item-view/rn-edit-item-view.component';
+import { RnCreateItemViewComponent } from './rn-create-item-view/rn-create-item-view.component';
+import { RnFormCtrlComponent } from './rn-form-ctrl/rn-form-ctrl.component';
 
 
 @NgModule({
@@ -112,11 +115,8 @@ import { RnCtrlComponent } from './rn-ctrl/rn-ctrl.component';
     RnTreeViewComponent,
     RnButtonViewComponent,
     RnLabelViewComponent,
-    EditItemComponent,
-    CreateItemComponent,
     EditViewComponent,
     LocationComponent,
-    ScheduleItemComponent,
     EditQueryComponent,
     QrCodeComponent,
     RnCtrlViewComponent,
@@ -127,13 +127,19 @@ import { RnCtrlComponent } from './rn-ctrl/rn-ctrl.component';
     RnDateCtrlComponent,
     RnTreeCtrlComponent,
     RnQueryCtrlComponent,
-    RnSelectCtrlComponent,
     RnLinkCtrlComponent,
     RnButtonCtrlComponent,
     RnLabelCtrlComponent,
     RnQrcodeCtrlComponent,
     RnItemCtrlComponent,
-    RnCtrlComponent
+    RnCtrlComponent,
+    RnTypeSelectCtrlComponent,
+    RnItemSelectCtrlComponent,
+    RnFunctionViewComponent,
+    RnCreateViewComponent,
+    RnEditItemViewComponent,
+    RnCreateItemViewComponent,
+    RnFormCtrlComponent
   ],
   imports: [
     BrowserModule,
@@ -169,7 +175,8 @@ import { RnCtrlComponent } from './rn-ctrl/rn-ctrl.component';
     MatSliderModule,
     MatTreeModule,
     MatSidenavModule,
-    QRCodeModule
+    QRCodeModule,
+    CodemirrorModule
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi:true }

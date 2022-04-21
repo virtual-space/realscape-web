@@ -26,7 +26,7 @@
       </mat-tab-group>
     </div>
     <ng-container *ngIf="views.length === 1">
-        <app-rn-view [items]="items" [view]="views[0]" [item]="item"></app-rn-view>
+        <app-rn-view [items]="items" [view]="views[0]" [item]="item" (onEvent)="onEvent($event)"></app-rn-view>
     </ng-container>
 </div>
 <div *ngIf="!item">

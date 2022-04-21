@@ -1,0 +1,11 @@
+<mat-select [(value)]="selectedId" (selectionChange)="onSelectChange($event)">
+    <mat-select-trigger>
+        <div fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="32px">
+            <mat-icon>{{selectedIcon}}</mat-icon>{{selectedName}}
+        </div>
+    </mat-select-trigger>
+    <mat-option *ngFor="let type of types" [value]="type.id">
+      <mat-icon>{{type.icon}}</mat-icon>{{type.name}}
+    </mat-option>
+</mat-select>
+<app-rn-ctrl-view [control]="control" [item]="selectedItem"></app-rn-ctrl-view>

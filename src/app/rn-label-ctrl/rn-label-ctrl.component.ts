@@ -8,5 +8,4 @@ import { RnCtrlComponent } from '../rn-ctrl/rn-ctrl.component';
 })
 export class RnLabelCtrlComponent extends RnCtrlComponent implements OnInit {
 
-
 }

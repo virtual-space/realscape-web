@@ -1,5 +1,5 @@
-import { Component, Input, OnInit } from '@angular/core';
-import { Item } from '../services/item.service';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Item, ItemEvent, ItemService } from '../services/item.service';
 
 @Component({
   selector: 'app-rn-ctrl',
@@ -9,16 +9,18 @@ import { Item } from '../services/item.service';
 export class RnCtrlComponent implements OnInit {
   @Input() item?: Item;
   @Input() control?: Item;
-  constructor() { }
+  @Output() onEvent = new EventEmitter<ItemEvent>();
+  
+  constructor(public itemService: ItemService) { }
 
   ngOnInit(): void {
     if(!this.item) {
       this.item = this.control;
     }
-    console.log(this.item);
+    //console.log(this.item);
   }
 
-  getAttribute(key: string, def: string): string {
+  public getAttribute(key: string, def: string): string {
     if(this.item) {
        if(this.item.attributes) {
          const ret = this.item.attributes[key];
@@ -29,6 +31,26 @@ export class RnCtrlComponent implements OnInit {
     } 
 
     return def;
+  }
+
+  getValue() {
+    if (this.control && this.control.attributes) {
+      if (this.item && this.item.attributes) {
+        if (this.control.attributes) {
+          if ('target' in this.control.attributes) {
+            const target = this.control.attributes['target'];
+            if (target in this.item.attributes) {
+              return this.item.attributes[target];
+            }
+          }
+        }
+        
+      }
+      if ('value' in this.control.attributes) {
+        console.log('*** 5 ***');
+        return this.control.attributes['value'];
+      }
+    }
   }
 
 }
