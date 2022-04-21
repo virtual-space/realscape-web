@@ -13,9 +13,9 @@ Install nvm: https://docs.microsoft.com/en-us/windows/dev-environment/javascript
 Use the ubuntu terminal app rather than the windows terminal app (or opening a linux shell via shift-rightclick), otherwise it will break.
 Then run the following before mounting:
 ```
-nvm install 10.24.1
-nvm use 10.24.1
-npm install -g @angular/cli@11.0.2
+nvm install 16.14.2
+nvm use 16.14.2
+npm install -g @angular/cli
 ```
 
 Clone out the repo, then navigate to the realscape-web directory to run `npm install`.
@@ -26,9 +26,9 @@ Install NVM: `https://github.com/coreybutler/nvm-windows/releases`
 
 Run powershell as administrator, then run the following:
 ```
-nvm install 10.24.1
-nvm use 10.24.1
-npm install -g @angular/cli@11.0.2
+nvm install 16.14.2
+nvm use 16.14.2
+npm install -g @angular/cli
 ```
 Clone out the repo, then navigate to the realscape-web directory to run `npm install`.
 
@@ -36,7 +36,7 @@ Clone out the repo, then navigate to the realscape-web directory to run `npm ins
 
 There needs to be an API and database running for the interface to work correctly. See the `https://github.com/virtual-space/realnet-server` readme for how to set those up if you want a local development server.
 
-Run `nvm use v10.24.1` to swap to the node version required.
+Run `nvm use v16.14.2` to swap to the node version required.
 
 If you want to use a locally run API the `client_id` in `environment.ts` will need to be changed to the client-id of root_web in the database your local API connects to.
 
