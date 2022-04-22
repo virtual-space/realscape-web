@@ -497,5 +497,8 @@ export class Query {
 export class ItemEvent {
   event?: string;
   item?: Item;
+  control?: Item;
+  view?: Item;
+  data?: any;
 }
 

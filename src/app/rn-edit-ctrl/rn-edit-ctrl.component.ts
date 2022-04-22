@@ -8,8 +8,6 @@ import { RnCtrlComponent } from '../rn-ctrl/rn-ctrl.component';
   styleUrls: ['./rn-edit-ctrl.component.sass']
 })
 export class RnEditCtrlComponent extends RnCtrlComponent implements OnInit {
-
-  text = new FormControl('');
   
 
 }

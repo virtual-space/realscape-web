@@ -12,12 +12,14 @@ export class RnFormCtrlComponent extends RnCtrlComponent implements OnInit {
     @Input() layout?: string = "column";
     @Input() align?: string = "center center";
     @Input() gap?: string = "1%";
-    item_form = new FormGroup({});
+    form_group = new FormGroup({});
     actuators: Item[] = [];
     controls: Item[] = [];
 
     override ngOnInit(): void {
+      
       if(this.control && this.control.items) {
+        
         let controls: {[index: string]:any} = {};
         for(var control of this.control.items) {
 
@@ -32,7 +34,6 @@ export class RnFormCtrlComponent extends RnCtrlComponent implements OnInit {
             console.log('item ' + control.name! + ' is not control');
           }
         } 
-        this.item_form = new FormGroup(controls);
         }
         console.log(this);
         
@@ -57,13 +58,38 @@ export class RnFormCtrlComponent extends RnCtrlComponent implements OnInit {
         //console.log(this.item);
       }
     }
-  
-    isButton(item: Item) {
-      return itemIsInstanceOf(item, "ButtonCtrl");
+
+    getButtons(): Item[] {
+      if (this.controls) {
+          return this.controls.filter(c => itemIsInstanceOf(c, "ButtonCtrl"));
+      }
+
+      return [];
+    }
+
+    getControls(): Item[] {
+      if (this.controls) {
+          return this.controls.filter(c => !itemIsInstanceOf(c, "ButtonCtrl"));
+      }
+
+      return [];
+    }
+
+    isDefaultButton(item: Item) {
+      return item && item.attributes && item.attributes['default'] === 'true';
+    }
+
+    isNormalButton(item: Item) {
+      return item && item.attributes && item.attributes['default'] !== 'true';
     }
   
-    isForm(item: Item) {
-      return itemIsInstanceOf(item, "FormCtrl");
+    onButtonClick(button: Item) {
+      if (this.onEvent) {
+        this.onEvent.emit({event: 'click', 
+                          item: this.item, 
+                          control: button,
+                          data: this.form_group.value });
+      }
     }
   }
 

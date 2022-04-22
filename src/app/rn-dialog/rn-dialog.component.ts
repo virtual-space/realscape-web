@@ -1,6 +1,6 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { Item } from '../services/item.service';
+import { Item, ItemEvent } from '../services/item.service';
 
 export interface RnDialogData {
   view: Item;
@@ -29,6 +29,16 @@ export class RnDialogComponent implements OnInit {
 
   onOkClick(): void {
     this.dialogRef.close();
+  }
+
+  onEvent(event: ItemEvent) {
+    if (event.item) {
+      if(event.item.attributes && event.item.attributes['close'] === 'true') {
+        this.dialogRef.close();
+      } else {
+        this.dialogRef.close(event);
+      }
+    }
   }
 
 }

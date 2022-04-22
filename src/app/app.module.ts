@@ -84,7 +84,6 @@ import { RnCtrlComponent } from './rn-ctrl/rn-ctrl.component';
 import { RnTypeSelectCtrlComponent } from './rn-type-select-ctrl/rn-type-select-ctrl.component';
 import { RnItemSelectCtrlComponent } from './rn-item-select-ctrl/rn-item-select-ctrl.component';
 import { RnFunctionViewComponent } from './rn-function-view/rn-function-view.component';
-import { RnCreateViewComponent } from './rn-create-view/rn-create-view.component';
 import { RnEditItemViewComponent } from './rn-edit-item-view/rn-edit-item-view.component';
 import { RnCreateItemViewComponent } from './rn-create-item-view/rn-create-item-view.component';
 import { RnFormCtrlComponent } from './rn-form-ctrl/rn-form-ctrl.component';
@@ -139,7 +138,6 @@ import { RnDialogComponent } from './rn-dialog/rn-dialog.component';
     RnTypeSelectCtrlComponent,
     RnItemSelectCtrlComponent,
     RnFunctionViewComponent,
-    RnCreateViewComponent,
     RnEditItemViewComponent,
     RnCreateItemViewComponent,
     RnFormCtrlComponent,

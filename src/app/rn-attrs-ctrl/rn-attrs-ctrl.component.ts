@@ -1,5 +1,5 @@
 import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
-import { FormControl } from '@angular/forms';
+import { FormControl, FormGroup } from '@angular/forms';
 import { RnCtrlComponent } from '../rn-ctrl/rn-ctrl.component';
 import { Item } from '../services/item.service';
 
@@ -12,13 +12,22 @@ export class RnAttrsCtrlComponent extends RnCtrlComponent implements OnInit, OnC
 
   @Input() attributes: Array<[string, string]> = [];
 
+  childFormGroup = new FormGroup({})
+
   override ngOnInit(): void {
     //console.log('*************************************** hello from attrs');
     //console.log(this.item);
     if (this.item) {
       if (this.item.attributes) {
         this.attributes = Object.entries(this.item.attributes).map(([k, v]) => [k, v]);
+        this.attributes.forEach(a => this.childFormGroup.addControl(a[0], new FormControl(a[1])));
         //console.log(this.attributes);
+      }
+    }
+
+    if(this.formGroup) {
+      if(this.control && this.control.name) {
+        this.formGroup.addControl('attributes', this.childFormGroup);
       }
     }
   }

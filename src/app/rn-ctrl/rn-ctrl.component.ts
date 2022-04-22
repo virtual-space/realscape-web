@@ -1,4 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { FormControl, FormGroup } from '@angular/forms';
 import { Item, ItemEvent, ItemService } from '../services/item.service';
 
 @Component({
@@ -10,6 +11,9 @@ export class RnCtrlComponent implements OnInit {
   @Input() item?: Item;
   @Input() control?: Item;
   @Output() onEvent = new EventEmitter<ItemEvent>();
+  @Input() formGroup?: FormGroup;
+
+  formControl = new FormControl('');
   
   constructor(public itemService: ItemService) { }
 
@@ -17,7 +21,13 @@ export class RnCtrlComponent implements OnInit {
     if(!this.item) {
       this.item = this.control;
     }
-    //console.log(this.item);
+
+    if(this.formGroup) {
+      if(this.control && this.control.name) {
+        this.formControl = new FormControl(this.getValue());
+        this.formGroup.addControl(this.control.name.toLowerCase(), this.formControl);
+      }
+    }
   }
 
   public getAttribute(key: string, def: string): string {
@@ -35,8 +45,13 @@ export class RnCtrlComponent implements OnInit {
 
   getValue() {
     if (this.control && this.control.attributes) {
-      if (this.item && this.item.attributes) {
-        if (this.control.attributes) {
+      if ('value' in this.control.attributes) {
+        return this.control.attributes['value'];
+      }
+      
+      if (this.item) {
+
+        if (this.item.attributes && this.control.attributes) {
           if ('target' in this.control.attributes) {
             const target = this.control.attributes['target'];
             if (target in this.item.attributes) {
@@ -44,11 +59,17 @@ export class RnCtrlComponent implements OnInit {
             }
           }
         }
+
+        if (this.control.name) {
+            const target = this.control.name.toLowerCase();
+
+            if (target === 'name') {
+              return this.item.name;
+            } else if(this.item && this.item.attributes && target in this.item.attributes) {
+              return this.item.attributes[target];
+            }
+        }
         
-      }
-      if ('value' in this.control.attributes) {
-        console.log('*** 5 ***');
-        return this.control.attributes['value'];
       }
     }
   }

@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { FormControl } from '@angular/forms';
 import { MatSelectChange } from '@angular/material/select';
 import { RnCtrlComponent } from '../rn-ctrl/rn-ctrl.component';
 import { isInstanceOf, Item, Type } from '../services/item.service';
@@ -46,6 +47,12 @@ export class RnTypeSelectCtrlComponent  extends RnCtrlComponent implements OnIni
             this.selectedName = t.name;
             this.selectedId = t.id;
             this.selectedIcon = t.icon;
+            if(this.formGroup) {
+              if(this.control && this.control.name) {
+                this.formControl = new FormControl(this.selectedName);
+                this.formGroup.addControl('type', this.formControl);
+              }
+            }
           }
         }
       }

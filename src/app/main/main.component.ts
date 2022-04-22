@@ -73,46 +73,50 @@ export class MainComponent implements OnInit, OnDestroy {
 
       this.itemService.dialogs().subscribe(dialogs => {
         if (dialogs) {
-          const dialog = dialogs[0];
+          const createDialogs = dialogs.filter(d => itemIsInstanceOf(d, 'ItemCreateDialog'));
 
-        if (dialog && dialog.items) {
-          const dialogRef = this.dialog.open(RnDialogComponent, {
-            width: '400px',
-            data: {item: this.item, view: dialog.items[0]}
-          });
-  
-          dialogRef.afterClosed().subscribe(result => {
-            if (result) {
-              this.uploading = true;
-    
-              if (result.file) {
-                this.uploadingFile = true;
-                this.uploadProgress = 0;
-              }
-    
-              this.itemService.create(result, (progress) => { this.uploadProgress = progress }).subscribe(
-                (res) => {
-                  if (res && res['id']) {
-                    console.log(`Success created item id: ${res['id']}`);
-                    this.refresh();
+          if (createDialogs) {
+            const dialog = createDialogs[0];
+
+            if (dialog && dialog.items) {
+              const dialogRef = this.dialog.open(RnDialogComponent, {
+                width: '400px',
+                data: {item: this.item, view: dialog.items[0]}
+              });
+      
+              dialogRef.afterClosed().subscribe(result => {
+                if (result) {
+                  this.uploading = true;
+        
+                  if (result.file) {
+                    this.uploadingFile = true;
+                    this.uploadProgress = 0;
                   }
-                },
-                (err) => {
-                  this.uploadingFile = false;
-                  this.uploadProgress = 0;
-                  this.uploading = false;
-                  this.snackBar.open(err['error']['Error'], 'Dismiss');
-                },
-                () => {
-                  this.uploadingFile = false;
-                  this.uploadProgress = 0;
-                  this.uploading = false;
-                  this.refresh();
-                });
+        
+                  this.itemService.create(result.data, (progress) => { this.uploadProgress = progress }).subscribe(
+                    (res) => {
+                      if (res && res['id']) {
+                        console.log(`Success created item id: ${res['id']}`);
+                        this.refresh();
+                      }
+                    },
+                    (err) => {
+                      this.uploadingFile = false;
+                      this.uploadProgress = 0;
+                      this.uploading = false;
+                      this.snackBar.open(err['error']['Error'], 'Dismiss');
+                    },
+                    () => {
+                      this.uploadingFile = false;
+                      this.uploadProgress = 0;
+                      this.uploading = false;
+                      this.refresh();
+                    });
+                }
+              });
             }
-          });
-        }
-        } 
+            } 
+          }
       });
   
     }
@@ -142,29 +146,33 @@ export class MainComponent implements OnInit, OnDestroy {
 
     this.itemService.dialogs().subscribe(dialogs => {
       if (dialogs) {
-        const dialog = dialogs[0];
+        const editDialogs = dialogs.filter(d => itemIsInstanceOf(d, 'ItemEditDialog'));
 
-      if (dialog && dialog.items) {
-        const dialogRef = this.dialog.open(RnDialogComponent, {
-          width: '400px',
-          data: {item: this.item, view: dialog.items[0]}
-        });
+        if (editDialogs) {
+          const dialog = editDialogs[0];
 
-        dialogRef.afterClosed().subscribe(result => {
-          if (result) {
-            this.uploading = true;
+          if (dialog && dialog.items) {
+            const dialogRef = this.dialog.open(RnDialogComponent, {
+              width: '400px',
+              data: {item: this.item, view: dialog.items[0]}
+            });
   
-            if (result.file) {
-              this.uploadingFile = true;
-              this.uploadProgress = 0;
-            }
-  
-            this.itemService.update(result.id, result).subscribe(res => {
-              this.refresh();
+            dialogRef.afterClosed().subscribe(result => {
+              if (result) {
+                this.uploading = true;
+      
+                if (result.file) {
+                  this.uploadingFile = true;
+                  this.uploadProgress = 0;
+                }
+      
+                this.itemService.update(result.id, result).subscribe(res => {
+                  this.refresh();
+                });
+              }
             });
           }
-        });
-      }
+        }
       } 
     });
     

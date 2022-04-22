@@ -1,8 +1,8 @@
-<form *ngIf="item && attributes">
+<form *ngIf="item && attributes" [formGroup]="childFormGroup">
     <div fxLayout="column">
         <mat-form-field *ngFor="let attribute of attributes; let index = index">
             <mat-label>{{attribute[0]}}</mat-label>
-            <input matInput placeholder="" [value]="attribute[1]" type="text">
+            <input matInput placeholder="" [value]="attribute[1]" type="text" formControlName="{{attribute[0]}}">
         </mat-form-field>
     </div>
 </form>
