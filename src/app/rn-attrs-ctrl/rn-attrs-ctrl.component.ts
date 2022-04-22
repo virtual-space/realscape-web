@@ -15,8 +15,11 @@ export class RnAttrsCtrlComponent extends RnCtrlComponent implements OnInit, OnC
   childFormGroup = new FormGroup({})
 
   override ngOnInit(): void {
-    //console.log('*************************************** hello from attrs');
-    //console.log(this.item);
+    this.rebuildFormGroup();
+  }
+
+  rebuildFormGroup() {
+    this.childFormGroup = new FormGroup({});
     if (this.item) {
       if (this.item.attributes) {
         this.attributes = Object.entries(this.item.attributes).map(([k, v]) => [k, v]);
@@ -27,6 +30,7 @@ export class RnAttrsCtrlComponent extends RnCtrlComponent implements OnInit, OnC
 
     if(this.formGroup) {
       if(this.control && this.control.name) {
+        this.formGroup.removeControl('attributes');
         this.formGroup.addControl('attributes', this.childFormGroup);
       }
     }
@@ -34,8 +38,7 @@ export class RnAttrsCtrlComponent extends RnCtrlComponent implements OnInit, OnC
 
   ngOnChanges(changes: SimpleChanges): void {
     if(changes['item']) {
-      //console.log('*************************************** hello from attrs changed!!!');
-      //console.log(this.item);
+      this.rebuildFormGroup();
     }
   }
 

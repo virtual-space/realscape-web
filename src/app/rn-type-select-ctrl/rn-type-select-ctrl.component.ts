@@ -60,7 +60,7 @@ export class RnTypeSelectCtrlComponent  extends RnCtrlComponent implements OnIni
   }
     
   onSelectChange(event: MatSelectChange) {
-      const e = this.types.filter(t => t.id === event.value)[0];
+      const e = this.types.filter(t => t.name === event.value)[0];
       if (e && e.name && e.id && e.icon) {
         this.selectedId = e.id;
         this.selectedName = e.name;
@@ -70,7 +70,10 @@ export class RnTypeSelectCtrlComponent  extends RnCtrlComponent implements OnIni
         this.selectedItem.name = 'New' + e.name;
         this.selectedItem.type_id = e.id;
         this.selectedItem.attributes = e.attributes;
-        console.log(this.selectedItem);
+        //console.log(this.selectedItem);
+        if (this.onEvent) {
+          this.onEvent.emit({event: "item", item: this.selectedItem, control: this.control});
+        }
       }
   }
 

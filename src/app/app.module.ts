@@ -89,6 +89,7 @@ import { RnCreateItemViewComponent } from './rn-create-item-view/rn-create-item-
 import { RnFormCtrlComponent } from './rn-form-ctrl/rn-form-ctrl.component';
 import { RnSelectCtrlComponent } from './rn-select-ctrl/rn-select-ctrl.component';
 import { RnDialogComponent } from './rn-dialog/rn-dialog.component';
+import { RnMsgBoxComponent } from './rn-msg-box/rn-msg-box.component';
 
 
 @NgModule({
@@ -142,7 +143,8 @@ import { RnDialogComponent } from './rn-dialog/rn-dialog.component';
     RnCreateItemViewComponent,
     RnFormCtrlComponent,
     RnSelectCtrlComponent,
-    RnDialogComponent
+    RnDialogComponent,
+    RnMsgBoxComponent
   ],
   imports: [
     BrowserModule,

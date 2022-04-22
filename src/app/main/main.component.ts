@@ -10,6 +10,8 @@ import { EditViewComponent } from '../edit-view/edit-view.component';
 import { RnCreateItemViewComponent } from '../rn-create-item-view/rn-create-item-view.component';
 import { RnEditItemViewComponent } from '../rn-edit-item-view/rn-edit-item-view.component';
 import { RnDialogComponent } from '../rn-dialog/rn-dialog.component';
+import { RnMsgBoxComponent } from '../rn-msg-box/rn-msg-box.component';
+import { request } from 'http';
 
 @Component({
   selector: 'app-main',
@@ -92,6 +94,14 @@ export class MainComponent implements OnInit, OnDestroy {
                     this.uploadingFile = true;
                     this.uploadProgress = 0;
                   }
+
+                  if (this.item) {
+                    if (itemIsInstanceOf(this.item, "HomeApp")) {
+                      result.data['home'] = 'true';
+                    } else {
+                      result.data['parent_id'] = this.item.id;
+                    }
+                  }
         
                   this.itemService.create(result.data, (progress) => { this.uploadProgress = progress }).subscribe(
                     (res) => {
@@ -139,7 +149,21 @@ export class MainComponent implements OnInit, OnDestroy {
   }
 
   onDelete(event: any) {
-    
+    const dialogRef = this.dialog.open(RnMsgBoxComponent, {
+      width: '400px',
+      data: {title: 'Delete item', message: 'Warning you are about to delete an item. Are you sure you want to do this?'}
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if(result) {
+        if (this.item) {
+          this.uploading = true;
+          this.itemService.delete(this.item.id!).subscribe(res => {
+                this.refresh();
+          });
+        }
+      }
+    });
   }
 
   onEdit(event: any) {
@@ -165,8 +189,9 @@ export class MainComponent implements OnInit, OnDestroy {
                   this.uploadingFile = true;
                   this.uploadProgress = 0;
                 }
-      
-                this.itemService.update(result.id, result).subscribe(res => {
+                console.log(result);
+                const arg = Object.assign({id: this.item?.id},result.data)
+                this.itemService.update(arg.id, arg).subscribe(res => {
                   this.refresh();
                 });
               }

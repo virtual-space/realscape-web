@@ -1,7 +1,7 @@
 import { Component, Input, OnInit, SimpleChanges } from '@angular/core';
 import { RnCtrlComponent } from '../rn-ctrl/rn-ctrl.component';
 import { FormGroup, FormControl } from '@angular/forms';
-import { Item, itemIsInstanceOf } from '../services/item.service';
+import { Item, ItemEvent, itemIsInstanceOf } from '../services/item.service';
 
 @Component({
   selector: 'app-rn-form-ctrl',
@@ -17,7 +17,11 @@ export class RnFormCtrlComponent extends RnCtrlComponent implements OnInit {
     controls: Item[] = [];
 
     override ngOnInit(): void {
-      
+      this.rebuildControls();
+    }
+
+    rebuildControls() {
+      this.controls = [];
       if(this.control && this.control.items) {
         
         let controls: {[index: string]:any} = {};
@@ -35,8 +39,6 @@ export class RnFormCtrlComponent extends RnCtrlComponent implements OnInit {
           }
         } 
         }
-        console.log(this);
-        
     }
 
     getControlAttribute(key: string, def: string, control?: Item): string {
@@ -54,8 +56,7 @@ export class RnFormCtrlComponent extends RnCtrlComponent implements OnInit {
   
     ngOnChanges(changes: SimpleChanges): void {
       if(changes['item']) {
-        //console.log('*************************************** hello from ctrl view changed!!!');
-        //console.log(this.item);
+        this.rebuildControls();
       }
     }
 
@@ -90,6 +91,10 @@ export class RnFormCtrlComponent extends RnCtrlComponent implements OnInit {
                           control: button,
                           data: this.form_group.value });
       }
+    }
+
+    onEventHandler(event: ItemEvent) {
+      this.onEvent.next(event);
     }
   }
 

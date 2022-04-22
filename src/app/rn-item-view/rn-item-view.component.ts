@@ -80,6 +80,9 @@ export class RnItemViewComponent extends RnViewComponent implements OnInit, OnDe
     console.log('activating ',item);
     this.children = children.filter(child => !itemIsInstanceOf(child, "View"));
     this.views = children.filter(child => itemIsInstanceOf(child, "View"));
+    if (this.views.length === 0) {
+      console.log('dddddd');
+    }
     this.query = this.children.find(child => {
       if (child) {
         return itemIsInstanceOf(child, "Query");
@@ -87,13 +90,13 @@ export class RnItemViewComponent extends RnViewComponent implements OnInit, OnDe
         return false;
       }
     });
-    if(this.query) {
-        this.itemService.items(this.query.attributes!).subscribe(items => {
-          this.items = items;
-          if (activate) {
-            this.sessionService.activateItem(item);
-          }
-        });
+    if(this.query && this.query.attributes) {
+      this.itemService.items(this.query.attributes).subscribe(items => {
+        this.items = items.filter(child => !itemIsInstanceOf(child, "View"));
+        if (activate) {
+          this.sessionService.activateItem(item);
+        }
+      });
     } else {
       this.items = this.children;
       if (activate) {

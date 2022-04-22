@@ -13,14 +13,14 @@ export interface RnDialogData {
   styleUrls: ['./rn-dialog.component.sass']
 })
 export class RnDialogComponent implements OnInit {
-
+  item?: Item;
   constructor(
     public dialogRef: MatDialogRef<RnDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: RnDialogData,
   ) {}
 
   ngOnInit(): void {
-    console.log(this.data);
+    this.item = this.data.item;
   }
 
   onNoClick(): void {
@@ -32,12 +32,18 @@ export class RnDialogComponent implements OnInit {
   }
 
   onEvent(event: ItemEvent) {
+    console.log(event);
     if (event.item) {
-      if(event.item.attributes && event.item.attributes['close'] === 'true') {
-        this.dialogRef.close();
-      } else {
-        this.dialogRef.close(event);
+      if (event.event === 'click') {
+        if(event.item.attributes && event.item.attributes['close'] === 'true') {
+          this.dialogRef.close();
+        } else {
+          this.dialogRef.close(event);
+        }
+      } else if (event.event === 'item') {
+        this.item = event.item;
       }
+      
     }
   }
 

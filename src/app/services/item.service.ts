@@ -162,6 +162,9 @@ export class ItemService {
       if (query.name) {
         params = params.append('name', query.name);
       }
+      if (query.home) {
+        params = params.append('home', query.home);
+      }
       if (query.public) {
         params = params.append('public', query.public.toString());
       }
@@ -487,6 +490,7 @@ export class Query {
   tags?: string[];
   name?: string;
   public?: boolean;
+  home?: boolean;
   myItems?: boolean;
   parentId?: string;
   lat?: number;
