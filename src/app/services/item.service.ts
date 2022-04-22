@@ -211,7 +211,7 @@ export class ItemService {
   }
 
   public types(): Observable<[Type]> {
-    return this.http.get<Type>(this.getAccessibleEndpoint(true) + 'types').pipe(
+    return this.http.get<Type>(this.getAccessibleEndpoint(true) + '/types').pipe(
       catchError(this.handleError('/items', []))
     );
   }
@@ -340,6 +340,21 @@ export class ItemService {
     let params = new HttpParams();
     params = params.append('my_items', 'true');
     params = params.append('types', 'Apps');
+    
+    const httpOptions = {
+      params: params
+    };
+
+    return this.http.get<[Item]>(this.getAccessibleEndpoint(), httpOptions).pipe(
+      mergeMap(apps => this.http.get<[Item]>(this.getAccessibleEndpoint() + this.getAppsQueryString(apps))),
+      catchError(this.handleError('/items', []))
+    );
+  }
+
+  public dialogs(): Observable<[Item]> {
+    let params = new HttpParams();
+    params = params.append('my_items', 'true');
+    params = params.append('types', 'Dialogs');
     
     const httpOptions = {
       params: params

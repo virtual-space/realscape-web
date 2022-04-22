@@ -1,7 +1,9 @@
 import { L } from '@angular/cdk/keycodes';
-import { Component, OnInit, Input, OnChanges, SimpleChanges, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Input, OnChanges, SimpleChanges, Output, EventEmitter, ViewChild, ViewChildren, QueryList } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { stringify } from 'querystring';
-import { Item, ItemEvent, itemIsInstanceOf } from '../services/item.service';
+import { Item, ItemEvent, itemIsInstanceOf, ItemService } from '../services/item.service';
+import { SessionService } from '../services/session.service';
 
 @Component({
   selector: 'app-rn-view',
@@ -17,7 +19,11 @@ export class RnViewComponent implements OnInit, OnChanges {
 
   public isControl: boolean = false;
 
-  constructor() { }
+  @ViewChildren(RnViewComponent) itemViews!: QueryList<RnViewComponent>;
+
+  constructor(protected itemService: ItemService, 
+              protected sessionService: SessionService, 
+              protected route: ActivatedRoute) { }
 
   ngOnInit(): void {
     //console.log('*************************************** hello from view');
@@ -63,6 +69,24 @@ export class RnViewComponent implements OnInit, OnChanges {
     if(this.onEvent) {
       this.onEvent.emit(event);
     }
+  }
+
+  public onActivateHandler(index: number) {
+    //console.log('activating view ', this);
+    this.onActivate(index);
+
+    if (this.itemViews) {
+      //console.log('child views ', this.itemViews.toArray());
+      //console.log('activating view ', this.itemViews.toArray()[index]);
+      const view = this.itemViews.toArray()[index];
+      if (view) {
+        view.onActivateHandler(index);
+      }
+    }
+  }
+
+  public onActivate(index: number) {
+    //console.log('activating view ', this);
   }
 
 }

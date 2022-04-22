@@ -34,6 +34,7 @@ import { MatDividerModule} from '@angular/material/divider';
 import { MatSliderModule } from '@angular/material/slider';
 import { MatTreeModule } from '@angular/material/tree';
 import { MatSidenavModule } from '@angular/material/sidenav';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner'
 
 import { QRCodeModule } from 'angularx-qrcode';
 import { CodemirrorModule } from '@ctrl/ngx-codemirror';
@@ -87,6 +88,8 @@ import { RnCreateViewComponent } from './rn-create-view/rn-create-view.component
 import { RnEditItemViewComponent } from './rn-edit-item-view/rn-edit-item-view.component';
 import { RnCreateItemViewComponent } from './rn-create-item-view/rn-create-item-view.component';
 import { RnFormCtrlComponent } from './rn-form-ctrl/rn-form-ctrl.component';
+import { RnSelectCtrlComponent } from './rn-select-ctrl/rn-select-ctrl.component';
+import { RnDialogComponent } from './rn-dialog/rn-dialog.component';
 
 
 @NgModule({
@@ -139,7 +142,9 @@ import { RnFormCtrlComponent } from './rn-form-ctrl/rn-form-ctrl.component';
     RnCreateViewComponent,
     RnEditItemViewComponent,
     RnCreateItemViewComponent,
-    RnFormCtrlComponent
+    RnFormCtrlComponent,
+    RnSelectCtrlComponent,
+    RnDialogComponent
   ],
   imports: [
     BrowserModule,
@@ -175,6 +180,7 @@ import { RnFormCtrlComponent } from './rn-form-ctrl/rn-form-ctrl.component';
     MatSliderModule,
     MatTreeModule,
     MatSidenavModule,
+    MatProgressSpinnerModule,
     QRCodeModule,
     CodemirrorModule
   ],

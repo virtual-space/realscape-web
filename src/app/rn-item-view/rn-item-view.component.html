@@ -1,7 +1,7 @@
 <div fxFlex fxLayoutAlign="center center" *ngIf="item" fxFlexFill>
     <!-- <app-rn-query-view *ngIf="query"></app-rn-query-view> -->
     <div *ngIf="views.length > 1" class="tab-group-container">
-        <mat-tab-group [selectedIndex]="selectedView.value" dynamicHeight
+        <mat-tab-group [selectedIndex]="selectedView.value" dynamicHeight backgroundColor="primary"
                      (selectedTabChange)="onChangeTab($event)"
                      (selectedIndexChange)="selectedView.setValue($event)">
 
@@ -26,7 +26,7 @@
       </mat-tab-group>
     </div>
     <ng-container *ngIf="views.length === 1">
-        <app-rn-view [items]="items" [view]="views[0]" [item]="item" (onEvent)="onEvent($event)"></app-rn-view>
+        <app-rn-view [items]="items" [view]="views[0]" [item]="item" (onEvent)="onItemEvent($event)"></app-rn-view>
     </ng-container>
 </div>
 <div *ngIf="!item">

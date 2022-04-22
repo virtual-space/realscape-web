@@ -1,21 +1,20 @@
-import { Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges } from '@angular/core';
+import { Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges, ViewChild } from '@angular/core';
 import { Subscription } from 'rxjs';
 import {ActivatedRoute, Router} from '@angular/router';
 import { Item, ItemService, itemIsInstanceOf, ItemEvent } from '../services/item.service';
 import { SessionService } from '../services/session.service';
 
 import {FormControl} from "@angular/forms";
+import { RnViewComponent } from '../rn-view/rn-view.component';
 
 @Component({
   selector: 'app-rn-item-view',
   templateUrl: './rn-item-view.component.html',
   styleUrls: ['./rn-item-view.component.sass']
 })
-export class RnItemViewComponent implements OnInit, OnDestroy, OnChanges {
+export class RnItemViewComponent extends RnViewComponent implements OnInit, OnDestroy, OnChanges {
 
   @Input() id?: string;
-  @Input() item?: Item;
-  @Input() items: Item[] = [];
   @Input() children: Item[] = [];
   @Input() views: Item[] = [];
   @Input() query?: Item;
@@ -28,11 +27,7 @@ export class RnItemViewComponent implements OnInit, OnDestroy, OnChanges {
 
   selectedView = new FormControl(0);
 
-  constructor(private itemService: ItemService, 
-              private sessionService: SessionService, 
-              private route: ActivatedRoute) { }
-
-  ngOnInit(): void {
+  override ngOnInit(): void {
     console.log('item-view init ', this.item);
     if (this.item) {
         this.reloadItem(this.item, false);
@@ -107,7 +102,7 @@ export class RnItemViewComponent implements OnInit, OnDestroy, OnChanges {
     }
   }
 
-  ngOnChanges(changes: SimpleChanges): void {
+  override ngOnChanges(changes: SimpleChanges): void {
     if(changes['item']) {
       if (this.item) {
         console.log('item view reloading item', this.item);
@@ -117,11 +112,13 @@ export class RnItemViewComponent implements OnInit, OnDestroy, OnChanges {
     }
   }
 
-  onEvent(event: ItemEvent) {
+  onItemEvent(event: ItemEvent) {
     console.log(event);
   }
 
   onChangeTab(event: any) {
+    //console.log(event);
+    this.onActivateHandler(event.index);
     //this.selectedTab = event.index;
   }
 

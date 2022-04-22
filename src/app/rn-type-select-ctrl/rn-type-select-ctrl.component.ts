@@ -19,32 +19,34 @@ export class RnTypeSelectCtrlComponent  extends RnCtrlComponent implements OnIni
 
   override ngOnInit(): void {
     this.itemService.types().subscribe(types => {
-      this.types = types.filter(t => t.attributes && t.attributes['creatable'] === 'true');
-      if (this.item && this.item.attributes && 'creatable_types' in this.item.attributes) {
-          const includedTypeNames: Set<string> = new Set(this.item.attributes['creatable_types']);
-          //console.log('************************* included type names ', includedTypeNames);
-          //const includedTypes = new Set(types.filter(t => includedTypeNames.has(t.name)).map(t => t['id']));
-          //this.types = this.types.filter(t => includedTypes.has(t['id']) || includedTypes.has(t['base_id']) );
-          const includedTypes:Type[] = [];
-          for (let type of this.types) {
-            for(let type_name of includedTypeNames) {
-              if (isInstanceOf(type, type_name)) {
-                //console.log('************************* found instance ', type.name, type_name);
-                includedTypes.push(type);  
-                break;
+      if(types) {
+        this.types = types.filter(t => t.attributes && t.attributes['creatable'] === 'true');
+        if (this.item && this.item.attributes && 'creatable_types' in this.item.attributes) {
+            const includedTypeNames: Set<string> = new Set(this.item.attributes['creatable_types']);
+            //console.log('************************* included type names ', includedTypeNames);
+            //const includedTypes = new Set(types.filter(t => includedTypeNames.has(t.name)).map(t => t['id']));
+            //this.types = this.types.filter(t => includedTypes.has(t['id']) || includedTypes.has(t['base_id']) );
+            const includedTypes:Type[] = [];
+            for (let type of this.types) {
+              for(let type_name of includedTypeNames) {
+                if (isInstanceOf(type, type_name)) {
+                  //console.log('************************* found instance ', type.name, type_name);
+                  includedTypes.push(type);  
+                  break;
+                }
               }
-            }
-          } 
-          this.types = includedTypes;
-          //console.log('************************* resulting types ', includedTypes);
-      }
-      
-      if (this.types.length > 0) {
-        const t = this.types[0];
-        if (t && t.name && t.id && t.icon) {
-          this.selectedName = t.name;
-          this.selectedId = t.id;
-          this.selectedIcon = t.icon;
+            } 
+            this.types = includedTypes;
+            //console.log('************************* resulting types ', includedTypes);
+        }
+        
+        if (this.types.length > 0) {
+          const t = this.types[0];
+          if (t && t.name && t.id && t.icon) {
+            this.selectedName = t.name;
+            this.selectedId = t.id;
+            this.selectedIcon = t.icon;
+          }
         }
       }
     });

@@ -18,34 +18,40 @@
                             <app-rn-type-select-ctrl [item]="item" [control]="child"></app-rn-type-select-ctrl>
                         </ng-container>
                         <ng-container *ngSwitchCase="'TreeCtrl'">
-                            <app-rn-tree-ctrl></app-rn-tree-ctrl>
+                            <app-rn-tree-ctrl  [item]="item" [control]="child"></app-rn-tree-ctrl>
                         </ng-container>
                         <ng-container *ngSwitchCase="'QueryCtrl'">
-                            <app-rn-query-ctrl></app-rn-query-ctrl>
+                            <app-rn-query-ctrl  [item]="item" [control]="child"></app-rn-query-ctrl>
                         </ng-container>
                         <ng-container *ngSwitchCase="'EditCtrl'">
-                            <app-rn-edit-ctrl [item]="child"></app-rn-edit-ctrl>
+                            <app-rn-edit-ctrl  [item]="item" [control]="child"></app-rn-edit-ctrl>
                         </ng-container>
                         <ng-container *ngSwitchCase="'LocationCtrl'">
-                            <app-rn-location-ctrl></app-rn-location-ctrl>
+                            <app-rn-location-ctrl  [item]="item" [control]="child"></app-rn-location-ctrl>
                         </ng-container>
                         <ng-container *ngSwitchCase="'TagsCtrl'">
-                            <app-rn-tags-ctrl></app-rn-tags-ctrl>
+                            <app-rn-tags-ctrl  [item]="item" [control]="child"></app-rn-tags-ctrl>
                         </ng-container>
                         <ng-container *ngSwitchCase="'DateCtrl'">
-                            <app-rn-date-ctrl  [item]="child"></app-rn-date-ctrl>
+                            <app-rn-date-ctrl   [item]="item" [control]="child"></app-rn-date-ctrl>
                         </ng-container>
                         <ng-container *ngSwitchCase="'LabelCtrl'">
                             <app-rn-label-ctrl [item]="item" [control]="child"></app-rn-label-ctrl>
                         </ng-container>
+                        <ng-container *ngSwitchCase="'FormCtrl'">
+                            <app-rn-form-ctrl [item]="item" [control]="child"></app-rn-form-ctrl>
+                        </ng-container>
                         <ng-container *ngSwitchCase="'ItemCtrl'">
-                            <app-rn-item-ctrl></app-rn-item-ctrl>
+                            <app-rn-item-ctrl  [item]="item" [control]="child"></app-rn-item-ctrl>
                         </ng-container>
                         <div *ngSwitchDefault>
                             <div *ngIf="isButton(child)">
                                 <app-rn-button-ctrl [item]="item" [control]="child"></app-rn-button-ctrl>
                             </div>
-                            <div *ngIf="!isButton(child)">
+                            <div *ngIf="isForm(child)">
+                                <app-rn-form-ctrl [item]="item" [control]="child"></app-rn-form-ctrl>
+                            </div>
+                            <div *ngIf="!isButton(child) && !isForm(child)">
                                 Control: {{child!.type!.name!}}
                             </div>
                         </div>

@@ -70,4 +70,8 @@ export class RnCtrlViewComponent implements OnInit, OnChanges {
     return itemIsInstanceOf(item, "ButtonCtrl");
   }
 
+  isForm(item: Item) {
+    return itemIsInstanceOf(item, "FormCtrl");
+  }
+
 }

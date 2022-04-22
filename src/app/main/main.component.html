@@ -1,11 +1,16 @@
 <div fxLayout="column" fxFlexFill>
     <div fxFlex>
-        <mat-toolbar color="primary">
-            <div fxLayout="row" fxLayoutGap="5px">
-              <nav mat-tab-nav-bar fxLayout="row">
-                <button mat-fab [matMenuTriggerFor]="menu" color="primary" style="background: url('../assets/vslogo.png') center no-repeat;" center no-repeat>
-                </button>
-                <button mat-flat-button *ngIf="item" color="primary" ><mat-icon>{{item.type!.icon}}</mat-icon><span>{{item.name}}</span></button>
+        <nav mat-tab-nav-bar color="primary" [tabPanel]="">
+            <div fxLayout="row" fxLayoutGap="5px" fxFlexFill>
+              <nav mat-tab-nav-bar fxLayout="row" backgroundColor="primary" fxFlexFill>
+                <div fxFlex="1 0 5%">
+                  <button mat-mini-fab [matMenuTriggerFor]="menu" color="primary" style="background: url('../assets/vslogo.png') center no-repeat;" center no-repeat></button>
+                </div>
+                
+                <div fxFlex="0 1 90%" fxLayoutAlign="center center">
+                  <button mat-flat-button *ngIf="item" color="primary" ><mat-icon>{{item.type!.icon}}</mat-icon><span>{{item.name}}</span></button>
+                </div>
+                
                 <mat-menu #menu="matMenu">
                     <ng-container  *ngFor="let app of apps">
                         <ng-container [ngSwitch]="app!.type!.name">
@@ -14,7 +19,10 @@
                         </ng-container>
                     </ng-container>
                 </mat-menu>
-                <button mat-fab [matMenuTriggerFor]="menuMore" *ngIf="item" color="primary" ><mat-icon>more_vert</mat-icon></button>
+                <div fxFlex="1 0 5%" fxLayoutAlign="center center">
+                  <button mat-mini-fab [matMenuTriggerFor]="menuMore" *ngIf="item" color="primary"><mat-icon>more_vert</mat-icon></button>
+                </div>
+                
                 <mat-menu #menuMore="matMenu" xPosition="before">
                     <button *ngIf="canAddItem()" mat-menu-item (click)="onAdd($event)">
                       <mat-icon>add</mat-icon>
@@ -44,9 +52,9 @@
                   </mat-menu>
                </nav>
             </div>
-        </mat-toolbar>
+        </nav>
     </div>
-    <div fxFlex>
-        <router-outlet></router-outlet> 
-    </div>
+    <mat-tab-nav-panel #tabPanel fxFlex>
+      <router-outlet></router-outlet> 
+    </mat-tab-nav-panel>
 </div>

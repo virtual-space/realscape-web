@@ -8,6 +8,7 @@ import { Item } from '../services/item.service'
 //const mapboxgl:any = require('mapbox-gl');
 
 import { Map, NavigationControl } from 'mapbox-gl';
+import { RnViewComponent } from '../rn-view/rn-view.component';
 //import * as mapboxgl from "mapbox-gl";
 
 @Component({
@@ -15,10 +16,8 @@ import { Map, NavigationControl } from 'mapbox-gl';
   templateUrl: './rn-map-view.component.html',
   styleUrls: ['./rn-map-view.component.sass']
 })
-export class RnMapViewComponent implements OnInit {
+export class RnMapViewComponent extends RnViewComponent implements OnInit {
 
-  @Input() items: Item[] = []
-  
   @ViewChild('mapElement') set content(content: ElementRef) {
     if(content) {
       console.log(content);
@@ -40,11 +39,8 @@ export class RnMapViewComponent implements OnInit {
   zoom = 12;
   token = 'pk.eyJ1IjoidjFydHU0bHNwNGMzIiwiYSI6ImNreW1mZXI5ZzA2aHQydG5zY2hiNWh0ZjAifQ.BovKKecsXgBq1wu7PlAUHQ';
 
-  constructor() { 
-  }
-
-  ngOnInit(): void {
-    
+  public override onActivate(): void {
+    console.log('map view activate');
   }
 
 }
