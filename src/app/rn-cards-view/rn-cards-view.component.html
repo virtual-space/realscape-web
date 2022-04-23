@@ -1,1 +1,3 @@
-<p>rn-cards-view works!</p>
+<div fxLayout="row wrap" class="card-deck-container" fxLayoutAlign="center center" fxLayoutGap="24px" *ngIf="items">
+    <app-rn-card-view [item]="item" *ngFor="let item of items"></app-rn-card-view>
+</div>

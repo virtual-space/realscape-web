@@ -148,21 +148,6 @@ export class RnItemViewComponent extends RnViewComponent implements OnInit, OnDe
     //this.onSaveViews();
   }
 
-  onAddView(event: any) {
-    /*
-    const dialogRef = this.dialog.open(EditViewComponent, {
-      width: '400px'
-    });
-
-    dialogRef.afterClosed().subscribe(result => {
-      if (result) {
-        this.views.push(result);
-        this.selectedView.setValue(this.views.length - 1);
-        this.onSaveViews();
-      }
-    });
-    */
-  }
 
   onSaveViews() {
     /*
@@ -179,10 +164,6 @@ export class RnItemViewComponent extends RnViewComponent implements OnInit, OnDe
   onCenterChanged(event: any) {
     //console.log('onCenterChanged', event);
     //this.center = event;
-  }
-
-  onAdd(event: any): void {
-    //this.addItem({});
   }
 
   addItem(options: any) {

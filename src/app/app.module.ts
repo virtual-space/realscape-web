@@ -35,6 +35,8 @@ import { MatSliderModule } from '@angular/material/slider';
 import { MatTreeModule } from '@angular/material/tree';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner'
+import {MatCardModule} from '@angular/material/card';
+import {MatTooltipModule} from '@angular/material/tooltip';
 
 import { QRCodeModule } from 'angularx-qrcode';
 import { CodemirrorModule } from '@ctrl/ngx-codemirror';
@@ -90,6 +92,7 @@ import { RnFormCtrlComponent } from './rn-form-ctrl/rn-form-ctrl.component';
 import { RnSelectCtrlComponent } from './rn-select-ctrl/rn-select-ctrl.component';
 import { RnDialogComponent } from './rn-dialog/rn-dialog.component';
 import { RnMsgBoxComponent } from './rn-msg-box/rn-msg-box.component';
+import { RnCardViewComponent } from './rn-card-view/rn-card-view.component';
 
 
 @NgModule({
@@ -144,7 +147,8 @@ import { RnMsgBoxComponent } from './rn-msg-box/rn-msg-box.component';
     RnFormCtrlComponent,
     RnSelectCtrlComponent,
     RnDialogComponent,
-    RnMsgBoxComponent
+    RnMsgBoxComponent,
+    RnCardViewComponent
   ],
   imports: [
     BrowserModule,
@@ -181,6 +185,8 @@ import { RnMsgBoxComponent } from './rn-msg-box/rn-msg-box.component';
     MatTreeModule,
     MatSidenavModule,
     MatProgressSpinnerModule,
+    MatCardModule,
+    MatTooltipModule,
     QRCodeModule,
     CodemirrorModule
   ],

@@ -43,7 +43,7 @@
     <app-rn-query-view></app-rn-query-view>
   </div>
   <div *ngSwitchCase="'CardsView'">
-    <app-rn-cards-view></app-rn-cards-view>
+    <app-rn-cards-view [items]="items"></app-rn-cards-view>
   </div>
   <div *ngSwitchCase="'TreeView'">
     <app-rn-tree-view [items]="items"></app-rn-tree-view>

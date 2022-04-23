@@ -28,6 +28,9 @@
     <ng-container *ngIf="views.length === 1">
         <app-rn-view [items]="items" [view]="views[0]" [item]="item" (onEvent)="onItemEvent($event)"></app-rn-view>
     </ng-container>
+    <ng-container *ngIf="views.length === 0">
+      <app-rn-card-view [items]="items" [view]="views[0]" [item]="item" (onEvent)="onItemEvent($event)"></app-rn-card-view>
+  </ng-container>
 </div>
 <div *ngIf="!item">
     ...
