@@ -21,7 +21,7 @@
               </button>
             </mat-menu>
           </ng-template>
-          <app-rn-view [items]="items" [view]="view" [item]="item"></app-rn-view>
+          <app-rn-view [items]="items" [view]="view" [item]="item" [events]="eventsSubject.asObservable()" [tabIndex]="index"></app-rn-view>
         </mat-tab>
       </mat-tab-group>
     </div>

@@ -1,20 +1,20 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { RnFunctionViewComponent } from './rn-function-view.component';
+import { RnFuncCtrlComponent } from './rn-func-ctrl.component';
 
-describe('RnFunctionViewComponent', () => {
-  let component: RnFunctionViewComponent;
-  let fixture: ComponentFixture<RnFunctionViewComponent>;
+describe('RnFuncCtrlComponent', () => {
+  let component: RnFuncCtrlComponent;
+  let fixture: ComponentFixture<RnFuncCtrlComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ RnFunctionViewComponent ]
+      declarations: [ RnFuncCtrlComponent ]
     })
     .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(RnFunctionViewComponent);
+    fixture = TestBed.createComponent(RnFuncCtrlComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

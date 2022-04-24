@@ -1,0 +1,10 @@
+<div *ngIf="item && item.attributes">
+    <ngx-codemirror
+    [(ngModel)]="item.attributes['code']"
+    [options]="{
+      lineNumbers: true,
+      theme: 'material',
+      mode: 'python'
+    }"
+  ></ngx-codemirror>
+</div>

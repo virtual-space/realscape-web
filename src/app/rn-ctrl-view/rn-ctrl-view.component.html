@@ -41,6 +41,9 @@
                         <ng-container *ngSwitchCase="'FormCtrl'">
                             <app-rn-form-ctrl [item]="item" [control]="child"></app-rn-form-ctrl>
                         </ng-container>
+                        <ng-container *ngSwitchCase="'FuncCtrl'">
+                            <app-rn-func-ctrl [item]="item" [control]="child"></app-rn-func-ctrl>
+                        </ng-container>
                         <ng-container *ngSwitchCase="'ItemCtrl'">
                             <app-rn-item-ctrl  [item]="item" [control]="child"></app-rn-item-ctrl>
                         </ng-container>

@@ -3,8 +3,7 @@
       <app-rn-list-view [items]="items"></app-rn-list-view>
   </div>
   <div *ngSwitchCase="'MapView'">
-    map!!!
-    <app-rn-map-view [items]="items"></app-rn-map-view>
+    <app-rn-map-view [items]="items" [events]="events" [tabIndex]="tabIndex"></app-rn-map-view>
   </div>
   <div *ngSwitchCase="'CalendarView'">
       <app-rn-calendar-view [items]="items"></app-rn-calendar-view>
@@ -48,9 +47,6 @@
   <div *ngSwitchCase="'TreeView'">
     <app-rn-tree-view [items]="items"></app-rn-tree-view>
   </div>
-  <div *ngSwitchCase="'FuncView'">
-    <app-rn-function-view [items]="items"></app-rn-function-view>
-  </div>
   <div *ngSwitchCase="'EditView'">
     <app-rn-edit-item-view [item]="item"></app-rn-edit-item-view>
   </div>
@@ -61,11 +57,13 @@
     <app-rn-item-view [item]="getItemViewTarget(items)"></app-rn-item-view>
   </div>
   <div *ngSwitchDefault>
-    <div *ngIf="isControl">
-      <app-rn-ctrl-view [control]="view" [item]="item" (onEvents)="onEventHandler($event)"></app-rn-ctrl-view>
-    </div>
-    <div *ngIf="!isControl">
-      Unhandled type: {{view!.type!.name!}}
+    <div *ngIf="view">
+      <div *ngIf="isCtrlView(view)">
+        <app-rn-ctrl-view [control]="view" [item]="item" (onEvents)="onEventHandler($event)"></app-rn-ctrl-view>
+      </div>
+      <div *ngIf="!isCtrlView(view)">
+        Unhandled type: {{view.type!.name!}}
+      </div>
     </div>
   </div>
 </div>

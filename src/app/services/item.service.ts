@@ -20,6 +20,10 @@ export class ItemService {
     return (environment['api'] || '') + '/items';
   }
 
+  protected getHomeEndpoint() {
+    return (environment['home'] || '') + '/items';
+  }
+
   protected getAccessibleEndpoint(excludePath= false) {
     if (this.authService.isLoggedIn()) {
       if (excludePath) {
@@ -262,9 +266,10 @@ export class ItemService {
   }
 
   public getLink(item: Item): string {
+    const base = this.getHomeEndpoint();
     if (item && item.link && item.link.startsWith('http')) {
-      if (item.link.startsWith('https://realnet.io/')) {
-        return item.link.slice(19);
+      if (item.link.startsWith(base)) {
+        return item.link.slice(base.length);
       }
       return item.link;
     } else if (item && item.link) {
@@ -278,16 +283,18 @@ export class ItemService {
   }
 
   public getLinkedItemId(item: Item): string {
+    const base = this.getHomeEndpoint();
     if (item && item.link && item.link.startsWith('http')) {
-      if (item.link.startsWith('https://realnet.io/')) {
-        return item.link.slice(25);
+      if (item.link.startsWith(base)) {
+        return item.link.slice(base.length);
       }
     }
     return '';
   }
 
   isInternalLink(item: Item): boolean {
-    return !!item && !!item.link && item.link.startsWith('https://realnet.io/');
+    const base = this.getHomeEndpoint();
+    return !!item && !!item.link && item.link.startsWith(base);
   }
 
   isLink(item: Item): boolean {
@@ -385,6 +392,7 @@ export class Type {
   attributes?: {[index: string]:any};
   instances?: [Instance];
   base?: Type;
+  module?: string;
 }
 
 

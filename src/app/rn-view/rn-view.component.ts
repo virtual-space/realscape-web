@@ -1,9 +1,10 @@
 import { L } from '@angular/cdk/keycodes';
-import { Component, OnInit, Input, OnChanges, SimpleChanges, Output, EventEmitter, ViewChild, ViewChildren, QueryList } from '@angular/core';
+import { Component, OnInit, Input, OnChanges, SimpleChanges, Output, EventEmitter, ViewChild, ViewChildren, QueryList, OnDestroy } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute } from '@angular/router';
 import { stringify } from 'querystring';
+import { Observable, Subscription } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { EditViewComponent } from '../edit-view/edit-view.component';
 import { QrCodeComponent } from '../qr-code/qr-code.component';
@@ -11,6 +12,7 @@ import { RnDialogComponent } from '../rn-dialog/rn-dialog.component';
 import { RnMsgBoxComponent } from '../rn-msg-box/rn-msg-box.component';
 import { Item, ItemEvent, itemIsInstanceOf, ItemService } from '../services/item.service';
 import { SessionService } from '../services/session.service';
+
 
 @Component({
   selector: 'app-rn-view',
@@ -22,15 +24,15 @@ export class RnViewComponent implements OnInit, OnChanges {
   @Input() view?: Item;
   @Input() items: Item[] = [];
   @Input() item?: Item;
+  @Input() events?: Observable<number>;
+  @Input() tabIndex?: number;
   @Output() onEvent = new EventEmitter<ItemEvent>();
-
+  
   public isControl: boolean = false;
 
   uploadProgress = 0;
   uploadingFile = false;
   uploading = false;
-
-  @ViewChildren(RnViewComponent) itemViews!: QueryList<RnViewComponent>;
 
   constructor(protected itemService: ItemService, 
               protected sessionService: SessionService, 
@@ -95,40 +97,44 @@ export class RnViewComponent implements OnInit, OnChanges {
     }
   }
 
-  public onActivateHandler(index: number) {
-    //console.log('activating view ', this);
-    this.onActivate(index);
-
-    if (this.itemViews) {
-      //console.log('child views ', this.itemViews.toArray());
-      //console.log('activating view ', this.itemViews.toArray()[index]);
-      const view = this.itemViews.toArray()[index];
-      if (view) {
-        view.onActivateHandler(index);
-      }
-    }
+  onViewEventHandler(event: string) {
+    console.log('event received by ', this);
   }
 
-  public onActivate(index: number) {
-    //console.log('activating view ', this);
+  isExternalType(item: Item): boolean {
+    if (item.type && item.type.module) {
+      return true;
+    }
+    return false;
+  }
+
+  openQRCodeDialog(item?: Item) {
+    const dialogRef = this.dialog.open(QrCodeComponent, {
+      width: '400px',
+      data: { code: environment['home'] + '/items/' + (this.item? this.item.id : ''), name: this.item? this.item.name : 'realnet' }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {});
   }
 
   onQRCode() {
-    const dialogRef = this.dialog.open(QrCodeComponent, {
-      width: '400px',
-      data: { code: environment['home'] + '/items/' + (this.item? this.item.id : ''), name: this.item? this.item.name : 'Realnet' }
-    });
+    this.openQRCodeDialog(this.item);
+  }
 
-    dialogRef.afterClosed().subscribe(result => {
-    });
+  openEditDialog(item?: Item): void {
+    this.onEventHandler({event: 'edit', item: item});
   }
 
   editDialog(): void {
-    this.onEventHandler({event: 'edit', item: this.item});
+    this.openEditDialog(this.item);
+  }
+
+  openDeleteDialog(item?: Item): void {
+    this.onEventHandler({event: 'delete', item: item});
   }
 
   deleteDialog(): void {
-    this.onEventHandler({event: 'delete', item: this.item});
+    this.openDeleteDialog(this.item);
   }
 
   trimItemName(itemName: String) {
@@ -138,20 +144,52 @@ export class RnViewComponent implements OnInit, OnChanges {
     return itemName;
   }
 
+  extractParentRelativeLink(item?: Item): string {
+    if (item && item.id) {
+/*
+      if(item.parent_id) {
+        return '/items/' + item.parent_id + '/items/' + item.id;
+      }
+*/
+      return '/items/' + item.id;
+    }
+    return '';
+  }
+
+  extractLink(item?: Item): string {
+    return item? this.itemService.getLink(item) : '';
+  }
+
   getLink(): string {
-    return this.item? this.itemService.getLink(this.item) : '';
+    return this.extractLink(this.item);
+  }
+
+  extractLinkedItemId(item?: Item): string {
+    return item? this.itemService.getLinkedItemId(item) : '';
   }
 
   getLinkedItemId(): string {
-    return this.item? this.itemService.getLinkedItemId(this.item) : '';
+    return this.extractLinkedItemId(this.item);
+  }
+
+  linkCheck(item?: Item) : boolean {
+    return item? this.itemService.isLink(item) : false;
   }
 
   isLink(): boolean {
-    return this.item? this.itemService.isLink(this.item) : false;
+    return this.linkCheck(this.item);
+  }
+
+  itemLinkCheck(item?: Item) : boolean {
+    return item? this.itemService.isInternalLink(item) : false;
   }
 
   isItemLink(): boolean {
-    return this.item? this.itemService.isInternalLink(this.item) : false;
+    return this.itemLinkCheck(this.item);
+  }
+
+  isCtrlView(item: Item) {
+    return itemIsInstanceOf(item, "CtrlView");
   }
 
   canAddItem(): boolean {

@@ -85,7 +85,6 @@ import { RnItemCtrlComponent } from './rn-item-ctrl/rn-item-ctrl.component';
 import { RnCtrlComponent } from './rn-ctrl/rn-ctrl.component';
 import { RnTypeSelectCtrlComponent } from './rn-type-select-ctrl/rn-type-select-ctrl.component';
 import { RnItemSelectCtrlComponent } from './rn-item-select-ctrl/rn-item-select-ctrl.component';
-import { RnFunctionViewComponent } from './rn-function-view/rn-function-view.component';
 import { RnEditItemViewComponent } from './rn-edit-item-view/rn-edit-item-view.component';
 import { RnCreateItemViewComponent } from './rn-create-item-view/rn-create-item-view.component';
 import { RnFormCtrlComponent } from './rn-form-ctrl/rn-form-ctrl.component';
@@ -93,6 +92,7 @@ import { RnSelectCtrlComponent } from './rn-select-ctrl/rn-select-ctrl.component
 import { RnDialogComponent } from './rn-dialog/rn-dialog.component';
 import { RnMsgBoxComponent } from './rn-msg-box/rn-msg-box.component';
 import { RnCardViewComponent } from './rn-card-view/rn-card-view.component';
+import { RnFuncCtrlComponent } from './rn-func-ctrl/rn-func-ctrl.component';
 
 
 @NgModule({
@@ -141,14 +141,14 @@ import { RnCardViewComponent } from './rn-card-view/rn-card-view.component';
     RnCtrlComponent,
     RnTypeSelectCtrlComponent,
     RnItemSelectCtrlComponent,
-    RnFunctionViewComponent,
     RnEditItemViewComponent,
     RnCreateItemViewComponent,
     RnFormCtrlComponent,
     RnSelectCtrlComponent,
     RnDialogComponent,
     RnMsgBoxComponent,
-    RnCardViewComponent
+    RnCardViewComponent,
+    RnFuncCtrlComponent
   ],
   imports: [
     BrowserModule,

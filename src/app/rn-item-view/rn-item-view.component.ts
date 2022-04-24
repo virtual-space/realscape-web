@@ -1,11 +1,12 @@
-import { Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges, ViewChild } from '@angular/core';
-import { Subscription } from 'rxjs';
+import { Component, Input, OnChanges, OnDestroy, OnInit, QueryList, SimpleChanges, ViewChild, ViewChildren } from '@angular/core';
+import { Subject, Subscription } from 'rxjs';
 import {ActivatedRoute, Router} from '@angular/router';
 import { Item, ItemService, itemIsInstanceOf, ItemEvent } from '../services/item.service';
 import { SessionService } from '../services/session.service';
 
 import {FormControl} from "@angular/forms";
 import { RnViewComponent } from '../rn-view/rn-view.component';
+import { throwMatDuplicatedDrawerError } from '@angular/material/sidenav';
 
 @Component({
   selector: 'app-rn-item-view',
@@ -25,6 +26,8 @@ export class RnItemViewComponent extends RnViewComponent implements OnInit, OnDe
 
   subscription?: Subscription;
 
+  eventsSubject: Subject<number> = new Subject<number>();
+
   selectedView = new FormControl(0);
 
   override ngOnInit(): void {
@@ -33,6 +36,7 @@ export class RnItemViewComponent extends RnViewComponent implements OnInit, OnDe
         this.reloadItem(this.item, false);
     } else {
         this.route.paramMap.subscribe(params => {
+          //console.log(params);
           const id = params.get('id');
           if(id && (!this.item || id != this.id)) {
             console.log('subscribing ',id);
@@ -54,7 +58,7 @@ export class RnItemViewComponent extends RnViewComponent implements OnInit, OnDe
     }
   }
 
-  refresh(id: string): void {
+  refresh(id: string, subid?: string): void {
     console.log('refreshing ',id);
     this.itemService.getItem(id).subscribe(item => {
       if (item) {
@@ -66,8 +70,14 @@ export class RnItemViewComponent extends RnViewComponent implements OnInit, OnDe
 
   reloadItem(item: Item, activate: boolean): void {
     console.log('reloading ',item);
-    this.id = item.id;  
-    if (item.items) {
+    this.id = item.id; 
+    if (this.isExternalType(item)) {
+      if (this.id) {
+        this.itemService.children(this.id).subscribe(children => {
+          this.activateItem(item, children, activate);
+        });
+      }
+    }  else if (item.items) {
       this.activateItem(item, item.items, activate);
     } else if (this.id) {
       this.itemService.children(this.id).subscribe(children => {
@@ -78,32 +88,50 @@ export class RnItemViewComponent extends RnViewComponent implements OnInit, OnDe
 
   activateItem(item: Item, children: Item[], activate: boolean) {
     console.log('activating ',item);
-    this.children = children.filter(child => !itemIsInstanceOf(child, "View"));
-    this.views = children.filter(child => itemIsInstanceOf(child, "View"));
-    if (this.views.length === 0) {
-      console.log('dddddd');
-    }
-    this.query = this.children.find(child => {
-      if (child) {
-        return itemIsInstanceOf(child, "Query");
-      } else {
-        return false;
-      }
-    });
-    if(this.query && this.query.attributes) {
-      this.itemService.items(this.query.attributes).subscribe(items => {
-        this.items = items.filter(child => !itemIsInstanceOf(child, "View"));
-        if (activate) {
-          this.sessionService.activateItem(item);
-        }
-      });
-    } else {
-      this.items = this.children;
+    if (this.isExternalType(item)) {
+      this.items = children;
+      console.log(this);
       if (activate) {
         this.sessionService.activateItem(item);
-      }
+        if (this.views.length > 0) {
+          this.eventsSubject.next(0);
+        }
+      };
     }
-  }
+    else {
+      this.children = children.filter(child => !itemIsInstanceOf(child, "View"));
+      this.views = children.filter(child => itemIsInstanceOf(child, "View"));
+      if (this.views.length > 0) {
+        this.eventsSubject.next(0);
+      }
+      this.query = this.children.find(child => {
+        if (child) {
+          return itemIsInstanceOf(child, "Query");
+        } else {
+          return false;
+        }
+      });
+      if(this.query && this.query.attributes) {
+        this.itemService.items(this.query.attributes).subscribe(items => {
+          this.items = items.filter(child => !itemIsInstanceOf(child, "View"));
+          if (activate) {
+            this.sessionService.activateItem(item);
+            if (this.views.length > 0) {
+              this.eventsSubject.next(0);
+            }
+          }
+        });
+      } else {
+        this.items = this.children;
+        if (activate) {
+          this.sessionService.activateItem(item);
+          if (this.views.length > 0) {
+            this.eventsSubject.next(0);
+          }
+        }
+      }
+      }
+   }
 
   override ngOnChanges(changes: SimpleChanges): void {
     if(changes['item']) {
@@ -120,10 +148,11 @@ export class RnItemViewComponent extends RnViewComponent implements OnInit, OnDe
   }
 
   onChangeTab(event: any) {
-    //console.log(event);
-    this.onActivateHandler(event.index);
+    console.log(event);
+    this.eventsSubject.next(event.index);
     //this.selectedTab = event.index;
   }
+
 
   onEditView(index: number) {
     /*
