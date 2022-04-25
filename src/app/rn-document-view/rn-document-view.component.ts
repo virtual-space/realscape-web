@@ -8,7 +8,6 @@ import { RnViewComponent } from '../rn-view/rn-view.component';
 })
 export class RnDocumentViewComponent extends RnViewComponent implements OnInit {
 
-  public pdfSrc;
 
 
 }
