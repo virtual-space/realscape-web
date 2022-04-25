@@ -15,7 +15,7 @@ export class RnListViewComponent extends RnViewComponent implements OnInit, OnCh
   displayedColumns: string[] = ['icon', 'name', 'tags', 'menu'];
 
   override ngOnInit() {
-    //console.log(this.items);
+    console.log(this.items);
     this.dataSource.data = this.items;
   }
 

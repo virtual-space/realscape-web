@@ -1,1 +1,6 @@
-<p>rn-image-view works!</p>
+<div *ngIf="item" fxFlexFill>
+    <div>
+        <img [src]="getDataLink() | secure1 | async" class="image">
+    </div>
+    
+</div>

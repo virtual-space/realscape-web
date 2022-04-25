@@ -47,6 +47,9 @@
                         <ng-container *ngSwitchCase="'ItemCtrl'">
                             <app-rn-item-ctrl  [item]="item" [control]="child"></app-rn-item-ctrl>
                         </ng-container>
+                        <ng-container *ngSwitchCase="'UploadCtrl'">
+                            <app-rn-upload-ctrl  [item]="item" [control]="child"></app-rn-upload-ctrl>
+                        </ng-container>
                         <div *ngSwitchDefault>
                             <div *ngIf="isButton(child)">
                                 <app-rn-button-ctrl [item]="item" [control]="child"></app-rn-button-ctrl>

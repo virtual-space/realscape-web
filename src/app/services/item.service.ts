@@ -233,6 +233,18 @@ export class ItemService {
     return this.getAccessibleEndpoint() + '/' + id + '/data';
   }
 
+  
+  public importFile(id: string, file: File): Observable<any> {
+    const formData: FormData = new FormData();
+    formData.append('file', file, file.name);
+    return this.http
+      .post(this.getEndpoint() + '/' + id + '/import', formData, {
+        reportProgress: true,
+        observe: 'events'
+      })
+      .pipe(catchError(this.handleErrorAndRethrow('/items', [])));
+  }
+
   public uploadFile(id: string, file: File): Observable<any> {
     const formData: FormData = new FormData();
     formData.append('file', file, file.name);
@@ -281,6 +293,7 @@ export class ItemService {
       return '';
     }
   }
+
 
   public getLinkedItemId(item: Item): string {
     const base = this.getHomeEndpoint();

@@ -39,6 +39,9 @@
                                 <div *ngSwitchCase="'LabelCtrl'">
                                     <app-rn-label-ctrl [item]="item" [control]="child" (onEvent)="onEventHandler($event)"></app-rn-label-ctrl>
                                 </div>
+                                <ng-container *ngSwitchCase="'UploadCtrl'">
+                                    <app-rn-upload-ctrl  [item]="item" [control]="child" (onEvent)="onEventHandler($event)"></app-rn-upload-ctrl>
+                                </ng-container>
                                 <div *ngSwitchDefault>
                                     Control: {{child!.type!.name!}}
                                 </div>

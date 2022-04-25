@@ -1,7 +1,8 @@
 import { L } from '@angular/cdk/keycodes';
-import { Component, OnInit, Input, OnChanges, SimpleChanges, Output, EventEmitter, ViewChild, ViewChildren, QueryList, OnDestroy } from '@angular/core';
+import { Component, OnInit, Input, OnChanges, SimpleChanges, Output, EventEmitter, ViewChild, ViewChildren, QueryList, OnDestroy, SecurityContext } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { DomSanitizer } from '@angular/platform-browser';
 import { ActivatedRoute } from '@angular/router';
 import { stringify } from 'querystring';
 import { Observable, Subscription } from 'rxjs';
@@ -36,6 +37,7 @@ export class RnViewComponent implements OnInit, OnChanges {
 
   constructor(protected itemService: ItemService, 
               protected sessionService: SessionService, 
+              protected sanitizer: DomSanitizer,
               protected route: ActivatedRoute,
               protected dialog: MatDialog,
               protected snackBar: MatSnackBar) { }
@@ -154,6 +156,24 @@ export class RnViewComponent implements OnInit, OnChanges {
       return '/items/' + item.id;
     }
     return '';
+  }
+
+  extractDataLink(item?: Item): string {
+    if (item) {
+      const link = this.itemService.getDataLink(item.id!);
+      if (link) {
+        const sanitized = this.sanitizer.sanitize(SecurityContext.RESOURCE_URL, this.sanitizer.bypassSecurityTrustResourceUrl(link));
+        if (sanitized) {
+          return sanitized;
+        }
+      }
+    }
+    
+    return '';
+  }
+
+  getDataLink(): string {
+    return this.extractDataLink(this.item);
   }
 
   extractLink(item?: Item): string {

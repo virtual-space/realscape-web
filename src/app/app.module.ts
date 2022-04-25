@@ -7,6 +7,7 @@ import {HTTP_INTERCEPTORS, HttpClientModule} from '@angular/common/http';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { AuthInterceptor } from './auth-interceptor';
+import { SecurePipe, SecurePipe1, DenulPipe } from './secure-pipe';
 import { MainComponent } from './main/main.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
@@ -40,6 +41,7 @@ import {MatTooltipModule} from '@angular/material/tooltip';
 
 import { QRCodeModule } from 'angularx-qrcode';
 import { CodemirrorModule } from '@ctrl/ngx-codemirror';
+import { PdfViewerModule } from 'ng2-pdf-viewer';
 
 import { CallbackComponent } from './callback/callback.component';
 import { HomeComponent } from './home/home.component';
@@ -93,6 +95,7 @@ import { RnDialogComponent } from './rn-dialog/rn-dialog.component';
 import { RnMsgBoxComponent } from './rn-msg-box/rn-msg-box.component';
 import { RnCardViewComponent } from './rn-card-view/rn-card-view.component';
 import { RnFuncCtrlComponent } from './rn-func-ctrl/rn-func-ctrl.component';
+import { RnUploadCtrlComponent } from './rn-upload-ctrl/rn-upload-ctrl.component';
 
 
 @NgModule({
@@ -101,6 +104,9 @@ import { RnFuncCtrlComponent } from './rn-func-ctrl/rn-func-ctrl.component';
     MainComponent,
     CallbackComponent,
     HomeComponent,
+    SecurePipe,
+    SecurePipe1,
+    DenulPipe,
     RnItemViewComponent,
     RnQueryViewComponent,
     RnLoginViewComponent,
@@ -148,7 +154,8 @@ import { RnFuncCtrlComponent } from './rn-func-ctrl/rn-func-ctrl.component';
     RnDialogComponent,
     RnMsgBoxComponent,
     RnCardViewComponent,
-    RnFuncCtrlComponent
+    RnFuncCtrlComponent,
+    RnUploadCtrlComponent
   ],
   imports: [
     BrowserModule,
@@ -188,7 +195,8 @@ import { RnFuncCtrlComponent } from './rn-func-ctrl/rn-func-ctrl.component';
     MatCardModule,
     MatTooltipModule,
     QRCodeModule,
-    CodemirrorModule
+    CodemirrorModule,
+    PdfViewerModule
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi:true }

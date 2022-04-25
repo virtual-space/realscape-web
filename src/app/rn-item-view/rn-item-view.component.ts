@@ -86,6 +86,13 @@ export class RnItemViewComponent extends RnViewComponent implements OnInit, OnDe
     }
   }
 
+  shouldShowChildren(item: Item): boolean {
+    if (item.attributes && 'show_children' in item.attributes) {
+      return item.attributes['show_children'] === 'true';
+    }
+    return false;
+  }
+
   activateItem(item: Item, children: Item[], activate: boolean) {
     console.log('activating ',item);
     if (this.isExternalType(item)) {
@@ -99,37 +106,52 @@ export class RnItemViewComponent extends RnViewComponent implements OnInit, OnDe
       };
     }
     else {
-      this.children = children.filter(child => !itemIsInstanceOf(child, "View"));
-      this.views = children.filter(child => itemIsInstanceOf(child, "View"));
-      if (this.views.length > 0) {
-        this.eventsSubject.next(0);
-      }
-      this.query = this.children.find(child => {
-        if (child) {
-          return itemIsInstanceOf(child, "Query");
-        } else {
-          return false;
+      let showChildren = this.shouldShowChildren(item);
+      
+      if (showChildren) {
+        this.children = children.filter(child => !itemIsInstanceOf(child, "View"));
+        this.views = children.filter(child => itemIsInstanceOf(child, "View"));
+        console.log('showChildren', this.children, this.views);
+        if (activate) {
+          this.sessionService.activateItem(item);
+        if (this.views.length > 0) {
+          this.eventsSubject.next(0);
         }
-      });
-      if(this.query && this.query.attributes) {
-        this.itemService.items(this.query.attributes).subscribe(items => {
-          this.items = items.filter(child => !itemIsInstanceOf(child, "View"));
+        }
+      } else {
+        this.children = children.filter(child => !itemIsInstanceOf(child, "View"));
+        this.views = children.filter(child => itemIsInstanceOf(child, "View"));
+        if (this.views.length > 0) {
+          this.eventsSubject.next(0);
+        }
+        this.query = this.children.find(child => {
+          if (child) {
+            return itemIsInstanceOf(child, "Query");
+          } else {
+            return false;
+          }
+        });
+        if(this.query && this.query.attributes) {
+          this.itemService.items(this.query.attributes).subscribe(items => {
+            this.items = items.filter(child => !itemIsInstanceOf(child, "View"));
+            if (activate) {
+              this.sessionService.activateItem(item);
+              if (this.views.length > 0) {
+                this.eventsSubject.next(0);
+              }
+            }
+          });
+        } else {
+          this.items = this.children;
           if (activate) {
             this.sessionService.activateItem(item);
             if (this.views.length > 0) {
               this.eventsSubject.next(0);
             }
           }
-        });
-      } else {
-        this.items = this.children;
-        if (activate) {
-          this.sessionService.activateItem(item);
-          if (this.views.length > 0) {
-            this.eventsSubject.next(0);
-          }
         }
       }
+        
       }
    }
 
@@ -151,6 +173,18 @@ export class RnItemViewComponent extends RnViewComponent implements OnInit, OnDe
     console.log(event);
     this.eventsSubject.next(event.index);
     //this.selectedTab = event.index;
+  }
+
+  getItemDefaultView(item?: Item) {
+    console.log(item);
+    if (item && item.items) {
+      const views = item.items.filter(i => itemIsInstanceOf(i, 'View'));
+      console.log(views);
+      if (views.length > 0) {
+        return views[0];
+      }
+    }
+    return undefined
   }
 
 

@@ -12,6 +12,7 @@ import { RnEditItemViewComponent } from '../rn-edit-item-view/rn-edit-item-view.
 import { RnDialogComponent } from '../rn-dialog/rn-dialog.component';
 import { RnMsgBoxComponent } from '../rn-msg-box/rn-msg-box.component';
 import { request } from 'http';
+import { HttpEvent, HttpEventType } from '@angular/common/http';
 
 @Component({
   selector: 'app-main',
@@ -67,7 +68,28 @@ export class MainComponent implements OnInit, OnDestroy {
   }
 
   importFile(event: any) {
-    console.log(event.target.files[0]);
+    if (this.item && this.item.id) {
+      this.itemService.importFile(this.item.id, event.target.files[0]).subscribe(
+        (event: HttpEvent<Object>) => {
+          if (event.type === HttpEventType.UploadProgress) {
+            if (event.total) {
+              let uploadProgress = Math.round(event.loaded / event.total * 100);
+              console.log(`Uploaded! ${uploadProgress}%`);
+            }
+            
+            /*
+            if (progressFn) {
+              progressFn(uploadProgress);
+            }*/
+            this.snackBar.open("File uploaded");
+          } else if (event.type === HttpEventType.Response) {
+            this.snackBar.open("File uploaded");
+          } else {
+            this.snackBar.open("File uploaded");
+          }
+        });
+    }
+    
   }
 
   onAdd(event: any) {

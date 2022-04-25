@@ -30,7 +30,7 @@
                     </button>
                     <button *ngIf="canAddView()" mat-menu-item (click)="uploader.click()">
                       <mat-icon>file_upload</mat-icon>
-                      <span>Import Items</span>
+                      <span>Upload</span>
                     </button>
                     <input hidden type="file" #uploader (change)="importFile($event)"/>
                     <button *ngIf="canAddView()" mat-menu-item (click)="onAddView($event)">

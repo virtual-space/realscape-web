@@ -1,1 +1,10 @@
-<p>rn-document-view works!</p>
+
+<div *ngIf="item">
+    <pdf-viewer [src]="getDataLink() | secure1 | async | denul"
+              [render-text]="true"
+              [original-size]="true"
+              [page]="5"
+              style="width: 400px; height: 500px"
+  ></pdf-viewer>
+</div>
+
