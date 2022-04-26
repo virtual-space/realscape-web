@@ -7,6 +7,8 @@ import { Item } from '../services/item.service'
 //const mapboxgl:any = require('mapbox-gl/dist/mapbox-gl.js');
 //const mapboxgl:any = require('mapbox-gl');
 
+import { environment } from 'src/environments/environment';
+
 import { Map, NavigationControl } from 'mapbox-gl';
 import { RnViewComponent } from '../rn-view/rn-view.component';
 import { Subscription } from 'rxjs';
@@ -26,13 +28,14 @@ export class RnMapViewComponent extends RnViewComponent implements OnInit, OnDes
     }
   }
 
+  isLoaded = false;
   subscription?: Subscription;
   map?: Map;
   style = 'mapbox://styles/mapbox/streets-v11';
   lat = 45.899977;
   lng = 6.172652;
   zoom = 12;
-  token = 'pk.eyJ1IjoidjFydHU0bHNwNGMzIiwiYSI6ImNreW1mZXI5ZzA2aHQydG5zY2hiNWh0ZjAifQ.BovKKecsXgBq1wu7PlAUHQ';
+  token = environment.mapboxToken;
 
   override ngOnInit(): void {
     if (this.events) {
@@ -52,15 +55,28 @@ export class RnMapViewComponent extends RnViewComponent implements OnInit, OnDes
   handleEvent(e: number) {
     console.log('map received event ', e, 'index is ', this.tabIndex);
     if (e === this.tabIndex) {
-      console.log('refreshing map...');
-      this.map = new Map({
-        accessToken: this.token,
-        container: 'map1',
-        style: this.style,
-        zoom: this.zoom,
-        center: [this.lng, this.lat] 
-      });
-      this.map.addControl(new NavigationControl());
+      this.loadMap()
+    }
+  }
+
+  loadMap(): void {
+    if(!this.isLoaded){
+      console.log('loading map...')
+      try {
+        this.map = new Map({
+          accessToken: this.token,
+          container: 'map',
+          style: this.style,
+          zoom: this.zoom,
+          center: [this.lng, this.lat] 
+        });
+        this.map.addControl(new NavigationControl());
+        this.isLoaded = true;
+      } catch (error) {
+        console.log(error)
+      }
+    } else {
+      console.log('refreshing map')
     }
   }
 
