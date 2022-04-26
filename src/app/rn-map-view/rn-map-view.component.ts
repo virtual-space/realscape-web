@@ -43,6 +43,9 @@ export class RnMapViewComponent extends RnViewComponent implements OnInit, OnDes
         this.handleEvent(e);
       });
     }
+    this.sleep(50).then(() => {
+      this.loadMap()
+    });
     
   }
 
@@ -78,6 +81,10 @@ export class RnMapViewComponent extends RnViewComponent implements OnInit, OnDes
     } else {
       console.log('refreshing map')
     }
+  }
+
+  sleep (time: any): any {
+    return new Promise((resolve) => setTimeout(resolve, time));
   }
 
 }
