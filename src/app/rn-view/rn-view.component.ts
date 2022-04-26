@@ -1,4 +1,5 @@
 import { L } from '@angular/cdk/keycodes';
+import { HttpEvent, HttpEventType } from '@angular/common/http';
 import { Component, OnInit, Input, OnChanges, SimpleChanges, Output, EventEmitter, ViewChild, ViewChildren, QueryList, OnDestroy, SecurityContext } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -11,6 +12,7 @@ import { EditViewComponent } from '../edit-view/edit-view.component';
 import { QrCodeComponent } from '../qr-code/qr-code.component';
 import { RnDialogComponent } from '../rn-dialog/rn-dialog.component';
 import { RnMsgBoxComponent } from '../rn-msg-box/rn-msg-box.component';
+import { AuthService } from '../services/auth.service';
 import { Item, ItemEvent, itemIsInstanceOf, ItemService } from '../services/item.service';
 import { SessionService } from '../services/session.service';
 
@@ -36,7 +38,8 @@ export class RnViewComponent implements OnInit, OnChanges {
   uploading = false;
 
   constructor(protected itemService: ItemService, 
-              protected sessionService: SessionService, 
+              protected sessionService: SessionService,
+              protected authService: AuthService,
               protected sanitizer: DomSanitizer,
               protected route: ActivatedRoute,
               protected dialog: MatDialog,
@@ -240,15 +243,11 @@ export class RnViewComponent implements OnInit, OnChanges {
                     this.uploadingFile = true;
                     this.uploadProgress = 0;
                   }
-
+                  
                   if (this.item) {
-                    if (itemIsInstanceOf(this.item, "HomeApp")) {
-                      result.data['home'] = 'true';
-                    } else {
-                      result.data['parent_id'] = this.item.id;
-                    }
+                    result.data['parent_id'] = this.item.id;
                   }
-        
+                  console.log(result.data);
                   this.itemService.create(result.data, (progress) => { this.uploadProgress = progress }).subscribe(
                     (res) => {
                       if (res && res['id']) {
@@ -278,6 +277,37 @@ export class RnViewComponent implements OnInit, OnChanges {
     }
   }
 
+  importFile(event: any) {
+    if (this.item && this.item.id) {
+      this.itemService.importFile(this.item.id, event.target.files[0]).subscribe(
+        (event: HttpEvent<Object>) => {
+          if (event.type === HttpEventType.UploadProgress) {
+            if (event.total) {
+              let uploadProgress = Math.round(event.loaded / event.total * 100);
+              console.log(`Uploaded! ${uploadProgress}%`);
+            }
+            
+            /*
+            if (progressFn) {
+              progressFn(uploadProgress);
+            }*/
+            //this.snackBar.open("File uploaded");
+          } else if (event.type === HttpEventType.Response) {
+            //console.log(event);
+            if (event.status === 200 || event.status === 201) {
+              this.sessionService.refresh();
+            }
+            this.snackBar.open(event.statusText);
+            
+          } else {
+            console.log(event);
+            this.snackBar.open("File uploaded");
+          }
+        });
+    }
+    
+  }
+
   onAddView(event: any) {
     const dialogRef = this.dialog.open(EditViewComponent, {
       width: '400px'
@@ -299,12 +329,13 @@ export class RnViewComponent implements OnInit, OnChanges {
       width: '400px',
       data: {title: 'Delete item', message: 'Warning you are about to delete an item. Are you sure you want to do this?'}
     });
-
+    console.log(event);
     dialogRef.afterClosed().subscribe(result => {
+      console.log(result);
       if(result) {
-        if (this.item) {
+        if ('item' in event) {
           this.uploading = true;
-          this.itemService.delete(this.item.id!).subscribe(res => {
+          this.itemService.delete(event['item']['id']!).subscribe(res => {
             this.sessionService.refresh();;
           });
         }

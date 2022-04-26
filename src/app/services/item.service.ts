@@ -359,18 +359,13 @@ export class ItemService {
     }
   }
 
-  public apps(): Observable<[Item]> {
-    let params = new HttpParams();
-    params = params.append('my_items', 'true');
-    params = params.append('types', 'Apps');
-    
-    const httpOptions = {
-      params: params
-    };
-
-    return this.http.get<[Item]>(this.getAccessibleEndpoint(), httpOptions).pipe(
-      mergeMap(apps => this.http.get<[Item]>(this.getAccessibleEndpoint() + this.getAppsQueryString(apps))),
-      catchError(this.handleError('/items', []))
+  public apps(): Observable<Item> {
+    let path = environment['api']  + '/public/profile';
+    if (this.authService.isLoggedIn()) {
+      path = environment['api']  + '/profile';
+    } 
+    return this.http.get<Item>(path).pipe(
+      catchError(this.handleError('/profile', []))
     );
   }
 

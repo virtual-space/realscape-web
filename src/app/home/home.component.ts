@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import {Router} from "@angular/router";
 import {AuthService} from "../services/auth.service";
-import { ItemService } from '../services/item.service';
+import { itemIsInstanceOf, ItemService } from '../services/item.service';
 
 @Component({
   selector: 'app-home',
@@ -17,25 +17,21 @@ export class HomeComponent implements OnInit {
   ngOnInit(): void {
     const loggedIn = this.authService.isLoggedIn();
     this.itemService.apps().subscribe(apps => {
-      if (apps) {
-        const app = apps.find(a => {
-          if (a) {
-            if (loggedIn) {
-              if (a.attributes) {
-                if (a.attributes['initial'] == 'true') {
-                  return true;
-                }
-              }
-            } else {
-              if(a.type!.name! !== 'LoginApp') {
-                return true;
-              }
-            }
+      if (apps && apps.items) {
+        if (loggedIn) {
+          const apps_item = apps.items.find(a => itemIsInstanceOf(a, 'Apps'));
+          console.log(apps_item)
+          if (apps_item && apps_item.items) {
+            const initial_app = apps_item.items.find(aa => aa.attributes? (aa.attributes['initial'] === 'true') : false);
+            if (initial_app) {
+              this.router.navigate(['/items', initial_app.id!]);
+            } 
           }
-          return false;
-        });
-        if (app) {
-          this.router.navigate(['/items', app.id!]);
+        } else {
+          const initial_app = apps.items.find(aa => aa.attributes? (aa.attributes['initial'] === 'true') : false);
+          if (initial_app) {
+            this.router.navigate(['/items', initial_app.id!]);
+          }
         }
       } 
     });

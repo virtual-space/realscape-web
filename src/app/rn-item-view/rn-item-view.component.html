@@ -1,53 +1,118 @@
-<div fxFlex fxLayoutAlign="center center" *ngIf="item" fxFlexFill>
-    <!-- <app-rn-query-view *ngIf="query"></app-rn-query-view> -->
-    <div *ngIf="views.length > 1" class="tab-group-container">
-        <mat-tab-group [selectedIndex]="selectedView.value" dynamicHeight backgroundColor="primary"
-                     (selectedTabChange)="onChangeTab($event)"
-                     (selectedIndexChange)="selectedView.setValue($event)">
-
-        <mat-tab *ngFor="let view of views; let index = index" [label]="view!.name!">
-          <ng-template mat-tab-label>
-            <mat-icon class="tab-icon">{{view!.type!.icon}}</mat-icon>
-            {{view.name}}
-            <button mat-icon-button color="primary" *ngIf="allowEditingViews" [matMenuTriggerFor]="viewMenu"><mat-icon>more_vert</mat-icon></button>
-            <mat-menu #viewMenu="matMenu" xPosition="before">
-              <button  mat-menu-item (click)="onEditView(index)">
-                <mat-icon>edit</mat-icon>
-                <span>Edit</span>
-              </button>
-              <button *ngIf="allowEditingViews" mat-menu-item (click)="onDeleteView(index)">
-                <mat-icon>delete</mat-icon>
-                <span>Delete</span>
-              </button>
-            </mat-menu>
-          </ng-template>
-          <app-rn-view [items]="items" [view]="view" [item]="item" [events]="eventsSubject.asObservable()" [tabIndex]="index"></app-rn-view>
-        </mat-tab>
-      </mat-tab-group>
-    </div>
-    <ng-container *ngIf="views.length === 1">
-      <ng-container  *ngIf="shouldShowChildren(item)">
-        <app-rn-view [items]="children" [view]="views[0]" [item]="item" (onEvent)="onItemEvent($event)"></app-rn-view>
+<div fxLayout="column" fxFlexFill>
+  <div fxFlex>
+      <nav mat-tab-nav-bar color="primary" [tabPanel]="">
+          <div fxLayout="row" fxLayoutGap="5px" fxFlexFill>
+            <nav mat-tab-nav-bar fxLayout="row" backgroundColor="primary" fxFlexFill>
+              <div fxFlex="1 0 5%">
+                <button mat-mini-fab [matMenuTriggerFor]="menu" color="primary" style="background: url('../assets/vslogo.png') center no-repeat;" center no-repeat></button>
+              </div>
+              
+              <div fxFlex="0 1 90%" fxLayoutAlign="center center">
+                <button mat-flat-button *ngIf="item" color="primary" ><mat-icon>{{item.type!.icon}}</mat-icon><span>{{item.name}}</span></button>
+              </div>
+              
+              <mat-menu #menu="matMenu">
+                  <ng-container  *ngFor="let app of apps">
+                      <ng-container [ngSwitch]="app!.type!.name">
+                        <app-rn-login-view [login]="app" [button]="true" *ngSwitchCase="'LoginApp'"></app-rn-login-view>
+                        <button mat-menu-item color="primary" routerLinkActive="nav-active" routerLink="/items/{{app.id}}" *ngSwitchDefault><mat-icon>{{app.type!.icon}}</mat-icon><span>{{app.name}}</span></button>
+                      </ng-container>
+                  </ng-container>
+              </mat-menu>
+              <div fxFlex="1 0 5%" fxLayoutAlign="center center">
+                <button mat-mini-fab [matMenuTriggerFor]="menuMore" *ngIf="item" color="primary"><mat-icon>more_vert</mat-icon></button>
+              </div>
+              
+              <mat-menu #menuMore="matMenu" xPosition="before">
+                  <button *ngIf="canAddItem()" mat-menu-item (click)="onAdd($event)">
+                    <mat-icon>add</mat-icon>
+                    <span>Add Item</span>
+                  </button>
+                  <button *ngIf="canAddView()" mat-menu-item (click)="uploader.click()">
+                    <mat-icon>file_upload</mat-icon>
+                    <span>Upload</span>
+                  </button>
+                  <input hidden type="file" #uploader (change)="importFile($event)"/>
+                  <button *ngIf="canAddView()" mat-menu-item (click)="onAddView($event)">
+                    <mat-icon>add</mat-icon>
+                    <span>Add View</span>
+                  </button>
+                  <button *ngIf="canEditOrDeleteItem()" mat-menu-item (click)="onEdit($event)">
+                    <mat-icon>edit</mat-icon>
+                    <span>Edit Item</span>
+                  </button>
+                  <button *ngIf="canEditOrDeleteItem()" mat-menu-item (click)="onDelete($event)">
+                    <mat-icon>delete</mat-icon>
+                    <span>Delete Item</span>
+                  </button>
+                  <button mat-menu-item (click)="onRefreshClick()">
+                    <mat-icon>refresh</mat-icon>
+                    <span>Refresh</span>
+                  </button>
+                </mat-menu>
+             </nav>
+          </div>
+      </nav>
+  </div>
+  <div fxFlex>
+    <div fxFlex fxLayoutAlign="center center" *ngIf="item" fxFlexFill>
+      <!-- <app-rn-query-view *ngIf="query"></app-rn-query-view> -->
+      <div *ngIf="views.length > 1" class="tab-group-container">
+          <mat-tab-group [selectedIndex]="selectedView.value" dynamicHeight backgroundColor="primary"
+                       (selectedTabChange)="onChangeTab($event)"
+                       (selectedIndexChange)="selectedView.setValue($event)">
+  
+          <mat-tab *ngFor="let view of views; let index = index" [label]="view!.name!">
+            <ng-template mat-tab-label>
+              <mat-icon class="tab-icon">{{view!.type!.icon}}</mat-icon>
+              {{view.name}}
+              <button mat-icon-button color="primary" *ngIf="allowEditingViews" [matMenuTriggerFor]="viewMenu"><mat-icon>more_vert</mat-icon></button>
+              <mat-menu #viewMenu="matMenu" xPosition="before">
+                <button  mat-menu-item (click)="onEditView(index)">
+                  <mat-icon>edit</mat-icon>
+                  <span>Edit</span>
+                </button>
+                <button *ngIf="allowEditingViews" mat-menu-item (click)="onDeleteView(index)">
+                  <mat-icon>delete</mat-icon>
+                  <span>Delete</span>
+                </button>
+              </mat-menu>
+            </ng-template>
+            <app-rn-view [items]="items" [view]="view" [item]="item" [events]="eventsSubject.asObservable()" [tabIndex]="index"></app-rn-view>
+          </mat-tab>
+        </mat-tab-group>
+      </div>
+      <ng-container *ngIf="views.length === 1">
+        <ng-container  *ngIf="shouldShowChildren(item)">
+          <app-rn-view [items]="children" [view]="views[0]" [item]="item" (onEvent)="onItemEvent($event)"></app-rn-view>
+        </ng-container>
+        <ng-container  *ngIf="!shouldShowChildren(item)">
+          <app-rn-view [items]="items" [view]="views[0]" [item]="item" (onEvent)="onItemEvent($event)"></app-rn-view>
+        </ng-container>
       </ng-container>
-      <ng-container  *ngIf="!shouldShowChildren(item)">
-        <app-rn-view [items]="items" [view]="views[0]" [item]="item" (onEvent)="onItemEvent($event)"></app-rn-view>
+  
+      <ng-container *ngIf="views.length === 0">
+      <ng-container [ngSwitch]="item!.type!.name!">
+        <div *ngSwitchCase="'Image'">
+          <app-rn-image-view [items]="items" [item]="item" (onEvent)="onItemEvent($event)"></app-rn-image-view>
+        </div>
+        <div *ngSwitchCase="'Document'">
+          <app-rn-document-view [items]="items" [item]="item" (onEvent)="onItemEvent($event)"></app-rn-document-view>
+        </div>
+        <div *ngSwitchDefault>
+          <ng-container *ngIf="children.length > 0">
+            <app-rn-list-view [items]="children"></app-rn-list-view>
+          </ng-container>
+          <ng-container *ngIf="children.length === 0">
+            <app-rn-card-view [items]="items" [view]="getItemDefaultView(item)" [item]="item" (onEvent)="onItemEvent($event)"></app-rn-card-view>
+          </ng-container>
+        </div>
       </ng-container>
     </ng-container>
+  </div>
+  <div *ngIf="!item">
+      ...
+  </div>
+  </div>
+</div>
 
-    <ng-container *ngIf="views.length === 0">
-    <ng-container [ngSwitch]="item!.type!.name!">
-      <div *ngSwitchCase="'Image'">
-        <app-rn-image-view [items]="items" [item]="item" (onEvent)="onItemEvent($event)"></app-rn-image-view>
-      </div>
-      <div *ngSwitchCase="'Document'">
-        <app-rn-document-view [items]="items" [item]="item" (onEvent)="onItemEvent($event)"></app-rn-document-view>
-      </div>
-      <div *ngSwitchDefault>
-        <app-rn-card-view [items]="items" [view]="getItemDefaultView(item)" [item]="item" (onEvent)="onItemEvent($event)"></app-rn-card-view>
-      </div>
-    </ng-container>
-  </ng-container>
-</div>
-<div *ngIf="!item">
-    ...
-</div>

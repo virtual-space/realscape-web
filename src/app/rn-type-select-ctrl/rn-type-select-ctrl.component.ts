@@ -19,6 +19,7 @@ export class RnTypeSelectCtrlComponent  extends RnCtrlComponent implements OnIni
   selectedItem?: Item;
 
   override ngOnInit(): void {
+    //console.log(this.item);
     this.itemService.types().subscribe(types => {
       if(types) {
         this.types = types.filter(t => t.attributes && t.attributes['creatable'] === 'true');
@@ -52,6 +53,13 @@ export class RnTypeSelectCtrlComponent  extends RnCtrlComponent implements OnIni
                 this.formControl = new FormControl(this.selectedName);
                 this.formGroup.addControl('type', this.formControl);
               }
+            }
+            this.selectedItem = new Item();
+            this.selectedItem.name = 'New' + t.name;
+            this.selectedItem.type_id = t.id;
+            this.selectedItem.attributes = t.attributes;
+            if (this.onEvent) {
+              this.onEvent.emit({event: "item", item: this.selectedItem, control: this.control});
             }
           }
         }

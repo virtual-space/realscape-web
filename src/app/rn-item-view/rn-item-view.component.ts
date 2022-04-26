@@ -19,6 +19,7 @@ export class RnItemViewComponent extends RnViewComponent implements OnInit, OnDe
   @Input() children: Item[] = [];
   @Input() views: Item[] = [];
   @Input() query?: Item;
+  @Input() apps: Item[] = [];
 
   @Input() allowAddingItems = true;
   @Input() allowAddingViews = true;
@@ -32,23 +33,42 @@ export class RnItemViewComponent extends RnViewComponent implements OnInit, OnDe
 
   override ngOnInit(): void {
     console.log('item-view init ', this.item);
-    if (this.item) {
-        this.reloadItem(this.item, false);
-    } else {
-        this.route.paramMap.subscribe(params => {
-          //console.log(params);
-          const id = params.get('id');
-          if(id && (!this.item || id != this.id)) {
-            console.log('subscribing ',id);
-            this.subscription = this.sessionService.refreshed$.subscribe(
-              () => {
-                console.log('subscription requesting refresh for ',id);
-                this.refresh(id);
-            });
-            this.refresh(id);
+    this.itemService.apps().subscribe(apps => {
+      if (apps && apps.items) {
+        //console.log('apps:',apps);
+        if(this.authService.isLoggedIn()) {
+          const apps_item = apps.items.find(a => itemIsInstanceOf(a, 'Apps'));
+          if (apps_item && apps_item.items) {
+            this.apps = apps_item.items;
+          } else {
+            this.apps = [];
           }
-        });
-    }
+        } else {
+          this.apps = apps.items;
+        }
+        
+      } else {
+        this.apps = [];
+      }
+      if (this.item) {
+        this.reloadItem(this.item, false);
+      } else {
+          this.route.paramMap.subscribe(params => {
+            //console.log(params);
+            const id = params.get('id');
+            if(id && (!this.item || id != this.id)) {
+              console.log('subscribing ',id);
+              this.subscription = this.sessionService.refreshed$.subscribe(
+                () => {
+                  console.log('subscription requesting refresh for ',id);
+                  this.refresh(id);
+              });
+              this.refresh(id);
+            }
+          });
+      }
+    });
+    
   }
 
   ngOnDestroy() {
@@ -74,12 +94,14 @@ export class RnItemViewComponent extends RnViewComponent implements OnInit, OnDe
     if (this.isExternalType(item)) {
       if (this.id) {
         this.itemService.children(this.id).subscribe(children => {
+          console.log('retrieving children');
           this.activateItem(item, children, activate);
         });
       }
     }  else if (item.items) {
       this.activateItem(item, item.items, activate);
     } else if (this.id) {
+      console.log('retrieving children');
       this.itemService.children(this.id).subscribe(children => {
         this.activateItem(item, children, activate);
       });
@@ -94,9 +116,10 @@ export class RnItemViewComponent extends RnViewComponent implements OnInit, OnDe
   }
 
   activateItem(item: Item, children: Item[], activate: boolean) {
-    console.log('activating ',item);
-    if (this.isExternalType(item)) {
-      this.items = children;
+    console.log('activating ',item, children, activate);
+    if (this.isExternalType(item) && item.items) {
+      this.children = children.filter(child => !itemIsInstanceOf(child, "View"));
+      this.views = item.items.filter(child => itemIsInstanceOf(child, "View"));
       console.log(this);
       if (activate) {
         this.sessionService.activateItem(item);
@@ -176,10 +199,10 @@ export class RnItemViewComponent extends RnViewComponent implements OnInit, OnDe
   }
 
   getItemDefaultView(item?: Item) {
-    console.log(item);
+    //console.log(item);
     if (item && item.items) {
       const views = item.items.filter(i => itemIsInstanceOf(i, 'View'));
-      console.log(views);
+      //console.log(views);
       if (views.length > 0) {
         return views[0];
       }

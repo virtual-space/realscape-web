@@ -17,6 +17,7 @@ export class RnFormCtrlComponent extends RnCtrlComponent implements OnInit {
     controls: Item[] = [];
 
     override ngOnInit(): void {
+      console.log(this);
       this.rebuildControls();
     }
 
@@ -94,6 +95,11 @@ export class RnFormCtrlComponent extends RnCtrlComponent implements OnInit {
     }
 
     onEventHandler(event: ItemEvent) {
+      if (event.event) {
+        if (event.event === 'item') {
+          this.rebuildControls();
+        }
+      }
       this.onEvent.next(event);
     }
   }
