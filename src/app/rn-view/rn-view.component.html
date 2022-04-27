@@ -3,7 +3,7 @@
       <app-rn-list-view [items]="items"></app-rn-list-view>
   </div>
   <div *ngSwitchCase="'MapView'">
-    <app-rn-map-view [items]="items" [events]="events" [tabIndex]="tabIndex"></app-rn-map-view>
+    <app-rn-map-view [items]="items" [item]="item" [events]="events" [tabIndex]="tabIndex"></app-rn-map-view>
   </div>
   <div *ngSwitchCase="'CalendarView'">
       <app-rn-calendar-view [items]="items"></app-rn-calendar-view>
@@ -24,7 +24,6 @@
     <app-rn-video-view></app-rn-video-view>
   </div>
   <div *ngSwitchCase="'MapView'">
-    <app-rn-map-view></app-rn-map-view>
   </div>
   <div *ngSwitchCase="'PageView'">
     <app-rn-page-view></app-rn-page-view>
