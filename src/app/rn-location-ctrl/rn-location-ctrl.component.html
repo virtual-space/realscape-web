@@ -1,1 +1,7 @@
-<p>rn-location-ctrl works!</p>
+<div fxLayout="column" *ngIf="control">
+    <mat-form-field>
+        <mat-label>{{control.name!}}</mat-label>
+        <input matInput placeholder="" type="text" [formControl]="formControl">
+    </mat-form-field>
+    <button mat-button color="primary" (click)="onClick()">Set Location</button>
+</div>

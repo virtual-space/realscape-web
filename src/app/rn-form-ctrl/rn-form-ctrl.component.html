@@ -28,13 +28,13 @@
                                     <app-rn-edit-ctrl  [item]="item" [control]="child" [formGroup]="form_group" (onEvent)="onEventHandler($event)"></app-rn-edit-ctrl>
                                 </div>
                                 <div *ngSwitchCase="'LocationCtrl'">
-                                    <app-rn-location-ctrl  [item]="item" [control]="child" (onEvent)="onEventHandler($event)"></app-rn-location-ctrl>
+                                    <app-rn-location-ctrl  [item]="item" [control]="child" [formGroup]="form_group" (onEvent)="onEventHandler($event)"></app-rn-location-ctrl>
                                 </div>
                                 <div *ngSwitchCase="'TagsCtrl'">
                                     <app-rn-tags-ctrl  [item]="item" [control]="child" (onEvent)="onEventHandler($event)"></app-rn-tags-ctrl>
                                 </div>
                                 <div *ngSwitchCase="'DateCtrl'">
-                                    <app-rn-date-ctrl   [item]="item" [control]="child" (onEvent)="onEventHandler($event)"></app-rn-date-ctrl>
+                                    <app-rn-date-ctrl   [item]="item" [control]="child" [formGroup]="form_group" (onEvent)="onEventHandler($event)"></app-rn-date-ctrl>
                                 </div>
                                 <div *ngSwitchCase="'LabelCtrl'">
                                     <app-rn-label-ctrl [item]="item" [control]="child" (onEvent)="onEventHandler($event)"></app-rn-label-ctrl>

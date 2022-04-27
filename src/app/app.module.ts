@@ -42,6 +42,7 @@ import {MatTooltipModule} from '@angular/material/tooltip';
 import { QRCodeModule } from 'angularx-qrcode';
 import { CodemirrorModule } from '@ctrl/ngx-codemirror';
 import { PdfViewerModule } from 'ng2-pdf-viewer';
+import { NgxMatTimepickerModule } from 'ngx-mat-timepicker';
 
 import { CallbackComponent } from './callback/callback.component';
 import { HomeComponent } from './home/home.component';
@@ -196,7 +197,8 @@ import { RnUploadCtrlComponent } from './rn-upload-ctrl/rn-upload-ctrl.component
     MatTooltipModule,
     QRCodeModule,
     CodemirrorModule,
-    PdfViewerModule
+    PdfViewerModule,
+    NgxMatTimepickerModule
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi:true }

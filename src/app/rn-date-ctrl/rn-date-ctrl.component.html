@@ -1,9 +1,14 @@
-<div *ngIf="item">
+<div *ngIf="control" fxLayout="column">
     <mat-form-field appearance="fill">
-        <mat-label>{{item.name}}</mat-label>
+        <mat-label>{{control.name}} date</mat-label>
         <input matInput [matDatepicker]="datepicker1" [(ngModel)]="date">
         <mat-datepicker-toggle matSuffix [for]="datepicker1"></mat-datepicker-toggle>
         <mat-datepicker #datepicker1></mat-datepicker>
+    </mat-form-field>
+    <mat-form-field appearance="outline">
+        <mat-label>{{control.name}} time</mat-label>
+        <input matInput [(ngModel)]="time" [ngxMatTimepicker]="picker">
+        <ngx-mat-timepicker #picker></ngx-mat-timepicker>
     </mat-form-field>
 </div>
 

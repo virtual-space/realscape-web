@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { LocationComponent } from '../location/location.component';
 import { RnCtrlComponent } from '../rn-ctrl/rn-ctrl.component';
 
 @Component({
@@ -8,5 +9,25 @@ import { RnCtrlComponent } from '../rn-ctrl/rn-ctrl.component';
 })
 export class RnLocationCtrlComponent extends RnCtrlComponent implements OnInit {
 
+  onClick() {
+    const dialogRef = this.dialog.open(LocationComponent, {
+      width: '400px',
+      data: { location: this.item? this.item.location : undefined}
+    });
+
+    console.log(this.item);
+
+    dialogRef.afterClosed().subscribe(result => {
+      this.formControl.setValue(JSON.stringify({type: 'Point', coordinates: [result.location.lng, result.location.lat]}));
+    });
+  }
+
+  override getValue() {
+    if (this.item && this.item.location) {
+      return JSON.stringify(this.item.location);
+    } else {
+      return undefined;
+    }
+  }
 
 }

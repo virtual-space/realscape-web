@@ -1,5 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
+import { MatDialog } from '@angular/material/dialog';
 import { Item, ItemEvent, ItemService } from '../services/item.service';
 
 @Component({
@@ -15,7 +16,8 @@ export class RnCtrlComponent implements OnInit {
 
   formControl = new FormControl('');
   
-  constructor(public itemService: ItemService) { }
+  constructor(public itemService: ItemService,
+              protected dialog: MatDialog,) { }
 
   ngOnInit(): void {
     if(!this.item) {

@@ -237,6 +237,7 @@ export class RnViewComponent implements OnInit, OnChanges {
       
               dialogRef.afterClosed().subscribe(result => {
                 if (result) {
+                  console.log(result);
                   this.uploading = true;
         
                   if (result.file) {

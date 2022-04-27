@@ -6,6 +6,8 @@ import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
 import {MatDialog} from "@angular/material/dialog";
 import { features } from 'process';
 import { range } from 'rxjs';
+import { environment } from 'src/environments/environment';
+import { Map, NavigationControl, Marker } from 'mapbox-gl';
 
 @Component({
   selector: 'app-location',
@@ -21,7 +23,14 @@ export class LocationComponent implements OnInit {
   public draw: any;
   private canvas: any;
 
-  @ViewChild("marker", {static: false}) marker: any;
+  isLoaded = false;
+  marker?: Marker;
+  map?: Map;
+  style = 'mapbox://styles/mapbox/streets-v11';
+  lat = 45.899977;
+  lng = 6.172652;
+  zoom = 15;
+  token = environment.mapboxToken;
 
   constructor(public dialogRef: MatDialogRef<LocationComponent>,
               public dialog: MatDialog,
@@ -29,18 +38,28 @@ export class LocationComponent implements OnInit {
   }
 
   ngOnInit() {
-    console.log(this);
+    //console.log(this);
     if (this.data.location == null) {
       if (navigator.geolocation) {
         console.log("getting the current location");
         navigator.geolocation.getCurrentPosition((position) => {
-          console.log(position);
+          //console.log(position);
           //this.location = new LngLat(position.coords.longitude, position.coords.latitude);
           //this.mapCenter = this.location;
+          this.lat = position.coords.latitude;
+          this.lng = position.coords.longitude;
+          this.loadMap();
           console.log(this);
         });
       }
     } else {
+      const loc = this.data.location;
+      if (loc) {
+          if(loc['type'] === 'Point') {
+            this.lng = loc['coordinates'][0];
+            this.lat = loc['coordinates'][1];
+          }
+      }
       // this.location = this.data.location;
       /*if (this.location) {
         
@@ -50,17 +69,23 @@ export class LocationComponent implements OnInit {
           this.mapCenter = this.location['coordinates'][0][0];
         }
       }*/
+      this.loadMap();
     }
   }
 
   onOkClick(): void {
     console.log("Submit Location Data")
+    if (this.marker) {
+      const loc = this.marker.getLngLat();
+      this.dialogRef.close({location: {lng: loc.lng, lat: loc.lat}});
+    }
+    /*
     var featureCollection = this.draw.getAll()
     if (featureCollection.features[0]){
       this.dialogRef.close({location: featureCollection.features[0].geometry});
     } else {
       this.dialogRef.close({location: null});
-    }
+    }*/
   }
 
   onCancelClick(): void {
@@ -76,8 +101,13 @@ export class LocationComponent implements OnInit {
     this.geojson = null
   }
 
-  onDragEnd(event: any): void {
-    this.mapCenter = event.target.getLngLat();
+  onDragEnd() {
+    if (this.marker) {
+      const lngLat = this.marker.getLngLat();
+      this.lat = lngLat.lat;
+      this.lng = lngLat.lng;
+      console.log(this);
+    }
   }
 
   onLoad(event: any): void {
@@ -187,6 +217,38 @@ export class LocationComponent implements OnInit {
     if (dLng > 0.005 || dLat > 0.005) {
       this.marker.setLngLat(center);
     }*/
+  }
+
+  loadMap(): void {
+    if(!this.isLoaded){
+      console.log('loading map...')
+      try {
+        this.map = new Map({
+          accessToken: this.token,
+          container: 'map',
+          style: this.style,
+          zoom: this.zoom,
+          center: [this.lng, this.lat] 
+        });
+        this.map.addControl(new NavigationControl());
+        this.marker = new Marker({draggable: true})
+                          .setLngLat([this.lng, this.lat])
+                          .addTo(this.map);
+
+        this.marker.on('dragend', this.onDragEnd);
+        this.isLoaded = true;
+      } catch (error) {
+        console.log(error)
+      }
+    } else {
+      console.log('refreshing map')
+    }
+  }
+  
+  
+
+  sleep (time: any): any {
+    return new Promise((resolve) => setTimeout(resolve, time));
   }
 
 }

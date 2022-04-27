@@ -9,5 +9,6 @@ import { RnCtrlComponent } from '../rn-ctrl/rn-ctrl.component';
 export class RnDateCtrlComponent extends RnCtrlComponent implements OnInit {
 
   @Input() date?: string
+  @Input() time?: any;
 
 }
