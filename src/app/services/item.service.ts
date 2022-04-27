@@ -218,7 +218,7 @@ export class ItemService {
   }
 
   public types(): Observable<[Type]> {
-    return this.http.get<Type>(this.getAccessibleEndpoint(true) + '/types').pipe(
+    return this.http.get<Type>(this.getAccessibleEndpoint(true) + 'types').pipe(
       catchError(this.handleError('/items', []))
     );
   }
