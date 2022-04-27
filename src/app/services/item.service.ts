@@ -5,6 +5,7 @@ import {catchError, map, concatMap, mergeMap} from 'rxjs/operators';
 import {Router} from "@angular/router";
 import {AuthService} from "./auth.service";
 import { environment } from '../../environments/environment';
+import { AnyForUntypedForms } from '@angular/forms';
 
 @Injectable({
   providedIn: 'root'
@@ -411,7 +412,7 @@ export class Item {
   parent_id?: string;
   attributes?: {[index: string]:any};
   name?: string;
-  location?: string;
+  location?: any;
   visibility?: string;
   point?: object;
   link?: string;

@@ -8,10 +8,10 @@ import { Item } from '../services/item.service'
 //const mapboxgl:any = require('mapbox-gl');
 
 import { environment } from 'src/environments/environment';
-
-import { Map, NavigationControl } from 'mapbox-gl';
+import { Map, NavigationControl, Marker, SymbolLayout, LngLat, Popup, LngLatBounds, } from 'mapbox-gl';
 import { RnViewComponent } from '../rn-view/rn-view.component';
 import { Subscription } from 'rxjs';
+import { E } from '@angular/cdk/keycodes';
 //import * as mapboxgl from "mapbox-gl";
 
 @Component({
@@ -34,8 +34,10 @@ export class RnMapViewComponent extends RnViewComponent implements OnInit, OnDes
   style = 'mapbox://styles/mapbox/streets-v11';
   lat = 45.899977;
   lng = 6.172652;
+  location = {'type': 'Point','coordinates': [this.lng,this.lat] }
   zoom = 12;
   token = environment.mapboxToken;
+  markers: Marker[] = [];
 
   override ngOnInit(): void {
     if (this.events) {
@@ -46,7 +48,6 @@ export class RnMapViewComponent extends RnViewComponent implements OnInit, OnDes
     this.sleep(50).then(() => {
       this.loadMap()
     });
-    
   }
 
   ngOnDestroy(): void {
@@ -63,6 +64,7 @@ export class RnMapViewComponent extends RnViewComponent implements OnInit, OnDes
   }
 
   loadMap(): void {
+    //console.log("rn-map-view.this",this)
     if(!this.isLoaded){
       console.log('loading map...')
       try {
@@ -75,12 +77,65 @@ export class RnMapViewComponent extends RnViewComponent implements OnInit, OnDes
         });
         this.map.addControl(new NavigationControl());
         this.isLoaded = true;
+        if(this.items.length !== 0 || (this.item && this.item.location)){
+          if (this.map){
+            this.loadMarkers(this.map)
+          }
+        } else {
+          console.log('No data provided')
+        }
       } catch (error) {
         console.log(error)
       }
     } else {
       console.log('refreshing map')
+      if(this.items.length !== 0 || (this.item && this.item.location)){
+        if (this.map){
+          this.loadMarkers(this.map)
+        }
+      } else {
+        console.log('No data provided')
+      }
     }
+  }
+
+  loadMarkers(map: Map): void {
+    console.log("loading markers")
+    if(map){
+      let bounds = new LngLatBounds(); // Instantiate LatLngBounds object
+      var temp_items: any[] = this.items
+      temp_items.push(this.item)
+      const itemsWithPositions = temp_items.filter(i => i.location && i.location.coordinates);
+      //console.log(itemsWithPositions)
+      if (itemsWithPositions.length > 0) {
+        console.log("fitting map to bounds");
+        itemsWithPositions.forEach(ip => {
+          const m = new Marker();
+          this.markers.push(m);
+          m.setLngLat(ip.location.coordinates);
+          this.attachPopup(m, ip);
+          bounds = bounds.extend(ip.location.coordinates);
+          m.addTo(map);
+        });
+
+        map.fitBounds(bounds);
+        map.resize();
+      }
+    } else {
+      console.log("sequencing error: loadMarkers has occured before the map has loaded.")
+    }
+  }
+
+  attachPopup(marker: Marker, item: Item){
+    const popup = new Popup({className: 'my-class'});
+    popup.setLngLat(marker.getLngLat());
+    let popupContent = this.itemService.getLink(item);
+    popup.setText(popupContent)
+    //popup.setDOMContent(popupContent);
+    popup.setMaxWidth("300px");
+    //popup.addTo(this.mapObject);
+    marker.setPopup(popup);
+    return popup;
   }
 
   sleep (time: any): any {
