@@ -78,7 +78,12 @@
                 </button>
               </mat-menu>
             </ng-template>
-            <app-rn-view [items]="items" [view]="view" [item]="item" [events]="eventsSubject.asObservable()" [tabIndex]="index"></app-rn-view>
+            <ng-container  *ngIf="shouldShowChildren(item)">
+              <app-rn-view [items]="children" [view]="view" [item]="item" [events]="eventsSubject.asObservable()" [tabIndex]="index"></app-rn-view>
+            </ng-container>
+            <ng-container  *ngIf="!shouldShowChildren(item)">
+              <app-rn-view [items]="items" [view]="view" [item]="item" [events]="eventsSubject.asObservable()" [tabIndex]="index"></app-rn-view>
+            </ng-container>
           </mat-tab>
         </mat-tab-group>
       </div>
