@@ -6,9 +6,9 @@
         </div>
         <div>
           <mat-button-toggle-group name="fontStyle" aria-label="Font Style">
-            <mat-button-toggle [value]="'month'"><mat-icon>view_module</mat-icon></mat-button-toggle>
-            <mat-button-toggle [value]="'week'"><mat-icon>view_week</mat-icon></mat-button-toggle>
-            <mat-button-toggle [value]="'day'"><mat-icon>view_day</mat-icon></mat-button-toggle>
+            <mat-button-toggle (click)="setView(Month)" [value]="'month'"><mat-icon>view_module</mat-icon></mat-button-toggle>
+            <mat-button-toggle (click)="setView(Week)" [value]="'week'"><mat-icon>view_week</mat-icon></mat-button-toggle>
+            <mat-button-toggle (click)="setView(Day)" [value]="'day'"><mat-icon>view_day</mat-icon></mat-button-toggle>
           </mat-button-toggle-group>
         </div>
         <div>

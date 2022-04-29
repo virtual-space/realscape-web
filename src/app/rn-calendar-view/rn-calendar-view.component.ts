@@ -23,7 +23,10 @@ export class RnCalendarViewComponent implements OnInit {
 
   @Input() items: Item[] = [];
   dataSource = new MatTableDataSource<any>(this.items);
-  view: CalendarView = CalendarView.Month;
+  Month = CalendarView.Month;
+  Week = CalendarView.Week;
+  Day = CalendarView.Day;
+  view: CalendarView = this.Month;
   viewDate: Date = new Date();
   activeDayIsOpen: boolean = false;
 
@@ -149,6 +152,10 @@ export class RnCalendarViewComponent implements OnInit {
 
   isItemLink(item: Item): boolean {
     return this.itemService.isInternalLink(item);
+  }
+
+  setView(view: CalendarView) {
+    this.view = view;
   }
 
   onCalendarClick(event: any) {
