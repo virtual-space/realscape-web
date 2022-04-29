@@ -60,13 +60,13 @@ export class RnCalendarViewComponent implements OnInit {
         //this.onDeleteDialog(event['item']);
       },
     },*/
-    {
+    /*{
       label: '<i class="material-icons">qr_code</i>',
       a11yLabel: 'QRCode',
       onClick: ({ event }: { event: CalendarEvent }): void => {
         //this.onQRCode(event['item']);
       },
-    },
+    },*/
   ];
 
   events: CalendarEvent[] = [];
