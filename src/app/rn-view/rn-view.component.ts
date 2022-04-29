@@ -15,6 +15,7 @@ import { RnMsgBoxComponent } from '../rn-msg-box/rn-msg-box.component';
 import { AuthService } from '../services/auth.service';
 import { Item, ItemEvent, itemIsInstanceOf, ItemService } from '../services/item.service';
 import { SessionService } from '../services/session.service';
+import { ViewContainerRef } from '@angular/core';
 
 
 @Component({
@@ -43,7 +44,8 @@ export class RnViewComponent implements OnInit, OnChanges {
               protected sanitizer: DomSanitizer,
               protected route: ActivatedRoute,
               protected dialog: MatDialog,
-              protected snackBar: MatSnackBar) { }
+              protected snackBar: MatSnackBar,
+              public viewContainerRef: ViewContainerRef) { }
 
   ngOnInit(): void {
     //console.log('*************************************** hello from view');

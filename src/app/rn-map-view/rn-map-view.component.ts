@@ -7,11 +7,13 @@ import { Item } from '../services/item.service'
 //const mapboxgl:any = require('mapbox-gl/dist/mapbox-gl.js');
 //const mapboxgl:any = require('mapbox-gl');
 
+import { RnListViewComponent } from '../rn-list-view/rn-list-view.component';
 import { environment } from 'src/environments/environment';
 import { Map, NavigationControl, Marker, SymbolLayout, LngLat, Popup, LngLatBounds, } from 'mapbox-gl';
 import { RnViewComponent } from '../rn-view/rn-view.component';
 import { Subscription } from 'rxjs';
 import { E } from '@angular/cdk/keycodes';
+import { createComponentDefinitionMap } from '@angular/compiler/src/render3/partial/component';
 //import * as mapboxgl from "mapbox-gl";
 
 @Component({
@@ -65,6 +67,7 @@ export class RnMapViewComponent extends RnViewComponent implements OnInit, OnDes
 
   loadMap(): void {
     //console.log("rn-map-view.this",this)
+    var error = null;
     if(!this.isLoaded){
       console.log('loading map...')
       try {
@@ -77,15 +80,18 @@ export class RnMapViewComponent extends RnViewComponent implements OnInit, OnDes
         });
         this.map.addControl(new NavigationControl());
         this.isLoaded = true;
-        if(this.items.length !== 0 || (this.item && this.item.location)){
-          if (this.map){
-            this.loadMarkers(this.map)
-          }
-        } else {
-          console.log('No data provided')
-        }
       } catch (error) {
-        console.log(error)
+        console.log('Error: Attempted to load map before tab is loaded.')
+      } finally {
+        if(!error){
+          if(this.items.length !== 0 || (this.item && this.item.location)){
+            if (this.map){
+              this.loadMarkers(this.map)
+            }
+          } else {
+            console.log('No data provided')
+          }
+        }
       }
     } else {
       console.log('refreshing map')
@@ -126,19 +132,48 @@ export class RnMapViewComponent extends RnViewComponent implements OnInit, OnDes
     }
   }
 
-  attachPopup(marker: Marker, item: Item){
+  attachPopup(marker: Marker, item: Item): any {
     const popup = new Popup({className: 'my-class'});
     popup.setLngLat(marker.getLngLat());
-    let popupContent = this.itemService.getLink(item);
-    popup.setText(popupContent)
+    //let popupContent: any = this.createPopup(item)
+    //console.log(popupContent)
+    let popupLink = this.itemService.getLink(item);
+    popup.setHTML('<h3><a href="' + popupLink + '">' + item.name + '</a></h3>')
     //popup.setDOMContent(popupContent);
     popup.setMaxWidth("300px");
-    //popup.addTo(this.mapObject);
     marker.setPopup(popup);
     return popup;
   }
 
-  sleep (time: any): any {
+  /* 
+  This is supposed to dynamically create a component and be loaded with popup.setDOMContent()
+  Currently just exploratory for how to create a node object without using component factory.
+  */
+ /*
+  createPopup(item: Item): any {
+    
+    const listComp = new RnListViewComponent(
+      this.itemService,
+      this.sessionService,
+      this.authService,
+      this.sanitizer,
+      this.route,
+      this.dialog,
+      this.snackBar,
+      this.viewContainerRef
+    );
+    listComp.items = [item];
+    const viewContainerRef = listComp.viewContainerRef;
+    viewContainerRef.clear();
+    console.log('container ref',viewContainerRef)
+    const componentRef = viewContainerRef.createComponent(RnListViewComponent)
+    console.log('container ref2',viewContainerRef)
+    console.log('listcomp',listComp)
+    return componentRef;
+    
+  }*/
+
+  private sleep (time: any): any {
     return new Promise((resolve) => setTimeout(resolve, time));
   }
 
