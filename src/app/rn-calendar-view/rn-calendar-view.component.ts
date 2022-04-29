@@ -25,7 +25,7 @@ export class RnCalendarViewComponent implements OnInit {
   dataSource = new MatTableDataSource<any>(this.items);
   view: CalendarView = CalendarView.Month;
   viewDate: Date = new Date();
-  activeDayIsOpen: boolean = true;
+  activeDayIsOpen: boolean = false;
 
   colors: any = {
     red: {
@@ -93,13 +93,13 @@ export class RnCalendarViewComponent implements OnInit {
       this.events = [];
       this.dataSource.data.forEach(value => {
         console.log(value)
-        if(value.attributes.valid_from){
-          console.log('has valid_from',value.attributes.valid_from)
-          if(value.attributes.valid_to){
-            console.log('has valid_to',value.attributes.valid_to)
+        if(value.valid_from){
+          console.log('has valid_from',value.valid_from)
+          if(value.valid_to){
+            console.log('has valid_to',value.valid_to)
             this.events.push({
-              start: new Date(value.attributes.valid_from),
-              end: new Date(value.attributes.valid_to),
+              start: new Date(value.valid_from),
+              end: new Date(value.valid_to),
               id: value.id,
               title: value.name,
               color: this.colors.yellow,
@@ -107,7 +107,7 @@ export class RnCalendarViewComponent implements OnInit {
             })
           } else {
             this.events.push({
-              start: new Date(value.attributes.valid_from),
+              start: new Date(value.valid_from),
               id: value.id,
               title: value.name,
               color: this.colors.yellow,
