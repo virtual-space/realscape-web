@@ -6,7 +6,7 @@
     <app-rn-map-view [items]="items" [item]="item" [events]="events" [tabIndex]="tabIndex"></app-rn-map-view>
   </div>
   <div *ngSwitchCase="'CalendarView'">
-      <app-rn-calendar-view [items]="items"></app-rn-calendar-view>
+      <app-rn-calendar-view [items]="items" [item]="item"></app-rn-calendar-view>
   </div>
   <div *ngSwitchCase="'BoardView'">
     <app-rn-board-view></app-rn-board-view>
