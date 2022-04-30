@@ -10,6 +10,7 @@
         <input matInput [(ngModel)]="time" [ngxMatTimepicker]="picker">
         <ngx-mat-timepicker #picker></ngx-mat-timepicker>
     </mat-form-field>
+    <input  [formControl]="formControl" [value]="datetime" type="text">
 </div>
 
 

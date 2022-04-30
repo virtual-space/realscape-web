@@ -75,10 +75,10 @@ export class RnCalendarViewComponent implements OnInit {
   constructor(private itemService: ItemService, protected router: Router) { }
 
   ngOnInit(): void {
-    console.log('init',this.items)
+    //console.log('init',this.items)
     this.dataSource.data = this.items;
     this.dataSource.data.forEach(value => {
-      console.log(value)
+      //console.log(value)
       if(value.valid_from){
         this.events.push({
           start: startOfDay(new Date()),
@@ -91,17 +91,17 @@ export class RnCalendarViewComponent implements OnInit {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    console.log('changes',this.items)
+    //console.log('changes',this.items)
     if(changes['items']) {
       this.dataSource.data = this.items;
       this.dataSource.data.push(this.item)
       this.events = [];
       this.dataSource.data.forEach(value => {
-        console.log(value)
+        //console.log(value)
         if(value.valid_from){
-          console.log('has valid_from',value.valid_from)
+          //console.log('has valid_from',value.valid_from)
           if(value.valid_to){
-            console.log('has valid_to',value.valid_to)
+            //console.log('has valid_to',value.valid_to)
             this.events.push({
               start: new Date(value.valid_from),
               end: new Date(value.valid_to),
@@ -120,7 +120,7 @@ export class RnCalendarViewComponent implements OnInit {
             })
           }
         } else {
-          console.log(value.id, "does not have a valid start date")
+          //console.log(value.id, "does not have a valid start date")
         }
       })
     }

@@ -42,7 +42,7 @@ export class RnFormCtrlComponent extends RnCtrlComponent implements OnInit {
         }
     }
 
-    getControlAttribute(key: string, def: string, control?: Item): string {
+    getControlAttribute(key: string, def?: string, control?: Item): string | undefined {
       if(control) {
          if(control.attributes) {
            const ret = control.attributes[key];

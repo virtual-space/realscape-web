@@ -420,6 +420,8 @@ export class Item {
   type_id?: string;
   tags?: string[];
   items?: Item[];
+  valid_from?: Date;
+  valid_to?: Date;
 }
 /*
 export function getTypeAttributes(type: Type): {[index: string]:any} {

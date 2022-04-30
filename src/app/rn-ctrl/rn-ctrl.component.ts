@@ -13,6 +13,7 @@ export class RnCtrlComponent implements OnInit {
   @Input() control?: Item;
   @Output() onEvent = new EventEmitter<ItemEvent>();
   @Input() formGroup?: FormGroup;
+  @Input() fieldName?: string;
 
   formControl = new FormControl('');
   
@@ -25,9 +26,15 @@ export class RnCtrlComponent implements OnInit {
     }
 
     if(this.formGroup) {
-      if(this.control && this.control.name) {
+      if(this.control) {
         this.formControl = new FormControl(this.getValue());
-        this.formGroup.addControl(this.control.name.toLowerCase(), this.formControl);
+        let field_name = 'empty';
+        if (this.fieldName) {
+          field_name = this.fieldName;
+        } else if(this.control && this.control.name) {
+          field_name = this.control.name;
+        }
+        this.formGroup.addControl(field_name, this.formControl);
       }
     }
   }
@@ -56,6 +63,11 @@ export class RnCtrlComponent implements OnInit {
         if (this.item.attributes && this.control.attributes) {
           if ('target' in this.control.attributes) {
             const target = this.control.attributes['target'];
+            if (target === "valid_from") {
+              return this.item.valid_from;
+            } else if (target === "valid_to") {
+              return this.item.valid_to;
+            }
             if (target in this.item.attributes) {
               return this.item.attributes[target];
             }
@@ -64,7 +76,6 @@ export class RnCtrlComponent implements OnInit {
 
         if (this.control.name) {
             const target = this.control.name.toLowerCase();
-
             if (target === 'name') {
               return this.item.name;
             } else if(this.item && this.item.attributes && target in this.item.attributes) {
