@@ -2,91 +2,106 @@
     <form [formGroup]="form_group">
         <div fxFlex fxLayoutAlign="center center" *ngIf="controls">
             <!-- <app-rn-query-view *ngIf="query"></app-rn-query-view> -->
-            <div [fxLayout]="layout" [fxLayoutGap]="gap" [fxLayoutAlign]="align">
+            <div [fxLayout]="layout" [fxLayoutGap]="gap" [fxLayoutAlign]="align" fxFlex="1 1 100%">
                 <div mat-dialog-title>
                     {{control.name}}
                 </div>
-                <div mat-dialog-content fxFlex="0 1 80%">
+                <div  fxFlexFill>
                     <div *ngFor="let child of getControls(); let index = index">
-                        <div [ngSwitch]="child!.type!.name!">
-                            <div [fxFlex]="getControlAttribute('flex', '1 1 auto', child)"
-                            [fxFlexOffset]="getControlAttribute('offset', '1%', child)"
-                            [fxFlexAlign]="getControlAttribute('align', 'center', child)">
-                                <div *ngSwitchCase="'AttrsCtrl'">
-                                    <app-rn-attrs-ctrl  [item]="item" 
-                                                        [control]="child" 
-                                                        [formGroup]="form_group"
-                                                        [fieldName]="getControlAttribute('field_name', undefined, child)"
-                                                        (onEvent)="onEventHandler($event)">
-                                    </app-rn-attrs-ctrl>
-                                </div>
-                                <div *ngSwitchCase="'SelectCtrl'">
-                                    <app-rn-select-ctrl [item]="item" 
-                                                        [control]="child" 
-                                                        [formGroup]="form_group"
-                                                        [fieldName]="getControlAttribute('field_name', undefined, child)" 
-                                                        (onEvent)="onEventHandler($event)">
-                                    </app-rn-select-ctrl>
-                                </div>
-                                <div *ngSwitchCase="'ItemSelectCtrl'">
-                                    <app-rn-item-select-ctrl [item]="item" 
-                                                             [control]="child" 
-                                                             [formGroup]="form_group" 
-                                                             [fieldName]="getControlAttribute('field_name', undefined, child)"
-                                                             (onEvent)="onEventHandler($event)">
-                                    </app-rn-item-select-ctrl>
-                                </div>
-                                <div *ngSwitchCase="'TypeSelectCtrl'">
-                                    <app-rn-type-select-ctrl [item]="item" 
-                                                             [control]="child" 
-                                                             [formGroup]="form_group"
-                                                             [fieldName]="getControlAttribute('field_name', undefined, child)" 
-                                                             (onEvent)="onEventHandler($event)">
-                                    </app-rn-type-select-ctrl>
-                                </div>
-                                <div *ngSwitchCase="'EditCtrl'">
-                                    <app-rn-edit-ctrl   [item]="item" 
-                                                        [control]="child" 
-                                                        [formGroup]="form_group"
-                                                        [fieldName]="getControlAttribute('field_name', undefined, child)" 
-                                                        (onEvent)="onEventHandler($event)">
-                                    </app-rn-edit-ctrl>
-                                </div>
-                                <div *ngSwitchCase="'LocationCtrl'">
-                                    <app-rn-location-ctrl   [item]="item" 
+                        <div [ngSwitch]="child!.type!.name!" fxFlexFill>
+                            <div *ngSwitchCase="'AttrsCtrl'" 
+                                    [fxFlex]="getControlAttribute('flex', '1 1 auto', child)"
+                                    [fxFlexOffset]="getControlAttribute('offset', '1%', child)"
+                                    [fxFlexAlign]="getControlAttribute('align', 'center', child)">
+                                <app-rn-attrs-ctrl  [item]="item" 
+                                                    [control]="child" 
+                                                    [formGroup]="form_group"
+                                                    [fieldName]="getControlAttribute('field_name', undefined, child)"
+                                                    (onEvent)="onEventHandler($event)">
+                                </app-rn-attrs-ctrl>
+                            </div>
+                            <div *ngSwitchCase="'SelectCtrl'"   [fxFlex]="getControlAttribute('flex', '1 1 auto', child)"
+                                                                [fxFlexOffset]="getControlAttribute('offset', '1%', child)"
+                                                                [fxFlexAlign]="getControlAttribute('align', 'center', child)">
+                                <app-rn-select-ctrl [item]="item" 
+                                                    [control]="child" 
+                                                    [formGroup]="form_group"
+                                                    [fieldName]="getControlAttribute('field_name', undefined, child)" 
+                                                    (onEvent)="onEventHandler($event)">
+                                </app-rn-select-ctrl>
+                            </div>
+                            <div *ngSwitchCase="'ItemSelectCtrl'"   [fxFlex]="getControlAttribute('flex', '1 1 auto', child)"
+                                                                    [fxFlexOffset]="getControlAttribute('offset', '1%', child)"
+                                                                    [fxFlexAlign]="getControlAttribute('align', 'center', child)">
+                                <app-rn-item-select-ctrl [item]="item" 
                                                             [control]="child" 
                                                             [formGroup]="form_group" 
                                                             [fieldName]="getControlAttribute('field_name', undefined, child)"
                                                             (onEvent)="onEventHandler($event)">
-                                    </app-rn-location-ctrl>
-                                </div>
-                                <div *ngSwitchCase="'TagsCtrl'">
-                                    <app-rn-tags-ctrl   [item]="item" 
-                                                        [control]="child"
-                                                        [formGroup]="form_group" 
-                                                        [fieldName]="getControlAttribute('field_name', undefined, child)"
-                                                        (onEvent)="onEventHandler($event)">
-                                    </app-rn-tags-ctrl>
-                                </div>
-                                <div *ngSwitchCase="'DateCtrl'">
-                                    <app-rn-date-ctrl   [item]="item" 
+                                </app-rn-item-select-ctrl>
+                            </div>
+                            <div *ngSwitchCase="'TypeSelectCtrl'"   [fxFlex]="getControlAttribute('flex', '1 1 auto', child)"
+                                                                    [fxFlexOffset]="getControlAttribute('offset', '1%', child)"
+                                                                    [fxFlexAlign]="getControlAttribute('align', 'center', child)">
+                                <app-rn-type-select-ctrl [item]="item" 
+                                                            [control]="child" 
+                                                            [formGroup]="form_group"
+                                                            [fieldName]="getControlAttribute('field_name', undefined, child)" 
+                                                            (onEvent)="onEventHandler($event)">
+                                </app-rn-type-select-ctrl>
+                            </div>
+                            <div *ngSwitchCase="'EditCtrl'" [fxFlex]="getControlAttribute('flex', '1 1 auto', child)"
+                                                            [fxFlexOffset]="getControlAttribute('offset', '1%', child)"
+                                                            [fxFlexAlign]="getControlAttribute('align', 'center', child)">
+                                <app-rn-edit-ctrl   [item]="item" 
+                                                    [control]="child" 
+                                                    [formGroup]="form_group"
+                                                    [fieldName]="getControlAttribute('field_name', undefined, child)" 
+                                                    (onEvent)="onEventHandler($event)">
+                                </app-rn-edit-ctrl>
+                            </div>
+                            <div *ngSwitchCase="'LocationCtrl'" [fxFlex]="getControlAttribute('flex', '1 1 auto', child)"
+                                                                [fxFlexOffset]="getControlAttribute('offset', '1%', child)"
+                                                                [fxFlexAlign]="getControlAttribute('align', 'center', child)">
+                                <app-rn-location-ctrl   [item]="item" 
                                                         [control]="child" 
-                                                        [formGroup]="form_group"
-                                                        [fieldName]="getControlAttribute('field_name', undefined, child)" 
-                                                        (onEvent)="onEventHandler($event)">
-                                    </app-rn-date-ctrl>
-                                </div>
-                                <div *ngSwitchCase="'LabelCtrl'">
-                                    <app-rn-label-ctrl  [item]="item" 
-                                                        [control]="child"
                                                         [formGroup]="form_group" 
                                                         [fieldName]="getControlAttribute('field_name', undefined, child)"
                                                         (onEvent)="onEventHandler($event)">
-                                    </app-rn-label-ctrl>
-                                </div>
-                                <div *ngSwitchDefault>
-                                    Control: {{child!.type!.name!}}
-                                </div>
+                                </app-rn-location-ctrl>
+                            </div>
+                            <div *ngSwitchCase="'TagsCtrl'" [fxFlex]="getControlAttribute('flex', '1 1 auto', child)"
+                                                            [fxFlexOffset]="getControlAttribute('offset', '1%', child)"
+                                                            [fxFlexAlign]="getControlAttribute('align', 'center', child)">
+                                <app-rn-tags-ctrl   [item]="item" 
+                                                    [control]="child"
+                                                    [formGroup]="form_group" 
+                                                    [fieldName]="getControlAttribute('field_name', undefined, child)"
+                                                    (onEvent)="onEventHandler($event)">
+                                </app-rn-tags-ctrl>
+                            </div>
+                            <div *ngSwitchCase="'DateCtrl'" [fxFlex]="getControlAttribute('flex', '1 1 auto', child)"
+                                                            [fxFlexOffset]="getControlAttribute('offset', '1%', child)"
+                                                            [fxFlexAlign]="getControlAttribute('align', 'center', child)">
+                                <app-rn-date-ctrl   [item]="item" 
+                                                    [control]="child" 
+                                                    [formGroup]="form_group"
+                                                    [fieldName]="getControlAttribute('field_name', undefined, child)" 
+                                                    (onEvent)="onEventHandler($event)">
+                                </app-rn-date-ctrl>
+                            </div>
+                            <div *ngSwitchCase="'LabelCtrl'" [fxFlex]="getControlAttribute('flex', '1 1 auto', child)"
+                                                            [fxFlexOffset]="getControlAttribute('offset', '1%', child)"
+                                                            [fxFlexAlign]="getControlAttribute('align', 'center', child)">
+                                <app-rn-label-ctrl  [item]="item" 
+                                                    [control]="child"
+                                                    [formGroup]="form_group" 
+                                                    [fieldName]="getControlAttribute('field_name', undefined, child)"
+                                                    (onEvent)="onEventHandler($event)">
+                                </app-rn-label-ctrl>
+                            </div>
+                            <div *ngSwitchDefault>
+                                Control: {{child!.type!.name!}}
                             </div>
                         </div>
                     </div>

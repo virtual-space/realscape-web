@@ -21,13 +21,33 @@ export class RnFormCtrlComponent extends RnCtrlComponent implements OnInit {
       this.rebuildControls();
     }
 
+    compare(a: Number, b: Number) {
+      if (a < b) {
+        return -1;
+      }
+      if (a > b) {
+        return 1;
+      }
+      return 0;
+    }
+
+    getOrder(item: Item) {
+      if (item.attributes) {
+        if ('order' in item.attributes) {
+          console.log(item.attributes['order']);
+          return parseInt(item.attributes['order']);
+        }
+      }
+      return 99999999;
+    }
+
     rebuildControls() {
       this.controls = [];
       if(this.control && this.control.items) {
         
         let controls: {[index: string]:any} = {};
-        for(var control of this.control.items) {
-
+        for(var control of this.control.items.sort(this.getOrder)) {
+          console.log(control);
           if(itemIsInstanceOf(control, "Control")) {
             if (control.name) {
               controls[control.name] = new FormControl();
@@ -40,6 +60,7 @@ export class RnFormCtrlComponent extends RnCtrlComponent implements OnInit {
           }
         } 
         }
+      console.log(this.controls);
     }
 
     getControlAttribute(key: string, def?: string, control?: Item): string | undefined {

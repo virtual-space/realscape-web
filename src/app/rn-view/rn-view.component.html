@@ -9,7 +9,7 @@
       <app-rn-calendar-view [items]="items" [item]="item"></app-rn-calendar-view>
   </div>
   <div *ngSwitchCase="'BoardView'">
-    <app-rn-board-view></app-rn-board-view>
+    <app-rn-board-view  [items]="items" [item]="item"></app-rn-board-view>
   </div>
   <div *ngSwitchCase="'DocumentView'">
     <app-rn-document-view></app-rn-document-view>

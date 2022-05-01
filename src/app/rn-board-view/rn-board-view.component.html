@@ -1,1 +1,15 @@
-<p>rn-board-view works!</p>
+<div cdkDropListGroup *ngIf="board" fxLayoutAlign="center center">
+    <div class="example-container" *ngFor="let column of board.columns">
+
+        <h2>{{ column.name }}</h2>
+
+        <div class="example-list"
+        cdkDropList
+        [cdkDropListData]="column.items"
+        (cdkDropListDropped)="drop($event)">
+        <div class="example-box" *ngFor="let item of column.items" cdkDrag fxLayout="row" fxLayoutAlign="start center">
+            <mat-icon mat-card-image>{{item.type!.icon!}}</mat-icon>
+            <span>{{item.name}}</span>
+        </div>
+    </div>
+</div>

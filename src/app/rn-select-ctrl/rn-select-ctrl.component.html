@@ -1,1 +1,8 @@
-<p>rn-select-ctrl works!</p>
+<mat-form-field appearance="fill" fxFlexFill *ngIf="control">
+    <mat-label>{{control.name}}</mat-label>
+    <mat-select [(ngModel)]="selectedValue" name="select" [formControl]="formControl">
+      <mat-option *ngFor="let selectItem of selectItems" [value]="selectItem.value">
+        {{selectItem.viewValue}}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>

@@ -9,14 +9,18 @@ import { RnCtrlComponent } from '../rn-ctrl/rn-ctrl.component';
 export class RnDateCtrlComponent extends RnCtrlComponent implements OnInit {
 
   private date_value?: Date;
-  public get date() { return this.date_value; }
+  public get date() { 
+    return this.date_value; 
+  }
   public set date(newValue) {
     this.date_value = newValue;
     this.formControl.setValue(this.datetime);
   }
 
   private time_value?: string;
-  public get time() { return this.time_value; }
+  public get time() {
+   return this.time_value;
+  }
   public set time(newValue) {
     this.time_value = newValue;
     this.formControl.setValue(this.datetime);
@@ -33,7 +37,12 @@ export class RnDateCtrlComponent extends RnCtrlComponent implements OnInit {
           const time_minutes = time[1].split(" ");
           if (time_minutes.length === 2) {
             const minutes = parseInt(time_minutes[0]);
-            result.setHours(hours);
+            const ampm = time_minutes[1];
+            if (ampm === 'PM') {
+              result.setHours(hours + 12);
+            } else {
+              result.setHours(hours);
+            }
             result.setMinutes(minutes);
           }
         }
@@ -43,6 +52,20 @@ export class RnDateCtrlComponent extends RnCtrlComponent implements OnInit {
       }
     }
     return undefined;
+  }
+
+  protected  override initialize(): void {
+    if (this.formControl.value) {
+      this.date_value = new Date(this.formControl.value);
+      let ampm = 'AM';
+      let hours = this.date_value.getHours();
+      if (hours > 12) {
+        hours = hours - 12;
+        ampm = 'PM';
+      }
+      const minutes = this.date_value.getMinutes();
+      this.time_value = (('0' + hours).slice(-2) + ':' + ('0' + minutes).slice(-2) + ' ' + ampm);
+    }
   }
 
 

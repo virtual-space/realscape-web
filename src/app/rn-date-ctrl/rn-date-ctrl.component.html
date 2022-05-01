@@ -1,4 +1,4 @@
-<div *ngIf="control" fxLayout="column">
+<div *ngIf="control" fxLayout="column" class="datecontrol">
     <mat-form-field appearance="fill">
         <mat-label>{{control.name}} date</mat-label>
         <input matInput [matDatepicker]="datepicker1" [(ngModel)]="date">
@@ -10,7 +10,7 @@
         <input matInput [(ngModel)]="time" [ngxMatTimepicker]="picker">
         <ngx-mat-timepicker #picker></ngx-mat-timepicker>
     </mat-form-field>
-    <input  [formControl]="formControl" [value]="datetime" type="text">
+    <input  [formControl]="formControl" [value]="datetime" type="text" hidden="true">
 </div>
 
 

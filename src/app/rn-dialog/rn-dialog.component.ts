@@ -35,7 +35,7 @@ export class RnDialogComponent implements OnInit {
     console.log(event);
     if (event.item) {
       if (event.event === 'click') {
-        if(event.item.attributes && event.item.attributes['close'] === 'true') {
+        if(event.control && event.control.attributes && event.control.attributes['close'] === 'true') {
           this.dialogRef.close();
         } else {
           this.dialogRef.close(event);

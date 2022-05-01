@@ -89,7 +89,8 @@ export class ItemService {
     );
   }*/
   public update(id: string, params: any): Observable<Item> {
-    return this.http.put(this.getEndpoint() + '/' + id, params).pipe(
+    console.log(params);
+    return this.http.put<Item>(this.getEndpoint() + '/' + id, params).pipe(
       catchError(this.handleError('/items', []))
     );
   }
@@ -422,6 +423,7 @@ export class Item {
   items?: Item[];
   valid_from?: Date;
   valid_to?: Date;
+  status?: string;
 }
 /*
 export function getTypeAttributes(type: Type): {[index: string]:any} {

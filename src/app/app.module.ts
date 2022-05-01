@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule } from '@angular/forms';
 import { ReactiveFormsModule } from '@angular/forms';
+import {DragDropModule} from '@angular/cdk/drag-drop';
 import {HTTP_INTERCEPTORS, HttpClientModule} from '@angular/common/http';
 
 import { AppRoutingModule } from './app-routing.module';
@@ -163,6 +164,7 @@ import { RnUploadCtrlComponent } from './rn-upload-ctrl/rn-upload-ctrl.component
     FormsModule,
     FlexLayoutModule,
     ReactiveFormsModule,
+    DragDropModule,
     AppRoutingModule,
     HttpClientModule,
     BrowserAnimationsModule,

@@ -1,6 +1,6 @@
-<form *ngIf="item && control">
-    <mat-form-field>
+<div *ngIf="item && control">
+    <mat-form-field appearance="fill" fxFlexFill>
         <mat-label>{{control.name!}}</mat-label>
         <input matInput placeholder="" type="text" [formControl]="formControl">
     </mat-form-field>
-</form>
+</div>

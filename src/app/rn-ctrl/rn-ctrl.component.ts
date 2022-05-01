@@ -27,17 +27,26 @@ export class RnCtrlComponent implements OnInit {
 
     if(this.formGroup) {
       if(this.control) {
-        this.formControl = new FormControl(this.getValue());
         let field_name = 'empty';
         if (this.fieldName) {
           field_name = this.fieldName;
         } else if(this.control && this.control.name) {
           field_name = this.control.name;
         }
+        if (field_name === 'tags') {
+          this.formControl = new FormControl([]);
+        } else {
+          this.formControl = new FormControl(this.getValue());
+        }
         this.formGroup.addControl(field_name, this.formControl);
+        //console.log(field_name, this.formControl);
       }
     }
+
+    this.initialize();
   }
+
+  protected initialize() {}
 
   public getAttribute(key: string, def: string): string {
     if(this.item) {
@@ -67,6 +76,10 @@ export class RnCtrlComponent implements OnInit {
               return this.item.valid_from;
             } else if (target === "valid_to") {
               return this.item.valid_to;
+            } else if (target === "status") {
+              return this.item.status;
+            } else if (target === "tags") {
+              return this.item.tags? this.item.tags : [];
             }
             if (target in this.item.attributes) {
               return this.item.attributes[target];

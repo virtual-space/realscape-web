@@ -363,14 +363,16 @@ export class RnViewComponent implements OnInit, OnChanges {
   
             dialogRef.afterClosed().subscribe(result => {
               if (result) {
+                console.log(result);
                 this.uploading = true;
       
                 if (result.file) {
                   this.uploadingFile = true;
                   this.uploadProgress = 0;
                 }
-                console.log(result);
-                const arg = Object.assign({id: this.item?.id},result.data)
+                //console.log(result);
+                const arg = Object.assign({id: this.item?.id},result.data);
+                //console.log(arg);
                 this.itemService.update(arg.id, arg).subscribe(res => {
                   this.sessionService.refresh();
                 });

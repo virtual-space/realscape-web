@@ -32,7 +32,7 @@ export class RnItemViewComponent extends RnViewComponent implements OnInit, OnDe
   selectedView = new FormControl(0);
 
   override ngOnInit(): void {
-    console.log('item-view init ', this.item);
+    //console.log('item-view init ', this.item);
     this.itemService.apps().subscribe(apps => {
       if (apps && apps.items) {
         //console.log('apps:',apps);
@@ -60,7 +60,7 @@ export class RnItemViewComponent extends RnViewComponent implements OnInit, OnDe
               console.log('subscribing ',id);
               this.subscription = this.sessionService.refreshed$.subscribe(
                 () => {
-                  console.log('subscription requesting refresh for ',id);
+                  //console.log('subscription requesting refresh for ',id);
                   this.refresh(id);
               });
               this.refresh(id);
@@ -89,7 +89,7 @@ export class RnItemViewComponent extends RnViewComponent implements OnInit, OnDe
   }
 
   reloadItem(item: Item, activate: boolean): void {
-    console.log('reloading ',item);
+    //console.log('reloading ',item);
     this.id = item.id; 
     if (this.isExternalType(item)) {
       if (this.id) {
@@ -116,7 +116,7 @@ export class RnItemViewComponent extends RnViewComponent implements OnInit, OnDe
   }
 
   activateItem(item: Item, children: Item[], activate: boolean) {
-    console.log('activating ',item, children, activate);
+    //console.log('activating ',item, children, activate);
     if (this.isExternalType(item) && item.items) {
       this.children = children.filter(child => !itemIsInstanceOf(child, "View"));
       this.views = item.items.filter(child => itemIsInstanceOf(child, "View"));

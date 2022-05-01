@@ -1,1 +1,16 @@
-<p>rn-tags-ctrl works!</p>
+<mat-form-field fxFlexFill appearance="fill">
+    <mat-label>Tags</mat-label>
+    <mat-chip-list #chipList aria-label="Tag selection" [formControl]="formControl">
+      <mat-chip *ngFor="let tag of tags" (removed)="remove(tag)">
+        {{tag.name}}
+        <button matChipRemove>
+          <mat-icon>cancel</mat-icon>
+        </button>
+      </mat-chip>
+      <input placeholder="New tag..."
+             [matChipInputFor]="chipList"
+             [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+             [matChipInputAddOnBlur]="addOnBlur"
+             (matChipInputTokenEnd)="add($event)">
+    </mat-chip-list>
+  </mat-form-field>
