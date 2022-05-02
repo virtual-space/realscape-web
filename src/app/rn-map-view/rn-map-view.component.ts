@@ -36,7 +36,8 @@ export class RnMapViewComponent extends RnViewComponent implements OnInit, OnDes
   style = 'mapbox://styles/mapbox/streets-v11';
   lat = 45.899977;
   lng = 6.172652;
-  location = {'type': 'Point','coordinates': [this.lng,this.lat] }
+  //location = {'type': 'Point','coordinates': [this.lng,this.lat] }
+  location = null;
   zoom = 12;
   token = environment.mapboxToken;
   markers: Marker[] = [];
@@ -50,6 +51,9 @@ export class RnMapViewComponent extends RnViewComponent implements OnInit, OnDes
     this.sleep(50).then(() => {
       this.loadMap()
     });
+    if(this.item){
+      this.items.push(this.item)
+    }
   }
 
   ngOnDestroy(): void {
@@ -86,7 +90,7 @@ export class RnMapViewComponent extends RnViewComponent implements OnInit, OnDes
         if(!error){
           if(this.items.length !== 0 || (this.item && this.item.location)){
             if (this.map){
-              this.loadMarkers(this.map)
+              this.loadFunction()
             }
           } else {
             console.log('No data provided')
@@ -97,7 +101,8 @@ export class RnMapViewComponent extends RnViewComponent implements OnInit, OnDes
       console.log('refreshing map')
       if(this.items.length !== 0 || (this.item && this.item.location)){
         if (this.map){
-          this.loadMarkers(this.map)
+          //this needs to clear the existing map data.
+          this.loadFunction()
         }
       } else {
         console.log('No data provided')
@@ -105,23 +110,99 @@ export class RnMapViewComponent extends RnViewComponent implements OnInit, OnDes
     }
   }
 
+
+  /*
+  Always call this instead of directly calling loadMarkers.
+  */
+  private loadFunction(): void {
+    this.sleep(100).then(() => {
+      if(this.map){
+        this.loadMarkers(this.map)
+      }
+    });
+  }
+
+  /* 
+  Do not call this directly, use the loadFunction() provided to delay this until after the map finishes loading.
+  */
   loadMarkers(map: Map): void {
     console.log("loading markers")
     if(map){
       let bounds = new LngLatBounds(); // Instantiate LatLngBounds object
-      var temp_items: any[] = this.items
-      temp_items.push(this.item)
-      const itemsWithPositions = temp_items.filter(i => i.location && i.location.coordinates);
-      //console.log(itemsWithPositions)
+      const itemsWithPositions = this.items.filter(i => i.location && i.location.coordinates);
       if (itemsWithPositions.length > 0) {
         console.log("fitting map to bounds");
         itemsWithPositions.forEach(ip => {
-          const m = new Marker();
-          this.markers.push(m);
-          m.setLngLat(ip.location.coordinates);
-          this.attachPopup(m, ip);
-          bounds = bounds.extend(ip.location.coordinates);
-          m.addTo(map);
+          if(ip.location.type === 'Point'){
+            console.log("adding point...", ip.name)
+            const m = new Marker();
+            this.markers.push(m);
+            m.setLngLat(ip.location.coordinates);
+            this.attachPopup(m, ip);
+            bounds = bounds.extend(ip.location.coordinates);
+            m.addTo(map);
+          } else {
+            if (ip.location.type === 'Polygon'){
+              console.log("adding polygon...", ip.name)
+              const m = new Marker();
+              this.markers.push(m);
+              var sumlat = 0
+              var sumlong = 0
+              var count = 0
+              //finding the center of the polygon.
+              ip.location.coordinates[0].forEach((coord:any) => {
+                bounds = bounds.extend(coord);
+                sumlat += coord[0]
+                sumlong += coord[1]
+                count += 1
+              })
+              //console.log(sumlat,sumlong,count)
+              m.setLngLat([sumlat/count,sumlong/count]);
+              this.attachPopup(m, ip);
+              m.addTo(map);
+              //now add the polygon itself.
+              //console.log('current polygon',ip)
+              if(ip.name){
+                map.addSource(ip.name,{
+                  'type': 'geojson',
+                  'data': {
+                    'properties': {
+                      'name': ip.name
+                    },
+                    'type': 'Feature',
+                    'geometry': {
+                      'type': 'Polygon',
+                      'coordinates': ip.location.coordinates
+                    }
+                  }
+                })
+                map.addLayer({
+                  'id': ip.name,
+                  'type': 'fill',
+                  'source': ip.name, // reference the data source
+                  'layout': {},
+                  'paint': {
+                    'fill-color': '#0080ff', // blue color fill
+                    'fill-opacity': 0.5
+                  }
+                })
+                map.addLayer({
+                  'id': ip.name+'outline',
+                  'type': 'line',
+                  'source': ip.name, // reference the data source
+                  'layout': {},
+                  'paint': {
+                    'line-color': '#000',
+                    'line-width': 3
+                  }
+                })
+              } else {
+                console.log(`Error: The item somehow doesn't have a name. item:`,ip)
+              }
+            } else {
+              console.log('Error: an item with a position is neither a point or a polygon.')
+            }
+          }
         });
 
         map.fitBounds(bounds);
