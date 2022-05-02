@@ -1,7 +1,7 @@
 import { Pipe, PipeTransform, SecurityContext } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
-import { map, Observable } from 'rxjs';
+import { from, map, Observable, of, switchMap } from 'rxjs';
 
 @Pipe({
     name: 'secure'
@@ -43,6 +43,39 @@ export class SecurePipe1 implements PipeTransform {
     transform(url: any): Observable<SafeUrl> {
         return this.http.get(url, { responseType: 'blob' }).pipe(
             map(val => this.sanitizer.bypassSecurityTrustUrl(URL.createObjectURL(val))));
+    }
+
+}
+
+@Pipe({
+    name: 'secure2'
+})
+export class SecurePipe2 implements PipeTransform {
+
+    constructor(private http: HttpClient, private sanitizer: DomSanitizer) { }
+
+    /*
+    transform(url: any): Observable<SafeUrl> {
+        return this.http.get(url, {responseType: 'blob'}).pipe(
+            switchMap(response => response.text()),
+            map(response => this.sanitizer.bypassSecurityTrustUrl('data:image/png;base64,' + response)));
+    }
+    */
+
+    process(type: string | null, blob: Blob | null): Observable<string> {
+        if (type && blob) {
+            return from(blob.text()).pipe(
+                map(res => 'data:' + type + ';base64,' + res)
+            );
+        } else {
+            return of('');
+        }
+    }
+
+    transform(url: any): Observable<SafeUrl> {
+        return this.http.get(url, {responseType: 'blob', observe: 'response'}).pipe(
+            switchMap(response => this.process(response.headers.get('Content-Type'), response.body)),
+            map(response => this.sanitizer.bypassSecurityTrustUrl(response)));
     }
 
 }
