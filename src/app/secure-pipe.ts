@@ -120,7 +120,8 @@ export class SecurePipe4 implements PipeTransform {
     process(val: Blob): Observable<string> {
         return from(val.text()).pipe(
             map(res => {
-                return window.atob(res).replace(/\n/g, "<br />");
+                //return window.atob(res).replace(/\n/g, "<br />");
+                return res.replace(/\n/g, "<br />");
             })
         )
         
@@ -144,7 +145,7 @@ export class SecurePipe5 implements PipeTransform {
     process(val: Blob): Observable<string> {
         return from(val.text()).pipe(
             map(res => {
-                return window.atob(res);
+                return res;
             })
         )
         
