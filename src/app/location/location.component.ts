@@ -234,7 +234,15 @@ export class LocationComponent implements OnInit {
           center: [this.lng, this.lat] 
         });
         this.map.addControl(new NavigationControl());
-        let draw = new MapboxDraw();
+        let draw = new MapboxDraw(
+          {controls: {
+            point: true,
+            polygon: true,
+            trash: true
+            },
+            displayControlsDefault: false
+          }
+        );
         this.map.addControl(draw, 'top-right'); 
         this.marker = new Marker({draggable: true})
                           .setLngLat([this.lng, this.lat])
