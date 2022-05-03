@@ -43,6 +43,30 @@ export class RnMapViewComponent extends RnViewComponent implements OnInit, OnDes
   markers: Marker[] = [];
 
   override ngOnInit(): void {
+    if (this.item) {
+      if (this.item.location == null) {
+        if (navigator.geolocation) {
+          console.log("getting the current location");
+          navigator.geolocation.getCurrentPosition((position) => {
+            //console.log(position);
+            //this.location = new LngLat(position.coords.longitude, position.coords.latitude);
+            //this.mapCenter = this.location;
+            this.lat = position.coords.latitude;
+            this.lng = position.coords.longitude;
+            this.loadMap();
+            console.log(this);
+          });
+        }
+      } else {
+        const loc = this.item.location;
+        if (loc) {
+            if(loc['type'] === 'Point') {
+              this.lng = loc['coordinates'][0];
+              this.lat = loc['coordinates'][1];
+            }
+        }
+      }
+    }
     if (this.events) {
       this.subscription = this.events.subscribe(e => {
         this.handleEvent(e);
