@@ -81,6 +81,84 @@ export class SecurePipe2 implements PipeTransform {
 }
 
 @Pipe({
+    name: 'secure3'
+})
+export class SecurePipe3 implements PipeTransform {
+
+    constructor(private http: HttpClient, private sanitizer: DomSanitizer) { }
+
+    process(val: Blob): Observable<ArrayBuffer> {
+        return from(val.text()).pipe(
+            map(res => {
+                const binary_string = window.atob(res);
+                const len = binary_string.length;
+                const bytes = new Uint8Array(len);
+                for (let i = 0; i < len; i++) {
+                    bytes[i] = binary_string.charCodeAt(i);
+                }
+                return bytes.buffer;
+            })
+        )
+        
+        //return from(val.text()arrayBuffer());
+    }
+
+    transform(url: any): Observable<ArrayBuffer> {
+        return this.http.get(url, { responseType: 'blob' }).pipe(
+            switchMap(val => this.process(val)));
+    }
+
+}
+
+@Pipe({
+    name: 'secure4'
+})
+export class SecurePipe4 implements PipeTransform {
+
+    constructor(private http: HttpClient, private sanitizer: DomSanitizer) { }
+
+    process(val: Blob): Observable<string> {
+        return from(val.text()).pipe(
+            map(res => {
+                return window.atob(res).replace(/\n/g, "<br />");
+            })
+        )
+        
+        //return from(val.text()arrayBuffer());
+    }
+
+    transform(url: any): Observable<string> {
+        return this.http.get(url, { responseType: 'blob' }).pipe(
+            switchMap(val => this.process(val)));
+    }
+
+}
+
+@Pipe({
+    name: 'secure5'
+})
+export class SecurePipe5 implements PipeTransform {
+
+    constructor(private http: HttpClient, private sanitizer: DomSanitizer) { }
+
+    process(val: Blob): Observable<string> {
+        return from(val.text()).pipe(
+            map(res => {
+                return window.atob(res);
+            })
+        )
+        
+        //return from(val.text()arrayBuffer());
+    }
+
+    transform(url: any): Observable<string> {
+        return this.http.get(url, { responseType: 'blob' }).pipe(
+            switchMap(val => this.process(val)));
+    }
+
+}
+
+@Pipe({
     name: 'denul'
 })
 export class DenulPipe implements PipeTransform {

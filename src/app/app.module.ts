@@ -1,14 +1,14 @@
-import { NgModule } from '@angular/core';
+import { NgModule, SecurityContext } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule } from '@angular/forms';
 import { ReactiveFormsModule } from '@angular/forms';
 import {DragDropModule} from '@angular/cdk/drag-drop';
-import {HTTP_INTERCEPTORS, HttpClientModule} from '@angular/common/http';
+import {HTTP_INTERCEPTORS, HttpClientModule, HttpClient} from '@angular/common/http';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { AuthInterceptor } from './auth-interceptor';
-import { SecurePipe, SecurePipe1, DenulPipe, SecurePipe2 } from './secure-pipe';
+import { SecurePipe, SecurePipe1, DenulPipe, SecurePipe2, SecurePipe3, SecurePipe4, SecurePipe5 } from './secure-pipe';
 import { MainComponent } from './main/main.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
@@ -44,6 +44,7 @@ import { QRCodeModule } from 'angularx-qrcode';
 import { CodemirrorModule } from '@ctrl/ngx-codemirror';
 import { PdfViewerModule } from 'ng2-pdf-viewer';
 import { NgxMatTimepickerModule } from 'ngx-mat-timepicker';
+import { MarkdownModule } from 'ngx-markdown';
 
 import { CallbackComponent } from './callback/callback.component';
 import { HomeComponent } from './home/home.component';
@@ -109,6 +110,9 @@ import { RnUploadCtrlComponent } from './rn-upload-ctrl/rn-upload-ctrl.component
     SecurePipe,
     SecurePipe1,
     SecurePipe2,
+    SecurePipe3,
+    SecurePipe4,
+    SecurePipe5,
     DenulPipe,
     RnItemViewComponent,
     RnQueryViewComponent,
@@ -201,7 +205,8 @@ import { RnUploadCtrlComponent } from './rn-upload-ctrl/rn-upload-ctrl.component
     QRCodeModule,
     CodemirrorModule,
     PdfViewerModule,
-    NgxMatTimepickerModule
+    NgxMatTimepickerModule,
+    MarkdownModule.forRoot()
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi:true }

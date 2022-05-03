@@ -104,6 +104,9 @@
         <div *ngSwitchCase="'Document'">
           <app-rn-document-view [items]="items" [item]="item" (onEvent)="onItemEvent($event)"></app-rn-document-view>
         </div>
+        <div *ngSwitchCase="'Page'">
+          <app-rn-page-view [items]="items" [item]="item" (onEvent)="onItemEvent($event)"></app-rn-page-view>
+        </div>
         <div *ngSwitchDefault>
           <ng-container *ngIf="children.length > 0">
             <app-rn-list-view [items]="children"></app-rn-list-view>

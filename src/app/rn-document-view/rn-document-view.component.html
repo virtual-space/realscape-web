@@ -1,10 +1,24 @@
 
-<div *ngIf="item">
-    <pdf-viewer [src]="getDataLink() | secure1 | async | denul"
-              [render-text]="true"
-              [original-size]="true"
-              [page]="5"
-              style="width: 400px; height: 500px"
-  ></pdf-viewer>
+<div *ngIf="item" fxFlexFill>
+    <div [ngSwitch]="item.attributes!['content_type']">
+      <pdf-viewer *ngSwitchCase="'application/pdf'"
+        [src]="getDataLink() | secure3 | async | denul"
+        [render-text]="true"
+        [original-size]="false"
+        [autoresize]="true"
+        style="width: 100vw; height: 100vh">
+      </pdf-viewer>
+      <div *ngSwitchCase="'text/plain'" [innerHTML]="getDataLink() | secure4 | async">
+      </div>
+      <div *ngSwitchCase="'text/markdown'">
+        <markdown
+          [data]="getDataLink() | secure5 | async | denul">
+        </markdown>
+      </div>
+      <div *ngSwitchDefault>
+        {{item.attributes!['content_type']}}
+      </div>
+    </div>
+    
 </div>
 
