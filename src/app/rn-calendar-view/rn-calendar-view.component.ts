@@ -1,6 +1,6 @@
 import { Component, OnInit, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { Item, ItemService } from '../services/item.service';
-import {Router} from '@angular/router';
+import { Router } from '@angular/router';
 import { MatTableDataSource } from "@angular/material/table";
 import {CalendarEvent, CalendarEventAction, CalendarView} from 'angular-calendar';
 import {
@@ -161,14 +161,16 @@ export class RnCalendarViewComponent implements OnInit {
   }
 
   onCalendarClick(event: any) {
-    console.log(event)
+    console.log("calendarclick",event)
     if (isSameMonth(event.date, this.viewDate)) {
-      if ((isSameDay(this.viewDate, event.date) && this.activeDayIsOpen) || event.events.length === 0) {
-        this.activeDayIsOpen = false;
-      } else {
-        this.activeDayIsOpen = true;
+      if (event.events && event.events.length) {
+        if ((isSameDay(this.viewDate, event.date) && this.activeDayIsOpen) || event.events.length === 0) {
+          this.activeDayIsOpen = false;
+        } else {
+          this.activeDayIsOpen = true;
+        }
+        this.viewDate = event.date;
       }
-      this.viewDate = event.date;
     }
   }
 
