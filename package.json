@@ -34,6 +34,7 @@
     "@angular/platform-browser-dynamic": "~13.2.0",
     "@angular/router": "~13.2.0",
     "@ctrl/ngx-codemirror": "^5.1.1",
+    "@types/mapbox__mapbox-gl-draw": "^1.2.3",
     "@types/mapbox-gl": "^2.6.3",
     "angular-calendar": "^0.29.0",
     "angularx-qrcode": "^13.0.9",

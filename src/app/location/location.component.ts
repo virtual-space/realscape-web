@@ -8,6 +8,9 @@ import { features } from 'process';
 import { range } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { Map, NavigationControl, Marker } from 'mapbox-gl';
+// @ts-ignore
+import * as MapboxDraw from "mapbox-gl-draw";
+import 'mapbox-gl-draw/dist/mapbox-gl-draw.css';
 
 @Component({
   selector: 'app-location',
@@ -225,12 +228,14 @@ export class LocationComponent implements OnInit {
       try {
         this.map = new Map({
           accessToken: this.token,
-          container: 'map',
+          container: 'location-map',
           style: this.style,
           zoom: this.zoom,
           center: [this.lng, this.lat] 
         });
         this.map.addControl(new NavigationControl());
+        let draw = new MapboxDraw();
+        this.map.addControl(draw, 'top-right'); 
         this.marker = new Marker({draggable: true})
                           .setLngLat([this.lng, this.lat])
                           .addTo(this.map);
