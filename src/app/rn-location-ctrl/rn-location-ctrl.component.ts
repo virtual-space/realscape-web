@@ -18,7 +18,7 @@ export class RnLocationCtrlComponent extends RnCtrlComponent implements OnInit {
     console.log(this.item);
 
     dialogRef.afterClosed().subscribe(result => {
-      this.formControl.setValue(JSON.stringify({type: 'Point', coordinates: [result.location.lng, result.location.lat]}));
+      this.formControl.setValue(JSON.stringify(result.location));
     });
   }
 

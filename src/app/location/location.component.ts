@@ -64,8 +64,11 @@ export class LocationComponent implements OnInit {
       if(this.location){
         if(this.location['type'] === 'Point'){
           this.mapCenter = this.location['coordinates'];
-        } else {
+        } else if (this.location['type'] === 'Polygon') {
           this.mapCenter = this.location['coordinates'][0][0];
+          //add mapCenter correctly.
+        } else {
+          console.log("ERROR: Invalid type.")
         }
       }
       this.loadMap();
@@ -75,12 +78,6 @@ export class LocationComponent implements OnInit {
 
   onOkClick(): void {
     console.log("Submit Location Data")
-    /* // removed since this will never be true.
-    if (this.marker) {
-      const loc = this.marker.getLngLat();
-      this.dialogRef.close({location: {lng: loc.lng, lat: loc.lat}});
-    }
-    */
     var featureCollection = this.draw.getAll()
     if (featureCollection.features[0]){
       this.dialogRef.close({location: featureCollection.features[0].geometry});
