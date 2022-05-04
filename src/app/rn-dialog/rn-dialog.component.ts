@@ -41,7 +41,11 @@ export class RnDialogComponent implements OnInit {
           this.dialogRef.close(event);
         }
       } else if (event.event === 'item') {
+        console.log(this.item);
+        let location = this.item?.location;
         this.item = event.item;
+        this.item.location = location;
+        console.log(this.item);
       }
       
     }

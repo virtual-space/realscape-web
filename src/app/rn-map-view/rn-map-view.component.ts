@@ -1,7 +1,7 @@
 import { Component, ElementRef, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 //import * as mapboxgl from "mapbox-gl";
 
-import { Item } from '../services/item.service'
+import { Item, itemIsInstanceOf } from '../services/item.service'
 //import * as MapboxGl from '!mapbox-gl';
 
 //const mapboxgl:any = require('mapbox-gl/dist/mapbox-gl.js');
@@ -14,7 +14,10 @@ import { RnViewComponent } from '../rn-view/rn-view.component';
 import { Subscription } from 'rxjs';
 import { E } from '@angular/cdk/keycodes';
 import { createComponentDefinitionMap } from '@angular/compiler/src/render3/partial/component';
-//import * as mapboxgl from "mapbox-gl";
+// @ts-ignore
+import * as MapboxDraw from "mapbox-gl-draw";
+import 'mapbox-gl-draw/dist/mapbox-gl-draw.css';
+import { RnDialogComponent } from '../rn-dialog/rn-dialog.component';
 
 @Component({
   selector: 'app-rn-map-view',
@@ -30,6 +33,7 @@ export class RnMapViewComponent extends RnViewComponent implements OnInit, OnDes
     }
   }
 
+  public draw: any;
   isLoaded = false;
   subscription?: Subscription;
   map?: Map;
@@ -37,46 +41,58 @@ export class RnMapViewComponent extends RnViewComponent implements OnInit, OnDes
   lat = 45.899977;
   lng = 6.172652;
   //location = {'type': 'Point','coordinates': [this.lng,this.lat] }
-  location = null;
+  location:any = null;
   zoom = 12;
   token = environment.mapboxToken;
   markers: Marker[] = [];
 
   override ngOnInit(): void {
     if (this.item) {
+      //this.items.push(this.item);
       if (this.item.location == null) {
         if (navigator.geolocation) {
           console.log("getting the current location");
           navigator.geolocation.getCurrentPosition((position) => {
             //console.log(position);
-            //this.location = new LngLat(position.coords.longitude, position.coords.latitude);
-            //this.mapCenter = this.location;
             this.lat = position.coords.latitude;
             this.lng = position.coords.longitude;
-            this.loadMap();
-            console.log(this);
+            this.sleep(500).then(() => {
+              this.loadMap()
+            });
           });
         }
       } else {
-        const loc = this.item.location;
-        if (loc) {
-            if(loc['type'] === 'Point') {
-              this.lng = loc['coordinates'][0];
-              this.lat = loc['coordinates'][1];
-            }
+        this.location = this.item.location;
+        if(this.location){
+          if(this.location['type'] === 'Point'){
+            this.lng = this.location['coordinates'][0];
+            this.lat = this.location['coordinates'][1];
+          } else if (this.location['type'] === 'Polygon') {
+            let sumlat = 0
+            let sumlong = 0
+            let count = 0
+            //finding the center of the polygon.
+            this.location['coordinates'][0].forEach((coord:any) => {
+                  sumlat += coord[1]
+                  sumlong += coord[0]
+                  count += 1
+            });
+            this.lat = sumlat/count;
+            this.lng = sumlong/count;
+            console.log(this);
+          } else {
+            console.log("ERROR: Invalid type.")
+          }
         }
+        this.sleep(500).then(() => {
+          this.loadMap()
+        });
       }
     }
     if (this.events) {
       this.subscription = this.events.subscribe(e => {
         this.handleEvent(e);
       });
-    }
-    this.sleep(50).then(() => {
-      this.loadMap()
-    });
-    if(this.item){
-      this.items.push(this.item)
     }
   }
 
@@ -93,6 +109,133 @@ export class RnMapViewComponent extends RnViewComponent implements OnInit, OnDes
     }
   }
 
+  addToMap(location: any) {
+    if (this.canAddItem()) {
+
+      this.itemService.dialogs().subscribe(dialogs => {
+        if (dialogs) {
+          const createDialogs = dialogs.filter(d => itemIsInstanceOf(d, 'ItemCreateDialog'));
+
+          if (createDialogs) {
+            const dialog = createDialogs[0];
+
+            if (dialog && dialog.items) {
+              const dialogRef = this.dialog.open(RnDialogComponent, {
+                width: '400px',
+                data: {item: {location: location}, view: dialog.items[0]}
+              });
+      
+              dialogRef.afterClosed().subscribe(result => {
+                if (result) {
+                  console.log(result);
+                  this.uploading = true;
+        
+                  if (result.file) {
+                    this.uploadingFile = true;
+                    this.uploadProgress = 0;
+                  }
+                  
+                  if (this.item) {
+                    result.data['parent_id'] = this.item.id;
+                  }
+                  console.log(result.data);
+                  this.itemService.create(result.data, (progress) => { this.uploadProgress = progress }).subscribe(
+                    (res) => {
+                      if (res && res['id']) {
+                        console.log(`Success created item id: ${res['id']}`);
+                        this.sessionService.refresh();
+                      }
+                    },
+                    (err) => {
+                      this.uploadingFile = false;
+                      this.uploadProgress = 0;
+                      this.uploading = false;
+                      this.snackBar.open(err['error']['Error'], 'Dismiss');
+                    },
+                    () => {
+                      this.uploadingFile = false;
+                      this.uploadProgress = 0;
+                      this.uploading = false;
+                      this.sessionService.refresh();
+                    });
+                }
+              });
+            }
+            } 
+          }
+      });
+  
+    }
+  }
+
+  loadMap(): void {
+    if(!this.isLoaded){
+      console.log('loading map...')
+      this.map = new Map({
+        accessToken: this.token,
+        container: 'map',
+        style: this.style,
+        zoom: this.zoom,
+        center: [this.lng, this.lat] 
+      });
+      this.map.addControl(new NavigationControl());
+        this.draw = new MapboxDraw(
+          {
+            controls: 
+            {
+              point: true,
+              polygon: true
+            },
+            displayControlsDefault: false,
+            userProperties: true
+          }
+        );
+        this.map.addControl(this.draw, 'top-right');
+        this.map.on('draw.create', e => {
+          console.log('draw.create',e);
+          if (e['features'][0]['geometry']['type'] === 'Point') {
+            console.log('Point');
+            this.addToMap(e['features'][0]['geometry']);
+            this.draw.delete(e['features'][0]['id']);
+          } else if (e['features'][0]['geometry']['type'] === 'Polygon') {
+            console.log('Polygon');
+            this.addToMap(e['features'][0]['geometry']);
+            this.draw.delete(e['features'][0]['id']);
+          }
+          
+        });
+        /*this.map.on('load', this.onMapLoaded);
+        this.map.on('draw.create', e => {
+          console.log('draw.create',e)
+          if (this.marker) {
+            this.marker.remove();
+            this.marker = undefined;
+          }
+        });
+    
+        this.map.on('draw.delete', e => {
+          console.log('draw.delete',e)
+          this.marker = new Marker({draggable: true})
+            .setLngLat([this.lng, this.lat])
+            .addTo(e.target);
+            this.marker.on('dragend', this.onDragEnd);
+        });
+        */
+        this.sleep(500).then(() => {
+
+          if(this.map){
+            this.loadMarkers(this.map);
+          }
+        });
+        
+        
+        
+    } else {
+      console.log('refreshing map')
+    }
+  }
+
+  /*
   loadMap(): void {
     //console.log("rn-map-view.this",this)
     var error = null;
@@ -133,7 +276,7 @@ export class RnMapViewComponent extends RnViewComponent implements OnInit, OnDes
       }
     }
   }
-
+  */
 
   /*
   Always call this instead of directly calling loadMarkers.
@@ -168,8 +311,8 @@ export class RnMapViewComponent extends RnViewComponent implements OnInit, OnDes
           } else {
             if (ip.location.type === 'Polygon'){
               console.log("adding polygon...", ip.name)
-              const m = new Marker();
-              this.markers.push(m);
+              //const m = new Marker();
+              //this.markers.push(m);
               var sumlat = 0
               var sumlong = 0
               var count = 0
@@ -181,13 +324,13 @@ export class RnMapViewComponent extends RnViewComponent implements OnInit, OnDes
                 count += 1
               })
               //console.log(sumlat,sumlong,count)
-              m.setLngLat([sumlat/count,sumlong/count]);
-              this.attachPopup(m, ip);
-              m.addTo(map);
+              //m.setLngLat([sumlat/count,sumlong/count]);
+              //this.attachPopup(m, ip);
+              //m.addTo(map);
               //now add the polygon itself.
               //console.log('current polygon',ip)
-              if(ip.name){
-                map.addSource(ip.name,{
+              if(ip.id){
+                map.addSource(ip.id,{
                   'type': 'geojson',
                   'data': {
                     'properties': {
@@ -201,19 +344,29 @@ export class RnMapViewComponent extends RnViewComponent implements OnInit, OnDes
                   }
                 })
                 map.addLayer({
-                  'id': ip.name,
+                  'id': 'l' + ip.id,
                   'type': 'fill',
-                  'source': ip.name, // reference the data source
+                  'source': ip.id, // reference the data source
                   'layout': {},
                   'paint': {
                     'fill-color': '#0080ff', // blue color fill
                     'fill-opacity': 0.5
                   }
-                })
+                });
+                let popupLink = this.itemService.getLink(ip);
+                map.on('click', 'l' + ip.id, (e) => {
+                  if (e) {
+                    new Popup()
+                      .setLngLat(e.lngLat)
+                      .setHTML('<h3><a href="' + popupLink + '">' + ip.name + '</a></h3>')
+                      .addTo(map);
+                  }
+                  
+                  });
                 map.addLayer({
-                  'id': ip.name+'outline',
+                  'id': 'l' + ip.id + 'outline',
                   'type': 'line',
-                  'source': ip.name, // reference the data source
+                  'source': ip.id, // reference the data source
                   'layout': {},
                   'paint': {
                     'line-color': '#000',

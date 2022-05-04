@@ -53,7 +53,10 @@ export class LocationComponent implements OnInit {
           }
           this.lat = position.coords.latitude;
           this.lng = position.coords.longitude;
-          this.loadMap();
+          this.sleep(500).then(() => {
+            this.loadMap();
+          });
+          
         });
       }
     } else {
@@ -79,7 +82,9 @@ export class LocationComponent implements OnInit {
           console.log("ERROR: Invalid type.")
         }
       }
-      this.loadMap();
+      this.sleep(500).then(() => {
+        this.loadMap();
+      });
     }
   }
 
