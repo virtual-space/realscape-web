@@ -45,6 +45,10 @@ import { CodemirrorModule } from '@ctrl/ngx-codemirror';
 import { PdfViewerModule } from 'ng2-pdf-viewer';
 import { NgxMatTimepickerModule } from 'ngx-mat-timepicker';
 import { MarkdownModule } from 'ngx-markdown';
+import { VgCoreModule } from '@videogular/ngx-videogular/core';
+import { VgControlsModule } from '@videogular/ngx-videogular/controls';
+import { VgOverlayPlayModule } from '@videogular/ngx-videogular/overlay-play';
+import { VgBufferingModule } from '@videogular/ngx-videogular/buffering';
 
 import { CallbackComponent } from './callback/callback.component';
 import { HomeComponent } from './home/home.component';
@@ -206,7 +210,11 @@ import { RnUploadCtrlComponent } from './rn-upload-ctrl/rn-upload-ctrl.component
     CodemirrorModule,
     PdfViewerModule,
     NgxMatTimepickerModule,
-    MarkdownModule.forRoot()
+    MarkdownModule.forRoot(),
+    VgCoreModule,
+    VgControlsModule,
+    VgOverlayPlayModule,
+    VgBufferingModule
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi:true }
