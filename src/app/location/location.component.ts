@@ -98,13 +98,25 @@ export class LocationComponent implements OnInit {
     this.draw.set(featureCollection)
   }
 
-  onDragEnd() {
-    if (this.marker) {
-      const lngLat = this.marker.getLngLat();
-      this.lat = lngLat.lat;
-      this.lng = lngLat.lng;
+  onDragEnd(event: any) {
+    console.log('onDragEnd')
+    //console.log(this)
+    console.log(event)
+    /*
+    if (event) {
+      var lngLat = event['target']['_lngLat']
+      console.log(lngLat)
+      this.lat = lngLat['lat'];
+      this.lng = lngLat['lng'];
       console.log(this);
+      console.log(this.draw)
+      var featureCollection = this.draw.getAll()
+      if(featureCollection.features[0]['geometry']['type'] === 'Point'){
+        featureCollection.features[0]['geometry']['coordinates'] = [lngLat.lng,lngLat.lat]
+        this.draw.set(featureCollection)
+      }
     }
+    */
   }
 
   onLoad(event: any): void {
@@ -138,19 +150,52 @@ export class LocationComponent implements OnInit {
             displayControlsDefault: false
           }
         );
-        this.map.addControl(this.draw, 'top-right'); 
+        this.map.addControl(this.draw, 'top-right');
+        this.marker = new Marker({draggable: false})
+        .setLngLat([this.lng, this.lat])
+        .addTo(this.map);
+        console.log('this.marker',this.marker)
+        //this.marker.on('dragend', this.onDragEnd);
         this.isLoaded = true;
       } catch (error) {
         console.log(error)
       } finally { //execute the rest of the code outside of the try/catch block
         if(this.map && !error){
           //add the control code.
+
           this.map.on('draw.create', e => {
             console.log('draw.create',e)
             var featureCollection = this.draw.getAll()
             if (featureCollection.features.length !== 1){
               featureCollection.features[0] = featureCollection.features.pop()
               this.draw.set(featureCollection)
+            }
+            var tempLoc = null
+            if (featureCollection.features[0]['geometry']['type'] === 'Point'){
+              tempLoc = featureCollection.features[0]['geometry']['coordinates']
+            } else if (featureCollection.features[0]['geometry']['type'] === 'Polygon'){
+              var sumlat = 0
+              var sumlong = 0
+              var count = 0
+              //finding the center of the polygon.
+              featureCollection.features[0]['geometry']['coordinates'][0].forEach((coord:any) => {
+                sumlat += coord[0]
+                sumlong += coord[1]
+                count += 1
+              })
+              //console.log(sumlong,sumlat,count)
+              tempLoc = [sumlat/count,sumlong/count];
+            }
+            if(this.map){
+              if(this.marker){
+                this.marker.setLngLat(tempLoc)
+              } else {
+                this.marker = new Marker({draggable: false})
+                .setLngLat(tempLoc)
+                .addTo(this.map);
+                console.log('this.marker',this.marker)
+                //this.marker.on('dragend', this.onDragEnd);
+              }
             }
           });
       
