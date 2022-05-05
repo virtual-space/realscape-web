@@ -41,7 +41,6 @@ export class LocationComponent implements OnInit {
   }
 
   ngOnInit() {
-    console.log(this);
     if (this.data.location == null) {
       if (navigator.geolocation) {
         console.log("getting the current location");
@@ -53,18 +52,16 @@ export class LocationComponent implements OnInit {
           }
           this.lat = position.coords.latitude;
           this.lng = position.coords.longitude;
-          this.sleep(500).then(() => {
-            this.loadMap();
-          });
-          
+          this.loadMap();
+          console.log('loading with user location',this);
         });
       }
     } else {
       this.location = this.data.location;
       if(this.location){
         if(this.location['type'] === 'Point'){
-          this.lng = this.location['coordinates'][0];
-          this.lat = this.location['coordinates'][1];
+          this.lng = this.location['coordinates'][0]
+          this.lat = this.location['coordinates'][1]
         } else if (this.location['type'] === 'Polygon') {
           let sumlat = 0
           let sumlong = 0
@@ -82,22 +79,18 @@ export class LocationComponent implements OnInit {
           console.log("ERROR: Invalid type.")
         }
       }
-      this.sleep(500).then(() => {
-        this.loadMap();
-      });
+      this.loadMap();
+      console.log('loading with existing data',this)
     }
   }
 
   onOkClick(): void {
-    //console.log("Submit Location Data")
-    if (this.marker) {
-      const lngLat = this.marker.getLngLat();
-      this.dialogRef.close({location: {type: 'Point', coordinates: [lngLat.lng, lngLat.lat]}});
+    console.log("Submit Location Data")
+    var featureCollection = this.draw.getAll()
+    if (featureCollection.features[0]){
+      this.dialogRef.close({location: featureCollection.features[0].geometry});
     } else {
-      let featureCollection = this.draw.getAll()
-      if (featureCollection.features[0]){
-        this.dialogRef.close({location: featureCollection.features[0].geometry});
-      }
+      this.dialogRef.close({location: null});
     }
   }
 
@@ -113,109 +106,150 @@ export class LocationComponent implements OnInit {
     this.draw.set(featureCollection)
   }
 
-  onMapLoaded(e: {type: string, target: Map}) {
-    console.log('map loaded', e);
-    
-
-    /*
-    
-    */
-    this.isLoaded = true;
+  onLoad(event: any): void {
+    console.log("Map Load", event);
   }
 
-  onDragEnd(event: any) {
+  onZoomEnd(event: any) {
 
-    console.log(event)
-    if (event) {
-      var lngLat = event['target']['_lngLat']
-      console.log(lngLat)
-      this.lat = lngLat['lat'];
-      this.lng = lngLat['lng'];
-      if (this.map) {
-        this.map.setCenter([this.lng, this.lat]);
-      }
-      
-    }
   }
 
   loadMap(): void {
     if(!this.isLoaded){
       console.log('loading map...')
-      this.map = new Map({
-        accessToken: this.token,
-        container: 'location-map',
-        style: this.style,
-        zoom: this.zoom,
-        center: [this.lng, this.lat] 
-      });
-      this.map.addControl(new NavigationControl());
+      var error = null
+      try {
+        this.map = new Map({
+          accessToken: this.token,
+          container: 'location-map',
+          style: this.style,
+          zoom: this.zoom,
+          center: [this.lng, this.lat] 
+        });
+        this.map.addControl(new NavigationControl());
         this.draw = new MapboxDraw(
-          {
-            controls: 
-            {
-              //point: true,
-              polygon: true,
-              trash: true
+          {controls: {
+            point: true,
+            polygon: true,
+            trash: true
             },
-            displayControlsDefault: false,
-            userProperties: true
+            displayControlsDefault: false
           }
         );
         this.map.addControl(this.draw, 'top-right');
-        this.map.on('load', this.onMapLoaded);
-        this.map.on('draw.create', e => {
-          console.log('draw.create',e)
-          if (this.marker) {
-            this.marker.remove();
-            this.marker = undefined;
-          }
-        });
-    
-        this.map.on('draw.delete', e => {
-          console.log('draw.delete',e)
-          this.marker = new Marker({draggable: true})
-            .setLngLat([this.lng, this.lat])
-            .addTo(e.target);
-            this.marker.on('dragend', this.onDragEnd);
-        });
-        
-        this.sleep(500).then(() => {
-
-          if(this.location && this.map){
-            if(this.location['type'] === 'Point'){
-              this.marker = new Marker({draggable: true})
-              .setLngLat([this.location['coordinates'][0], this.location['coordinates'][1]])
-              .addTo(this.map);
-              this.marker.on('dragend', this.onDragEnd);
-            } else if (this.location['type'] === 'Polygon') {
-              let sumlat = 0
-              let sumlong = 0
-              let count = 0
-              //finding the center of the polygon.
-              this.location['coordinates'][0].forEach((coord:any) => {
-                    sumlat += coord[1]
-                    sumlong += coord[0]
-                    count += 1
-              });
-              this.lat = sumlat/count;
-              this.lng = sumlong/count;
-              
-              this.draw.set({
-                type: 'FeatureCollection',
-                features: [{
-                  type: 'Feature',
-                  properties: {},
-                  id: 'initial64b3f1896dc2dc5eb642bfdb',
-                  geometry: this.location
-                }]
-              });
-      
+        this.marker = new Marker({draggable: false})
+        .setLngLat([this.lng, this.lat])
+        .addTo(this.map);
+        console.log('this.marker',this.marker)
+        //this.marker.on('dragend', this.onDragEnd);
+        this.marker.on('dragend', () =>{
+          if(this.marker){
+            const lngLat: LngLat = this.marker.getLngLat()
+            console.log(lngLat)
+            var featureCollection = this.draw.getAll()
+            if(featureCollection.features[0]['geometry']['type'] === 'Point'){
+              featureCollection.features[0]['geometry']['coordinates'] = [lngLat.lng,lngLat.lat]
+              this.draw.set(featureCollection)
             }
           }
         });
-        
-        
-        
+        this.isLoaded = true;
+      } catch (error) {
+        console.log(error)
+      } finally { //execute the rest of the code outside of the try/catch block
+        if(this.map && !error){
+          //add the control code.
+
+          this.map.on('draw.create', e => {
+            console.log('draw.create',e)
+            var featureCollection = this.draw.getAll()
+            if (featureCollection.features.length !== 1){
+              featureCollection.features[0] = featureCollection.features.pop()
+              this.draw.set(featureCollection)
+            }
+            var tempLoc = null
+            var isDraggable = false;
+            if (featureCollection.features[0]['geometry']['type'] === 'Point'){
+              isDraggable = true;
+              tempLoc = featureCollection.features[0]['geometry']['coordinates']
+            } else if (featureCollection.features[0]['geometry']['type'] === 'Polygon'){
+              var sumlat = 0
+              var sumlong = 0
+              var count = 0
+              //finding the center of the polygon.
+              featureCollection.features[0]['geometry']['coordinates'][0].forEach((coord:any) => {
+                sumlat += coord[0]
+                sumlong += coord[1]
+                count += 1
+              })
+              //console.log(sumlong,sumlat,count)
+              tempLoc = [sumlat/count,sumlong/count];
+            }
+            if(this.map){
+              if(this.marker){
+                this.marker.setLngLat(tempLoc)
+                this.marker.setDraggable(isDraggable)
+              }
+            }
+          });
+      
+          this.map.on('draw.delete', e => {
+            console.log('draw.delete',e)
+            var featureCollection = this.draw.getAll()
+            featureCollection.features = []
+            this.draw.set(featureCollection)
+          });
+
+          this.map.on('draw.update', e => {
+            if(this.marker){
+              console.log('draw.update',e)
+              var featureCollection = this.draw.getAll()
+              console.log(featureCollection)
+              if(featureCollection.features[0]['geometry']['type'] === 'Point'){
+                console.log('point')
+                console.log(featureCollection.features[0]['geometry']['coordinates'])
+                this.marker.setLngLat(featureCollection.features[0]['geometry']['coordinates'])
+              } else {
+                if (featureCollection.features[0]['geometry']['type'] === 'Polygon'){
+                  console.log('polygon')
+                  var sumlat = 0
+                  var sumlong = 0
+                  var count = 0
+                  //finding the center of the polygon.
+                  featureCollection.features[0]['geometry']['coordinates'][0].forEach((coord:any) => {
+                    sumlat += coord[0]
+                    sumlong += coord[1]
+                    count += 1
+                  })
+                  this.marker.setLngLat([sumlat/count,sumlong/count])
+                }
+              }
+            }
+          });
+          
+          //create the initial feature.
+          //current has a bug where this isn't visible until you interact with the map
+          if (this.location && this.location['type']){
+            if(this.marker && this.location['type'] === 'Point'){
+              this.marker.setDraggable(true)
+            }
+            var featureCollection = this.draw.getAll()
+            var feature = {
+              geometry: {
+                coordinates: this.location['coordinates'],
+                type: this.location['type']
+              },
+              id: 'initial64b3f1896dc2dc5eb642bfdb',
+              properties: {},
+              type: 'Feature'
+            }
+            //this.geojson = feature //pretty sure this is depreciated.
+            featureCollection.features.push(feature)
+            this.draw.set(featureCollection)
+          }
+          this.canvas = this.map.getCanvasContainer();
+        }
+      }
     } else {
       console.log('refreshing map')
     }
