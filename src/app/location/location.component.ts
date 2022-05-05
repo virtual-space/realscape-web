@@ -52,7 +52,9 @@ export class LocationComponent implements OnInit {
           }
           this.lat = position.coords.latitude;
           this.lng = position.coords.longitude;
-          this.loadMap();
+          this.sleep(500).then(() => {
+            this.loadMap();
+          });
           console.log('loading with user location',this);
         });
       }
@@ -79,7 +81,9 @@ export class LocationComponent implements OnInit {
           console.log("ERROR: Invalid type.")
         }
       }
-      this.loadMap();
+      this.sleep(500).then(() => {
+        this.loadMap();
+      });
       console.log('loading with existing data',this)
     }
   }
@@ -229,24 +233,26 @@ export class LocationComponent implements OnInit {
           
           //create the initial feature.
           //current has a bug where this isn't visible until you interact with the map
-          if (this.location && this.location['type']){
-            if(this.marker && this.location['type'] === 'Point'){
-              this.marker.setDraggable(true)
+          this.sleep(500).then(() => {
+            if (this.location && this.location['type']){
+              if(this.marker && this.location['type'] === 'Point'){
+                this.marker.setDraggable(true)
+              }
+              var featureCollection = this.draw.getAll()
+              var feature = {
+                geometry: {
+                  coordinates: this.location['coordinates'],
+                  type: this.location['type']
+                },
+                id: 'initial64b3f1896dc2dc5eb642bfdb',
+                properties: {},
+                type: 'Feature'
+              }
+              //this.geojson = feature //pretty sure this is depreciated.
+              featureCollection.features.push(feature)
+              this.draw.set(featureCollection)
             }
-            var featureCollection = this.draw.getAll()
-            var feature = {
-              geometry: {
-                coordinates: this.location['coordinates'],
-                type: this.location['type']
-              },
-              id: 'initial64b3f1896dc2dc5eb642bfdb',
-              properties: {},
-              type: 'Feature'
-            }
-            //this.geojson = feature //pretty sure this is depreciated.
-            featureCollection.features.push(feature)
-            this.draw.set(featureCollection)
-          }
+          })
           this.canvas = this.map.getCanvasContainer();
         }
       }
