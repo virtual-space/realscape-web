@@ -40,6 +40,9 @@ export class LocationComponent implements OnInit {
               @Inject(MAT_DIALOG_DATA) public data: any) {
   }
 
+  //REMOVE THE MARKERS FROM POLYGON
+  //REMOVE THE DELETE METHOD
+
   ngOnInit() {
     if (this.data.location == null) {
       if (navigator.geolocation) {
@@ -52,8 +55,8 @@ export class LocationComponent implements OnInit {
           }
           this.lat = position.coords.latitude;
           this.lng = position.coords.longitude;
-          this.sleep(500).then(() => {
-            this.loadMap();
+          this.sleep(500).then(() => {//do not remove the sleep functions
+            this.loadMap();//this fixes 99% of the loading issues
           });
           console.log('loading with user location',this);
         });
@@ -103,11 +106,14 @@ export class LocationComponent implements OnInit {
     this.dialogRef.close();
   }
 
-  onClearClick(): void {//this should probably be removed since the delete button does the same thing.
+  onClearClick(): void {
     console.log("Clear Location Data")
     var featureCollection = this.draw.getAll()
     featureCollection.features = []
     this.draw.set(featureCollection)
+    if(this.marker && this.map){
+      this.marker.remove()
+    }
   }
 
   onLoad(event: any): void {
@@ -135,7 +141,7 @@ export class LocationComponent implements OnInit {
           {controls: {
             point: true,
             polygon: true,
-            trash: true
+            //trash: true
             },
             displayControlsDefault: false
           }
@@ -143,7 +149,6 @@ export class LocationComponent implements OnInit {
         this.map.addControl(this.draw, 'top-right');
         this.marker = new Marker({draggable: false})
         .setLngLat([this.lng, this.lat])
-        .addTo(this.map);
         console.log('this.marker',this.marker)
         //this.marker.on('dragend', this.onDragEnd);
         this.marker.on('dragend', () =>{
@@ -171,38 +176,27 @@ export class LocationComponent implements OnInit {
               featureCollection.features[0] = featureCollection.features.pop()
               this.draw.set(featureCollection)
             }
-            var tempLoc = null
-            var isDraggable = false;
             if (featureCollection.features[0]['geometry']['type'] === 'Point'){
-              isDraggable = true;
-              tempLoc = featureCollection.features[0]['geometry']['coordinates']
+              if(this.marker && this.map){
+                this.marker.setLngLat(featureCollection.features[0]['geometry']['coordinates'])
+                this.marker.setDraggable(true)
+                this.marker.addTo(this.map)
+              }
             } else if (featureCollection.features[0]['geometry']['type'] === 'Polygon'){
-              var sumlat = 0
-              var sumlong = 0
-              var count = 0
-              //finding the center of the polygon.
-              featureCollection.features[0]['geometry']['coordinates'][0].forEach((coord:any) => {
-                sumlat += coord[0]
-                sumlong += coord[1]
-                count += 1
-              })
-              //console.log(sumlong,sumlat,count)
-              tempLoc = [sumlat/count,sumlong/count];
-            }
-            if(this.map){
               if(this.marker){
-                this.marker.setLngLat(tempLoc)
-                this.marker.setDraggable(isDraggable)
+                this.marker.remove()
               }
             }
           });
-      
+          
+          /*//removed since this will not be called while the trash control is commented out.
           this.map.on('draw.delete', e => {
             console.log('draw.delete',e)
             var featureCollection = this.draw.getAll()
             featureCollection.features = []
             this.draw.set(featureCollection)
-          });
+            if(this.marker){this.marker.remove()}
+          });*/
 
           this.map.on('draw.update', e => {
             if(this.marker){
@@ -213,30 +207,19 @@ export class LocationComponent implements OnInit {
                 console.log('point')
                 console.log(featureCollection.features[0]['geometry']['coordinates'])
                 this.marker.setLngLat(featureCollection.features[0]['geometry']['coordinates'])
-              } else {
-                if (featureCollection.features[0]['geometry']['type'] === 'Polygon'){
-                  console.log('polygon')
-                  var sumlat = 0
-                  var sumlong = 0
-                  var count = 0
-                  //finding the center of the polygon.
-                  featureCollection.features[0]['geometry']['coordinates'][0].forEach((coord:any) => {
-                    sumlat += coord[0]
-                    sumlong += coord[1]
-                    count += 1
-                  })
-                  this.marker.setLngLat([sumlat/count,sumlong/count])
-                }
               }
             }
           });
           
           //create the initial feature.
-          //current has a bug where this isn't visible until you interact with the map
+          //there is a bug where polygons do not load, this fixes most of them.
           this.sleep(500).then(() => {
             if (this.location && this.location['type']){
               if(this.marker && this.location['type'] === 'Point'){
                 this.marker.setDraggable(true)
+                if(this.map){
+                  this.marker.addTo(this.map)
+                }
               }
               var featureCollection = this.draw.getAll()
               var feature = {
