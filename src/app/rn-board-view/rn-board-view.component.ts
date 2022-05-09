@@ -31,12 +31,16 @@ export class RnBoardViewComponent  extends RnViewComponent implements OnInit {
         statuses.add(i.status);
       }
     });
-    console.log(statuses);
+    statuses.add('To Do')
+    statuses.add('In Progress')
+    statuses.add('Done')
+    console.log('status',statuses);
     const columns: Column[] = [];
     for(let status of statuses) {
       const items: Item[] = this.items.filter(i => i.status === status);
       columns.push(new Column(status, items));
     }
+    console.log('columns',columns)
     this.board = new Board(this.item? this.item.name! : 'Board', columns);
     console.log(this.board);
   }
