@@ -27,34 +27,46 @@ export class RnBoardViewComponent  extends RnViewComponent implements OnInit {
   rebuildBoard() {
     const statuses = new Set<string>();
     this.items.forEach(i => {
-      if (i.status) {
-        statuses.add(i.status);
+      if (i.attributes && i.attributes['values']) {
+        i.attributes['values'].forEach((ii: string) => {
+          statuses.add(ii)
+        })
       }
     });
-    statuses.add('To Do')
-    statuses.add('In Progress')
-    statuses.add('Done')
     console.log('status',statuses);
     const columns: Column[] = [];
     for(let status of statuses) {
       const items: Item[] = this.items.filter(i => i.status === status);
       columns.push(new Column(status, items));
     }
-    console.log('columns',columns)
     this.board = new Board(this.item? this.item.name! : 'Board', columns);
-    console.log(this.board);
+    console.log(this.board)
   }
 
   drop(event: CdkDragDrop<Item[]>) {
     if (event.previousContainer === event.container) {
       moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
     } else {
-      console.log(event);
+      console.log('event',event);
       //this.itemService.update()
       transferArrayItem(event.previousContainer.data,
         event.container.data,
         event.previousIndex,
         event.currentIndex);
+
+      var item = event.container.data[0]
+      const columnid = event.container.id
+      let columnsplit: any = columnid.split('-')
+      const columnIndex: number = +columnsplit[columnsplit.length-1]
+      if(this.board && this.board.columns){
+        item.status = this.board.columns[columnIndex].name
+      }
+      if(item && item.id){
+        console.log('updating',item.name,'status to',item.status)
+        this.itemService.update(item.id,{status: item.status}).subscribe(res => {
+          //console.log(res)
+        });
+      }
     }
   }
 
