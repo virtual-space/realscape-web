@@ -487,6 +487,9 @@ export function expandItem(item: Item): Item {
 */
 export function isInstanceOf(type: Type, type_name: string): boolean {
   
+  if (type.name === 'EventOrg') {
+    console.log(type);
+  }
   if (type.name === type_name) {
     //console.log('*** ', type.name, ' is instance of ', type_name)
     return true;

@@ -347,7 +347,7 @@ export class RnViewComponent implements OnInit, OnChanges {
   }
 
   onEdit(event: any) {
-
+    console.log(event);
     this.itemService.dialogs().subscribe(dialogs => {
       if (dialogs) {
         const editDialogs = dialogs.filter(d => itemIsInstanceOf(d, 'ItemEditDialog'));
@@ -356,9 +356,13 @@ export class RnViewComponent implements OnInit, OnChanges {
           const dialog = editDialogs[0];
 
           if (dialog && dialog.items) {
+            let target = this.item;
+            if ('item' in event) {
+              target = event['item'];
+            }
             const dialogRef = this.dialog.open(RnDialogComponent, {
               width: '400px',
-              data: {item: this.item, view: dialog.items[0]}
+              data: {item: target, view: dialog.items[0]}
             });
   
             dialogRef.afterClosed().subscribe(result => {

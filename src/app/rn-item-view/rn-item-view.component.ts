@@ -37,11 +37,14 @@ export class RnItemViewComponent extends RnViewComponent implements OnInit, OnDe
       if (apps && apps.items) {
         //console.log('apps:',apps);
         if(this.authService.isLoggedIn()) {
-          const apps_item = apps.items.find(a => itemIsInstanceOf(a, 'Apps'));
-          if (apps_item && apps_item.items) {
-            this.apps = apps_item.items;
-          } else {
-            this.apps = [];
+          const role = apps.items.find(a => itemIsInstanceOf(a, 'Role'));
+          if (role && role.items) {
+            const apps_item = role.items.find(a => itemIsInstanceOf(a, 'Apps'));
+            if (apps_item && apps_item.items) {
+              this.apps = apps_item.items;
+            } else {
+              this.apps = [];
+            }
           }
         } else {
           this.apps = apps.items;
@@ -91,14 +94,7 @@ export class RnItemViewComponent extends RnViewComponent implements OnInit, OnDe
   reloadItem(item: Item, activate: boolean): void {
     //console.log('reloading ',item);
     this.id = item.id; 
-    if (this.isExternalType(item)) {
-      if (this.id) {
-        this.itemService.children(this.id).subscribe(children => {
-          console.log('retrieving children');
-          this.activateItem(item, children, activate);
-        });
-      }
-    }  else if (item.items) {
+    if (item.items) {
       this.activateItem(item, item.items, activate);
     } else if (this.id) {
       console.log('retrieving children');
@@ -111,6 +107,13 @@ export class RnItemViewComponent extends RnViewComponent implements OnInit, OnDe
   shouldShowChildren(item: Item): boolean {
     if (item.attributes && 'show_children' in item.attributes) {
       return item.attributes['show_children'] === 'true';
+    }
+    return false;
+  }
+
+  shouldShowViewsAsItems(item: Item): boolean {
+    if (item.attributes && 'show_views_as_items' in item.attributes) {
+      return item.attributes['show_views_as_items'] === 'true';
     }
     return false;
   }

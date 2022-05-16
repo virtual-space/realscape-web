@@ -1,7 +1,7 @@
 import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { RnCtrlComponent } from '../rn-ctrl/rn-ctrl.component';
-import { Item } from '../services/item.service';
+import { Item, Type } from '../services/item.service';
 
 @Component({
   selector: 'app-rn-attrs-ctrl',
@@ -18,16 +18,38 @@ export class RnAttrsCtrlComponent extends RnCtrlComponent implements OnInit, OnC
     this.rebuildFormGroup();
   }
 
+  collectTypeAttributes(type: Type, attrs: {[index: string]:any}) {
+    let ret = attrs;
+    console.log('collecting type attributes ', type.name!);
+    if (type.base) {
+      attrs = Object.assign(attrs, this.collectTypeAttributes(type.base, attrs));
+    }
+    if (type.attributes) {
+      attrs = Object.assign(attrs, type.attributes);
+    }
+    return ret;
+  }
+
+  collectAttributes() {
+    let attrs: {[index: string]:any} = {};
+    if (this.item) {
+      console.log(this.item);
+      if (this.item.type) {
+        attrs = this.collectTypeAttributes(this.item.type, attrs);
+      }
+      console.log(attrs);
+      if (this.item.attributes) {
+        attrs = Object.assign(attrs, this.item.attributes);
+      }
+      console.log(attrs);
+    }
+    return attrs;
+  }
+
   rebuildFormGroup() {
     this.childFormGroup = new FormGroup({});
-    if (this.item) {
-      if (this.item.attributes) {
-        this.attributes = Object.entries(this.item.attributes).map(([k, v]) => [k, v]);
-        this.attributes.forEach(a => this.childFormGroup.addControl(a[0], new FormControl(a[1])));
-        //console.log(this.attributes);
-      }
-    }
-
+    this.attributes = Object.entries(this.collectAttributes()).map(([k, v]) => [k, v]);
+    this.attributes.forEach(a => this.childFormGroup.addControl(a[0], new FormControl(a[1])));
     if(this.formGroup) {
       if(this.control && this.control.name) {
         this.formGroup.removeControl('attributes');

@@ -57,7 +57,7 @@
   <div fxFlex>
     <div fxFlex fxLayoutAlign="center center" *ngIf="item" fxFlexFill>
       <!-- <app-rn-query-view *ngIf="query"></app-rn-query-view> -->
-      <div *ngIf="views.length > 1" class="tab-group-container">
+      <div *ngIf="(views.length > 1) && !shouldShowViewsAsItems(item)" class="tab-group-container">
           <mat-tab-group [selectedIndex]="selectedView.value" dynamicHeight backgroundColor="primary"
                        (selectedTabChange)="onChangeTab($event)"
                        (selectedIndexChange)="selectedView.setValue($event)">
@@ -96,7 +96,7 @@
         </ng-container>
       </ng-container>
   
-      <ng-container *ngIf="views.length === 0">
+      <ng-container *ngIf="(views.length === 0) || shouldShowViewsAsItems(item)">
       <ng-container [ngSwitch]="item!.type!.name!">
         <div *ngSwitchCase="'Image'">
           <app-rn-image-view [items]="items" [item]="item" (onEvent)="onItemEvent($event)"></app-rn-image-view>

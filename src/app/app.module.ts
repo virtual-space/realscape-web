@@ -103,6 +103,8 @@ import { RnMsgBoxComponent } from './rn-msg-box/rn-msg-box.component';
 import { RnCardViewComponent } from './rn-card-view/rn-card-view.component';
 import { RnFuncCtrlComponent } from './rn-func-ctrl/rn-func-ctrl.component';
 import { RnUploadCtrlComponent } from './rn-upload-ctrl/rn-upload-ctrl.component';
+import { RnTabsCtrlComponent } from './rn-tabs-ctrl/rn-tabs-ctrl.component';
+import { RnTabCtrlComponent } from './rn-tab-ctrl/rn-tab-ctrl.component';
 
 
 @NgModule({
@@ -166,7 +168,9 @@ import { RnUploadCtrlComponent } from './rn-upload-ctrl/rn-upload-ctrl.component
     RnMsgBoxComponent,
     RnCardViewComponent,
     RnFuncCtrlComponent,
-    RnUploadCtrlComponent
+    RnUploadCtrlComponent,
+    RnTabsCtrlComponent,
+    RnTabCtrlComponent
   ],
   imports: [
     BrowserModule,
