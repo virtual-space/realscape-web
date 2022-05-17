@@ -1,4 +1,6 @@
-<div fxLayout="column" *ngIf="control">
-    <input matInput placeholder="" type="text" [formControl]="formControl" hidden="true">
-    <button mat-raised-button color="primary" (click)="onClick()">Location</button>
+<div class="map-container" #mapContainer>
+    <div id="location-map" class="map-element"  #mapElement></div>
+    <input matInput [formControl]="formControl" type="text" hidden="true">
+    
 </div>
+

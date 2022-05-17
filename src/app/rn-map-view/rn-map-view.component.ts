@@ -28,7 +28,7 @@ export class RnMapViewComponent extends RnViewComponent implements OnInit, OnDes
 
   @ViewChild('mapElement') set content(content: ElementRef) {
     if(content) {
-      console.log(content);
+      //console.log(content);
       
     }
   }
@@ -103,7 +103,7 @@ export class RnMapViewComponent extends RnViewComponent implements OnInit, OnDes
   }
 
   handleEvent(e: number) {
-    console.log('map received event ', e, 'index is ', this.tabIndex);
+    //console.log('map received event ', e, 'index is ', this.tabIndex);
     if (e === this.tabIndex) {
       this.loadMap()
     }
@@ -120,9 +120,11 @@ export class RnMapViewComponent extends RnViewComponent implements OnInit, OnDes
             const dialog = createDialogs[0];
 
             if (dialog && dialog.items) {
+              let item_data = Object.assign({}, {location: location, attributes: this.item!.attributes});
               const dialogRef = this.dialog.open(RnDialogComponent, {
-                width: '400px',
-                data: {item: {location: location}, view: dialog.items[0]}
+                width: '95vw',
+                height: '95vh',
+                data: {item: item_data, view: dialog.items[0]}
               });
       
               dialogRef.afterClosed().subscribe(result => {

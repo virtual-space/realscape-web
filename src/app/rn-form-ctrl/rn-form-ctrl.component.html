@@ -1,6 +1,6 @@
 <div *ngIf="item && control">
     <form [formGroup]="form_group">
-        <div fxFlex fxLayoutAlign="center center" *ngIf="controls">
+        <div fxFlex="1 1 100%" fxLayoutAlign="center center" *ngIf="controls">
             <!-- <app-rn-query-view *ngIf="query"></app-rn-query-view> -->
             <div [fxLayout]="layout" [fxLayoutGap]="gap" [fxLayoutAlign]="align" fxFlex="1 1 100%">
                 <div mat-dialog-title>
@@ -8,9 +8,9 @@
                 </div>
                 <div  fxFlexFill>
                     <div *ngFor="let child of getControls(); let index = index">
-                        <div [ngSwitch]="child!.type!.name!" fxFlexFill>
+                        <div [ngSwitch]="getControlType(child.type!)" fxFlexFill>
                             <div *ngSwitchCase="'AttrsCtrl'" 
-                                    [fxFlex]="getControlAttribute('flex', '1 1 auto', child)"
+                                    [fxFlex]="getControlAttribute('flex', '1 1 100%', child)"
                                     [fxFlexOffset]="getControlAttribute('offset', '1%', child)"
                                     [fxFlexAlign]="getControlAttribute('align', 'center', child)">
                                 <app-rn-attrs-ctrl  [item]="item" 
@@ -100,8 +100,18 @@
                                                     (onEvent)="onEventHandler($event)">
                                 </app-rn-label-ctrl>
                             </div>
+                            <div *ngSwitchCase="'TabsCtrl'" [fxFlex]="getControlAttribute('flex', '1 1 100%', child)"
+                                                            [fxFlexOffset]="getControlAttribute('offset', '1%', child)"
+                                                            [fxFlexAlign]="getControlAttribute('align', 'center', child)">
+                                <app-rn-tabs-ctrl   [item]="item" 
+                                                    [control]="child"
+                                                    [formGroup]="form_group" 
+                                                    [fieldName]="getControlAttribute('field_name', undefined, child)"
+                                                    (onEvent)="onEventHandler($event)">
+                                </app-rn-tabs-ctrl>
+                            </div>
                             <div *ngSwitchDefault>
-                                Control: {{child!.type!.name!}}
+                                Control: {{child!.type!.name!}} {{getControlType(control)}}
                             </div>
                         </div>
                     </div>

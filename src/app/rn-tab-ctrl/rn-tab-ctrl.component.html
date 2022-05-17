@@ -1,1 +1,7 @@
-<p>rn-tab-ctrl works!</p>
+<ng-container *ngIf="formGroup">
+    <app-rn-ctrl-view [item]="item" [control]="control" [formGroup]="formGroup" [events]="events" [tabIndex]="tabIndex" fxFlex="1 1 100%"></app-rn-ctrl-view>
+</ng-container>
+<ng-container *ngIf="!formGroup">
+    <app-rn-ctrl-view [item]="item" [control]="control" [events]="events" [tabIndex]="tabIndex" fxFlex="1 1 100%"></app-rn-ctrl-view>
+</ng-container>
+

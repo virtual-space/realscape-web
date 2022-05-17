@@ -118,6 +118,12 @@ export class RnItemViewComponent extends RnViewComponent implements OnInit, OnDe
     return false;
   }
 
+  editItem() {
+    if (this.item) {
+      this.onEdit({event: 'edit', item: this.item});
+    }
+  }
+
   activateItem(item: Item, children: Item[], activate: boolean) {
     //console.log('activating ',item, children, activate);
     if (this.isExternalType(item) && item.items) {

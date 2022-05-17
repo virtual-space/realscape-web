@@ -37,7 +37,7 @@
                     <mat-icon>add</mat-icon>
                     <span>Add View</span>
                   </button>
-                  <button *ngIf="canEditOrDeleteItem()" mat-menu-item (click)="onEdit($event)">
+                  <button *ngIf="canEditOrDeleteItem()" mat-menu-item (click)="editItem()">
                     <mat-icon>edit</mat-icon>
                     <span>Edit Item</span>
                   </button>
@@ -58,7 +58,7 @@
     <div fxFlex fxLayoutAlign="center center" *ngIf="item" fxFlexFill>
       <!-- <app-rn-query-view *ngIf="query"></app-rn-query-view> -->
       <div *ngIf="(views.length > 1) && !shouldShowViewsAsItems(item)" class="tab-group-container">
-          <mat-tab-group [selectedIndex]="selectedView.value" dynamicHeight backgroundColor="primary"
+          <mat-tab-group [selectedIndex]="selectedView.value" dynamicHeight mat-align-tabs="center" backgroundColor="primary"
                        (selectedTabChange)="onChangeTab($event)"
                        (selectedIndexChange)="selectedView.setValue($event)">
   

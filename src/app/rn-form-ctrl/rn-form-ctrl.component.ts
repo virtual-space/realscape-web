@@ -1,7 +1,7 @@
 import { Component, Input, OnInit, SimpleChanges } from '@angular/core';
 import { RnCtrlComponent } from '../rn-ctrl/rn-ctrl.component';
 import { FormGroup, FormControl } from '@angular/forms';
-import { Item, ItemEvent, itemIsInstanceOf } from '../services/item.service';
+import { Item, ItemEvent, itemIsInstanceOf, Type } from '../services/item.service';
 
 @Component({
   selector: 'app-rn-form-ctrl',
@@ -17,7 +17,7 @@ export class RnFormCtrlComponent extends RnCtrlComponent implements OnInit {
     controls: Item[] = [];
 
     override ngOnInit(): void {
-      console.log(this);
+      //console.log(this);
       this.rebuildControls();
     }
 
@@ -39,6 +39,19 @@ export class RnFormCtrlComponent extends RnCtrlComponent implements OnInit {
         }
       }
       return 99999999;
+    }
+
+    getControlType(type: Type): string {
+      if (type.name && type.name.endsWith('Ctrl')) {
+        //console.log('found control type ', type.name);
+        return type.name;
+      }
+      if (type && type.base) {
+        //console.log('checking base ',type.base);
+        return this.getControlType(type.base);
+      }
+      //console.log('not a control type ',type);
+      return 'Control';
     }
 
     rebuildControls() {
@@ -108,6 +121,7 @@ export class RnFormCtrlComponent extends RnCtrlComponent implements OnInit {
   
     onButtonClick(button: Item) {
       if (this.onEvent) {
+        //console.log(this.form_group);
         this.onEvent.emit({event: 'click', 
                           item: this.item, 
                           control: button,

@@ -2,62 +2,158 @@
 <div fxFlex fxLayoutAlign="center center" *ngIf="control">
     <!-- <app-rn-query-view *ngIf="query"></app-rn-query-view> -->
     <ng-container *ngIf="controls.length > 0">
-        <div [fxLayout]="layout" [fxLayoutGap]="gap" [fxLayoutAlign]="align">
+        <div [fxLayout]="layout" [fxLayoutGap]="gap" [fxLayoutAlign]="align" fxFlex>
             <ng-container *ngFor="let child of controls; let index = index">
                 <ng-container [ngSwitch]="child!.type!.name!">
-                    <div [fxFlex]="getControlAttribute('flex', '1 1 auto', child)"
+                    <div [fxFlex]="getControlAttribute('flex', '1 1 100%', child)"
                     [fxFlexOffset]="getControlAttribute('offset', '1%', child)"
-                    [fxFlexAlign]="getControlAttribute('align', 'center', child)">
+                    [fxFlexAlign]="getControlAttribute('align', 'center', child)" class="ctrlcontainer">
                         <ng-container *ngSwitchCase="'AttrsCtrl'">
-                            <app-rn-attrs-ctrl [item]="item" [control]="child"></app-rn-attrs-ctrl>
+                            <ng-container *ngIf="formGroup">
+                                <app-rn-attrs-ctrl [item]="item" [control]="child" [formGroup]="formGroup"  [events]="events" [tabIndex]="tabIndex"></app-rn-attrs-ctrl>
+                            </ng-container>
+                            <ng-container *ngIf="!formGroup">
+                                <app-rn-attrs-ctrl [item]="item" [control]="child"  [events]="events" [tabIndex]="tabIndex"></app-rn-attrs-ctrl>
+                            </ng-container>
+                        </ng-container>
+                        <ng-container *ngSwitchCase="'SelectCtrl'">
+                            <ng-container *ngIf="formGroup">
+                                <app-rn-select-ctrl [item]="item" [control]="child" [formGroup]="formGroup"  [events]="events" [tabIndex]="tabIndex"></app-rn-select-ctrl>
+                            </ng-container>
+                            <ng-container *ngIf="!formGroup">
+                                <app-rn-select-ctrl [item]="item" [control]="child"  [events]="events" [tabIndex]="tabIndex"></app-rn-select-ctrl>
+                            </ng-container>
                         </ng-container>
                         <ng-container *ngSwitchCase="'ItemSelectCtrl'">
-                            <app-rn-item-select-ctrl [item]="item" [control]="child"></app-rn-item-select-ctrl>
+                            <ng-container *ngIf="formGroup">
+                                <app-rn-item-select-ctrl [item]="item" [control]="child" [formGroup]="formGroup"  [events]="events" [tabIndex]="tabIndex"></app-rn-item-select-ctrl>
+                            </ng-container>
+                            <ng-container *ngIf="!formGroup">
+                                <app-rn-item-select-ctrl [item]="item" [control]="child"  [events]="events" [tabIndex]="tabIndex"></app-rn-item-select-ctrl>
+                            </ng-container>
                         </ng-container>
                         <ng-container *ngSwitchCase="'TypeSelectCtrl'">
-                            <app-rn-type-select-ctrl [item]="item" [control]="child"></app-rn-type-select-ctrl>
+                            <ng-container *ngIf="formGroup">
+                                <app-rn-type-select-ctrl [item]="item" [control]="child" [formGroup]="formGroup"  [events]="events" [tabIndex]="tabIndex"></app-rn-type-select-ctrl>
+                            </ng-container>
+                            <ng-container *ngIf="!formGroup">
+                                <app-rn-type-select-ctrl [item]="item" [control]="child"  [events]="events" [tabIndex]="tabIndex"></app-rn-type-select-ctrl>
+                            </ng-container>
                         </ng-container>
                         <ng-container *ngSwitchCase="'TreeCtrl'">
-                            <app-rn-tree-ctrl  [item]="item" [control]="child"></app-rn-tree-ctrl>
+                            <ng-container *ngIf="formGroup">
+                                <app-rn-tree-ctrl  [item]="item" [control]="child"  [formGroup]="formGroup"  [events]="events" [tabIndex]="tabIndex"></app-rn-tree-ctrl>
+                            </ng-container>
+                            <ng-container *ngIf="!formGroup">
+                                <app-rn-tree-ctrl  [item]="item" [control]="child"  [events]="events" [tabIndex]="tabIndex"></app-rn-tree-ctrl>
+                            </ng-container>
                         </ng-container>
                         <ng-container *ngSwitchCase="'QueryCtrl'">
-                            <app-rn-query-ctrl  [item]="item" [control]="child"></app-rn-query-ctrl>
+                            <ng-container *ngIf="formGroup">
+                                <app-rn-query-ctrl  [item]="item" [control]="child" [formGroup]="formGroup"  [events]="events" [tabIndex]="tabIndex"></app-rn-query-ctrl>
+                            </ng-container>
+                            <ng-container *ngIf="!formGroup">
+                                <app-rn-query-ctrl  [item]="item" [control]="child"  [events]="events" [tabIndex]="tabIndex"></app-rn-query-ctrl>
+                            </ng-container>
                         </ng-container>
                         <ng-container *ngSwitchCase="'EditCtrl'">
-                            <app-rn-edit-ctrl  [item]="item" [control]="child"></app-rn-edit-ctrl>
+                            <ng-container *ngIf="formGroup">
+                                <app-rn-edit-ctrl  [item]="item" [control]="child"  [formGroup]="formGroup"  [events]="events" [tabIndex]="tabIndex"></app-rn-edit-ctrl>
+                            </ng-container>
+                            <ng-container *ngIf="!formGroup">
+                                <app-rn-edit-ctrl  [item]="item" [control]="child"  [events]="events" [tabIndex]="tabIndex"></app-rn-edit-ctrl>
+                            </ng-container>
                         </ng-container>
                         <ng-container *ngSwitchCase="'LocationCtrl'">
-                            <app-rn-location-ctrl  [item]="item" [control]="child"></app-rn-location-ctrl>
+                            <ng-container *ngIf="formGroup">
+                                <app-rn-location-ctrl  [item]="item" [control]="child"  [formGroup]="formGroup"  [events]="events" [tabIndex]="tabIndex"></app-rn-location-ctrl>
+                            </ng-container>
+                            <ng-container *ngIf="!formGroup">
+                                <app-rn-location-ctrl  [item]="item" [control]="child"  [events]="events" [tabIndex]="tabIndex"></app-rn-location-ctrl>
+                            </ng-container>
                         </ng-container>
                         <ng-container *ngSwitchCase="'TagsCtrl'">
-                            <app-rn-tags-ctrl  [item]="item" [control]="child"></app-rn-tags-ctrl>
+                            <ng-container *ngIf="formGroup">
+                                <app-rn-tags-ctrl  [item]="item" [control]="child"  [formGroup]="formGroup"  [events]="events" [tabIndex]="tabIndex"></app-rn-tags-ctrl>
+                            </ng-container>
+                            <ng-container *ngIf="!formGroup">
+                                <app-rn-tags-ctrl  [item]="item" [control]="child"  [events]="events" [tabIndex]="tabIndex"></app-rn-tags-ctrl>
+                            </ng-container>
                         </ng-container>
                         <ng-container *ngSwitchCase="'DateCtrl'">
-                            <app-rn-date-ctrl   [item]="item" [control]="child"></app-rn-date-ctrl>
+                            <ng-container *ngIf="formGroup">
+                                <app-rn-date-ctrl   [item]="item" [control]="child"  [formGroup]="formGroup"  [events]="events" [tabIndex]="tabIndex"></app-rn-date-ctrl>
+                            </ng-container>
+                            <ng-container *ngIf="!formGroup">
+                                <app-rn-date-ctrl   [item]="item" [control]="child"  [events]="events" [tabIndex]="tabIndex"></app-rn-date-ctrl>
+                            </ng-container>
                         </ng-container>
                         <ng-container *ngSwitchCase="'LabelCtrl'">
-                            <app-rn-label-ctrl [item]="item" [control]="child"></app-rn-label-ctrl>
+                            <ng-container *ngIf="formGroup">
+                                <app-rn-label-ctrl [item]="item" [control]="child" [formGroup]="formGroup"  [events]="events" [tabIndex]="tabIndex"></app-rn-label-ctrl>
+                            </ng-container>
+                            <ng-container *ngIf="!formGroup">
+                                <app-rn-label-ctrl [item]="item" [control]="child"  [events]="events" [tabIndex]="tabIndex"></app-rn-label-ctrl>
+                            </ng-container>
                         </ng-container>
                         <ng-container *ngSwitchCase="'FormCtrl'">
-                            <app-rn-form-ctrl [item]="item" [control]="child"></app-rn-form-ctrl>
+                            <ng-container *ngIf="formGroup">
+                                <app-rn-form-ctrl [item]="item" [control]="child" [formGroup]="formGroup"  [events]="events" [tabIndex]="tabIndex"></app-rn-form-ctrl>
+                            </ng-container>
+                            <ng-container *ngIf="!formGroup">
+                                <app-rn-form-ctrl [item]="item" [control]="child"  [events]="events" [tabIndex]="tabIndex"></app-rn-form-ctrl>
+                            </ng-container>
                         </ng-container>
                         <ng-container *ngSwitchCase="'FuncCtrl'">
-                            <app-rn-func-ctrl [item]="item" [control]="child"></app-rn-func-ctrl>
+                            <ng-container *ngIf="formGroup">
+                                <app-rn-func-ctrl [item]="item" [control]="child" [formGroup]="formGroup"  [events]="events" [tabIndex]="tabIndex"></app-rn-func-ctrl>
+                            </ng-container>
+                            <ng-container *ngIf="!formGroup">
+                                <app-rn-func-ctrl [item]="item" [control]="child"  [events]="events" [tabIndex]="tabIndex"></app-rn-func-ctrl>
+                            </ng-container>
                         </ng-container>
                         <ng-container *ngSwitchCase="'ItemCtrl'">
-                            <app-rn-item-ctrl  [item]="item" [control]="child"></app-rn-item-ctrl>
+                            <ng-container *ngIf="formGroup">
+                                <app-rn-item-ctrl  [item]="item" [control]="child" [formGroup]="formGroup"  [events]="events" [tabIndex]="tabIndex"></app-rn-item-ctrl>
+                            </ng-container>
+                            <ng-container *ngIf="!formGroup">
+                                <app-rn-item-ctrl  [item]="item" [control]="child"  [events]="events" [tabIndex]="tabIndex"></app-rn-item-ctrl>
+                            </ng-container>
                         </ng-container>
                         <ng-container *ngSwitchCase="'UploadCtrl'">
-                            <app-rn-upload-ctrl  [item]="item" [control]="child"></app-rn-upload-ctrl>
+                            <ng-container *ngIf="formGroup">
+                                <app-rn-upload-ctrl  [item]="item" [control]="child"  [formGroup]="formGroup"  [events]="events" [tabIndex]="tabIndex"></app-rn-upload-ctrl>
+                            </ng-container>
+                            <ng-container *ngIf="!formGroup">
+                                <app-rn-upload-ctrl  [item]="item" [control]="child"  [events]="events" [tabIndex]="tabIndex"></app-rn-upload-ctrl>
+                            </ng-container>
                         </ng-container>
                         <div *ngSwitchDefault>
                             <div *ngIf="isButton(child)">
-                                <app-rn-button-ctrl [item]="item" [control]="child"></app-rn-button-ctrl>
+                                <ng-container *ngIf="formGroup">
+                                    <app-rn-button-ctrl [item]="item" [control]="child" [formGroup]="formGroup"  [events]="events" [tabIndex]="tabIndex"></app-rn-button-ctrl>
+                                </ng-container>
+                                <ng-container *ngIf="!formGroup">
+                                    <app-rn-button-ctrl [item]="item" [control]="child"  [events]="events" [tabIndex]="tabIndex"></app-rn-button-ctrl>
+                                </ng-container>
                             </div>
                             <div *ngIf="isForm(child)">
-                                <app-rn-form-ctrl [item]="item" [control]="child"></app-rn-form-ctrl>
+                                <ng-container *ngIf="formGroup">
+                                    <app-rn-form-ctrl [item]="item" [control]="child"  [formGroup]="formGroup"  [events]="events" [tabIndex]="tabIndex"></app-rn-form-ctrl>
+                                </ng-container>
+                                <ng-container *ngIf="!formGroup">
+                                    <app-rn-form-ctrl [item]="item" [control]="child"  [events]="events" [tabIndex]="tabIndex"></app-rn-form-ctrl>
+                                </ng-container>
                             </div>
-                            <div *ngIf="!isButton(child) && !isForm(child)">
+                            <div *ngIf="isTabs(child)">
+                                <ng-container *ngIf="formGroup">
+                                    <app-rn-tabs-ctrl  [item]="item" [control]="child" [formGroup]="formGroup"  [events]="events" [tabIndex]="tabIndex"></app-rn-tabs-ctrl>
+                                </ng-container>
+                                <ng-container *ngIf="!formGroup">
+                                    <app-rn-tabs-ctrl  [item]="item" [control]="child"  [events]="events" [tabIndex]="tabIndex"></app-rn-tabs-ctrl>
+                                </ng-container>
+                            </div>
+                            <div *ngIf="!isButton(child) && !isForm(child) && !isTabs(child)">
                                 Control: {{child!.type!.name!}}
                             </div>
                         </div>

@@ -1,5 +1,7 @@
 import { Component, Input, OnInit , OnChanges, SimpleChanges, EventEmitter, Output} from '@angular/core';
-import { Item, ItemEvent, ItemService, itemIsInstanceOf } from '../services/item.service';
+import { FormGroup } from '@angular/forms';
+import { Observable } from 'rxjs';
+import { Item, ItemEvent, ItemService, itemIsInstanceOf, Type } from '../services/item.service';
 
 @Component({
   selector: 'app-rn-ctrl-view',
@@ -12,7 +14,10 @@ export class RnCtrlViewComponent implements OnInit, OnChanges {
   @Input() layout?: string = "column";
   @Input() align?: string = "center center";
   @Input() gap?: string = "1%";
+  @Input() formGroup?: FormGroup;
   @Output() onEvents = new EventEmitter<ItemEvent>();
+  @Input() events?: Observable<number>;
+  @Input() tabIndex?: number;
   controls: Item[] = [];
   
   constructor(private itemService: ItemService) { }
@@ -46,15 +51,31 @@ export class RnCtrlViewComponent implements OnInit, OnChanges {
     }
   }
 
+  collectTypeAttributes(type: Type, attrs: {[index: string]:any}) {
+    let ret = attrs;
+    //console.log('collecting type attributes ', type.name!);
+    if (type) {
+      if (type.base) {
+        attrs = Object.assign(attrs, this.collectTypeAttributes(type.base, attrs));
+      }
+      if (type.attributes) {
+        attrs = Object.assign(attrs, type.attributes);
+      }
+    }
+    
+    return ret;
+  }
+
   getControlAttribute(key: string, def: string, control?: Item): string {
-    if(control) {
-       if(control.attributes) {
-         const ret = control.attributes[key];
+    if(this.control) {
+      const attributes = this.collectTypeAttributes(this.control.type!, this.control.attributes? this.control.attributes : {});
+       if(attributes) {
+         const ret = attributes[key];
          if (ret) {
            return ret;
          }
        }
-    } 
+    }  
 
     return def;
   }
@@ -72,6 +93,10 @@ export class RnCtrlViewComponent implements OnInit, OnChanges {
 
   isForm(item: Item) {
     return itemIsInstanceOf(item, "FormCtrl");
+  }
+
+  isTabs(item: Item) {
+    return itemIsInstanceOf(item, "TabsCtrl");
   }
 
 }

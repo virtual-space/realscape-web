@@ -32,7 +32,7 @@ export class RnDialogComponent implements OnInit {
   }
 
   onEvent(event: ItemEvent) {
-    console.log(event);
+    //console.log(event);
     if (event.item) {
       if (event.event === 'click') {
         if(event.control && event.control.attributes && event.control.attributes['close'] === 'true') {

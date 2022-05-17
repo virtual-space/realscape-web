@@ -28,25 +28,22 @@ export class RnTypeSelectCtrlComponent  extends RnCtrlComponent implements OnIni
     return 'help_center';
   }
 
-  collectTypeAttributes(type: Type, attrs: {[index: string]:any}) {
-    let ret = attrs;
-    console.log('collecting type attributes ', type.name!);
-    if (type.base) {
-      attrs = Object.assign(attrs, this.collectTypeAttributes(type.base, attrs));
-    }
-    if (type.attributes) {
-      attrs = Object.assign(attrs, type.attributes);
-    }
-    return ret;
-  }
-
   override ngOnInit(): void {
     //console.log(this.item);
     this.itemService.types().subscribe(types => {
       if(types) {
         this.types = types.filter(t => this.collectTypeAttributes(t, {})['creatable'] === 'true');
-        if (this.item && this.item.attributes && 'creatable_types' in this.item.attributes) {
-            const includedTypeNames: Set<string> = new Set(this.item.attributes['creatable_types']);
+        let attributes: {[index:string]:any} = {};
+        if (this.item) {
+          attributes = this.collectTypeAttributes(this.item.type!, attributes);
+          if (this.item.attributes) {
+            attributes = Object.assign(attributes, this.item.attributes);
+          }
+        }
+        console.log('item ', this.item, ' attributes ', attributes);
+        if ('creatable_types' in attributes) {
+            
+            const includedTypeNames: Set<string> = new Set(attributes['creatable_types']);
             console.log('************************* included type names ', includedTypeNames);
             //const includedTypes = new Set(types.filter(t => includedTypeNames.has(t.name)).map(t => t['id']));
             //this.types = this.types.filter(t => includedTypes.has(t['id']) || includedTypes.has(t['base_id']) );

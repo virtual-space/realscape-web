@@ -18,30 +18,18 @@ export class RnAttrsCtrlComponent extends RnCtrlComponent implements OnInit, OnC
     this.rebuildFormGroup();
   }
 
-  collectTypeAttributes(type: Type, attrs: {[index: string]:any}) {
-    let ret = attrs;
-    console.log('collecting type attributes ', type.name!);
-    if (type.base) {
-      attrs = Object.assign(attrs, this.collectTypeAttributes(type.base, attrs));
-    }
-    if (type.attributes) {
-      attrs = Object.assign(attrs, type.attributes);
-    }
-    return ret;
-  }
-
   collectAttributes() {
     let attrs: {[index: string]:any} = {};
     if (this.item) {
-      console.log(this.item);
+      //console.log(this.item);
       if (this.item.type) {
         attrs = this.collectTypeAttributes(this.item.type, attrs);
       }
-      console.log(attrs);
+      //console.log(attrs);
       if (this.item.attributes) {
         attrs = Object.assign(attrs, this.item.attributes);
       }
-      console.log(attrs);
+      //console.log(attrs);
     }
     return attrs;
   }

@@ -1,1 +1,12 @@
-<p>rn-tabs-ctrl works!</p>
+<div *ngIf="control">
+    <mat-tab-group mat-align-tabs="center" mat-stretch-tabs (selectedTabChange)="onChangeTab($event)">
+        <mat-tab *ngFor="let tab of tabs; let index = index" [label]="tab!.name!">
+            <ng-container *ngIf="formGroup">
+                <app-rn-tab-ctrl [item]="item" [control]="tab" [formGroup]="formGroup" [events]="eventsSubject.asObservable()" [tabIndex]="index"></app-rn-tab-ctrl>
+            </ng-container>
+            <ng-container *ngIf="!formGroup">
+                <app-rn-tab-ctrl [item]="item" [control]="tab" [events]="eventsSubject.asObservable()" [tabIndex]="index"></app-rn-tab-ctrl>
+            </ng-container>
+        </mat-tab>
+    </mat-tab-group>
+</div>

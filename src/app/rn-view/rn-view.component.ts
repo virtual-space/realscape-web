@@ -87,7 +87,7 @@ export class RnViewComponent implements OnInit, OnChanges {
   }
 
   onEventHandler(event: ItemEvent) {
-    console.log(event);
+    //console.log(event);
     
     if (event.event) {
        if(event.event == 'edit') {
@@ -233,7 +233,8 @@ export class RnViewComponent implements OnInit, OnChanges {
 
             if (dialog && dialog.items) {
               const dialogRef = this.dialog.open(RnDialogComponent, {
-                width: '400px',
+                width: '95vw',
+                height: '95vh',
                 data: {item: this.item, view: dialog.items[0]}
               });
       
@@ -347,7 +348,7 @@ export class RnViewComponent implements OnInit, OnChanges {
   }
 
   onEdit(event: any) {
-    console.log(event);
+    //console.log(event);
     this.itemService.dialogs().subscribe(dialogs => {
       if (dialogs) {
         const editDialogs = dialogs.filter(d => itemIsInstanceOf(d, 'ItemEditDialog'));
@@ -355,33 +356,34 @@ export class RnViewComponent implements OnInit, OnChanges {
         if (editDialogs) {
           const dialog = editDialogs[0];
 
-          if (dialog && dialog.items) {
-            let target = this.item;
-            if ('item' in event) {
-              target = event['item'];
-            }
-            const dialogRef = this.dialog.open(RnDialogComponent, {
-              width: '400px',
-              data: {item: target, view: dialog.items[0]}
-            });
-  
-            dialogRef.afterClosed().subscribe(result => {
-              if (result) {
-                console.log(result);
-                this.uploading = true;
-      
-                if (result.file) {
-                  this.uploadingFile = true;
-                  this.uploadProgress = 0;
+          if (dialog && dialog.items && 'item' in event) {
+            let target = event['item'];
+            //console.log(target);
+            if (target) {
+              const dialogRef = this.dialog.open(RnDialogComponent, {
+                width: '95vw',
+                height: '95vh',
+                data: {item: target, view: dialog.items[0]}
+              });
+    
+              dialogRef.afterClosed().subscribe(result => {
+                if (result) {
+                  console.log(result);
+                  this.uploading = true;
+        
+                  if (result.file) {
+                    this.uploadingFile = true;
+                    this.uploadProgress = 0;
+                  }
+                  //console.log(result);
+                  const arg = Object.assign({id: target.id},result.data);
+                  //console.log(arg);
+                  this.itemService.update(arg.id, arg).subscribe(res => {
+                    this.sessionService.refresh();
+                  });
                 }
-                //console.log(result);
-                const arg = Object.assign({id: this.item?.id},result.data);
-                //console.log(arg);
-                this.itemService.update(arg.id, arg).subscribe(res => {
-                  this.sessionService.refresh();
-                });
-              }
-            });
+              });
+            }
           }
         }
       } 
