@@ -1,7 +1,7 @@
 import { Component, ElementRef, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 //import * as mapboxgl from "mapbox-gl";
 
-import { Item, itemIsInstanceOf } from '../services/item.service'
+import { isInstanceOf, Item, itemIsInstanceOf } from '../services/item.service'
 //import * as MapboxGl from '!mapbox-gl';
 
 //const mapboxgl:any = require('mapbox-gl/dist/mapbox-gl.js');
@@ -9,7 +9,7 @@ import { Item, itemIsInstanceOf } from '../services/item.service'
 
 import { RnListViewComponent } from '../rn-list-view/rn-list-view.component';
 import { environment } from 'src/environments/environment';
-import { Map, NavigationControl, Marker, SymbolLayout, LngLat, Popup, LngLatBounds, } from 'mapbox-gl';
+import { Map, NavigationControl, Marker, SymbolLayout, LngLat, Popup, LngLatBounds, LngLatBoundsLike, } from 'mapbox-gl';
 import { RnViewComponent } from '../rn-view/rn-view.component';
 import { Subscription } from 'rxjs';
 import { E } from '@angular/cdk/keycodes';
@@ -42,9 +42,10 @@ export class RnMapViewComponent extends RnViewComponent implements OnInit, OnDes
   lng = 6.172652;
   //location = {'type': 'Point','coordinates': [this.lng,this.lat] }
   location:any = null;
-  zoom = 12;
+  zoom = 19;
   token = environment.mapboxToken;
   markers: Marker[] = [];
+  selectedTabIndex = 0;
 
   override ngOnInit(): void {
     if (this.item) {
@@ -105,73 +106,21 @@ export class RnMapViewComponent extends RnViewComponent implements OnInit, OnDes
   handleEvent(e: number) {
     //console.log('map received event ', e, 'index is ', this.tabIndex);
     if (e === this.tabIndex) {
+      this.selectedTabIndex = e;
       this.loadMap()
     }
   }
 
   addToMap(location: any) {
     if (this.canAddItem()) {
-
-      this.itemService.dialogs().subscribe(dialogs => {
-        if (dialogs) {
-          const createDialogs = dialogs.filter(d => itemIsInstanceOf(d, 'ItemCreateDialog'));
-
-          if (createDialogs) {
-            const dialog = createDialogs[0];
-
-            if (dialog && dialog.items) {
-              let item_data = Object.assign({}, {location: location, attributes: this.item!.attributes});
-              const dialogRef = this.dialog.open(RnDialogComponent, {
-                width: '95vw',
-                height: '95vh',
-                data: {item: item_data, view: dialog.items[0]}
-              });
-      
-              dialogRef.afterClosed().subscribe(result => {
-                if (result) {
-                  console.log(result);
-                  this.uploading = true;
-        
-                  if (result.file) {
-                    this.uploadingFile = true;
-                    this.uploadProgress = 0;
-                  }
-                  
-                  if (this.item) {
-                    result.data['parent_id'] = this.item.id;
-                  }
-                  console.log(result.data);
-                  this.itemService.create(result.data, (progress) => { this.uploadProgress = progress }).subscribe(
-                    (res) => {
-                      if (res && res['id']) {
-                        console.log(`Success created item id: ${res['id']}`);
-                        this.sessionService.refresh();
-                      }
-                    },
-                    (err) => {
-                      this.uploadingFile = false;
-                      this.uploadProgress = 0;
-                      this.uploading = false;
-                      this.snackBar.open(err['error']['Error'], 'Dismiss');
-                    },
-                    () => {
-                      this.uploadingFile = false;
-                      this.uploadProgress = 0;
-                      this.uploading = false;
-                      this.sessionService.refresh();
-                    });
-                }
-              });
-            }
-            } 
-          }
-      });
-  
+      let item: Item = this.item? { ... this.item} : new Item();
+      item.location = location;
+      this.onAdd(item);
     }
   }
 
   loadMap(): void {
-    if(!this.isLoaded){
+    if(!this.isLoaded && (this.tabIndex === this.selectedTabIndex)){
       console.log('loading map...')
       this.map = new Map({
         accessToken: this.token,
@@ -204,8 +153,13 @@ export class RnMapViewComponent extends RnViewComponent implements OnInit, OnDes
             this.addToMap(e['features'][0]['geometry']);
             this.draw.delete(e['features'][0]['id']);
           }
-          
         });
+        this.map.on('resize', event => {
+          console.log(event);
+          this.fitMapToBounds();
+          //map.fitBounds(bounds);
+        });
+        
         /*this.map.on('load', this.onMapLoaded);
         this.map.on('draw.create', e => {
           console.log('draw.create',e)
@@ -294,13 +248,77 @@ export class RnMapViewComponent extends RnViewComponent implements OnInit, OnDes
   /* 
   Do not call this directly, use the loadFunction() provided to delay this until after the map finishes loading.
   */
+
+  getItemsWithPositions(): Item[] {
+    return this.items.filter(i => i.location && i.location.coordinates);
+  }
+
+  getViewLocationBounds(): LngLatBoundsLike | undefined {
+    if (this.item && this.item.items)
+    {
+      const view = this.item.items.find((item,index) => itemIsInstanceOf(item, 'MapView') && (index === this.tabIndex));
+    
+      if (view && view.location) {
+        
+        let bounds = new LngLatBounds();
+        if(view.location.type === 'Point'){
+          bounds = bounds.extend(view.location.coordinates);
+        } else {
+          if (view.location.type === 'Polygon'){
+            view.location.coordinates[0].forEach((coord:any) => {
+              bounds = bounds.extend(coord);
+            })
+          } else {
+            console.log('Error: an item with a position is neither a point or a polygon.')
+          }
+        }
+        return bounds;
+      }
+    }
+    
+    return undefined;
+  }
+
+  getBoundingBox() :LngLatBoundsLike {
+    let bounds = new LngLatBounds();
+    //view bounding box overrides the item ones
+    //console.log(this);
+    const viewBounds = this.getViewLocationBounds();
+    console.log('viewbounds ', viewBounds);
+    if(viewBounds) {
+      return viewBounds;
+    } else {
+      this.getItemsWithPositions().forEach(ip => {
+        if(ip.location.type === 'Point'){
+          bounds = bounds.extend(ip.location.coordinates);
+        } else {
+          if (ip.location.type === 'Polygon'){
+            ip.location.coordinates[0].forEach((coord:any) => {
+              bounds = bounds.extend(coord);
+            })
+          } else {
+            console.log('Error: an item with a position is neither a point or a polygon.')
+          }
+        }
+      });
+    }
+    
+    console.log(bounds);
+    return bounds;
+  }
+
+  fitMapToBounds() {
+    console.log('fitting map to bounds');
+    this.map?.fitBounds(this.getBoundingBox());
+    //this.map?.setZoom(15);
+  }
+
   loadMarkers(map: Map): void {
     console.log("loading markers")
     if(map){
-      let bounds = new LngLatBounds(); // Instantiate LatLngBounds object
-      const itemsWithPositions = this.items.filter(i => i.location && i.location.coordinates);
+       // Instantiate LatLngBounds object
+      const itemsWithPositions = this.getItemsWithPositions();
       if (itemsWithPositions.length > 0) {
-        console.log("fitting map to bounds");
         itemsWithPositions.forEach(ip => {
           if(ip.location.type === 'Point'){
             console.log("adding point...", ip.name)
@@ -308,88 +326,82 @@ export class RnMapViewComponent extends RnViewComponent implements OnInit, OnDes
             this.markers.push(m);
             m.setLngLat(ip.location.coordinates);
             this.attachPopup(m, ip);
-            bounds = bounds.extend(ip.location.coordinates);
             m.addTo(map);
-          } else {
-            if (ip.location.type === 'Polygon'){
-              console.log("adding polygon...", ip.name)
-              //const m = new Marker();
-              //this.markers.push(m);
-              var sumlat = 0
-              var sumlong = 0
-              var count = 0
-              //finding the center of the polygon.
-              ip.location.coordinates[0].forEach((coord:any) => {
-                bounds = bounds.extend(coord);
-                sumlat += coord[0]
-                sumlong += coord[1]
-                count += 1
+          } else if (ip.location.type === 'Polygon'){
+            console.log("adding polygon...", ip.name)
+            //const m = new Marker();
+            //this.markers.push(m);
+            var sumlat = 0
+            var sumlong = 0
+            var count = 0
+            //finding the center of the polygon.
+            ip.location.coordinates[0].forEach((coord:any) => {
+              sumlat += coord[0]
+              sumlong += coord[1]
+              count += 1
+            })
+            //console.log(sumlat,sumlong,count)
+            //m.setLngLat([sumlat/count,sumlong/count]);
+            //this.attachPopup(m, ip);
+            //m.addTo(map);
+            //now add the polygon itself.
+            //console.log('current polygon',ip)
+            if(ip.id){
+              map.addSource(ip.id,{
+                'type': 'geojson',
+                'data': {
+                  'properties': {
+                    'name': ip.name
+                  },
+                  'type': 'Feature',
+                  'geometry': {
+                    'type': 'Polygon',
+                    'coordinates': ip.location.coordinates
+                  }
+                }
               })
-              //console.log(sumlat,sumlong,count)
-              //m.setLngLat([sumlat/count,sumlong/count]);
-              //this.attachPopup(m, ip);
-              //m.addTo(map);
-              //now add the polygon itself.
-              //console.log('current polygon',ip)
-              if(ip.id){
-                map.addSource(ip.id,{
-                  'type': 'geojson',
-                  'data': {
-                    'properties': {
-                      'name': ip.name
-                    },
-                    'type': 'Feature',
-                    'geometry': {
-                      'type': 'Polygon',
-                      'coordinates': ip.location.coordinates
-                    }
-                  }
-                })
-                map.addLayer({
-                  'id': 'l' + ip.id,
-                  'type': 'fill',
-                  'source': ip.id, // reference the data source
-                  'layout': {},
-                  'paint': {
-                    'fill-color': '#0080ff', // blue color fill
-                    'fill-opacity': 0.5
-                  }
+              map.addLayer({
+                'id': 'l' + ip.id,
+                'type': 'fill',
+                'source': ip.id, // reference the data source
+                'layout': {},
+                'paint': {
+                  'fill-color': '#0080ff', // blue color fill
+                  'fill-opacity': 0.5
+                }
+              });
+              let popupLink = this.itemService.getLink(ip);
+              map.on('click', 'l' + ip.id, (e) => {
+                if (e) {
+                  new Popup()
+                    .setLngLat(e.lngLat)
+                    .setHTML('<h3><a href="' + popupLink + '">' + ip.name + '</a></h3>')
+                    .addTo(map);
+                }
+                
                 });
-                let popupLink = this.itemService.getLink(ip);
-                map.on('click', 'l' + ip.id, (e) => {
-                  if (e) {
-                    new Popup()
-                      .setLngLat(e.lngLat)
-                      .setHTML('<h3><a href="' + popupLink + '">' + ip.name + '</a></h3>')
-                      .addTo(map);
-                  }
-                  
-                  });
-                map.addLayer({
-                  'id': 'l' + ip.id + 'outline',
-                  'type': 'line',
-                  'source': ip.id, // reference the data source
-                  'layout': {},
-                  'paint': {
-                    'line-color': '#000',
-                    'line-width': 3
-                  }
-                })
-              } else {
-                console.log(`Error: The item somehow doesn't have a name. item:`,ip)
-              }
+              map.addLayer({
+                'id': 'l' + ip.id + 'outline',
+                'type': 'line',
+                'source': ip.id, // reference the data source
+                'layout': {},
+                'paint': {
+                  'line-color': '#000',
+                  'line-width': 3
+                }
+              })
             } else {
-              console.log('Error: an item with a position is neither a point or a polygon.')
+              console.log(`Error: The item somehow doesn't have a name. item:`,ip)
             }
+          } else {
+            console.log('Error: an item with a position is neither a point or a polygon.')
           }
         });
-
-        map.fitBounds(bounds);
-        map.resize();
       }
     } else {
       console.log("sequencing error: loadMarkers has occured before the map has loaded.")
     }
+    this.fitMapToBounds();
   }
 
   attachPopup(marker: Marker, item: Item): any {

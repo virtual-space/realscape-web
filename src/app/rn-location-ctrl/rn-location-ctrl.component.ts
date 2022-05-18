@@ -10,6 +10,8 @@ import { environment } from 'src/environments/environment';
 import { LngLat, Map, NavigationControl, Marker } from 'mapbox-gl';
 // @ts-ignore
 import * as MapboxDraw from "mapbox-gl-draw";
+// @ts-ignore
+import * as MapboxGeocoder from "@mapbox/mapbox-gl-geocoder";
 import 'mapbox-gl-draw/dist/mapbox-gl-draw.css';
 import { RnCtrlComponent } from '../rn-ctrl/rn-ctrl.component';
 
@@ -41,6 +43,13 @@ export class RnLocationCtrlComponent extends RnCtrlComponent implements OnInit {
   //REMOVE THE DELETE METHOD
 
   override initialize() {
+    if(this.formGroup) {
+      this.formGroup.removeControl('location');
+      this.formGroup.addControl('location', this.formControl);
+      if(this.location) {
+        this.formControl.setValue(JSON.stringify(this.location));
+      }
+    }
     if (!this.item || (this.item.location == null)) {
       if (navigator.geolocation) {
         console.log("getting the current location");
@@ -63,8 +72,8 @@ export class RnLocationCtrlComponent extends RnCtrlComponent implements OnInit {
       this.location = this.item.location;
       if(this.location){
         if(this.location['type'] === 'Point'){
-          this.lng = this.location['coordinates'][0]
-          this.lat = this.location['coordinates'][1]
+          this.lng = this.location['coordinates'][0];
+          this.lat = this.location['coordinates'][1];
         } else if (this.location['type'] === 'Polygon') {
           let sumlat = 0
           let sumlong = 0
@@ -121,11 +130,6 @@ export class RnLocationCtrlComponent extends RnCtrlComponent implements OnInit {
   loadMap(): void {
     if(!this.isLoaded){
       //console.log('loading map...')
-      if(this.formGroup) {
-        this.formGroup.removeControl('location');
-        this.formGroup.addControl('location', this.formControl);
-      }
-      
       var error = null
       try {
         this.map = new Map({
@@ -135,6 +139,10 @@ export class RnLocationCtrlComponent extends RnCtrlComponent implements OnInit {
           zoom: this.zoom,
           center: [this.lng, this.lat] 
         });
+        this.map.addControl(new MapboxGeocoder({
+            accessToken: this.token,
+            mapboxgl: this.map
+        }));
         this.map.addControl(new NavigationControl());
         this.draw = new MapboxDraw(
           {controls: {

@@ -54,6 +54,14 @@ export class RnCtrlComponent implements OnInit {
 
   protected initialize() {}
 
+  getItemIcon(item: Item) : string {
+    return this.itemService.getItemIcon(item);
+  }
+
+  getTypeIcon(type: Type) : string {
+    return this.itemService.getTypeIcon(type);
+  }
+
   collectTypeAttributes(type: Type, attrs: {[index: string]:any}) {
     let ret = attrs;
     //console.log('collecting type attributes ', type.name!);
@@ -63,6 +71,19 @@ export class RnCtrlComponent implements OnInit {
       }
       if (type.attributes) {
         attrs = Object.assign(attrs, type.attributes);
+      }
+    }
+    
+    return ret;
+  }
+
+  collectItemAttributes(item: Item, attrs: {[index: string]:any}) {
+    let ret = attrs;
+    //console.log('collecting type attributes ', type.name!);
+    if (item) {
+      ret = this.collectTypeAttributes(item.type!, attrs);
+      if(item.attributes) {
+        ret = Object.assign(ret, item.attributes);
       }
     }
     

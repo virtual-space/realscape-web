@@ -3,9 +3,8 @@ import {HttpClient, HttpParams, HttpEvent, HttpEventType} from "@angular/common/
 import {Observable, from, of, throwError, scheduled} from "rxjs";
 import {catchError, map, concatMap, mergeMap} from 'rxjs/operators';
 import {Router} from "@angular/router";
-import {AuthService} from "./auth.service";
+import {Authenticator, AuthService} from "./auth.service";
 import { environment } from '../../environments/environment';
-import { AnyForUntypedForms } from '@angular/forms';
 
 @Injectable({
   providedIn: 'root'
@@ -203,6 +202,48 @@ export class ItemService {
     return params;
   }
 
+  private getParamsFromItem(item: Item): HttpParams {
+    let params = new HttpParams();
+
+    if (item.attributes) {
+      if ('name' in item.attributes) {
+        params = params.append('name', item.attributes['name']);
+      }
+      if ('home' in item.attributes) {
+        params = params.append('home', item.attributes['home']);
+      }
+      if ('public' in item.attributes) {
+        params = params.append('public', item.attributes['public']);
+      }
+      if ('my_items' in item.attributes) {
+        params = params.append('my_items', item.attributes['my_items']);
+      }
+      if ('parent_id' in item.attributes) {
+        params = params.append('parent_id', item.attributes['parent_id']);
+      }
+      if ('lat' in item.attributes) {
+        params = params.append('lat', item.attributes['lat']);
+      }
+      if ('lng' in item.attributes) {
+        params = params.append('lng', item.attributes['lng']);
+      }
+      if ('radius' in item.attributes) {
+        params = params.append('radius', item.attributes['radius']);
+      }
+      if ('creatable_types' in item.attributes) {
+        item.attributes['creatable_types'].forEach((t:string) => {
+          params = params.append('types', t);
+        });
+      }
+      if ('yags' in item.attributes) {
+        item.attributes['tags'].forEach((t:string) => {
+          params = params.append('tags', t);
+        });
+      }
+    }
+    return params;
+  }
+
   public children(id: string): Observable<[Item]> {
     return this.http.get<[Item]>(this.getAccessibleEndpoint() + '?parent_id=' + id).pipe(
       catchError(this.handleError('/items', []))
@@ -279,8 +320,44 @@ export class ItemService {
     }
   }
 
+  public getItemIcon(item: Item) : string {
+    if (item.attributes && 'icon' in item.attributes) {
+      return item.attributes['icon'];
+    }
+    return this.getTypeIcon(item.type!);
+  }
+
+  public getTypeIcon(type: Type) : string {
+    if (type.icon) {
+      return type.icon;
+    }
+    if (type.base) {
+      return this.getTypeIcon(type.base);
+    }
+    return 'help_center';
+  }
+
+
+  public getIcon(item: Item): string {
+    if(itemIsInstanceOf(item, 'Link') && item.linked_item) {
+      return this.getIcon(item.linked_item);
+    }
+
+    return this.getItemIcon(item);
+  }
+
   public getLink(item: Item): string {
     const base = this.getHomeEndpoint();
+    if(itemIsInstanceOf(item, 'Link') && item.linked_item) {
+      return this.getLink(item.linked_item);
+    }
+
+    if (itemIsInstanceOf(item,'LoginApp') && item.attributes) {
+      return this.authService.getLoginUrl(new Authenticator(item.attributes['authenticator_name'].toString(), 
+                                               item.attributes['authenticator_type'].toString(),
+                                               item.attributes['client_id'].toString(),
+                                               item.attributes['api']!.toString()));
+    }
     if (item && item.link && item.link.startsWith('http')) {
       if (item.link.startsWith(base)) {
         return item.link.slice(base.length);
@@ -299,6 +376,12 @@ export class ItemService {
 
   public getLinkedItemId(item: Item): string {
     const base = this.getHomeEndpoint();
+    if(itemIsInstanceOf(item, 'Link') && item.linked_item) {
+      return this.getLinkedItemId(item.linked_item);
+    }
+    if (itemIsInstanceOf(item, 'App')) {
+      return item.id!;
+    }
     if (item && item.link && item.link.startsWith('http')) {
       if (item.link.startsWith(base)) {
         return item.link.slice(base.length);
@@ -309,10 +392,22 @@ export class ItemService {
 
   isInternalLink(item: Item): boolean {
     const base = this.getHomeEndpoint();
+    if(itemIsInstanceOf(item, 'Link') && item.linked_item) {
+      return this.isInternalLink(item.linked_item);
+    }
+    if (itemIsInstanceOf(item, 'LoginApp')) {
+      return false;
+    }
+    if (itemIsInstanceOf(item, 'App')) {
+      return true;
+    }
     return !!item && !!item.link && item.link.startsWith(base);
   }
 
   isLink(item: Item): boolean {
+    if (itemIsInstanceOf(item, 'App') || itemIsInstanceOf(item, 'Link')) {
+      return true;
+    }
     return !!item && 'link' in item && 'link' != null;
   }
 
@@ -385,6 +480,12 @@ export class ItemService {
       catchError(this.handleError('/items', []))
     );
   }
+
+  public search(item: Item): Observable<[Item]> {
+    return this.http.get<[Item]>(this.getEndpoint(), { params: this.getParamsFromItem(item) } ).pipe(
+      catchError(this.handleError('/items', []))
+    );
+  }
 }
 
 export class Instance {
@@ -424,6 +525,8 @@ export class Item {
   valid_from?: Date;
   valid_to?: Date;
   status?: string;
+  linked_item_id?: string;
+  linked_item?: Item;
 }
 /*
 export function getTypeAttributes(type: Type): {[index: string]:any} {

@@ -11,7 +11,7 @@
     <mat-card-content>
       <div fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="4px" *ngIf="item.type">
         <div fxLayoutAlign="center center" class="card-content-center">
-          <mat-icon mat-card-image class="logo">{{item.type.icon}}</mat-icon>
+          <mat-icon mat-card-image class="logo">{{getIcon(item)}}</mat-icon>
         </div>
         <div class="card-text-content">
           {{item.type.name}}
@@ -34,7 +34,7 @@
       <button mat-button (click)="onQRCode()">QRCode</button>
       <button *ngIf="!isLink() && !isItemLink()" mat-button [routerLink]="['/items', item.id]">Open</button>
       <button *ngIf="isLink() && isItemLink()" mat-button [routerLink]="['/items', getLinkedItemId()]">Open</button>
-      <a *ngIf="isLink() && !isItemLink()" mat-button [href]="getLink()" target="_blank">Open</a>
+      <a *ngIf="isLink() && !isItemLink()" mat-button [href]="getLink()">Open</a>
     </mat-card-actions>
   
   </mat-card>

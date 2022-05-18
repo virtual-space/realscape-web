@@ -1,7 +1,11 @@
-<mat-select [(value)]="selectedId" (selectionChange)="onSelectChange($event)">
-    <mat-select-trigger>{{selectedName}}</mat-select-trigger>
-    <mat-option *ngFor="let item of items" [value]="item.id">
-      <mat-icon>{{getItemIcon(item)}}</mat-icon>{{item.name}}
-    </mat-option>
+<mat-select [(value)]="selectedId" (selectionChange)="onSelectChange($event)" [formControl]="formControl">
+  <mat-select-trigger>
+      <div fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="32px">
+          <mat-icon>{{selectedIcon}}</mat-icon>{{selectedName}}
+      </div>
+  </mat-select-trigger>
+  <mat-option *ngFor="let item of items" [value]="item.id">
+    <mat-icon>{{getItemIcon(item)}}</mat-icon>{{item.name}}
+  </mat-option>
 </mat-select>
 

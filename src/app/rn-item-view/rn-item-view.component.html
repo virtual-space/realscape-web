@@ -24,26 +24,45 @@
               </div>
               
               <mat-menu #menuMore="matMenu" xPosition="before">
-                  <button *ngIf="canAddItem()" mat-menu-item (click)="onAdd($event)">
+                  <button *ngIf="canAddItem()" mat-menu-item (click)="addItem()">
                     <mat-icon>add</mat-icon>
                     <span>Add Item</span>
                   </button>
-                  <button *ngIf="canAddView()" mat-menu-item (click)="uploader.click()">
-                    <mat-icon>file_upload</mat-icon>
-                    <span>Upload</span>
-                  </button>
-                  <input hidden type="file" #uploader (change)="importFile($event)"/>
-                  <button *ngIf="canAddView()" mat-menu-item (click)="onAddView($event)">
-                    <mat-icon>add</mat-icon>
-                    <span>Add View</span>
+                  <button *ngIf="canAddItem()" mat-menu-item (click)="addLink()">
+                    <mat-icon>link</mat-icon>
+                    <span>Link Item</span>
                   </button>
                   <button *ngIf="canEditOrDeleteItem()" mat-menu-item (click)="editItem()">
                     <mat-icon>edit</mat-icon>
                     <span>Edit Item</span>
                   </button>
-                  <button *ngIf="canEditOrDeleteItem()" mat-menu-item (click)="onDelete($event)">
+                  <button *ngIf="canEditOrDeleteItem()" mat-menu-item (click)="deleteItem()">
                     <mat-icon>delete</mat-icon>
                     <span>Delete Item</span>
+                  </button>
+                  <mat-divider></mat-divider>
+                  <button *ngIf="canAddView()" mat-menu-item (click)="uploader.click()">
+                    <mat-icon>file_upload</mat-icon>
+                    <span>Upload File</span>
+                  </button>
+                  <input hidden type="file" #uploader (change)="importFile($event)"/>
+                  <mat-divider></mat-divider>
+                  <button *ngIf="canEditOrDeleteView()" mat-menu-item (click)="editQuery()">
+                    <mat-icon>search</mat-icon>
+                    <span>Edit Query</span>
+                  </button>
+                  <mat-divider></mat-divider>
+                  <button *ngIf="canAddView()" mat-menu-item (click)="addView()">
+                    <mat-icon>add</mat-icon>
+                    <span>Add View</span>
+                  </button>
+                  <button *ngIf="canEditOrDeleteView()" mat-menu-item (click)="editView()">
+                    <mat-icon>edit</mat-icon>
+                    <span>Edit View</span>
+                  </button>
+                  <button *ngIf="canEditOrDeleteView()" mat-menu-item (click)="deleteView()">
+                    <mat-icon>delete</mat-icon>
+                    <span>Delete View</span>
                   </button>
                   <button mat-menu-item (click)="onRefreshClick()">
                     <mat-icon>refresh</mat-icon>

@@ -130,6 +130,7 @@ export class RnFormCtrlComponent extends RnCtrlComponent implements OnInit {
     }
 
     onEventHandler(event: ItemEvent) {
+      console.log(event);
       if (event.event) {
         if (event.event === 'item') {
           this.rebuildControls();

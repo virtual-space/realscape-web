@@ -40,12 +40,16 @@ export class AuthService {
     return of(false);
   }
 
-  public login(auth: Authenticator) {
+  public getLoginUrl(auth: Authenticator) {
     if (auth.type === 'password') {
-      window.location.href = this.getEndpoint() + '/public/login?client_id=' + auth.client_id + '&response_type=token';
+      return this.getEndpoint() + '/public/login?client_id=' + auth.client_id + '&response_type=token';
     } else {
-      window.location.href = this.getEndpoint() + '/public/login/' + auth.name + '?client_id=' + auth.client_id + '&response_type=token';
+      return this.getEndpoint() + '/public/login/' + auth.name + '?client_id=' + auth.client_id + '&response_type=token';
     }
+  }
+
+  public login(auth: Authenticator) {
+    window.location.href = this.getLoginUrl(auth);
   }
 
   public logout() {

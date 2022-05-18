@@ -18,16 +18,6 @@ export class RnTypeSelectCtrlComponent  extends RnCtrlComponent implements OnIni
 
   selectedItem?: Item;
 
-  getTypeIcon(type: Type) : string {
-    if (type.icon) {
-      return type.icon;
-    }
-    if (type.base) {
-      return this.getTypeIcon(type.base);
-    }
-    return 'help_center';
-  }
-
   override ngOnInit(): void {
     //console.log(this.item);
     this.itemService.types().subscribe(types => {
@@ -69,10 +59,10 @@ export class RnTypeSelectCtrlComponent  extends RnCtrlComponent implements OnIni
             this.selectedId = t.id;
             this.selectedIcon = icon;
             if(this.formGroup) {
-              if(this.control && this.control.name) {
-                this.formControl = new FormControl(this.selectedName);
-                this.formGroup.addControl('type', this.formControl);
-              }
+              this.formGroup.removeControl('name');
+              this.formGroup.removeControl('type');
+              this.formGroup.addControl('name', new FormControl('New ' + this.selectedName));
+              this.formGroup.addControl('type', new FormControl(this.selectedName));
             }
             this.selectedItem = new Item();
             this.selectedItem.name = 'New' + t.name;
@@ -99,7 +89,14 @@ export class RnTypeSelectCtrlComponent  extends RnCtrlComponent implements OnIni
         this.selectedItem.name = 'New' + e.name;
         this.selectedItem.type_id = e.id;
         this.selectedItem.attributes = this.collectTypeAttributes(e, {});
-        //console.log(this.selectedItem);
+        
+        if(this.formGroup) {
+          this.formGroup.removeControl('name');
+          this.formGroup.removeControl('type');
+          this.formGroup.addControl('name', new FormControl(this.selectedItem.name));
+          this.formGroup.addControl('type', new FormControl(this.selectedName));
+        }
+
         if (this.onEvent) {
           this.onEvent.emit({event: "item", item: this.selectedItem, control: this.control});
         }

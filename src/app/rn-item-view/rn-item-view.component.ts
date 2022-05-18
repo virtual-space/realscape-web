@@ -20,6 +20,7 @@ export class RnItemViewComponent extends RnViewComponent implements OnInit, OnDe
   @Input() views: Item[] = [];
   @Input() query?: Item;
   @Input() apps: Item[] = [];
+  @Input() activeViewIndex: number = 0;
 
   @Input() allowAddingItems = true;
   @Input() allowAddingViews = true;
@@ -118,12 +119,6 @@ export class RnItemViewComponent extends RnViewComponent implements OnInit, OnDe
     return false;
   }
 
-  editItem() {
-    if (this.item) {
-      this.onEdit({event: 'edit', item: this.item});
-    }
-  }
-
   activateItem(item: Item, children: Item[], activate: boolean) {
     //console.log('activating ',item, children, activate);
     if (this.isExternalType(item) && item.items) {
@@ -204,7 +199,7 @@ export class RnItemViewComponent extends RnViewComponent implements OnInit, OnDe
   onChangeTab(event: any) {
     console.log(event);
     this.eventsSubject.next(event.index);
-    //this.selectedTab = event.index;
+    this.activeViewIndex = event.index;
   }
 
   getItemDefaultView(item?: Item) {
@@ -213,7 +208,13 @@ export class RnItemViewComponent extends RnViewComponent implements OnInit, OnDe
       const views = item.items.filter(i => itemIsInstanceOf(i, 'View'));
       //console.log(views);
       if (views.length > 0) {
-        return views[0];
+        if (views.length < this.activeViewIndex) {
+          return views[this.activeViewIndex];
+        }
+
+        if (views.length > 0) {
+          return views[0];
+        }
       }
     }
     return undefined
@@ -256,61 +257,55 @@ export class RnItemViewComponent extends RnViewComponent implements OnInit, OnDe
     }*/
   }
 
-  onCenterChanged(event: any) {
-    //console.log('onCenterChanged', event);
-    //this.center = event;
+  addItem() {
+    if (this.item) {
+      this.onAdd(this.item);
+    }
   }
 
-  addItem(options: any) {
-    //console.log(event);
-    /*
-    if (this.canAddItem()) {
-
-      const createData = {};
-
-      if (options['valid_from']) {
-        createData['valid_from'] = options['valid_from'];
-      }
-
-      if (options['status']) {
-        createData['status'] = options['status'];
-      }
-
-      const dialogRef = this.dialog.open(CreateItemComponent, {
-        width: '400px',
-        data: createData
-      });
-
-      dialogRef.afterClosed().subscribe(result => {
-        if (result) {
-          this.uploading = true;
-
-          if (result.file) {
-            this.uploadingFile = true;
-            this.uploadProgress = 0;
-          }
-
-          this.itemService.create(result, (progress) => { this.uploadProgress = progress }).subscribe(
-            (res) => {
-              if (res && res['id']) {
-                console.log(`Success created item id: ${res['id']}`);
-              }
-            },
-            (err) => {
-              this.uploadingFile = false;
-              this.uploadProgress = 0;
-              this.uploading = false;
-              this.snackBar.open(err['error']['Error'], 'Dismiss');
-            },
-            () => {
-              this.uploadingFile = false;
-              this.uploadProgress = 0;
-              this.uploading = false;
-              this.refresh();
-            });
-        }
-      });
-    }*/
+  addLink() {
+    if (this.item) {
+      this.onAddLink(this.item);
+    }
   }
 
+  addView() {
+    if (this.item) {
+      const view = new Item();
+      view.id = this.item.id;
+      view.attributes = {creatable_types: ["View"]};
+      view.name = this.item.name! + " View"
+      this.onAdd(view);
+    }
+  }
+
+  editItem() {
+    if (this.item) {
+      this.onEdit(this.item);
+    }
+  }
+
+  editView() {
+    if (this.item) {
+      this.onEdit(this.views[this.activeViewIndex]);
+    }
+  }
+
+  editQuery() {
+    if (this.item) {
+      this.onEdit(this.item);
+    }
+  }
+
+  deleteItem() {
+    if (this.item) {
+      this.onDelete(this.item);
+    }
+  }
+
+  deleteView() {
+    if (this.item) {
+      this.onDelete(this.views[this.activeViewIndex]);
+    }
+  }
 }
