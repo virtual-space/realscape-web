@@ -15,10 +15,14 @@ export class RnFormCtrlComponent extends RnCtrlComponent implements OnInit {
     form_group = new FormGroup({});
     actuators: Item[] = [];
     controls: Item[] = [];
+    buttons: Item[] = [];
 
     override ngOnInit(): void {
       //console.log(this);
+      this.controls = this.getControls();
+      this.buttons = this.getButtons();
       this.rebuildControls();
+      //console.log(this);
     }
 
     compare(a: Number, b: Number) {
@@ -55,11 +59,12 @@ export class RnFormCtrlComponent extends RnCtrlComponent implements OnInit {
     }
 
     rebuildControls() {
+      /*
       this.controls = [];
       if(this.control && this.control.items) {
-        
+        const item_controls = this.getControls();  
         let controls: {[index: string]:any} = {};
-        for(var control of this.control.items.sort(this.getOrder)) {
+        for(var control of item_controls.sort(this.getOrder)) {
           //console.log(control);
           if(itemIsInstanceOf(control, "Control")) {
             if (control.name) {
@@ -72,7 +77,7 @@ export class RnFormCtrlComponent extends RnCtrlComponent implements OnInit {
             console.log('item ' + control.name! + ' is not control');
           }
         } 
-        }
+        }*/
       //console.log(this.controls);
     }
 
@@ -96,27 +101,28 @@ export class RnFormCtrlComponent extends RnCtrlComponent implements OnInit {
     }
 
     getButtons(): Item[] {
-      if (this.controls) {
-          return this.controls.filter(c => itemIsInstanceOf(c, "ButtonCtrl"));
+      if (this.control) {
+          return this.getItemControls(this.control).filter(c => itemIsInstanceOf(c, "ButtonCtrl"));
       }
 
       return [];
     }
 
     getControls(): Item[] {
-      if (this.controls) {
-          return this.controls.filter(c => !itemIsInstanceOf(c, "ButtonCtrl"));
+      if (this.control) {
+        return this.getItemControls(this.control).filter(c => !itemIsInstanceOf(c, "ButtonCtrl"));
       }
-
       return [];
     }
 
     isDefaultButton(item: Item) {
-      return item && item.attributes && item.attributes['default'] === 'true';
+      const attrs = this.collectItemAttributes(item, {});
+      return attrs['default'] === 'true';
     }
 
     isNormalButton(item: Item) {
-      return item && item.attributes && item.attributes['default'] !== 'true';
+      const attrs = this.collectItemAttributes(item, {});
+      return attrs['default'] !== 'true';
     }
   
     onButtonClick(button: Item) {
@@ -134,6 +140,8 @@ export class RnFormCtrlComponent extends RnCtrlComponent implements OnInit {
       if (event.event) {
         if (event.event === 'item') {
           this.rebuildControls();
+        } else if(event.event === 'type') {
+          this.item = event.item;
         }
       }
       this.onEvent.next(event);

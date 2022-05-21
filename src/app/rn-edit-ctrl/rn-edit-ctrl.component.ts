@@ -8,6 +8,10 @@ import { RnCtrlComponent } from '../rn-ctrl/rn-ctrl.component';
   styleUrls: ['./rn-edit-ctrl.component.sass']
 })
 export class RnEditCtrlComponent extends RnCtrlComponent implements OnInit {
-  
+    value: string = '';
+
+    override initialize(): void {
+      this.value = this.getValue();
+    }
 
 }

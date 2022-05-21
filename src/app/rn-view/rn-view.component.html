@@ -1,64 +1,62 @@
 <div [ngSwitch]="view!.type!.name!">
   <div *ngSwitchCase="'ListView'">
-      <app-rn-list-view [items]="items"></app-rn-list-view>
+      <app-rn-list-view [items]="items" (onEvent)="onEvent" (onRefresh)="childRefresh()"></app-rn-list-view>
   </div>
   <div *ngSwitchCase="'MapView'">
-    <app-rn-map-view [items]="items" [item]="item" [events]="events" [tabIndex]="tabIndex"></app-rn-map-view>
+    <app-rn-map-view [items]="items" [item]="item" [events]="events" [tabIndex]="tabIndex" (onEvent)="onEvent" (onRefresh)="childRefresh()"></app-rn-map-view>
   </div>
   <div *ngSwitchCase="'CalendarView'">
-      <app-rn-calendar-view [items]="items" [item]="item"></app-rn-calendar-view>
+      <app-rn-calendar-view [items]="items" [item]="item" (onEvent)="onEvent" (onRefresh)="childRefresh()"></app-rn-calendar-view>
   </div>
   <div *ngSwitchCase="'BoardView'">
-    <app-rn-board-view  [items]="items" [item]="item"></app-rn-board-view>
+    <app-rn-board-view  [items]="items" [item]="item" (onEvent)="onEvent" (onRefresh)="childRefresh()"></app-rn-board-view>
   </div>
   <div *ngSwitchCase="'DocumentView'">
-    <app-rn-document-view></app-rn-document-view>
+    <app-rn-document-view  (onEvent)="onEvent" (onRefresh)="childRefresh()"></app-rn-document-view>
   </div>
   <div *ngSwitchCase="'DrawingView'">
-    <app-rn-drawing-view></app-rn-drawing-view>
+    <app-rn-drawing-view  (onEvent)="onEvent" (onRefresh)="childRefresh()"></app-rn-drawing-view>
   </div>
   <div *ngSwitchCase="'ImageView'">
-    <app-rn-image-view></app-rn-image-view>
+    <app-rn-image-view  (onEvent)="onEvent" (onRefresh)="childRefresh()"></app-rn-image-view>
   </div>
   <div *ngSwitchCase="'VideoView'">
-    <app-rn-video-view></app-rn-video-view>
-  </div>
-  <div *ngSwitchCase="'MapView'">
+    <app-rn-video-view  (onEvent)="onEvent" (onRefresh)="childRefresh()"></app-rn-video-view>
   </div>
   <div *ngSwitchCase="'PageView'">
-    <app-rn-page-view></app-rn-page-view>
+    <app-rn-page-view  (onEvent)="onEvent" (onRefresh)="childRefresh()"></app-rn-page-view>
   </div>
   <div *ngSwitchCase="'PanelView'">
-    <app-rn-panel-view></app-rn-panel-view>
+    <app-rn-panel-view  (onEvent)="onEvent" (onRefresh)="childRefresh()"></app-rn-panel-view>
   </div>
   <div *ngSwitchCase="'SceneView'">
-    <app-rn-scene-view></app-rn-scene-view>
+    <app-rn-scene-view  (onEvent)="onEvent" (onRefresh)="childRefresh()"></app-rn-scene-view>
   </div>
   <div *ngSwitchCase="'PropertiesView'">
-    <app-rn-properties-view></app-rn-properties-view>
+    <app-rn-properties-view  (onEvent)="onEvent" (onRefresh)="childRefresh()"></app-rn-properties-view>
   </div>
   <div *ngSwitchCase="'QueryView'">
-    <app-rn-query-view></app-rn-query-view>
+    <app-rn-query-view  (onEvent)="onEvent" (onRefresh)="childRefresh()"></app-rn-query-view>
   </div>
   <div *ngSwitchCase="'CardsView'">
-    <app-rn-cards-view [items]="items"></app-rn-cards-view>
+    <app-rn-cards-view [items]="items"  (onEvent)="onEvent" (onRefresh)="childRefresh()"></app-rn-cards-view>
   </div>
   <div *ngSwitchCase="'TreeView'">
-    <app-rn-tree-view [items]="items"></app-rn-tree-view>
+    <app-rn-tree-view [items]="items"  (onEvent)="onEvent" (onRefresh)="childRefresh()"></app-rn-tree-view>
   </div>
   <div *ngSwitchCase="'EditView'">
-    <app-rn-edit-item-view [item]="item"></app-rn-edit-item-view>
+    <app-rn-edit-item-view [item]="item"  (onEvent)="onEvent" (onRefresh)="childRefresh()"></app-rn-edit-item-view>
   </div>
   <div *ngSwitchCase="'CreateView'">
-    <app-rn-create-item-view [item]="item"></app-rn-create-item-view>
+    <app-rn-create-item-view [item]="item"  (onEvent)="onEvent" (onRefresh)="childRefresh()"></app-rn-create-item-view>
   </div>
   <div *ngSwitchCase="'ItemView'">
-    <app-rn-item-view [item]="getItemViewTarget(items)"></app-rn-item-view>
+    <app-rn-item-view [item]="getItemViewTarget(items)"  (onEvent)="onEvent" (onRefresh)="childRefresh()"></app-rn-item-view>
   </div>
   <div *ngSwitchDefault>
     <div *ngIf="view">
       <div *ngIf="isCtrlView(view)">
-        <app-rn-ctrl-view [control]="view" [item]="item" (onEvents)="onEventHandler($event)"></app-rn-ctrl-view>
+        <app-rn-ctrl-view [control]="view" [item]="item" (onEvents)="onEventHandler($event)" (onRefresh)="childRefresh()"></app-rn-ctrl-view>
       </div>
       <div *ngIf="!isCtrlView(view)">
         Unhandled type: {{view.type!.name!}}

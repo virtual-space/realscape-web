@@ -7,8 +7,18 @@
                     {{control.name}}
                 </div>
                 <div  fxFlexFill>
-                    <div *ngFor="let child of getControls(); let index = index">
+                    <div *ngFor="let child of controls; let index = index">
                         <div [ngSwitch]="getControlType(child.type!)" fxFlexFill>
+                            <div *ngSwitchCase="'TypeSelectCtrl'"   [fxFlex]="getControlAttribute('flex', '1 1 auto', child)"
+                                                                    [fxFlexOffset]="getControlAttribute('offset', '1%', child)"
+                                                                    [fxFlexAlign]="getControlAttribute('align', 'center', child)">
+                                <app-rn-type-select-ctrl [item]="item" 
+                                                            [control]="child" 
+                                                            [formGroup]="form_group"
+                                                            [fieldName]="getControlAttribute('field_name', undefined, child)" 
+                                                            (onEvent)="onEventHandler($event)">
+                                </app-rn-type-select-ctrl>
+                            </div>
                             <div *ngSwitchCase="'AttrsCtrl'" 
                                     [fxFlex]="getControlAttribute('flex', '1 1 100%', child)"
                                     [fxFlexOffset]="getControlAttribute('offset', '1%', child)"
@@ -40,16 +50,7 @@
                                                             (onEvent)="onEventHandler($event)">
                                 </app-rn-item-select-ctrl>
                             </div>
-                            <div *ngSwitchCase="'TypeSelectCtrl'"   [fxFlex]="getControlAttribute('flex', '1 1 auto', child)"
-                                                                    [fxFlexOffset]="getControlAttribute('offset', '1%', child)"
-                                                                    [fxFlexAlign]="getControlAttribute('align', 'center', child)">
-                                <app-rn-type-select-ctrl [item]="item" 
-                                                            [control]="child" 
-                                                            [formGroup]="form_group"
-                                                            [fieldName]="getControlAttribute('field_name', undefined, child)" 
-                                                            (onEvent)="onEventHandler($event)">
-                                </app-rn-type-select-ctrl>
-                            </div>
+                            
                             <div *ngSwitchCase="'EditCtrl'" [fxFlex]="getControlAttribute('flex', '1 1 auto', child)"
                                                             [fxFlexOffset]="getControlAttribute('offset', '1%', child)"
                                                             [fxFlexAlign]="getControlAttribute('align', 'center', child)">
@@ -118,7 +119,7 @@
                 </div>
                 
                 <div mat-dialog-actions fxFlex="0 1 80%">
-                    <div *ngFor="let child of getButtons(); let index = index">
+                    <div *ngFor="let child of buttons; let index = index">
                         <button mat-button (click)="onButtonClick(child)" *ngIf="isNormalButton(child)">{{child.name}}</button>
                         <button mat-button (click)="onButtonClick(child)" *ngIf="isDefaultButton(child)" cdkFocusInitial>{{child.name}}</button>
                     </div>

@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import {HttpClient, HttpParams, HttpEvent, HttpEventType} from "@angular/common/http";
 import {Observable, from, of, throwError, scheduled} from "rxjs";
-import {catchError, map, concatMap, mergeMap} from 'rxjs/operators';
+import {catchError, map, concatMap, mergeMap, tap} from 'rxjs/operators';
 import {Router} from "@angular/router";
 import {Authenticator, AuthService} from "./auth.service";
 import { environment } from '../../environments/environment';
@@ -260,8 +260,50 @@ export class ItemService {
     );
   }
 
+  public setTypes(types: Type[]) {
+    localStorage.setItem('types', JSON.stringify(types))
+  }
+
+  public getTypes(): Type[] {
+    let types_string = localStorage.getItem('types');
+    if (types_string) {
+      return JSON.parse(types_string);
+    }
+    return [];
+  }
+
+  public setApps(apps: Item[]) {
+    localStorage.setItem('apps', JSON.stringify(apps));
+  }
+
+  public getApps(): Item[] {
+    let apps_string = localStorage.getItem('apps');
+    if (apps_string) {
+      return JSON.parse(apps_string);
+    }
+    return [];
+  }
+
+  public setDialogs(dialogs: Item[]) {
+    localStorage.setItem('dialogs', JSON.stringify(dialogs));
+  }
+
+  public getDialogs(): Item[] {
+    let dialogs_string = localStorage.getItem('dialogs');
+    if (dialogs_string) {
+      return JSON.parse(dialogs_string);
+    }
+    return [];
+  }
+
   public types(): Observable<[Type]> {
-    return this.http.get<Type>(this.getAccessibleEndpoint(true) + 'types').pipe(
+    let url = this.getAccessibleEndpoint(true);
+    if (this.authService.isLoggedIn()) {
+      url = url + '/types';
+    } else {
+      url = url + '/public/types';
+    }
+    return this.http.get<[Type]>(url).pipe(
       catchError(this.handleError('/items', []))
     );
   }
@@ -335,6 +377,34 @@ export class ItemService {
       return this.getTypeIcon(type.base);
     }
     return 'help_center';
+  }
+
+  collectTypeAttributes(type: Type, attrs: {[index: string]:any}) {
+    let ret = attrs;
+    //console.log('collecting type attributes ', type.name!);
+    if (type) {
+      if (type.base) {
+        attrs = Object.assign(attrs, this.collectTypeAttributes(type.base, attrs));
+      }
+      if (type.attributes) {
+        attrs = Object.assign(attrs, type.attributes);
+      }
+    }
+    
+    return ret;
+  }
+
+  collectItemAttributes(item: Item, attrs: {[index: string]:any}) {
+    let ret = attrs;
+    //console.log('collecting type attributes ', type.name!);
+    if (item) {
+      ret = this.collectTypeAttributes(item.type!, attrs);
+      if(item.attributes) {
+        ret = Object.assign(ret, item.attributes);
+      }
+    }
+    
+    return ret;
   }
 
 
@@ -590,9 +660,6 @@ export function expandItem(item: Item): Item {
 */
 export function isInstanceOf(type: Type, type_name: string): boolean {
   
-  if (type.name === 'EventOrg') {
-    console.log(type);
-  }
   if (type.name === type_name) {
     //console.log('*** ', type.name, ' is instance of ', type_name)
     return true;
@@ -619,6 +686,7 @@ export class Query {
   public?: boolean;
   home?: boolean;
   myItems?: boolean;
+  children?: boolean;
   parentId?: string;
   lat?: number;
   lng?: number;

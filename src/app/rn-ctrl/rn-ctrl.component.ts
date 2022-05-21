@@ -63,31 +63,26 @@ export class RnCtrlComponent implements OnInit {
   }
 
   collectTypeAttributes(type: Type, attrs: {[index: string]:any}) {
-    let ret = attrs;
-    //console.log('collecting type attributes ', type.name!);
-    if (type) {
-      if (type.base) {
-        attrs = Object.assign(attrs, this.collectTypeAttributes(type.base, attrs));
-      }
-      if (type.attributes) {
-        attrs = Object.assign(attrs, type.attributes);
-      }
-    }
-    
-    return ret;
+    return this.itemService.collectTypeAttributes(type, attrs);
   }
 
   collectItemAttributes(item: Item, attrs: {[index: string]:any}) {
-    let ret = attrs;
-    //console.log('collecting type attributes ', type.name!);
-    if (item) {
-      ret = this.collectTypeAttributes(item.type!, attrs);
-      if(item.attributes) {
-        ret = Object.assign(ret, item.attributes);
-      }
+    return this.itemService.collectItemAttributes(item, attrs);
+  }
+
+  getItemControls(item: Item): Item[] {
+    const attributes = this.itemService.collectItemAttributes(item, {});
+    if ('controls' in attributes) {
+      return attributes['controls'].map((v:any) => {
+        let item: Item = {... v};
+        const type = this.itemService.getTypes().find(t => t.name === item.type);
+        if (type) {
+          item.type = type;
+        }
+        return item;
+      });
     }
-    
-    return ret;
+    return []
   }
 
   public getAttribute(item: Item, key: string, def: string): string {

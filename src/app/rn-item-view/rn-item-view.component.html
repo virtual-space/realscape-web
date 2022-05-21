@@ -87,54 +87,46 @@
               {{view.name}}
               <button mat-icon-button color="primary" *ngIf="allowEditingViews" [matMenuTriggerFor]="viewMenu"><mat-icon>more_vert</mat-icon></button>
               <mat-menu #viewMenu="matMenu" xPosition="before">
-                <button  mat-menu-item (click)="onEditView(index)">
+                <button  mat-menu-item (click)="editView()">
                   <mat-icon>edit</mat-icon>
                   <span>Edit</span>
                 </button>
-                <button *ngIf="allowEditingViews" mat-menu-item (click)="onDeleteView(index)">
+                <button *ngIf="allowEditingViews" mat-menu-item (click)="deleteView()">
                   <mat-icon>delete</mat-icon>
                   <span>Delete</span>
                 </button>
               </mat-menu>
             </ng-template>
-            <ng-container  *ngIf="shouldShowChildren(item)">
-              <app-rn-view [items]="children" [view]="view" [item]="item" [events]="eventsSubject.asObservable()" [tabIndex]="index"></app-rn-view>
-            </ng-container>
-            <ng-container  *ngIf="!shouldShowChildren(item)">
-              <app-rn-view [items]="items" [view]="view" [item]="item" [events]="eventsSubject.asObservable()" [tabIndex]="index"></app-rn-view>
+            <ng-container>
+              <app-rn-view [items]="children" [view]="view" [item]="item" [events]="eventsSubject.asObservable()" [tabIndex]="index" (onEvent)="onItemEvent($event)" (onRefresh)="refreshView()"></app-rn-view>
             </ng-container>
           </mat-tab>
         </mat-tab-group>
       </div>
       <ng-container *ngIf="views.length === 1">
-        <ng-container  *ngIf="shouldShowChildren(item)">
-          <app-rn-view [items]="children" [view]="views[0]" [item]="item" (onEvent)="onItemEvent($event)"></app-rn-view>
-        </ng-container>
-        <ng-container  *ngIf="!shouldShowChildren(item)">
-          <app-rn-view [items]="items" [view]="views[0]" [item]="item" (onEvent)="onItemEvent($event)"></app-rn-view>
-        </ng-container>
+        <app-rn-view [items]="children" [view]="views[0]" [item]="item" (onEvent)="onItemEvent($event)" (onRefresh)="refreshView()"></app-rn-view>
       </ng-container>
   
       <ng-container *ngIf="(views.length === 0) || shouldShowViewsAsItems(item)">
       <ng-container [ngSwitch]="item!.type!.name!">
         <div *ngSwitchCase="'Image'">
-          <app-rn-image-view [items]="items" [item]="item" (onEvent)="onItemEvent($event)"></app-rn-image-view>
+          <app-rn-image-view [items]="items" [item]="item" (onEvent)="onItemEvent($event)" (onRefresh)="refreshView()"></app-rn-image-view>
         </div>
         <div *ngSwitchCase="'Document'">
-          <app-rn-document-view [items]="items" [item]="item" (onEvent)="onItemEvent($event)"></app-rn-document-view>
+          <app-rn-document-view [items]="items" [item]="item" (onEvent)="onItemEvent($event)" (onRefresh)="refreshView()"></app-rn-document-view>
         </div>
         <div *ngSwitchCase="'Page'">
-          <app-rn-page-view [items]="items" [item]="item" (onEvent)="onItemEvent($event)"></app-rn-page-view>
+          <app-rn-page-view [items]="items" [item]="item" (onEvent)="onItemEvent($event)" (onRefresh)="refreshView()"></app-rn-page-view>
         </div>
         <div *ngSwitchCase="'Video'">
-          <app-rn-video-view [items]="items" [item]="item" (onEvent)="onItemEvent($event)"></app-rn-video-view>
+          <app-rn-video-view [items]="items" [item]="item" (onEvent)="onItemEvent($event)" (onRefresh)="refreshView()"></app-rn-video-view>
         </div>
         <div *ngSwitchDefault>
           <ng-container *ngIf="children.length > 0">
-            <app-rn-list-view [items]="children"></app-rn-list-view>
+            <app-rn-list-view [items]="children"  (onEvent)="onItemEvent($event)" (onRefresh)="refreshView()"></app-rn-list-view>
           </ng-container>
           <ng-container *ngIf="children.length === 0">
-            <app-rn-card-view [items]="items" [view]="getItemDefaultView(item)" [item]="item" (onEvent)="onItemEvent($event)"></app-rn-card-view>
+            <app-rn-card-view [items]="items" [view]="getItemDefaultView(item)" [item]="item" (onEvent)="onItemEvent($event)" (onRefresh)="refreshView()"></app-rn-card-view>
           </ng-container>
         </div>
       </ng-container>

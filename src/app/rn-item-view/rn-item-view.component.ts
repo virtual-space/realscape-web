@@ -1,19 +1,17 @@
 import { Component, Input, OnChanges, OnDestroy, OnInit, QueryList, SimpleChanges, ViewChild, ViewChildren } from '@angular/core';
-import { Subject, Subscription } from 'rxjs';
+import { Subject } from 'rxjs';
 import {ActivatedRoute, Router} from '@angular/router';
-import { Item, ItemService, itemIsInstanceOf, ItemEvent } from '../services/item.service';
-import { SessionService } from '../services/session.service';
+import { Item, itemIsInstanceOf, ItemEvent } from '../services/item.service';
 
 import {FormControl} from "@angular/forms";
 import { RnViewComponent } from '../rn-view/rn-view.component';
-import { throwMatDuplicatedDrawerError } from '@angular/material/sidenav';
 
 @Component({
   selector: 'app-rn-item-view',
   templateUrl: './rn-item-view.component.html',
   styleUrls: ['./rn-item-view.component.sass']
 })
-export class RnItemViewComponent extends RnViewComponent implements OnInit, OnDestroy, OnChanges {
+export class RnItemViewComponent extends RnViewComponent implements OnInit, OnChanges {
 
   @Input() id?: string;
   @Input() children: Item[] = [];
@@ -26,167 +24,97 @@ export class RnItemViewComponent extends RnViewComponent implements OnInit, OnDe
   @Input() allowAddingViews = true;
   @Input() allowEditingViews = true;
 
-  subscription?: Subscription;
-
   eventsSubject: Subject<number> = new Subject<number>();
 
   selectedView = new FormControl(0);
 
   override ngOnInit(): void {
     //console.log('item-view init ', this.item);
-    this.itemService.apps().subscribe(apps => {
-      if (apps && apps.items) {
-        //console.log('apps:',apps);
-        if(this.authService.isLoggedIn()) {
-          const role = apps.items.find(a => itemIsInstanceOf(a, 'Role'));
-          if (role && role.items) {
-            const apps_item = role.items.find(a => itemIsInstanceOf(a, 'Apps'));
-            if (apps_item && apps_item.items) {
-              this.apps = apps_item.items;
-            } else {
-              this.apps = [];
-            }
-          }
-        } else {
-          this.apps = apps.items;
-        }
-        
-      } else {
-        this.apps = [];
-      }
-      if (this.item) {
-        this.reloadItem(this.item, false);
-      } else {
-          this.route.paramMap.subscribe(params => {
-            //console.log(params);
-            const id = params.get('id');
-            if(id && (!this.item || id != this.id)) {
-              console.log('subscribing ',id);
-              this.subscription = this.sessionService.refreshed$.subscribe(
-                () => {
-                  //console.log('subscription requesting refresh for ',id);
-                  this.refresh(id);
-              });
-              this.refresh(id);
-            }
-          });
-      }
+    this.onRefresh.subscribe(e => {
+      this.refreshView();
     });
+    this.apps = this.itemService.getApps();
+    if (this.item) {
+      this.reloadItem(this.item);
+    } else {
+        this.route.paramMap.subscribe(params => {
+          //console.log(params);
+          const id = params.get('id');
+          if(id && (!this.item || id != this.id)) {
+            this.retrieve(id);
+          }
+        });
+    }
     
   }
 
-  ngOnDestroy() {
-    // prevent memory leak when component destroyed
-    if (this.subscription) {
-      this.subscription.unsubscribe();
-    }
-  }
-
-  refresh(id: string, subid?: string): void {
-    console.log('refreshing ',id);
+  retrieve(id: string): void {
+    console.log('*** retrieve ', id);
     this.itemService.getItem(id).subscribe(item => {
       if (item) {
         this.item = item;
-        this.reloadItem(item, true);
+        this.reloadItem(item);
       }
     });
   }
 
-  reloadItem(item: Item, activate: boolean): void {
-    //console.log('reloading ',item);
-    this.id = item.id; 
-    if (item.items) {
-      this.activateItem(item, item.items, activate);
-    } else if (this.id) {
-      console.log('retrieving children');
-      this.itemService.children(this.id).subscribe(children => {
-        this.activateItem(item, children, activate);
-      });
+  refreshView(): void {
+    console.log('*** refreshView ***');
+    if (this.id) {
+      this.retrieve(this.id);
+    } else if(this.item) {
+      this.reloadItem(this.item);
+    }
+  }
+
+  onRefreshClick(): void {
+    this.refreshView();
+  }
+
+  reloadItem(item: Item): void {
+    console.log('*** reloading ',item);
+    this.views = this.getItemViews(item);
+    this.query = this.getItemQuery(item);
+    this.id = item.id;
+    if (item.items && item.items.length > 0) {
+      console.log('children = items', item.items);
+      this.children = item.items;
+    } else {
+      if (this.query) {
+        console.log('children = query')
+        this.itemService.items(this.query).subscribe(items => {
+          this.children = items;
+        });
+      } else {
+        console.log('children = chidlren')
+        this.itemService.children(this.id!).subscribe(children => {
+          this.children = children;
+        });
+      }
     }
   }
 
   shouldShowChildren(item: Item): boolean {
-    if (item.attributes && 'show_children' in item.attributes) {
-      return item.attributes['show_children'] === 'true';
+    const attrs = this.itemService.collectItemAttributes(item, {});
+    if ('show_children' in attrs) {
+      return attrs['show_children'] === 'true';
     }
     return false;
   }
 
   shouldShowViewsAsItems(item: Item): boolean {
-    if (item.attributes && 'show_views_as_items' in item.attributes) {
-      return item.attributes['show_views_as_items'] === 'true';
+    const attrs = this.itemService.collectItemAttributes(item, {});
+    if ('show_views_as_items' in attrs) {
+      return attrs['show_views_as_items'] === 'true';
     }
     return false;
   }
-
-  activateItem(item: Item, children: Item[], activate: boolean) {
-    //console.log('activating ',item, children, activate);
-    if (this.isExternalType(item) && item.items) {
-      this.children = children.filter(child => !itemIsInstanceOf(child, "View"));
-      this.views = item.items.filter(child => itemIsInstanceOf(child, "View"));
-      console.log(this);
-      if (activate) {
-        this.sessionService.activateItem(item);
-        if (this.views.length > 0) {
-          this.eventsSubject.next(0);
-        }
-      };
-    }
-    else {
-      let showChildren = this.shouldShowChildren(item);
-      
-      if (showChildren) {
-        this.children = children.filter(child => !itemIsInstanceOf(child, "View"));
-        this.views = children.filter(child => itemIsInstanceOf(child, "View"));
-        console.log('showChildren', this.children, this.views);
-        if (activate) {
-          this.sessionService.activateItem(item);
-        if (this.views.length > 0) {
-          this.eventsSubject.next(0);
-        }
-        }
-      } else {
-        this.children = children.filter(child => !itemIsInstanceOf(child, "View"));
-        this.views = children.filter(child => itemIsInstanceOf(child, "View"));
-        if (this.views.length > 0) {
-          this.eventsSubject.next(0);
-        }
-        this.query = this.children.find(child => {
-          if (child) {
-            return itemIsInstanceOf(child, "Query");
-          } else {
-            return false;
-          }
-        });
-        if(this.query && this.query.attributes) {
-          this.itemService.items(this.query.attributes).subscribe(items => {
-            this.items = items.filter(child => !itemIsInstanceOf(child, "View"));
-            if (activate) {
-              this.sessionService.activateItem(item);
-              if (this.views.length > 0) {
-                this.eventsSubject.next(0);
-              }
-            }
-          });
-        } else {
-          this.items = this.children;
-          if (activate) {
-            this.sessionService.activateItem(item);
-            if (this.views.length > 0) {
-              this.eventsSubject.next(0);
-            }
-          }
-        }
-      }
-        
-      }
-   }
 
   override ngOnChanges(changes: SimpleChanges): void {
     if(changes['item']) {
       if (this.item) {
         console.log('item view reloading item', this.item);
-        this.reloadItem(this.item, false);
+        this.reloadItem(this.item);
       }
       
     }
@@ -221,41 +149,6 @@ export class RnItemViewComponent extends RnViewComponent implements OnInit, OnDe
   }
 
 
-  onEditView(index: number) {
-    /*
-    const view = this.views[index];
-
-    const dialogRef = this.dialog.open(EditViewComponent, {
-      width: '400px',
-      data: view
-    });
-
-    dialogRef.afterClosed().subscribe(result => {
-      if (result) {
-        this.views[index] = result;
-        this.onSaveViews();
-      }
-    });
-    */
-  }
-
-  onDeleteView(index: number) {
-    //this.views.splice(index, 1);
-    //this.onSaveViews();
-  }
-
-
-  onSaveViews() {
-    /*
-    if (this.item && (this.allowAddingViews || this.allowEditingViews)) {
-      const props = Object.assign(this.item.attributes || {}, { views: this.views });
-      this.itemService.update(this.item.id, {properties: props}).subscribe(res => {
-        this.refresh();
-      });
-    } else {
-      this.refresh();
-    }*/
-  }
 
   addItem() {
     if (this.item) {

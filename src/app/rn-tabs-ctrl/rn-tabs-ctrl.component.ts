@@ -14,8 +14,8 @@ export class RnTabsCtrlComponent extends RnCtrlComponent implements OnInit {
   eventsSubject: Subject<number> = new Subject<number>();
 
   override ngOnInit(): void {
-    if (this.control && this.control.items) {
-      this.tabs = this.control.items?.filter(i => itemIsInstanceOf(i, 'TabCtrl'));
+    if (this.control) {
+      this.tabs = this.getItemControls(this.control).filter(i => itemIsInstanceOf(i, 'TabCtrl'));
     }
     //console.log('tabsctrl item', this.item);
     //console.log('tabsctrl formgroup ', this.formGroup);

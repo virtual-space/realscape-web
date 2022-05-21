@@ -13,7 +13,7 @@ import { QrCodeComponent } from '../qr-code/qr-code.component';
 import { RnDialogComponent } from '../rn-dialog/rn-dialog.component';
 import { RnMsgBoxComponent } from '../rn-msg-box/rn-msg-box.component';
 import { AuthService } from '../services/auth.service';
-import { Item, ItemEvent, itemIsInstanceOf, ItemService } from '../services/item.service';
+import { Item, ItemEvent, itemIsInstanceOf, ItemService, Query } from '../services/item.service';
 import { SessionService } from '../services/session.service';
 import { ViewContainerRef } from '@angular/core';
 
@@ -30,6 +30,7 @@ export class RnViewComponent implements OnInit, OnChanges {
   @Input() events?: Observable<number>;
   @Input() tabIndex?: number;
   @Output() onEvent = new EventEmitter<ItemEvent>();
+  @Output() onRefresh = new EventEmitter();
   
   public isControl: boolean = false;
 
@@ -37,8 +38,7 @@ export class RnViewComponent implements OnInit, OnChanges {
   uploadingFile = false;
   uploading = false;
 
-  constructor(protected itemService: ItemService, 
-              protected sessionService: SessionService,
+  constructor(protected itemService: ItemService,
               protected authService: AuthService,
               protected sanitizer: DomSanitizer,
               protected route: ActivatedRoute,
@@ -90,7 +90,7 @@ export class RnViewComponent implements OnInit, OnChanges {
   }
 
   onEventHandler(event: ItemEvent) {
-    //console.log(event);
+    console.log('*** onEventHandler ', this, event);
     
     if (event.event) {
        if(event.event == 'edit' && event.item) {
@@ -100,10 +100,6 @@ export class RnViewComponent implements OnInit, OnChanges {
       } else if(event.event == 'delete' && event.item) {
         this.onDelete(event.item);
       }
-    }
-
-    if(this.onEvent) {
-      this.onEvent.emit(event);
     }
   }
 
@@ -226,7 +222,7 @@ export class RnViewComponent implements OnInit, OnChanges {
 
   onAdd(item?: Item) {
     if (this.canAddItem()) {
-      console.log(item);
+      //console.log(item);
       this.itemService.dialogs().subscribe(dialogs => {
         if (dialogs) {
           const createDialogs = dialogs.filter(d => itemIsInstanceOf(d, 'ItemCreateDialog'));
@@ -262,7 +258,9 @@ export class RnViewComponent implements OnInit, OnChanges {
                       (res) => {
                         if (res && res['id']) {
                           console.log(`Success created item id: ${res['id']}`);
-                          this.sessionService.refresh();
+                          if(this.onRefresh) {
+                            this.onRefresh.emit();
+                          }
                         }
                       },
                       (err) => {
@@ -275,7 +273,9 @@ export class RnViewComponent implements OnInit, OnChanges {
                         this.uploadingFile = false;
                         this.uploadProgress = 0;
                         this.uploading = false;
-                        this.sessionService.refresh();
+                        if(this.onRefresh) {
+                          this.onRefresh.emit();
+                        }
                       });
                   }
                 });
@@ -290,7 +290,7 @@ export class RnViewComponent implements OnInit, OnChanges {
 
   onAddLink(item?: Item) {
     if (this.canAddItem()) {
-      console.log(item);
+      //console.log(item);
       this.itemService.dialogs().subscribe(dialogs => {
         if (dialogs) {
           const createDialogs = dialogs.filter(d => itemIsInstanceOf(d, 'ItemLinkDialog'));
@@ -326,7 +326,9 @@ export class RnViewComponent implements OnInit, OnChanges {
                       (res) => {
                         if (res && res['id']) {
                           console.log(`Success created item id: ${res['id']}`);
-                          this.sessionService.refresh();
+                          if(this.onRefresh) {
+                            this.onRefresh.emit();
+                          }
                         }
                       },
                       (err) => {
@@ -339,7 +341,9 @@ export class RnViewComponent implements OnInit, OnChanges {
                         this.uploadingFile = false;
                         this.uploadProgress = 0;
                         this.uploading = false;
-                        this.sessionService.refresh();
+                        if(this.onRefresh) {
+                          this.onRefresh.emit();
+                        }
                       });
                   }
                 });
@@ -383,7 +387,10 @@ export class RnViewComponent implements OnInit, OnChanges {
                   const arg = Object.assign({id: item.id},result.data);
                   //console.log(arg);
                   this.itemService.update(arg.id, arg).subscribe(res => {
-                    this.sessionService.refresh();
+                    if(this.onRefresh) {
+                      console.log('refreshing',this);
+                      this.onRefresh.emit();
+                    }
                   });
                 }
               });
@@ -413,7 +420,9 @@ export class RnViewComponent implements OnInit, OnChanges {
           } else if (event.type === HttpEventType.Response) {
             //console.log(event);
             if (event.status === 200 || event.status === 201) {
-              this.sessionService.refresh();
+              if(this.onRefresh) {
+                this.onRefresh.emit();
+              }
             }
             this.snackBar.open(event.statusText);
             
@@ -454,14 +463,15 @@ export class RnViewComponent implements OnInit, OnChanges {
         if(result) {
           this.uploading = true;
             this.itemService.delete(item.id!).subscribe(res => {
-              this.sessionService.refresh();;
+              if(this.onRefresh) {
+                this.onRefresh.emit();
+              }
             });
         }
       });
     }
     
   }
-
   
 
   canAddView(): boolean {
@@ -476,8 +486,50 @@ export class RnViewComponent implements OnInit, OnChanges {
     return true;
   }
 
-  onRefreshClick(): void {
-    this.sessionService.refresh();
+  getItemQuery(item: Item): Query | undefined {
+    const attributes = this.itemService.collectItemAttributes(item, {});
+    console.log(attributes);
+    let query = undefined;
+    if ('query' in attributes) {
+        query = {... attributes['query']};
+    }
+    return query;
+  }
+
+  getItemViews(item: Item): Item[] {
+    const attributes = this.itemService.collectItemAttributes(item, {});
+    if ('views' in attributes) {
+      return attributes['views'].map((v:any) => {
+        let item: Item = {... v};
+        const type = this.itemService.getTypes().find(t => t.name === item.type);
+        if (type) {
+          item.type = type;
+        }
+        return item;
+      });
+    }
+    return []
+  }
+
+  getItemControls(item: Item): Item[] {
+    const attributes = this.itemService.collectItemAttributes(item, {});
+    if ('controls' in attributes) {
+      return attributes['controls'].map((v:any) => {
+        let item: Item = {... v};
+        const type = this.itemService.getTypes().find(t => t.name === item.type);
+        if (type) {
+          item.type = type;
+        }
+        return item;
+      });
+    }
+    return []
+  }
+
+  childRefresh() {
+    if (this.onRefresh) {
+      this.onRefresh.emit();
+    }
   }
 
 }

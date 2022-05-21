@@ -54,6 +54,9 @@ export class AuthService {
 
   public logout() {
     localStorage.removeItem('access_token');
+    localStorage.removeItem('types');
+    localStorage.removeItem('apps');
+    localStorage.removeItem('dialogs');
     window.location.href = this.getHome();
   }
 

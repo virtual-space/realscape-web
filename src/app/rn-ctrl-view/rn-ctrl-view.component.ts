@@ -1,6 +1,7 @@
 import { Component, Input, OnInit , OnChanges, SimpleChanges, EventEmitter, Output} from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { Observable } from 'rxjs';
+import { RnViewComponent } from '../rn-view/rn-view.component';
 import { Item, ItemEvent, ItemService, itemIsInstanceOf, Type } from '../services/item.service';
 
 @Component({
@@ -8,32 +9,29 @@ import { Item, ItemEvent, ItemService, itemIsInstanceOf, Type } from '../service
   templateUrl: './rn-ctrl-view.component.html',
   styleUrls: ['./rn-ctrl-view.component.sass']
 })
-export class RnCtrlViewComponent implements OnInit, OnChanges {
+export class RnCtrlViewComponent extends RnViewComponent implements OnInit, OnChanges {
   @Input() control?: Item;
-  @Input() item?: Item;
   @Input() layout?: string = "column";
   @Input() align?: string = "center center";
   @Input() gap?: string = "1%";
   @Input() formGroup?: FormGroup;
   @Output() onEvents = new EventEmitter<ItemEvent>();
-  @Input() events?: Observable<number>;
-  @Input() tabIndex?: number;
+
   controls: Item[] = [];
   
-  constructor(private itemService: ItemService) { }
 
-  ngOnInit(): void {
-    //console.log('*************************************** hello from ctrl view init');
+  override ngOnInit(): void {
+    //console.log('*************************************** ctrl view init', this.control);
     //console.log(this.item);
     if(this.control) {
-      if(this.control.items) {
-          this.controls = this.control.items;
-      } else if(this.control.id) {
+      this.controls = this.getItemControls(this.control);
+      
+      /*if(this.control.id) {
         this.itemService.children(this.control.id).subscribe(children => {
           //this.controls = children.filter(child => !child.type!.name!.endsWith("Ctrl"));
           this.controls = children;
         });
-      }
+      }*/
       if(this.control.attributes) {
         const layout = this.control.attributes['layout'];
         if(layout) {
@@ -78,13 +76,6 @@ export class RnCtrlViewComponent implements OnInit, OnChanges {
     }  
 
     return def;
-  }
-
-  ngOnChanges(changes: SimpleChanges): void {
-    if(changes['item']) {
-      //console.log('*************************************** hello from ctrl view changed!!!');
-      //console.log(this.item);
-    }
   }
 
   isButton(item: Item) {

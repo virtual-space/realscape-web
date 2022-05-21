@@ -52,7 +52,7 @@ export class RnLocationCtrlComponent extends RnCtrlComponent implements OnInit {
     }
     if (!this.item || (this.item.location == null)) {
       if (navigator.geolocation) {
-        console.log("getting the current location");
+        //console.log("getting the current location");
         navigator.geolocation.getCurrentPosition((position) => {
           //console.log(position);
           this.location = {
@@ -65,7 +65,7 @@ export class RnLocationCtrlComponent extends RnCtrlComponent implements OnInit {
           this.sleep(500).then(() => {//do not remove the sleep functions
             this.loadMap();//this fixes 99% of the loading issues
           });*/
-          console.log('loading with user location',this);
+          //console.log('loading with user location',this);
         });
       }
     } else {
