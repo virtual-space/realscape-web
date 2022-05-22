@@ -3,9 +3,6 @@
         <div fxFlex="1 1 100%" fxLayoutAlign="center center" *ngIf="controls">
             <!-- <app-rn-query-view *ngIf="query"></app-rn-query-view> -->
             <div [fxLayout]="layout" [fxLayoutGap]="gap" [fxLayoutAlign]="align" fxFlex="1 1 100%">
-                <div mat-dialog-title>
-                    {{control.name}}
-                </div>
                 <div  fxFlexFill>
                     <div *ngFor="let child of controls; let index = index">
                         <div [ngSwitch]="getControlType(child.type!)" fxFlexFill>

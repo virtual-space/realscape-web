@@ -671,12 +671,6 @@ export class RnViewComponent implements OnInit, OnChanges {
       return attributes['views'].map((v:any) => {
         let item: Item = new Item();
         item.name = v['name'];
-        if('query' in v) {
-          item.attributes = {query: v['query']};
-        }
-        if('attributes' in v) {
-          item.attributes = Object.assign(item.attributes? item.attributes : {}, v['attributes']);
-        }
         const types = this.itemService.getTypes()
         if (types) {
           let type = types.find(t => t.name === v['type']);
@@ -684,6 +678,14 @@ export class RnViewComponent implements OnInit, OnChanges {
             item.type = type;
           }
         }
+        item.attributes = item.type?.attributes
+        if('attributes' in v) {
+          item.attributes = Object.assign(item.attributes? item.attributes : {}, v['attributes']);
+        }
+        if('query' in v) {
+          item.attributes = Object.assign(item.attributes? item.attributes : {}, {query: v['query']});
+        }
+        
         return item;
       });
     }
@@ -693,9 +695,10 @@ export class RnViewComponent implements OnInit, OnChanges {
   getItemControls(item: Item): Item[] {
     const attributes = this.itemService.collectItemAttributes(item, {});
     if ('controls' in attributes) {
+      const allTypes = this.itemService.getTypes();
       return attributes['controls'].map((v:any) => {
         let item: Item = {... v};
-        const type = this.itemService.getTypes().find(t => t.name === item.type);
+        const type = allTypes.find(t => t.name === v['type']);
         if (type) {
           item.type = type;
         }
