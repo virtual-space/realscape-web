@@ -669,9 +669,12 @@ export class RnViewComponent implements OnInit, OnChanges {
     if ('views' in attributes) {
       return attributes['views'].map((v:any) => {
         let item: Item = {... v};
-        const type = this.itemService.getTypes().find(t => t.name === item.type);
-        if (type) {
-          item.type = type;
+        const types = this.itemService.getTypes()
+        if (types) {
+          let type = types.find(t => t.name === item.type);
+          if (type) {
+            item.type = type;
+          }
         }
         return item;
       });
