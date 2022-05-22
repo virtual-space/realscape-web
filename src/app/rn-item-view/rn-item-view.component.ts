@@ -168,7 +168,7 @@ export class RnItemViewComponent extends RnViewComponent implements OnInit, OnCh
       view.id = this.item.id;
       view.attributes = {creatable_types: ["View"]};
       view.name = this.item.name! + " View"
-      this.onAdd(view);
+      this.onAddView(view);
     }
   }
 
@@ -180,11 +180,17 @@ export class RnItemViewComponent extends RnViewComponent implements OnInit, OnCh
 
   editView() {
     if (this.item) {
-      this.onEdit(this.views[this.activeViewIndex]);
+      this.onEditView(this.views[this.activeViewIndex]);
     }
   }
 
   editQuery() {
+    if (this.item) {
+      this.onEdit(this.item);
+    }
+  }
+
+  editViewQuery() {
     if (this.item) {
       this.onEdit(this.item);
     }
@@ -198,7 +204,7 @@ export class RnItemViewComponent extends RnViewComponent implements OnInit, OnCh
 
   deleteView() {
     if (this.item) {
-      this.onDelete(this.views[this.activeViewIndex]);
+      this.onDeleteView(this.views[this.activeViewIndex]);
     }
   }
 }

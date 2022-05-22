@@ -8,14 +8,14 @@
               </div>
               
               <div fxFlex="0 1 90%" fxLayoutAlign="center center">
-                <button mat-flat-button *ngIf="item" color="primary" ><mat-icon>{{item.type!.icon}}</mat-icon><span>{{item.name}}</span></button>
+                <button mat-flat-button *ngIf="item" color="primary" ><mat-icon>{{getIcon(item)}}</mat-icon><span>{{item.name}}</span></button>
               </div>
               
               <mat-menu #menu="matMenu">
                   <ng-container  *ngFor="let app of apps">
                       <ng-container [ngSwitch]="app!.type!.name">
                         <app-rn-login-view [login]="app" [button]="true" *ngSwitchCase="'LoginApp'"></app-rn-login-view>
-                        <button mat-menu-item color="primary" routerLinkActive="nav-active" routerLink="/items/{{app.id}}" *ngSwitchDefault><mat-icon>{{app.type!.icon}}</mat-icon><span>{{app.name}}</span></button>
+                        <button mat-menu-item color="primary" routerLinkActive="nav-active" routerLink="/items/{{app.id}}" *ngSwitchDefault><mat-icon>{{getIcon(app)}}</mat-icon><span>{{app.name}}</span></button>
                       </ng-container>
                   </ng-container>
               </mat-menu>
@@ -36,6 +36,10 @@
                     <mat-icon>edit</mat-icon>
                     <span>Edit Item</span>
                   </button>
+                  <button *ngIf="canEditOrDeleteItem()" mat-menu-item (click)="editQuery()">
+                    <mat-icon>search</mat-icon>
+                    <span>Edit Item Query</span>
+                  </button>
                   <button *ngIf="canEditOrDeleteItem()" mat-menu-item (click)="deleteItem()">
                     <mat-icon>delete</mat-icon>
                     <span>Delete Item</span>
@@ -46,11 +50,6 @@
                     <span>Upload File</span>
                   </button>
                   <input hidden type="file" #uploader (change)="importFile($event)"/>
-                  <mat-divider></mat-divider>
-                  <button *ngIf="canEditOrDeleteView()" mat-menu-item (click)="editQuery()">
-                    <mat-icon>search</mat-icon>
-                    <span>Edit Query</span>
-                  </button>
                   <mat-divider></mat-divider>
                   <button *ngIf="canAddView()" mat-menu-item (click)="addView()">
                     <mat-icon>add</mat-icon>
@@ -63,6 +62,10 @@
                   <button *ngIf="canEditOrDeleteView()" mat-menu-item (click)="deleteView()">
                     <mat-icon>delete</mat-icon>
                     <span>Delete View</span>
+                  </button>
+                  <button *ngIf="canEditOrDeleteView()" mat-menu-item (click)="editViewQuery()">
+                    <mat-icon>search</mat-icon>
+                    <span>Edit View Query</span>
                   </button>
                   <button mat-menu-item (click)="onRefreshClick()">
                     <mat-icon>refresh</mat-icon>
@@ -83,15 +86,15 @@
   
           <mat-tab *ngFor="let view of views; let index = index" [label]="view!.name!">
             <ng-template mat-tab-label>
-              <mat-icon class="tab-icon">{{view!.type!.icon}}</mat-icon>
+              <mat-icon class="tab-icon">{{getIcon(view)}}</mat-icon>
               {{view.name}}
-              <button mat-icon-button color="primary" *ngIf="allowEditingViews" [matMenuTriggerFor]="viewMenu"><mat-icon>more_vert</mat-icon></button>
+              <button mat-icon-button  *ngIf="canEditOrDeleteView()" [matMenuTriggerFor]="viewMenu"><mat-icon>more_vert</mat-icon></button>
               <mat-menu #viewMenu="matMenu" xPosition="before">
                 <button  mat-menu-item (click)="editView()">
                   <mat-icon>edit</mat-icon>
                   <span>Edit</span>
                 </button>
-                <button *ngIf="allowEditingViews" mat-menu-item (click)="deleteView()">
+                <button *ngIf="canEditOrDeleteView()" mat-menu-item (click)="deleteView()">
                   <mat-icon>delete</mat-icon>
                   <span>Delete</span>
                 </button>

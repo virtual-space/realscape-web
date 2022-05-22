@@ -1,14 +1,14 @@
 <mat-form-field fxFlexFill appearance="fill">
-    <mat-label>Tags</mat-label>
-    <mat-chip-list #chipListTags aria-label="Tag selection" [formControl]="formControl">
-      <mat-chip *ngFor="let tag of tags" (removed)="remove(tag)">
-        {{tag.name}}
+    <mat-label>Types</mat-label>
+    <mat-chip-list #chipListTypes aria-label="Type selection" [formControl]="formControl">
+      <mat-chip *ngFor="let type of types" (removed)="remove(type)">
+        {{type.name}}
         <button matChipRemove>
           <mat-icon>cancel</mat-icon>
         </button>
       </mat-chip>
-      <input placeholder="New tag..."
-             [matChipInputFor]="chipListTags"
+      <input placeholder="New type..."
+             [matChipInputFor]="chipListTypes"
              [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
              [matChipInputAddOnBlur]="addOnBlur"
              (matChipInputTokenEnd)="add($event)">

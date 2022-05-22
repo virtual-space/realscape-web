@@ -1,5 +1,5 @@
-<div fxFlex fxLayoutAlign="center center" class="table-container">
-    <table mat-table [dataSource]="dataSource" class="item-list-table">
+<div fxFlexFill fxLayoutAlign="center center" class="table-container" style="width: 100%;">
+    <table mat-table [dataSource]="dataSource" class="item-list-table" fxFlexFill style="width: 100%;">
   
       <!-- Icon Column -->
       <ng-container matColumnDef="icon">
@@ -62,7 +62,7 @@
       <ng-template [ngIf]="dataSource.data.length === 0">
         <tr mat-footer-row *matFooterRowDef="['noRecord']"></tr>
       </ng-template>
-      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-header-row *matHeaderRowDef="displayedColumns" ></tr>
       <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
     </table>
   </div>

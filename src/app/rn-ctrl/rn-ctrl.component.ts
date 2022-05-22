@@ -37,7 +37,7 @@ export class RnCtrlComponent implements OnInit {
         if(field_name === '' && this.control && this.control.name) {
           field_name = this.control.name.toLowerCase();
         }
-        if (field_name === 'tags') {
+        if (field_name === 'tags' || field_name === 'types') {
           this.formControl = new FormControl([]);
         } else {
           //const val = this.getValue();
@@ -70,6 +70,16 @@ export class RnCtrlComponent implements OnInit {
     return this.itemService.collectItemAttributes(item, attrs);
   }
 
+  getItemTypes(item: Item): Type[] {
+    const attributes = this.itemService.collectItemAttributes(item, {});
+    if ('types' in attributes) {
+      const names = new Set(attributes['types']);
+      const types = this.itemService.getTypes().filter(t => names.has(t.name));
+      return types;
+    }
+    return []
+  }
+
   getItemControls(item: Item): Item[] {
     const attributes = this.itemService.collectItemAttributes(item, {});
     if ('controls' in attributes) {
@@ -98,16 +108,17 @@ export class RnCtrlComponent implements OnInit {
   }
 
   getValue() {
-    if (this.control && this.control.attributes) {
-      if ('value' in this.control.attributes) {
-        return this.control.attributes['value'];
+    if (this.control) {
+      const control_attributes = this.collectItemAttributes(this.control, {});
+      if ('value' in control_attributes) {
+        return control_attributes['value'];
       }
       
       if (this.item) {
-
-        if (this.item.attributes && this.control.attributes) {
-          if ('target' in this.control.attributes) {
-            const target = this.control.attributes['target'];
+        const item_attributes = this.collectItemAttributes(this.item, {});
+        if (item_attributes && control_attributes) {
+          if ('target' in control_attributes) {
+            const target = control_attributes['target'];
             //console.log('target is ', target);
             if (target === "valid_from") {
               return this.item.valid_from;
@@ -122,8 +133,8 @@ export class RnCtrlComponent implements OnInit {
             } else if (target === "tags") {
               return this.item.tags? this.item.tags : [];
             }
-            if (target in this.item.attributes) {
-              return this.item.attributes[target];
+            if (target in item_attributes) {
+              return item_attributes[target];
             }
           }
         }

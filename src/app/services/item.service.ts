@@ -88,8 +88,12 @@ export class ItemService {
     );
   }*/
   public update(id: string, params: any): Observable<Item> {
+    let requestParams = Object.assign({attributes: {types: []} }, params);
+    if ('types' in params) {
+      requestParams.attributes.types = Object.assign(requestParams.attributes.types, params.types);
+    }
     console.log(params);
-    return this.http.put<Item>(this.getEndpoint() + '/' + id, params).pipe(
+    return this.http.put<Item>(this.getEndpoint() + '/' + id, requestParams).pipe(
       catchError(this.handleError('/items', []))
     );
   }
@@ -173,8 +177,8 @@ export class ItemService {
       if (query.public) {
         params = params.append('public', query.public.toString());
       }
-      if (query.myItems) {
-        params = params.append('my_items', query.myItems.toString());
+      if (query.my_items) {
+        params = params.append('my_items', query.my_items.toString());
       }
       if (query.parentId) {
         params = params.append('parent_id', query.parentId.toString());
@@ -230,12 +234,12 @@ export class ItemService {
       if ('radius' in item.attributes) {
         params = params.append('radius', item.attributes['radius']);
       }
-      if ('creatable_types' in item.attributes) {
-        item.attributes['creatable_types'].forEach((t:string) => {
+      if ('types' in item.attributes) {
+        item.attributes['types'].forEach((t:string) => {
           params = params.append('types', t);
         });
       }
-      if ('yags' in item.attributes) {
+      if ('tags' in item.attributes) {
         item.attributes['tags'].forEach((t:string) => {
           params = params.append('tags', t);
         });
@@ -370,12 +374,14 @@ export class ItemService {
   }
 
   public getTypeIcon(type: Type) : string {
-    if (type.icon) {
-      return type.icon;
+    if (type ) {
+      if (type.icon) {
+        return type.icon;
+      } else if (type.base) {
+        return this.getTypeIcon(type.base);
+      }
     }
-    if (type.base) {
-      return this.getTypeIcon(type.base);
-    }
+    
     return 'help_center';
   }
 
@@ -485,11 +491,11 @@ export class ItemService {
     let result = 'Show ';
     console.log(query);
 
-    if (query.public && query.myItems) {
+    if (query.public && query.my_items) {
       result += ' items ';
     } else if (query.public) {
       result += ' public items ';
-    } else if (query.myItems) {
+    } else if (query.my_items) {
       result += ' my items ';
     } else {
       result += ' items ';
@@ -685,7 +691,7 @@ export class Query {
   name?: string;
   public?: boolean;
   home?: boolean;
-  myItems?: boolean;
+  my_items?: boolean;
   children?: boolean;
   parentId?: string;
   lat?: number;

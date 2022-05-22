@@ -105,6 +105,7 @@ import { RnFuncCtrlComponent } from './rn-func-ctrl/rn-func-ctrl.component';
 import { RnUploadCtrlComponent } from './rn-upload-ctrl/rn-upload-ctrl.component';
 import { RnTabsCtrlComponent } from './rn-tabs-ctrl/rn-tabs-ctrl.component';
 import { RnTabCtrlComponent } from './rn-tab-ctrl/rn-tab-ctrl.component';
+import { RnTypesCtrlComponent } from './rn-types-ctrl/rn-types-ctrl.component';
 
 
 @NgModule({
@@ -170,7 +171,8 @@ import { RnTabCtrlComponent } from './rn-tab-ctrl/rn-tab-ctrl.component';
     RnFuncCtrlComponent,
     RnUploadCtrlComponent,
     RnTabsCtrlComponent,
-    RnTabCtrlComponent
+    RnTabCtrlComponent,
+    RnTypesCtrlComponent
   ],
   imports: [
     BrowserModule,

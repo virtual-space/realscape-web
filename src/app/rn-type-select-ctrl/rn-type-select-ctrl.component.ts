@@ -30,9 +30,9 @@ export class RnTypeSelectCtrlComponent  extends RnCtrlComponent implements OnIni
         }
       }
       //console.log('item ', this.item, ' attributes ', attributes);
-      if ('creatable_types' in attributes) {
+      if ('types' in attributes) {
           
-          const includedTypeNames: Set<string> = new Set(attributes['creatable_types']);
+          const includedTypeNames: Set<string> = new Set(attributes['types']);
           //console.log('************************* included type names ', includedTypeNames);
           //const includedTypes = new Set(types.filter(t => includedTypeNames.has(t.name)).map(t => t['id']));
           //this.types = this.types.filter(t => includedTypes.has(t['id']) || includedTypes.has(t['base_id']) );

@@ -80,6 +80,14 @@
                                 <app-rn-tags-ctrl  [item]="item" [control]="child"  [events]="events" [tabIndex]="tabIndex"></app-rn-tags-ctrl>
                             </ng-container>
                         </ng-container>
+                        <ng-container *ngSwitchCase="'TypesCtrl'">
+                            <ng-container *ngIf="formGroup">
+                                <app-rn-types-ctrl  [item]="item" [control]="child"  [formGroup]="formGroup"  [events]="events" [tabIndex]="tabIndex"></app-rn-types-ctrl>
+                            </ng-container>
+                            <ng-container *ngIf="!formGroup">
+                                <app-rn-types-ctrl  [item]="item" [control]="child"  [events]="events" [tabIndex]="tabIndex"></app-rn-types-ctrl>
+                            </ng-container>
+                        </ng-container>
                         <ng-container *ngSwitchCase="'DateCtrl'">
                             <ng-container *ngIf="formGroup">
                                 <app-rn-date-ctrl   [item]="item" [control]="child"  [formGroup]="formGroup"  [events]="events" [tabIndex]="tabIndex"></app-rn-date-ctrl>
