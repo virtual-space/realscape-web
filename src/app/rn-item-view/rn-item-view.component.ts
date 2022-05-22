@@ -49,7 +49,7 @@ export class RnItemViewComponent extends RnViewComponent implements OnInit, OnCh
   }
 
   retrieve(id: string): void {
-    console.log('*** retrieve ', id);
+    //console.log('*** retrieve ', id);
     this.itemService.getItem(id).subscribe(item => {
       if (item) {
         this.item = item;
@@ -59,7 +59,7 @@ export class RnItemViewComponent extends RnViewComponent implements OnInit, OnCh
   }
 
   refreshView(): void {
-    console.log('*** refreshView ***');
+    //console.log('*** refreshView ***');
     if (this.id) {
       this.retrieve(this.id);
     } else if(this.item) {
@@ -76,21 +76,28 @@ export class RnItemViewComponent extends RnViewComponent implements OnInit, OnCh
     this.views = this.getItemViews(item);
     this.query = this.getItemQuery(item);
     this.id = item.id;
-    if (item.items && item.items.length > 0) {
+    const active_view = this.views[this.activeViewIndex];
+    const view_query = this.getItemQuery(active_view);
+    console.log('*** query ', this.query);
+    console.log('*** view_query ', view_query);
+    if (view_query) {
+      view_query.parentId = this.id; 
+      this.itemService.items(view_query).subscribe(items => {
+        this.children = items;
+      });
+    } else if (item.items && item.items.length > 0) {
       console.log('children = items', item.items);
       this.children = item.items;
+    } else if (this.query) {
+      console.log('children = query')
+      this.itemService.items(this.query).subscribe(items => {
+        this.children = items;
+      });
     } else {
-      if (this.query) {
-        console.log('children = query')
-        this.itemService.items(this.query).subscribe(items => {
-          this.children = items;
-        });
-      } else {
-        console.log('children = chidlren')
-        this.itemService.children(this.id!).subscribe(children => {
-          this.children = children;
-        });
-      }
+      console.log('children = chidlren')
+      this.itemService.children(this.id!).subscribe(children => {
+        this.children = children;
+      });
     }
   }
 
@@ -128,6 +135,15 @@ export class RnItemViewComponent extends RnViewComponent implements OnInit, OnCh
     console.log(event);
     this.eventsSubject.next(event.index);
     this.activeViewIndex = event.index;
+    const active_view = this.views[this.activeViewIndex];
+    const view_query = this.getItemQuery(active_view);
+    console.log('view_query ', view_query, active_view);
+    if (view_query) {
+      view_query.parentId = this.id; 
+      this.itemService.items(view_query).subscribe(items => {
+        this.children = items;
+      });
+    }
   }
 
   getItemDefaultView(item?: Item) {

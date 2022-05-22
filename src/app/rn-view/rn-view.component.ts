@@ -5,7 +5,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { DomSanitizer } from '@angular/platform-browser';
 import { ActivatedRoute } from '@angular/router';
-import { Observable, Subscription } from 'rxjs';
+import { Observable, of, Subscription } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { QrCodeComponent } from '../qr-code/qr-code.component';
 import { RnDialogComponent } from '../rn-dialog/rn-dialog.component';
@@ -655,23 +655,31 @@ export class RnViewComponent implements OnInit, OnChanges {
 
   getItemQuery(item: Item): Query | undefined {
     const attributes = this.itemService.collectItemAttributes(item, {});
-    console.log(attributes);
+    console.log(item, attributes);
     let query = undefined;
-    if ('query' in attributes) {
+    if ('query' in attributes && Object.keys(attributes['query']).length > 0) {
         query = {... attributes['query']};
-        console.log(query);
+        //console.log(query);
     }
     return query;
   }
+  
 
   getItemViews(item: Item): Item[] {
     const attributes = this.itemService.collectItemAttributes(item, {});
     if ('views' in attributes) {
       return attributes['views'].map((v:any) => {
-        let item: Item = {... v};
+        let item: Item = new Item();
+        item.name = v['name'];
+        if('query' in v) {
+          item.attributes = {query: v['query']};
+        }
+        if('attributes' in v) {
+          item.attributes = Object.assign(item.attributes? item.attributes : {}, v['attributes']);
+        }
         const types = this.itemService.getTypes()
         if (types) {
-          let type = types.find(t => t.name === item.type);
+          let type = types.find(t => t.name === v['type']);
           if (type) {
             item.type = type;
           }

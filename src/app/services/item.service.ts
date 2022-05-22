@@ -166,7 +166,7 @@ export class ItemService {
 */
   private getParams(query: Query): HttpParams {
     let params = new HttpParams();
-    console.log(query);
+    //console.log(query);
     if (query) {
       if (query.name) {
         params = params.append('name', query.name);
