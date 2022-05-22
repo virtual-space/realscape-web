@@ -303,7 +303,7 @@ export class ItemService {
   public types(): Observable<[Type]> {
     let url = this.getAccessibleEndpoint(true);
     if (this.authService.isLoggedIn()) {
-      url = url + '/types';
+      url = url + 'types';
     } else {
       url = url + '/public/types';
     }
