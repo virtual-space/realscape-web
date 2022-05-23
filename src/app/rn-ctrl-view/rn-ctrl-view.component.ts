@@ -24,9 +24,9 @@ export class RnCtrlViewComponent extends RnViewComponent implements OnInit, OnCh
     //console.log('*************************************** ctrl view init', this.control);
     console.log(this);
     if(this.control) {
-      console.log('*** control ', this.control);
+      //console.log('*** control ', this.control);
       this.controls = this.getItemControls(this.control);
-      console.log('*** controls ', this.controls);
+      //console.log('*** controls ', this.controls);
       /*if(this.control.id) {
         this.itemService.children(this.control.id).subscribe(children => {
           //this.controls = children.filter(child => !child.type!.name!.endsWith("Ctrl"));

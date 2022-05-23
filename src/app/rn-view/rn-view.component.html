@@ -44,12 +44,6 @@
   <div *ngSwitchCase="'TreeView'">
     <app-rn-tree-view [items]="items"  (onEvent)="onEvent" (onRefresh)="childRefresh()"></app-rn-tree-view>
   </div>
-  <div *ngSwitchCase="'EditView'">
-    <app-rn-edit-item-view [item]="item"  (onEvent)="onEvent" (onRefresh)="childRefresh()"></app-rn-edit-item-view>
-  </div>
-  <div *ngSwitchCase="'CreateView'">
-    <app-rn-create-item-view [item]="item"  (onEvent)="onEvent" (onRefresh)="childRefresh()"></app-rn-create-item-view>
-  </div>
   <div *ngSwitchCase="'ItemView'">
     <app-rn-item-view [item]="getItemViewTarget(items)"  (onEvent)="onEvent" (onRefresh)="childRefresh()"></app-rn-item-view>
   </div>

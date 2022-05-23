@@ -72,10 +72,7 @@ import { RnCardsViewComponent } from './rn-cards-view/rn-cards-view.component';
 import { RnTreeViewComponent } from './rn-tree-view/rn-tree-view.component';
 import { RnButtonViewComponent } from './rn-button-view/rn-button-view.component';
 import { RnLabelViewComponent } from './rn-label-view/rn-label-view.component';
-import { EditViewComponent } from './edit-view/edit-view.component';
-import { LocationComponent } from './location/location.component';
 import { MatSelectModule } from '@angular/material/select';
-import { EditQueryComponent } from './edit-query/edit-query.component';
 import { QrCodeComponent } from './qr-code/qr-code.component';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { RnCtrlViewComponent } from './rn-ctrl-view/rn-ctrl-view.component';
@@ -94,8 +91,6 @@ import { RnItemCtrlComponent } from './rn-item-ctrl/rn-item-ctrl.component';
 import { RnCtrlComponent } from './rn-ctrl/rn-ctrl.component';
 import { RnTypeSelectCtrlComponent } from './rn-type-select-ctrl/rn-type-select-ctrl.component';
 import { RnItemSelectCtrlComponent } from './rn-item-select-ctrl/rn-item-select-ctrl.component';
-import { RnEditItemViewComponent } from './rn-edit-item-view/rn-edit-item-view.component';
-import { RnCreateItemViewComponent } from './rn-create-item-view/rn-create-item-view.component';
 import { RnFormCtrlComponent } from './rn-form-ctrl/rn-form-ctrl.component';
 import { RnSelectCtrlComponent } from './rn-select-ctrl/rn-select-ctrl.component';
 import { RnDialogComponent } from './rn-dialog/rn-dialog.component';
@@ -141,9 +136,6 @@ import { RnTypesCtrlComponent } from './rn-types-ctrl/rn-types-ctrl.component';
     RnTreeViewComponent,
     RnButtonViewComponent,
     RnLabelViewComponent,
-    EditViewComponent,
-    LocationComponent,
-    EditQueryComponent,
     QrCodeComponent,
     RnCtrlViewComponent,
     RnEditCtrlComponent,
@@ -161,8 +153,6 @@ import { RnTypesCtrlComponent } from './rn-types-ctrl/rn-types-ctrl.component';
     RnCtrlComponent,
     RnTypeSelectCtrlComponent,
     RnItemSelectCtrlComponent,
-    RnEditItemViewComponent,
-    RnCreateItemViewComponent,
     RnFormCtrlComponent,
     RnSelectCtrlComponent,
     RnDialogComponent,

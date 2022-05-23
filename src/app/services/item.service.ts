@@ -171,26 +171,20 @@ export class ItemService {
       if (query.name) {
         params = params.append('name', query.name);
       }
-      if (query.home) {
-        params = params.append('home', query.home);
+      if (query.valid_from) {
+        params = params.append('valid_from', query.valid_from.toDateString());
       }
-      if (query.public) {
-        params = params.append('public', query.public.toString());
+      if (query.valid_to) {
+        params = params.append('valid_from', query.valid_to.toDateString());
       }
-      if (query.my_items) {
-        params = params.append('my_items', query.my_items.toString());
+      if (query.status) {
+        params = params.append('status', query.status);
       }
-      if (query.parentId) {
-        params = params.append('parent_id', query.parentId.toString());
+      if (query.parent_id) {
+        params = params.append('parent_id', query.parent_id.toString());
       }
-      if (query.lat) {
-        params = params.append('lat', query.lat.toString());
-      }
-      if (query.lng) {
-        params = params.append('lng', query.lng.toString());
-      }
-      if (query.radius) {
-        params = params.append('radius', query.radius.toString());
+      if (query.location) {
+        params = params.append('location', JSON.stringify(query.location));
       }
       if (query.types && query.types.length > 0) {
         query.types.forEach(t => {
@@ -488,18 +482,8 @@ export class ItemService {
   }
 
   getQueryString(query: Query): string {
-    let result = 'Show ';
+    let result = 'Show items ';
     console.log(query);
-
-    if (query.public && query.my_items) {
-      result += ' items ';
-    } else if (query.public) {
-      result += ' public items ';
-    } else if (query.my_items) {
-      result += ' my items ';
-    } else {
-      result += ' items ';
-    }
 
     if (query.types && query.types.length > 0) {
       result += ' of type ';
@@ -518,8 +502,8 @@ export class ItemService {
         result += t + ',';
       });
     }
-    if (query.lat && query.lng) {
-      result += ' in ' + query.radius + ' m radius around ' + query.lat.toFixed(4) + ', ' + query.lng.toFixed(4);
+    if (query.location) {
+      result += ' in ' + JSON.stringify(query.location);
     }
     return result;
   }
@@ -689,14 +673,11 @@ export class Query {
   types?: string[];
   tags?: string[];
   name?: string;
-  public?: boolean;
-  home?: boolean;
-  my_items?: boolean;
-  children?: boolean;
-  parentId?: string;
-  lat?: number;
-  lng?: number;
-  radius?: number;
+  parent_id?: string;
+  location?: any;
+  valid_from?: Date;
+  valid_to?: Date;
+  status?: string;
 }
 
 export class ItemEvent {

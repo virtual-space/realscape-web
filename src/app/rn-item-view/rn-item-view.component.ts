@@ -81,7 +81,7 @@ export class RnItemViewComponent extends RnViewComponent implements OnInit, OnCh
     console.log('*** query ', this.query);
     console.log('*** view_query ', view_query);
     if (view_query) {
-      view_query.parentId = this.id; 
+      view_query.parent_id = this.id; 
       this.itemService.items(view_query).subscribe(items => {
         this.children = items;
       });
@@ -139,7 +139,7 @@ export class RnItemViewComponent extends RnViewComponent implements OnInit, OnCh
     const view_query = this.getItemQuery(active_view);
     console.log('view_query ', view_query, active_view);
     if (view_query) {
-      view_query.parentId = this.id; 
+      view_query.parent_id = this.id; 
       this.itemService.items(view_query).subscribe(items => {
         this.children = items;
       });
@@ -202,13 +202,13 @@ export class RnItemViewComponent extends RnViewComponent implements OnInit, OnCh
 
   editQuery() {
     if (this.item) {
-      this.onEdit(this.item);
+      this.onEditQuery(this.item);
     }
   }
 
   editViewQuery() {
     if (this.item) {
-      this.onEdit(this.item);
+      this.onEditViewQuery(this.views[this.activeViewIndex]);
     }
   }
 

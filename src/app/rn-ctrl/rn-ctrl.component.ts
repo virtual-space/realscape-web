@@ -89,7 +89,7 @@ export class RnCtrlComponent implements OnInit {
         if (type) {
           item.type = type;
         }
-        console.log(item);
+        //console.log(item);
         return item;
       });
     }

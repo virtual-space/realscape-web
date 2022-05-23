@@ -26,26 +26,15 @@ export class RnItemSelectCtrlComponent extends RnCtrlComponent implements OnInit
     override ngOnInit(): void {
       if (this.item) {
         let types = this.itemService.getTypes();
-        let creatable_types = types.filter(t => this.collectTypeAttributes(t, {})['creatable'] === 'true');
-        this.linkType = creatable_types.find(t => t.name === 'Link');
+        this.linkType = types.find(t => t.name === 'Link');
         if (this.linkType)
         {
+          let attributes = this.collectItemAttributes(this.item, {});
           let query = new Query();
-          query.my_items = true;
-          if (this.item && this.item.attributes && 'creatable_types' in this.item.attributes) {
-            const includedTypeNames: Set<string> = new Set(this.item.attributes['creatable_types']);
-            const includedTypes:Type[] = [];
-            for (let type of types) {
-              for(let type_name of includedTypeNames) {
-                if (isInstanceOf(type, type_name)) {
-                  includedTypes.push(type);  
-                  break;
-                }
-              }
-            } 
-            creatable_types = includedTypes;
+          if ('types' in attributes) {
+            query.types = attributes['types'];
           }
-          query.types = creatable_types.map(c => c.name!);
+          
           this.itemService.items(query).subscribe(items => {
               this.items = items;
               if (this.items.length > 0) {

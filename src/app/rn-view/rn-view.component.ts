@@ -483,6 +483,164 @@ export class RnViewComponent implements OnInit, OnChanges {
     
   }
 
+  onEditQuery(item: Item) {
+    if(this.canEditOrDeleteItem()) {
+      this.itemService.dialogs().subscribe(dialogs => {
+        if (dialogs) {
+          const editDialogs = dialogs.filter(d => itemIsInstanceOf(d, 'ItemEditDialog'));
+  
+          if (editDialogs) {
+            const dialog = editDialogs[0];
+  
+            if (dialog && dialog.items) {
+              const form = dialog.items.find(d => itemIsInstanceOf(d, 'FormCtrl'));
+              const item_query = this.getItemQuery(item);
+              if (form) {
+                let query = this.itemFromQuery(item_query ? item_query : new Item() );
+
+                const dialogRef = this.dialog.open(RnDialogComponent, {
+                  width: '95vw',
+                  height: '75vh',
+                  data: {item: query, view: form}
+                });
+      
+                dialogRef.afterClosed().subscribe(result => {
+                  if (result) {
+                    console.log(result);
+                    this.uploading = true;
+          
+                    if (result.file) {
+                      this.uploadingFile = true;
+                      this.uploadProgress = 0;
+                    }
+                    let result_item: Item = {...result.data};
+                    if ('types' in result.data) {
+                      result_item.attributes = Object.assign(result_item.attributes? result_item.attributes : {}, {types: result.data['types']});
+                    }      
+                    let attr_data = Object.assign(this.item!.attributes, {query: this.queryFromItem(result_item)});
+                    this.itemService.update(this.item!.id!,{attributes: attr_data} ).subscribe(
+                        (res) => {
+                          if (res && res['id']) {
+                            console.log(`Success updated item id: ${res['id']}`);
+                            if(this.onRefresh) {
+                              this.onRefresh.emit();
+                            }
+                          }
+                        },
+                        (err) => {
+                          this.uploadingFile = false;
+                          this.uploadProgress = 0;
+                          this.uploading = false;
+                          this.snackBar.open(err['error']['Error'], 'Dismiss');
+                        },
+                        () => {
+                          this.uploadingFile = false;
+                          this.uploadProgress = 0;
+                          this.uploading = false;
+                          if(this.onRefresh) {
+                            this.onRefresh.emit();
+                          }
+                        });
+                  }
+                });
+              }
+            }
+          }
+        } 
+      });
+    }
+    
+  }
+
+  onEditViewQuery(item: Item) {
+    if(this.canEditOrDeleteView()) {
+      this.itemService.dialogs().subscribe(dialogs => {
+        if (dialogs) {
+          const editDialogs = dialogs.filter(d => itemIsInstanceOf(d, 'ItemEditDialog'));
+  
+          if (editDialogs) {
+            const dialog = editDialogs[0];
+  
+            if (dialog && dialog.items) {
+              const form = dialog.items.find(d => itemIsInstanceOf(d, 'FormCtrl'));
+              if (form) {
+                const target_view = this.getItemViews(this.item!).find(v => v.name === item.name && v.type!.name === item.type!.name!);
+                if(target_view) {
+                  const view_query = this.getItemQuery(target_view);
+                  const query = this.itemFromQuery(view_query ? view_query : new Item());
+                  const dialogRef = this.dialog.open(RnDialogComponent, {
+                    width: '95vw',
+                    height: '75vh',
+                    data: {item: query, view: form}
+                  });
+        
+                  dialogRef.afterClosed().subscribe(result => {
+                    if (result) {
+                      console.log(result);
+                      this.uploading = true;
+            
+                      if (result.file) {
+                        this.uploadingFile = true;
+                        this.uploadProgress = 0;
+                      }
+
+                      let result_item: Item = {...result.data};
+                      if ('types' in result.data) {
+                        result_item.attributes = Object.assign(result_item.attributes? result_item.attributes : {}, {types: result.data['types']});
+                      }                            
+                      let views = this.getItemViews(this.item!).map(v => { return {name: v.name, type: v.type!.name, attributes: v.attributes}});
+                      const view = views.find(v => v.name === item.name && v.type === item.type!.name!);
+                      console.log(view);
+                      if(view) {
+                        view.attributes = Object.assign(view.attributes? view.attributes : {}, {query: this.queryFromItem(result_item)});
+                      }
+                      
+                      let result_views: any[] = [];
+                      views.forEach(v => {
+                        let result_view: any = {}
+                        result_view['name'] = v.name;
+                        result_view['type'] = v.type;
+                        if (v.attributes && 'query' in v.attributes) {
+                          result_view['query'] = v.attributes['query'];
+                        }
+                        result_views.push(result_view);
+                      });
+                      let attr_data = Object.assign(this.item!.attributes, {views: result_views});
+                      this.itemService.update(this.item!.id!,{attributes: attr_data} ).subscribe(
+                          (res) => {
+                            if (res && res['id']) {
+                              console.log(`Success created item id: ${res['id']}`);
+                              if(this.onRefresh) {
+                                this.onRefresh.emit();
+                              }
+                            }
+                          },
+                          (err) => {
+                            this.uploadingFile = false;
+                            this.uploadProgress = 0;
+                            this.uploading = false;
+                            this.snackBar.open(err['error']['Error'], 'Dismiss');
+                          },
+                          () => {
+                            this.uploadingFile = false;
+                            this.uploadProgress = 0;
+                            this.uploading = false;
+                            if(this.onRefresh) {
+                              this.onRefresh.emit();
+                            }
+                          });
+                    }
+                  });
+                }
+              }
+            }
+          }
+        } 
+      });
+    }
+    
+  }
+
   importFile(event: any) {
     if (this.item && this.item.id) {
       this.itemService.importFile(this.item.id, event.target.files[0]).subscribe(
@@ -653,15 +811,76 @@ export class RnViewComponent implements OnInit, OnChanges {
     return true;
   }
 
+  itemFromQuery(query: Query): Item {
+    const result = new Item();
+    const types = this.itemService.getTypes()
+    if (types) {
+      let type = types.find(t => t.name === 'Query');
+      if (type) {
+        result.type = type;
+      }
+    }
+    if (query.name) {
+      result.name = query.name;
+    }
+    if(query.types) {
+      result.attributes = {types: query.types};
+    }
+    if(query.location) {
+      result.location = query.location;
+    }
+    if(query.tags) {
+      result.tags = query.tags;
+    }
+    if(query.valid_from) {
+      result.valid_from = query.valid_from;
+    }
+    if(query.valid_to) {
+      result.valid_to = query.valid_to;
+    }
+    if(query.status) {
+      result.status = query.status;
+    }
+    return result;
+  }
+
+  queryFromItem(item: Item): Query {
+    const result = new Query();
+    if (item.name) {
+      result.name = item.name;
+    }
+    if(item.attributes) {
+      if ('types' in item.attributes) {
+        result.types = item.attributes['types'];
+      }
+    }
+    if(item.location) {
+      result.location = item.location;
+    }
+    if(item.tags) {
+      result.tags = item.tags;
+    }
+    if(item.valid_from) {
+      result.valid_from = item.valid_from;
+    }
+    if(item.valid_to) {
+      result.valid_to = item.valid_to;
+    }
+    if(item.status) {
+      result.status = item.status;
+    }
+    return result;
+  }
+
   getItemQuery(item: Item): Query | undefined {
     const attributes = this.itemService.collectItemAttributes(item, {});
     console.log(item, attributes);
-    let query = undefined;
     if ('query' in attributes && Object.keys(attributes['query']).length > 0) {
-        query = {... attributes['query']};
-        //console.log(query);
+      let query: Query = new Query();
+      query = {... attributes['query']};
+      return query;
     }
-    return query;
+    return undefined;
   }
   
 
