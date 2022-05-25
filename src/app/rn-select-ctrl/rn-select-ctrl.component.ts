@@ -1,5 +1,6 @@
 import { Component, OnInit, SimpleChanges } from '@angular/core';
 import { RnCtrlComponent } from '../rn-ctrl/rn-ctrl.component';
+import { Item } from '../services/item.service';
 
 interface SelectItem {
   value: string;
@@ -36,11 +37,8 @@ export class RnSelectCtrlComponent  extends RnCtrlComponent implements OnInit {
     }
   }
 
-  ngOnChanges(changes: SimpleChanges): void {
-    if(changes['item']) {
-      console.log('item changed', changes);
-      this.rebuildSelect();
-    }
+  override itemChanged(item?: Item): void {
+    this.rebuildSelect();
   }
 
 }

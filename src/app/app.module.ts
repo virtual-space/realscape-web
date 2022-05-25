@@ -17,6 +17,7 @@ import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
 
 import { FlexLayoutModule } from '@angular/flex-layout';
 
+import { MatExpansionModule } from '@angular/material/expansion'
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatToolbarModule } from '@angular/material/toolbar';
@@ -75,7 +76,6 @@ import { RnLabelViewComponent } from './rn-label-view/rn-label-view.component';
 import { MatSelectModule } from '@angular/material/select';
 import { QrCodeComponent } from './qr-code/qr-code.component';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
-import { RnCtrlViewComponent } from './rn-ctrl-view/rn-ctrl-view.component';
 import { RnEditCtrlComponent } from './rn-edit-ctrl/rn-edit-ctrl.component';
 import { RnAttrsCtrlComponent } from './rn-attrs-ctrl/rn-attrs-ctrl.component';
 import { RnLocationCtrlComponent } from './rn-location-ctrl/rn-location-ctrl.component';
@@ -101,6 +101,9 @@ import { RnUploadCtrlComponent } from './rn-upload-ctrl/rn-upload-ctrl.component
 import { RnTabsCtrlComponent } from './rn-tabs-ctrl/rn-tabs-ctrl.component';
 import { RnTabCtrlComponent } from './rn-tab-ctrl/rn-tab-ctrl.component';
 import { RnTypesCtrlComponent } from './rn-types-ctrl/rn-types-ctrl.component';
+import { RnCodeCtrlComponent } from './rn-code-ctrl/rn-code-ctrl.component';
+import { RnExpCtrlComponent } from './rn-exp-ctrl/rn-exp-ctrl.component';
+import { RnAccordionCtrlComponent } from './rn-accordion-ctrl/rn-accordion-ctrl.component';
 
 
 @NgModule({
@@ -137,7 +140,6 @@ import { RnTypesCtrlComponent } from './rn-types-ctrl/rn-types-ctrl.component';
     RnButtonViewComponent,
     RnLabelViewComponent,
     QrCodeComponent,
-    RnCtrlViewComponent,
     RnEditCtrlComponent,
     RnAttrsCtrlComponent,
     RnLocationCtrlComponent,
@@ -162,7 +164,10 @@ import { RnTypesCtrlComponent } from './rn-types-ctrl/rn-types-ctrl.component';
     RnUploadCtrlComponent,
     RnTabsCtrlComponent,
     RnTabCtrlComponent,
-    RnTypesCtrlComponent
+    RnTypesCtrlComponent,
+    RnCodeCtrlComponent,
+    RnExpCtrlComponent,
+    RnAccordionCtrlComponent
   ],
   imports: [
     BrowserModule,
@@ -177,6 +182,7 @@ import { RnTypesCtrlComponent } from './rn-types-ctrl/rn-types-ctrl.component';
       provide: DateAdapter,
       useFactory: adapterFactory,
     }),
+    MatExpansionModule,
     MatToolbarModule,
     MatButtonModule,
     MatIconModule,

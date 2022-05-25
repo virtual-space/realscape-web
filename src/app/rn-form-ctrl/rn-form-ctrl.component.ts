@@ -9,18 +9,18 @@ import { Item, ItemEvent, itemIsInstanceOf, Type } from '../services/item.servic
   styleUrls: ['./rn-form-ctrl.component.sass']
 })
 export class RnFormCtrlComponent extends RnCtrlComponent implements OnInit {
-    @Input() layout?: string = "column";
-    @Input() align?: string = "center center";
-    @Input() gap?: string = "1%";
     form_group = new FormGroup({});
     actuators: Item[] = [];
-    controls: Item[] = [];
     buttons: Item[] = [];
+    views: Item[] = [];
 
     override ngOnInit(): void {
       //console.log(this);
       this.controls = this.getControls();
       this.buttons = this.getButtons();
+      this.views = [];
+      console.log(this.getItemViews(this.item!));
+      console.log(this.getItemViews(this.control!));
       this.rebuildControls();
       //console.log(this);
     }
@@ -80,24 +80,9 @@ export class RnFormCtrlComponent extends RnCtrlComponent implements OnInit {
         }*/
       //console.log(this.controls);
     }
-
-    getControlAttribute(key: string, def?: string, control?: Item): string | undefined {
-      if(control) {
-         if(control.attributes) {
-           const ret = control.attributes[key];
-           if (ret) {
-             return ret;
-           }
-         }
-      } 
   
-      return def;
-    }
-  
-    ngOnChanges(changes: SimpleChanges): void {
-      if(changes['item']) {
-        this.rebuildControls();
-      }
+    override itemChanged(item?: Item): void {
+      this.rebuildControls();
     }
 
     getButtons(): Item[] {

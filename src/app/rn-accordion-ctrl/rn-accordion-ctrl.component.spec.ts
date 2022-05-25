@@ -1,20 +1,20 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { RnCtrlViewComponent } from './rn-ctrl-view.component';
+import { RnAccordionCtrlComponent } from './rn-accordion-ctrl.component';
 
-describe('RnCtrlViewComponent', () => {
-  let component: RnCtrlViewComponent;
-  let fixture: ComponentFixture<RnCtrlViewComponent>;
+describe('RnAccordionCtrlComponent', () => {
+  let component: RnAccordionCtrlComponent;
+  let fixture: ComponentFixture<RnAccordionCtrlComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ RnCtrlViewComponent ]
+      declarations: [ RnAccordionCtrlComponent ]
     })
     .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(RnCtrlViewComponent);
+    fixture = TestBed.createComponent(RnAccordionCtrlComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

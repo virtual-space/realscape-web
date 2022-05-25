@@ -1,4 +1,5 @@
-<mat-form-field appearance="fill" fxFlexFill *ngIf="control">
+<div fxFlexFill fxLayoutAlign="center center">
+  <mat-form-field appearance="fill" fxFlex *ngIf="control">
     <mat-label>{{control.name}}</mat-label>
     <mat-select [(ngModel)]="selectedValue" name="select" [formControl]="formControl">
       <mat-option *ngFor="let selectItem of selectItems" [value]="selectItem.value">
@@ -6,3 +7,5 @@
       </mat-option>
     </mat-select>
   </mat-form-field>
+</div>
+

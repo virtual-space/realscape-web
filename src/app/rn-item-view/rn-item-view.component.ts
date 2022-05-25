@@ -30,6 +30,12 @@ export class RnItemViewComponent extends RnViewComponent implements OnInit, OnCh
 
   override ngOnInit(): void {
     //console.log('item-view init ', this.item);
+    this.sessionService.itemActivated$.subscribe(item => {
+        this.itemChanged(item);
+    });
+    this.sessionService.itemsActivated$.subscribe(items => {
+      this.itemsChanged(items);
+    });
     this.onRefresh.subscribe(e => {
       this.refreshView();
     });
@@ -67,6 +73,15 @@ export class RnItemViewComponent extends RnViewComponent implements OnInit, OnCh
     }
   }
 
+  refreshItems(items: Item[]) {
+    console.log('*** refresh_items ***');
+    this.items = [...items];
+    if (this.item) {
+      this.item.items = [...items];
+      this.reloadItem(this.item);
+    }
+  }
+
   onRefreshClick(): void {
     this.refreshView();
   }
@@ -84,21 +99,26 @@ export class RnItemViewComponent extends RnViewComponent implements OnInit, OnCh
       view_query.parent_id = this.id; 
       this.itemService.items(view_query).subscribe(items => {
         this.children = items;
+        this.sessionService.activateItems(this.children);
       });
     } else if (item.items && item.items.length > 0) {
       console.log('children = items', item.items);
-      this.children = item.items;
+      this.children = [...item.items];
+      this.sessionService.activateItems(this.children);
     } else if (this.query) {
       console.log('children = query')
       this.itemService.items(this.query).subscribe(items => {
         this.children = items;
+        this.sessionService.activateItems(this.children);
       });
     } else {
       console.log('children = chidlren')
       this.itemService.children(this.id!).subscribe(children => {
         this.children = children;
+        this.sessionService.activateItems(this.children);
       });
     }
+    this.sessionService.activateItem(item);
   }
 
   shouldShowChildren(item: Item): boolean {
@@ -222,5 +242,18 @@ export class RnItemViewComponent extends RnViewComponent implements OnInit, OnCh
     if (this.item) {
       this.onDeleteView(this.views[this.activeViewIndex]);
     }
+  }
+
+  override itemChanged(item?: Item): void {
+    console.log("*** item_view item_changed ***");
+    if (item) {
+     // this.sessionService.activateItem(item);
+    }
+    
+  }
+
+  override itemsChanged(items?: Item[]): void {
+    console.log("*** item_view items_changed ***");
+    //this.sessionService.activateItems(items);
   }
 }

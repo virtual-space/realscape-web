@@ -13,43 +13,41 @@ import { RnMsgBoxComponent } from '../rn-msg-box/rn-msg-box.component';
 import { AuthService } from '../services/auth.service';
 import { Item, ItemEvent, itemIsInstanceOf, ItemService, Query } from '../services/item.service';
 import { ViewContainerRef } from '@angular/core';
+import { RnCtrlComponent, ItemCallbacks } from '../rn-ctrl/rn-ctrl.component';
+import { basename } from 'path';
 
 @Component({
   selector: 'app-rn-view',
   templateUrl: './rn-view.component.html',
   styleUrls: ['./rn-view.component.sass']
 })
-export class RnViewComponent implements OnInit, OnChanges {
+export class RnViewComponent extends RnCtrlComponent implements OnInit, OnChanges, ItemCallbacks {
 
+  private _items: Item[] = [];
+
+  @Input() set items(value: Item[]) {
+    this._items = value;
+    this.itemsChanged(this._items);
+  }
+  get items(): Item[] {
+    // other logic
+    return this._items;
+  }
   @Input() view?: Item;
-  @Input() items: Item[] = [];
-  @Input() item?: Item;
-  @Input() events?: Observable<number>;
-  @Input() tabIndex?: number;
-  @Output() onEvent = new EventEmitter<ItemEvent>();
-  @Output() onRefresh = new EventEmitter();
-  
+
   public isControl: boolean = false;
 
   uploadProgress = 0;
   uploadingFile = false;
   uploading = false;
 
-  constructor(protected itemService: ItemService,
-              protected authService: AuthService,
-              protected sanitizer: DomSanitizer,
-              protected route: ActivatedRoute,
-              protected dialog: MatDialog,
-              protected snackBar: MatSnackBar,
-              public viewContainerRef: ViewContainerRef) { }
+  
 
-  ngOnInit(): void {
-    //console.log('*************************************** hello from view');
-    //console.log(this.item);
-    
+  protected override initialize(): void {
     if (this.view) {
       this.isControl = itemIsInstanceOf(this.view, "CtrlView");
-    }
+      this.controls = this.getItemControls(this.view);
+    } 
   }
 
   getIcon(item: Item) {
@@ -79,11 +77,10 @@ export class RnViewComponent implements OnInit, OnChanges {
     return undefined;
   }
 
-  ngOnChanges(changes: SimpleChanges): void {
-    if(changes['item']) {
-      //console.log('*************************************** hello from view changed!!!');
-      //console.log(this.item);
-    }
+  
+
+  updateItems(items: Item[]) {
+
   }
 
   onEventHandler(event: ItemEvent) {
@@ -217,6 +214,28 @@ export class RnViewComponent implements OnInit, OnChanges {
     return true;
   }
 
+  getUpdateParams(item: Item) {
+    console.log("&&& getUpdateParams &&&", item);
+    const params: {[index: string]: any} = {};
+    let attrs = item.attributes? item.attributes : {};
+    params['attributes'] = attrs;
+    if (item.type) {
+      params['type'] = item.type.name!;
+    }
+    if ('name' in attrs) {
+        params['name'] = attrs['name'];
+        delete attrs['name'];
+    } else if(item.name) {
+      params['name'] = item.name;
+    }
+    if (item.parent_id) {
+      params['parent_id'] = item.parent_id
+    } else if (this.item) {
+      params['parent_id'] = this.item.id
+    }
+    return params;
+  }
+
   onAdd(item?: Item) {
     if (this.canAddItem()) {
       //console.log(item);
@@ -229,7 +248,7 @@ export class RnViewComponent implements OnInit, OnChanges {
 
             if (dialog && dialog.items) {
 
-              const form = dialog.items.find(d => itemIsInstanceOf(d, 'FormCtrl'));
+              const form = dialog.items.find(d => itemIsInstanceOf(d, 'Ctrl'));
               if (form) {
                 const dialogRef = this.dialog.open(RnDialogComponent, {
                   width: '95vw',
@@ -247,11 +266,8 @@ export class RnViewComponent implements OnInit, OnChanges {
                       this.uploadProgress = 0;
                     }
                     
-                    if (item) {
-                      result.data['parent_id'] = item.id;
-                    }
                     console.log(result.data);
-                    this.itemService.create(result.data, (progress) => { this.uploadProgress = progress }).subscribe(
+                    this.itemService.create(this.getUpdateParams(result.item), (progress) => { this.uploadProgress = progress }).subscribe(
                       (res) => {
                         if (res && res['id']) {
                           console.log(`Success created item id: ${res['id']}`);
@@ -297,7 +313,7 @@ export class RnViewComponent implements OnInit, OnChanges {
 
             if (dialog && dialog.items) {
 
-              const form = dialog.items.find(d => itemIsInstanceOf(d, 'FormCtrl'));
+              const form = dialog.items.find(d => itemIsInstanceOf(d, 'Ctrl'));
               if (form) {
                 const dialogRef = this.dialog.open(RnDialogComponent, {
                   width: '95vw',
@@ -364,7 +380,7 @@ export class RnViewComponent implements OnInit, OnChanges {
             const dialog = editDialogs[0];
   
             if (dialog && dialog.items) {
-              const form = dialog.items.find(d => itemIsInstanceOf(d, 'FormCtrl'));
+              const form = dialog.items.find(d => itemIsInstanceOf(d, 'Ctrl'));
               if (form) {
                 const dialogRef = this.dialog.open(RnDialogComponent, {
                   width: '95vw',
@@ -388,11 +404,9 @@ export class RnViewComponent implements OnInit, OnChanges {
                     }
                     console.log(attrs);
                     
-                    let arg = Object.assign({id: item.id},{attributes: attrs});
-                    arg = Object.assign(arg, result.data);
-                    console.log(arg);
+                    let arg = this.getUpdateParams(result.item);
                     //console.log(arg);
-                    this.itemService.update(arg.id!, arg).subscribe(res => {
+                    this.itemService.update(item.id!, arg).subscribe(res => {
                       if(this.onRefresh) {
                         console.log('refreshing',this);
                         this.onRefresh.emit();
@@ -418,7 +432,7 @@ export class RnViewComponent implements OnInit, OnChanges {
             const dialog = editDialogs[0];
   
             if (dialog && dialog.items) {
-              const form = dialog.items.find(d => itemIsInstanceOf(d, 'FormCtrl'));
+              const form = dialog.items.find(d => itemIsInstanceOf(d, 'Ctrl'));
               if (form) {
                 const target_view = this.getItemViews(this.item!).find(v => v.name === item.name && v.type!.name === item.type!.name!);
                 if(target_view) {
@@ -493,7 +507,7 @@ export class RnViewComponent implements OnInit, OnChanges {
             const dialog = editDialogs[0];
   
             if (dialog && dialog.items) {
-              const form = dialog.items.find(d => itemIsInstanceOf(d, 'FormCtrl'));
+              const form = dialog.items.find(d => itemIsInstanceOf(d, 'Ctrl'));
               const item_query = this.getItemQuery(item);
               if (form) {
                 let query = this.itemFromQuery(item_query ? item_query : new Item() );
@@ -562,7 +576,7 @@ export class RnViewComponent implements OnInit, OnChanges {
             const dialog = editDialogs[0];
   
             if (dialog && dialog.items) {
-              const form = dialog.items.find(d => itemIsInstanceOf(d, 'FormCtrl'));
+              const form = dialog.items.find(d => itemIsInstanceOf(d, 'Ctrl'));
               if (form) {
                 const target_view = this.getItemViews(this.item!).find(v => v.name === item.name && v.type!.name === item.type!.name!);
                 if(target_view) {
@@ -686,7 +700,7 @@ export class RnViewComponent implements OnInit, OnChanges {
 
             if (dialog && dialog.items) {
 
-              const form = dialog.items.find(d => itemIsInstanceOf(d, 'FormCtrl'));
+              const form = dialog.items.find(d => itemIsInstanceOf(d, 'Ctrl'));
               if (form) {
                 const dialogRef = this.dialog.open(RnDialogComponent, {
                   width: '95vw',
@@ -811,126 +825,18 @@ export class RnViewComponent implements OnInit, OnChanges {
     return true;
   }
 
-  itemFromQuery(query: Query): Item {
-    const result = new Item();
-    const types = this.itemService.getTypes()
-    if (types) {
-      let type = types.find(t => t.name === 'Query');
-      if (type) {
-        result.type = type;
-      }
-    }
-    if (query.name) {
-      result.name = query.name;
-    }
-    if(query.types) {
-      result.attributes = {types: query.types};
-    }
-    if(query.location) {
-      result.location = query.location;
-    }
-    if(query.tags) {
-      result.tags = query.tags;
-    }
-    if(query.valid_from) {
-      result.valid_from = query.valid_from;
-    }
-    if(query.valid_to) {
-      result.valid_to = query.valid_to;
-    }
-    if(query.status) {
-      result.status = query.status;
-    }
-    return result;
+  override itemsChanged(items?: Item[]): void {
+    //console.log('*************************************** hello from view items changed!!!');
   }
 
-  queryFromItem(item: Item): Query {
-    const result = new Query();
-    if (item.name) {
-      result.name = item.name;
-    }
-    if(item.attributes) {
-      if ('types' in item.attributes) {
-        result.types = item.attributes['types'];
-      }
-    }
-    if(item.location) {
-      result.location = item.location;
-    }
-    if(item.tags) {
-      result.tags = item.tags;
-    }
-    if(item.valid_from) {
-      result.valid_from = item.valid_from;
-    }
-    if(item.valid_to) {
-      result.valid_to = item.valid_to;
-    }
-    if(item.status) {
-      result.status = item.status;
-    }
-    return result;
-  }
-
-  getItemQuery(item: Item): Query | undefined {
-    const attributes = this.itemService.collectItemAttributes(item, {});
-    console.log(item, attributes);
-    if ('query' in attributes && Object.keys(attributes['query']).length > 0) {
-      let query: Query = new Query();
-      query = {... attributes['query']};
-      return query;
-    }
-    return undefined;
-  }
-  
-
-  getItemViews(item: Item): Item[] {
-    const attributes = this.itemService.collectItemAttributes(item, {});
-    if ('views' in attributes) {
-      return attributes['views'].map((v:any) => {
-        let item: Item = new Item();
-        item.name = v['name'];
-        const types = this.itemService.getTypes()
-        if (types) {
-          let type = types.find(t => t.name === v['type']);
-          if (type) {
-            item.type = type;
-          }
-        }
-        item.attributes = item.type?.attributes
-        if('attributes' in v) {
-          item.attributes = Object.assign(item.attributes? item.attributes : {}, v['attributes']);
-        }
-        if('query' in v) {
-          item.attributes = Object.assign(item.attributes? item.attributes : {}, {query: v['query']});
-        }
-        
-        return item;
-      });
-    }
-    return []
-  }
-
-  getItemControls(item: Item): Item[] {
-    const attributes = this.itemService.collectItemAttributes(item, {});
-    if ('controls' in attributes) {
-      const allTypes = this.itemService.getTypes();
-      return attributes['controls'].map((v:any) => {
-        let item: Item = {... v};
-        const type = allTypes.find(t => t.name === v['type']);
-        if (type) {
-          item.type = type;
-        }
-        return item;
-      });
-    }
-    return []
-  }
-
-  childRefresh() {
-    if (this.onRefresh) {
-      this.onRefresh.emit();
-    }
+  override ngOnChanges(changes: SimpleChanges): void {
+    if(changes['control']) {
+      this.controlChanged(this.control);
+     } else if(changes['item']) {
+       this.itemChanged(this.item);
+     } else if(changes['items']) {
+       this.itemsChanged(this.items);
+     }
   }
 
 }

@@ -1,4 +1,5 @@
-<mat-form-field fxFlexFill appearance="fill">
+<div fxFlexFill fxLayoutAlign="center center">
+  <mat-form-field fxFlex appearance="fill">
     <mat-label>Types</mat-label>
     <mat-chip-list #chipListTypes aria-label="Type selection" [formControl]="formControl">
       <mat-chip *ngFor="let type of types" (removed)="remove(type)">
@@ -7,10 +8,11 @@
           <mat-icon>cancel</mat-icon>
         </button>
       </mat-chip>
-      <input placeholder="New type..."
+      <input placeholder="Include type..."
              [matChipInputFor]="chipListTypes"
              [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
              [matChipInputAddOnBlur]="addOnBlur"
              (matChipInputTokenEnd)="add($event)">
     </mat-chip-list>
   </mat-form-field>
+</div>

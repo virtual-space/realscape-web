@@ -94,7 +94,7 @@ export class RnCalendarViewComponent implements OnInit {
     //console.log('changes',this.items)
     if(changes['items']) {
       this.dataSource.data = this.items;
-      this.dataSource.data.push(this.item)
+      //this.dataSource.data.push(this.item)
       this.events = [];
       this.dataSource.data.forEach(value => {
         //console.log(value)

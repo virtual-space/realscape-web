@@ -8,10 +8,23 @@ import { RnCtrlComponent } from '../rn-ctrl/rn-ctrl.component';
   styleUrls: ['./rn-edit-ctrl.component.sass']
 })
 export class RnEditCtrlComponent extends RnCtrlComponent implements OnInit {
-    value: string = '';
-
+    
     override initialize(): void {
-      this.value = this.getValue();
+      this.formControl.setValue(this.getValue());
+
+      this.formControl.valueChanges.subscribe(value => {
+        console.log(value);
+        this.setValue(value);
+        console.log(this.item);
+      });
+
+      this.sessionService.itemActivated$.subscribe(item => {
+        if (item) {
+          this.formControl.setValue(this.getValue());
+        };
+      });
     }
+
+
 
 }

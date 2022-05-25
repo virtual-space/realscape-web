@@ -1,0 +1,28 @@
+<mat-accordion>
+    <mat-expansion-panel (opened)="panelOpenState = true"
+                         (closed)="panelOpenState = false" *ngIf="control">
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          {{control.name!}}
+        </mat-panel-title>
+        <mat-panel-description>
+          Currently I am {{panelOpenState ? 'open' : 'closed'}}
+        </mat-panel-description>
+      </mat-expansion-panel-header>
+
+
+    <div *ngFor="let child of controls; let index = index" fxFlexFill>
+        <div fxFlexFill fxLayout="column" fxLayoutAlign="center center">
+            <div *ngIf="formGroup" fxFlexFill>
+                <app-rn-ctrl [control]="child" [item]="item" [formGroup]="formGroup" [events]="events" [tabIndex]="tabIndex"></app-rn-ctrl>
+            </div>
+            <div *ngIf="!formGroup" fxFlexFill>
+                <app-rn-ctrl [control]="child" [item]="item" [events]="events" [tabIndex]="tabIndex" fxFlex="1 1 100%"></app-rn-ctrl>
+            </div>
+        </div>
+    </div>
+
+    
+
+    </mat-expansion-panel>
+</mat-accordion>

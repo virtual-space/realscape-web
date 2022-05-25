@@ -26,6 +26,11 @@ export class RnTypesCtrlComponent extends RnCtrlComponent implements OnInit {
       const target = allTypes.find(t => t.name === value);
       if(target) {
         this.types.push({name: value});
+        if (this.item) {
+          if(this.item.attributes) {
+            this.item.attributes['types'] = this.types.map(t => t.name);
+          }
+        }
         this.formControl.setValue(this.types.map(t => t.name));
       }
     }
@@ -41,21 +46,34 @@ export class RnTypesCtrlComponent extends RnCtrlComponent implements OnInit {
     if (index >= 0) {
       this.types.splice(index, 1);
     }
+    if (this.item) {
+      if(this.item.attributes) {
+        this.item.attributes['types'] = this.types.map(t => t.name);
+      }
+    }
     this.formControl.setValue(this.types.map(t => t.name));
     //console.log(this.formControl.value);
   }
 
   protected  override initialize(): void {
-    
-    console.log(this);
-    if (this.item) {
-      //const names = new Set(this.getItemTypes(this.item).map(t => t.name!));
-      //const allTypes = this.itemService.getTypes();
-      //this.formControl.setValue(allTypes.filter(t => names.has(t.name!)));
+    //console.log('types-ctrl', this.item);
+    if(this.item) {
       this.types = this.getItemTypes(this.item);
       this.formControl.setValue(Array.from(new Set(this.types.map(t => t.name!))));
     }
-    console.log(this.formControl);
+    //console.log('item-view init ', this.item);
+    this.sessionService.itemActivated$.subscribe(item => {
+      //console.log('types-ctrl item Activated', this.item);
+      //console.log(this);
+      if (item) {
+        //const names = new Set(this.getItemTypes(this.item).map(t => t.name!));
+        //const allTypes = this.itemService.getTypes();
+        //this.formControl.setValue(allTypes.filter(t => names.has(t.name!)));
+        this.types = this.getItemTypes(item);
+        this.formControl.setValue(Array.from(new Set(this.types.map(t => t.name!))));
+      };
+      //console.log(this.formControl);
+    });
   }
 
 }

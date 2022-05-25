@@ -46,10 +46,8 @@ export class RnAttrsCtrlComponent extends RnCtrlComponent implements OnInit, OnC
     }
   }
 
-  ngOnChanges(changes: SimpleChanges): void {
-    if(changes['item']) {
-      this.rebuildFormGroup();
-    }
+  override itemChanged(item?: Item): void {
+    this.rebuildFormGroup();
   }
 
 }

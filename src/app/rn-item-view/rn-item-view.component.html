@@ -1,6 +1,6 @@
 <div fxLayout="column" fxFlexFill>
-  <div fxFlex>
-      <nav mat-tab-nav-bar color="primary" [tabPanel]="">
+  <div fxFlexFill>
+      <nav mat-tab-nav-bar color="primary" [tabPanel]="" fxFlexFill>
           <div fxLayout="row" fxLayoutGap="5px" fxFlexFill>
             <nav mat-tab-nav-bar fxLayout="row" backgroundColor="primary" fxFlexFill>
               <div fxFlex="1 0 5%">
@@ -76,15 +76,15 @@
           </div>
       </nav>
   </div>
-  <div fxFlex>
-    <div fxFlex fxLayoutAlign="center center" *ngIf="item" fxFlexFill>
+  <div fxFlexFill>
+    <div fxLayoutAlign="center center" *ngIf="item" fxFlexFill>
       <!-- <app-rn-query-view *ngIf="query"></app-rn-query-view> -->
-      <div *ngIf="(views.length > 1) && !shouldShowViewsAsItems(item)" class="tab-group-container">
+      <div *ngIf="(views.length > 1) && !shouldShowViewsAsItems(item)" class="tab-group-container" fxFlexFill>
           <mat-tab-group [selectedIndex]="selectedView.value" dynamicHeight mat-align-tabs="center" backgroundColor="primary"
                        (selectedTabChange)="onChangeTab($event)"
                        (selectedIndexChange)="selectedView.setValue($event)">
   
-          <mat-tab *ngFor="let view of views; let index = index" [label]="view!.name!">
+          <mat-tab *ngFor="let view of views; let index = index" [label]="view!.name!" fxFlexFill>
             <ng-template mat-tab-label>
               <mat-icon class="tab-icon">{{getIcon(view)}}</mat-icon>
               {{view.name}}
@@ -101,39 +101,39 @@
               </mat-menu>
             </ng-template>
             <ng-container>
-              <app-rn-view [items]="children" [view]="view" [item]="item" [events]="eventsSubject.asObservable()" [tabIndex]="index" (onEvent)="onItemEvent($event)" (onRefresh)="refreshView()"></app-rn-view>
+              <app-rn-view [items]="children" [view]="view" [item]="item" [events]="eventsSubject.asObservable()" [tabIndex]="index" (onEvent)="onItemEvent($event)" (onRefresh)="refreshView()" (onItems)="refreshItems($event)"></app-rn-view>
             </ng-container>
           </mat-tab>
         </mat-tab-group>
       </div>
-      <ng-container *ngIf="views.length === 1">
+      <div *ngIf="views.length === 1" fxFlexFill>
         <app-rn-view [items]="children" [view]="views[0]" [item]="item" (onEvent)="onItemEvent($event)" (onRefresh)="refreshView()"></app-rn-view>
-      </ng-container>
+      </div>
   
-      <ng-container *ngIf="(views.length === 0) || shouldShowViewsAsItems(item)">
-      <ng-container [ngSwitch]="item!.type!.name!">
-        <div *ngSwitchCase="'Image'">
-          <app-rn-image-view [items]="items" [item]="item" (onEvent)="onItemEvent($event)" (onRefresh)="refreshView()"></app-rn-image-view>
+      <div *ngIf="(views.length === 0) || shouldShowViewsAsItems(item)" fxFlexFill>
+        <div [ngSwitch]="item!.type!.name!" fxFlexFill>
+          <div *ngSwitchCase="'Image'" fxFlexFill>
+            <app-rn-image-view [items]="items" [item]="item" (onEvent)="onItemEvent($event)" (onRefresh)="refreshView()"   (onItems)="refreshItems($event)"></app-rn-image-view>
+          </div>
+          <div *ngSwitchCase="'Document'" fxFlexFill>
+            <app-rn-document-view [items]="items" [item]="item" (onEvent)="onItemEvent($event)" (onRefresh)="refreshView()"   (onItems)="refreshItems($event)"></app-rn-document-view>
+          </div>
+          <div *ngSwitchCase="'Page'" fxFlexFill>
+            <app-rn-page-view [items]="items" [item]="item" (onEvent)="onItemEvent($event)" (onRefresh)="refreshView()"   (onItems)="refreshItems($event)"></app-rn-page-view>
+          </div>
+          <div *ngSwitchCase="'Video'" fxFlexFill>
+            <app-rn-video-view [items]="items" [item]="item" (onEvent)="onItemEvent($event)" (onRefresh)="refreshView()"   (onItems)="refreshItems($event)"></app-rn-video-view>
+          </div>
+          <div *ngSwitchDefault fxFlexFill>
+            <div *ngIf="children.length > 0" fxFlexFill>
+              <app-rn-list-view [items]="children"  (onEvent)="onItemEvent($event)" (onRefresh)="refreshView()"   (onItems)="refreshItems($event)"></app-rn-list-view>
+            </div>
+            <div *ngIf="children.length === 0" fxFlexFill>
+              <app-rn-card-view [items]="items" [view]="getItemDefaultView(item)" [item]="item" (onEvent)="onItemEvent($event)" (onRefresh)="refreshView()"  (onItems)="refreshItems($event)"></app-rn-card-view>
+            </div>
+          </div>
         </div>
-        <div *ngSwitchCase="'Document'">
-          <app-rn-document-view [items]="items" [item]="item" (onEvent)="onItemEvent($event)" (onRefresh)="refreshView()"></app-rn-document-view>
-        </div>
-        <div *ngSwitchCase="'Page'">
-          <app-rn-page-view [items]="items" [item]="item" (onEvent)="onItemEvent($event)" (onRefresh)="refreshView()"></app-rn-page-view>
-        </div>
-        <div *ngSwitchCase="'Video'">
-          <app-rn-video-view [items]="items" [item]="item" (onEvent)="onItemEvent($event)" (onRefresh)="refreshView()"></app-rn-video-view>
-        </div>
-        <div *ngSwitchDefault>
-          <ng-container *ngIf="children.length > 0">
-            <app-rn-list-view [items]="children"  (onEvent)="onItemEvent($event)" (onRefresh)="refreshView()"></app-rn-list-view>
-          </ng-container>
-          <ng-container *ngIf="children.length === 0">
-            <app-rn-card-view [items]="items" [view]="getItemDefaultView(item)" [item]="item" (onEvent)="onItemEvent($event)" (onRefresh)="refreshView()"></app-rn-card-view>
-          </ng-container>
-        </div>
-      </ng-container>
-    </ng-container>
+      </div>
   </div>
   <div *ngIf="!item">
       ...

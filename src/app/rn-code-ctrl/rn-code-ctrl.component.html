@@ -1,0 +1,6 @@
+<div *ngIf="item && item.attributes" fxFlexFill>
+    <ngx-codemirror
+    [(ngModel)]="item.attributes['code']"
+    [options]="getCodemirrorOptions(item)"
+  ></ngx-codemirror>
+</div>

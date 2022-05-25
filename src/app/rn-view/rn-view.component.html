@@ -1,59 +1,60 @@
-<div [ngSwitch]="view!.type!.name!">
-  <div *ngSwitchCase="'ListView'">
-      <app-rn-list-view [items]="items" (onEvent)="onEvent" (onRefresh)="childRefresh()"></app-rn-list-view>
+<div [ngSwitch]="view!.type!.name!" fxFlexFill>
+  <div *ngSwitchCase="'ListView'" fxFlexFill>
+      <app-rn-list-view [items]="items" (onEvent)="onEvent" (onRefresh)="childRefresh()"> (onItems)="childItems" (onItems)="childItems($event)" fxFlexFill></app-rn-list-view>
   </div>
-  <div *ngSwitchCase="'MapView'">
-    <app-rn-map-view [items]="items" [item]="item" [events]="events" [tabIndex]="tabIndex" (onEvent)="onEvent" (onRefresh)="childRefresh()"></app-rn-map-view>
+  <div *ngSwitchCase="'MapView'" fxFlexFill>
+    <app-rn-map-view [items]="items" [item]="item" [events]="events" [tabIndex]="tabIndex" (onEvent)="onEvent" (onRefresh)="childRefresh()" (onItems)="childItems($event)" fxFlexFill></app-rn-map-view>
   </div>
-  <div *ngSwitchCase="'CalendarView'">
-      <app-rn-calendar-view [items]="items" [item]="item" (onEvent)="onEvent" (onRefresh)="childRefresh()"></app-rn-calendar-view>
+  <div *ngSwitchCase="'CalendarView'" fxFlexFill>
+      <app-rn-calendar-view [items]="items" [item]="item" (onEvent)="onEvent" (onRefresh)="childRefresh()" fxFlexFill></app-rn-calendar-view>
   </div>
-  <div *ngSwitchCase="'BoardView'">
-    <app-rn-board-view  [items]="items" [item]="item" (onEvent)="onEvent" (onRefresh)="childRefresh()"></app-rn-board-view>
+  <div *ngSwitchCase="'BoardView'" fxFlexFill>
+    <app-rn-board-view  [items]="items" [item]="item" (onEvent)="onEvent" (onRefresh)="childRefresh()" (onItems)="childItems($event)" fxFlexFill></app-rn-board-view>
   </div>
-  <div *ngSwitchCase="'DocumentView'">
-    <app-rn-document-view  (onEvent)="onEvent" (onRefresh)="childRefresh()"></app-rn-document-view>
+  <div *ngSwitchCase="'DocumentView'" fxFlexFill>
+    <app-rn-document-view  (onEvent)="onEvent" (onRefresh)="childRefresh()" (onItems)="childItems($event)" fxFlexFill></app-rn-document-view>
   </div>
-  <div *ngSwitchCase="'DrawingView'">
-    <app-rn-drawing-view  (onEvent)="onEvent" (onRefresh)="childRefresh()"></app-rn-drawing-view>
+  <div *ngSwitchCase="'DrawingView'" fxFlexFill>
+    <app-rn-drawing-view  (onEvent)="onEvent" (onRefresh)="childRefresh()" (onItems)="childItems" fxFlexFill></app-rn-drawing-view>
   </div>
-  <div *ngSwitchCase="'ImageView'">
-    <app-rn-image-view  (onEvent)="onEvent" (onRefresh)="childRefresh()"></app-rn-image-view>
+  <div *ngSwitchCase="'ImageView'" fxFlexFill>
+    <app-rn-image-view  (onEvent)="onEvent" (onRefresh)="childRefresh()" (onItems)="childItems" fxFlexFill></app-rn-image-view>
   </div>
-  <div *ngSwitchCase="'VideoView'">
-    <app-rn-video-view  (onEvent)="onEvent" (onRefresh)="childRefresh()"></app-rn-video-view>
+  <div *ngSwitchCase="'VideoView'" fxFlexFill>
+    <app-rn-video-view  (onEvent)="onEvent" (onRefresh)="childRefresh()" (onItems)="childItems" fxFlexFill></app-rn-video-view>
   </div>
-  <div *ngSwitchCase="'PageView'">
-    <app-rn-page-view  (onEvent)="onEvent" (onRefresh)="childRefresh()"></app-rn-page-view>
+  <div *ngSwitchCase="'PageView'" fxFlexFill>
+    <app-rn-page-view  (onEvent)="onEvent" (onRefresh)="childRefresh()" (onItems)="childItems" fxFlexFill></app-rn-page-view>
   </div>
-  <div *ngSwitchCase="'PanelView'">
-    <app-rn-panel-view  (onEvent)="onEvent" (onRefresh)="childRefresh()"></app-rn-panel-view>
+  <div *ngSwitchCase="'PanelView'" fxFlexFill>
+    <app-rn-panel-view  (onEvent)="onEvent" (onRefresh)="childRefresh()" (onItems)="childItems" fxFlexFill></app-rn-panel-view>
   </div>
-  <div *ngSwitchCase="'SceneView'">
-    <app-rn-scene-view  (onEvent)="onEvent" (onRefresh)="childRefresh()"></app-rn-scene-view>
+  <div *ngSwitchCase="'SceneView'" fxFlexFill>
+    <app-rn-scene-view  (onEvent)="onEvent" (onRefresh)="childRefresh()" (onItems)="childItems" fxFlexFill></app-rn-scene-view>
   </div>
-  <div *ngSwitchCase="'PropertiesView'">
-    <app-rn-properties-view  (onEvent)="onEvent" (onRefresh)="childRefresh()"></app-rn-properties-view>
+  <div *ngSwitchCase="'PropertiesView'" fxFlexFill>
+    <app-rn-properties-view  (onEvent)="onEvent" (onRefresh)="childRefresh()" (onItems)="childItems" fxFlexFill></app-rn-properties-view>
   </div>
+  <!--
   <div *ngSwitchCase="'QueryView'">
     <app-rn-query-view  (onEvent)="onEvent" (onRefresh)="childRefresh()"></app-rn-query-view>
   </div>
-  <div *ngSwitchCase="'CardsView'">
-    <app-rn-cards-view [items]="items"  (onEvent)="onEvent" (onRefresh)="childRefresh()"></app-rn-cards-view>
+  -->
+  <div *ngSwitchCase="'CardsView'" fxFlexFill>
+    <app-rn-cards-view [items]="items"  (onEvent)="onEvent" (onRefresh)="childRefresh()" (onItems)="childItems($event)" fxFlexFill></app-rn-cards-view>
   </div>
-  <div *ngSwitchCase="'TreeView'">
-    <app-rn-tree-view [items]="items"  (onEvent)="onEvent" (onRefresh)="childRefresh()"></app-rn-tree-view>
+  <div *ngSwitchCase="'TreeView'" fxFlexFill>
+    <app-rn-tree-view [items]="items"  (onEvent)="onEvent" (onRefresh)="childRefresh()" fxFlexFill></app-rn-tree-view>
   </div>
-  <div *ngSwitchCase="'ItemView'">
-    <app-rn-item-view [item]="getItemViewTarget(items)"  (onEvent)="onEvent" (onRefresh)="childRefresh()"></app-rn-item-view>
+  <div *ngSwitchCase="'ItemView'" fxFlexFill>
+    <app-rn-item-view [item]="getItemViewTarget(items)"  (onEvent)="onEvent" (onRefresh)="childRefresh()" (onItems)="childItems($event)" fxFlexFill></app-rn-item-view>
   </div>
-  <div *ngSwitchDefault>
-    <div *ngIf="view">
-      <div *ngIf="isCtrlView(view)">
-        <app-rn-ctrl-view [control]="view" [item]="item" (onEvents)="onEventHandler($event)" (onRefresh)="childRefresh()"></app-rn-ctrl-view>
-      </div>
-      <div *ngIf="!isCtrlView(view)">
-        Unhandled type: {{view.type!.name!}}
+  <div *ngSwitchDefault fxFlexFill>
+    <div *ngIf="controls.length > 0" fxFlexFill>
+      <div [fxLayout]="layout" [fxLayoutGap]="gap" [fxLayoutAlign]="align" fxFlexFill>
+        <div *ngFor="let child of controls; let index = index" fxFlexFill>
+          <app-rn-ctrl [control]="child" [item]="item" (onRefresh)="childRefresh()" (onItems)="childItems($event)"></app-rn-ctrl>
+        </div>
       </div>
     </div>
   </div>
