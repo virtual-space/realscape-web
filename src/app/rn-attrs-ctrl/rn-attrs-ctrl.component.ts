@@ -1,7 +1,7 @@
 import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { RnCtrlComponent } from '../rn-ctrl/rn-ctrl.component';
-import { Item, Type } from '../services/item.service';
+import { Item, ItemEvent, Type } from '../services/item.service';
 
 @Component({
   selector: 'app-rn-attrs-ctrl',
@@ -47,6 +47,7 @@ export class RnAttrsCtrlComponent extends RnCtrlComponent implements OnInit, OnC
   }
 
   override itemChanged(item?: Item): void {
+    console.log("*** attrs item changed ***");
     this.rebuildFormGroup();
   }
 

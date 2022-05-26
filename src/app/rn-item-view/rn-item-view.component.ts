@@ -24,7 +24,7 @@ export class RnItemViewComponent extends RnViewComponent implements OnInit, OnCh
   @Input() allowAddingViews = true;
   @Input() allowEditingViews = true;
 
-  eventsSubject: Subject<number> = new Subject<number>();
+  eventsSubject: Subject<ItemEvent> = new Subject<ItemEvent>();
 
   selectedView = new FormControl(0);
 
@@ -153,7 +153,7 @@ export class RnItemViewComponent extends RnViewComponent implements OnInit, OnCh
 
   onChangeTab(event: any) {
     console.log(event);
-    this.eventsSubject.next(event.index);
+    this.eventsSubject.next({event: 'tab', data: {index: event.index}, item: this.item});
     this.activeViewIndex = event.index;
     const active_view = this.views[this.activeViewIndex];
     const view_query = this.getItemQuery(active_view);

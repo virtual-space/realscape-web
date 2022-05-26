@@ -1,6 +1,5 @@
 <div fxLayout="column" fxFlexFill *ngIf="control">
-    <!-- {{control!.name!}} -->
-    <div [ngSwitch]="control!.type!.name!" fxFlexFill>
+    <div [ngSwitch]="getControlType(control.type!)" fxFlexFill>
         <div fxFlexFill>
             <div *ngSwitchCase="'AttrsCtrl'" fxFlexFill>
                 <div *ngIf="formGroup" fxFlexFill>
@@ -214,8 +213,12 @@
                     <div *ngIf="controls.length > 0" fxFlexFill>
                         <div [fxLayout.gt-sm]="layout"  fxLayout="column" fxLayoutGap="1%" fxFlexFill>
                             <div *ngFor="let child of controls; let index = index" fxFlex="1 0 auto">
-                              <div fxFlex>
-                                <app-rn-ctrl [control]="child" [item]="item" (onRefresh)="childRefresh()" (onItems)="childItems($event)">
+                              <div fxFlex *ngIf="formGroup">
+                                <app-rn-ctrl [control]="child" [item]="item" (onRefresh)="childRefresh()" (onItems)="childItems($event)" [formGroup]="formGroup"  [events]="events" [tabIndex]="tabIndex">
+                                </app-rn-ctrl>
+                              </div>
+                              <div fxFlex *ngIf="!formGroup">
+                                <app-rn-ctrl [control]="child" [item]="item" (onRefresh)="childRefresh()" (onItems)="childItems($event)" [events]="events" [tabIndex]="tabIndex">
                                 </app-rn-ctrl>
                               </div>
                           </div>

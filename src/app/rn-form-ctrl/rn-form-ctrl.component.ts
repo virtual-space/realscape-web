@@ -2,6 +2,7 @@ import { Component, Input, OnInit, SimpleChanges } from '@angular/core';
 import { RnCtrlComponent } from '../rn-ctrl/rn-ctrl.component';
 import { FormGroup, FormControl } from '@angular/forms';
 import { Item, ItemEvent, itemIsInstanceOf, Type } from '../services/item.service';
+import { Subject } from 'rxjs';
 
 @Component({
   selector: 'app-rn-form-ctrl',
@@ -9,19 +10,22 @@ import { Item, ItemEvent, itemIsInstanceOf, Type } from '../services/item.servic
   styleUrls: ['./rn-form-ctrl.component.sass']
 })
 export class RnFormCtrlComponent extends RnCtrlComponent implements OnInit {
-    form_group = new FormGroup({});
     actuators: Item[] = [];
     buttons: Item[] = [];
     views: Item[] = [];
+    eventsSubject: Subject<ItemEvent> = new Subject<ItemEvent>();
 
     override ngOnInit(): void {
       //console.log(this);
+      this.formGroup = new FormGroup({});
       this.controls = this.getControls();
+      //console.log(this.controls)
       this.buttons = this.getButtons();
       this.views = [];
-      console.log(this.getItemViews(this.item!));
-      console.log(this.getItemViews(this.control!));
-      this.rebuildControls();
+      //console.log(this.getItemViews(this.item!));
+      //console.log(this.getItemViews(this.control!));
+      //this.rebuildControls();
+      //this.form_group.setValue(this.item!);
       //console.log(this);
     }
 
@@ -45,44 +49,32 @@ export class RnFormCtrlComponent extends RnCtrlComponent implements OnInit {
       return 99999999;
     }
 
-    getControlType(type: Type): string {
-      if (type.name && type.name.endsWith('Ctrl')) {
-        //console.log('found control type ', type.name);
-        return type.name;
-      }
-      if (type && type.base) {
-        //console.log('checking base ',type.base);
-        return this.getControlType(type.base);
-      }
-      //console.log('not a control type ',type);
-      return 'Control';
-    }
-
     rebuildControls() {
-      /*
-      this.controls = [];
-      if(this.control && this.control.items) {
+      //console.log('*** rebuilding controls ***');
+      if(this.control && this.control.items && this.formGroup) {
         const item_controls = this.getControls();  
-        let controls: {[index: string]:any} = {};
         for(var control of item_controls.sort(this.getOrder)) {
           //console.log(control);
-          if(itemIsInstanceOf(control, "Control")) {
-            if (control.name) {
-              controls[control.name] = new FormControl();
-              this.controls.push(control);
+          if(itemIsInstanceOf(control, "Ctrl")) {
+            const field_name = this.getControlAttribute('field_name', this.control.name? this.control.name : 'value');
+            if (field_name) {
+              //this.formGroup.removeControl(field_name);
+              //this.formGroup.addControl(field_name, new FormControl({}));
             }
           } else if(itemIsInstanceOf(control, "Actuator")) {
             this.actuators.push(control);
           } else {
             console.log('item ' + control.name! + ' is not control');
           }
-        } 
-        }*/
+        }
+        //console.log(this.formGroup.value)
+
+      }
       //console.log(this.controls);
     }
   
     override itemChanged(item?: Item): void {
-      this.rebuildControls();
+      //this.rebuildControls();
     }
 
     getButtons(): Item[] {
@@ -109,27 +101,43 @@ export class RnFormCtrlComponent extends RnCtrlComponent implements OnInit {
       const attrs = this.collectItemAttributes(item, {});
       return attrs['default'] !== 'true';
     }
-  
+
+    override  refreshValue(event: ItemEvent): void {
+      //console.log('*** form-ctrl refresh ***');
+      this.eventsSubject.next(event);
+      this.rebuildControls();
+    }
+
+    
+
+    /*
+    override onEventHandler(event: ItemEvent) {
+      console.log(event, this);
+      if (event.event) {
+        if (event.event === 'item') {
+          this.refreshValue(event);
+          //this.controls.forEach(c => c.refreshValue())
+          //this.rebuildControls();
+        } else if(event.event === 'type') {
+          console.log(this);
+          this.item = event.item;
+          this.refreshValue(event);
+          //this.form_group.setValue(this.item!);
+          //console.log(this.form_group);
+          //this.rebuildControls();
+        }
+      }
+      this.onEvent.next(event);
+    }
+    */
     onButtonClick(button: Item) {
       if (this.onEvent) {
         //console.log(this.form_group);
         this.onEvent.emit({event: 'click', 
                           item: this.item, 
                           control: button,
-                          data: this.form_group.value });
+                          data: this.formGroup!.value });
       }
-    }
-
-    onEventHandler(event: ItemEvent) {
-      console.log(event);
-      if (event.event) {
-        if (event.event === 'item') {
-          this.rebuildControls();
-        } else if(event.event === 'type') {
-          this.item = event.item;
-        }
-      }
-      this.onEvent.next(event);
     }
   }
 

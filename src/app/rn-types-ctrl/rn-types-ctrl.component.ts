@@ -3,7 +3,7 @@ import { RnCtrlComponent } from '../rn-ctrl/rn-ctrl.component';
 import {COMMA, ENTER} from '@angular/cdk/keycodes';
 import {MatChipInputEvent} from '@angular/material/chips';
 import { FormControl } from '@angular/forms';
-import { Type } from '../services/item.service';
+import { Item, Type } from '../services/item.service';
 
 @Component({
   selector: 'app-rn-types-ctrl',
@@ -16,6 +16,38 @@ export class RnTypesCtrlComponent extends RnCtrlComponent implements OnInit {
   readonly separatorKeysCodes = [ENTER, COMMA] as const;
   types: Type[] = [];
 
+  override ngOnInit(): void {
+    this.rebuildTypesControl();
+  }
+
+  override itemChanged(item?: Item): void {
+    this.rebuildTypesControl();
+  }
+
+  rebuildTypesControl() {
+    console.log(this);
+    if(this.item) {
+      this.types = [];
+      const allTypes = this.itemService.getTypes();
+      this.getValue().forEach((v: any) => {
+        const target = allTypes.find(t => t.name === v);
+        if (target) {
+          this.types.push(target);
+        }
+      });
+      console.log(this.types);
+      this.formControl.setValue(Array.from(new Set(this.types.map(t => t.name!))));
+   }
+   if(this.formGroup) {
+      if(this.control) {
+        const field_name = this.getControlAttribute('field_name', this.control.name? this.control.name : 'value');
+        //console.log('edit_ctrl', field_name);
+        this.formGroup.removeControl(field_name);
+        this.formGroup.addControl(field_name, this.formControl);
+        console.log('*** rebuild types control ***', this.formGroup);
+      }
+    }
+  }
 
   add(event: MatChipInputEvent): void {
     const value = (event.value || '').trim();
@@ -25,11 +57,9 @@ export class RnTypesCtrlComponent extends RnCtrlComponent implements OnInit {
       const allTypes = this.itemService.getTypes();
       const target = allTypes.find(t => t.name === value);
       if(target) {
-        this.types.push({name: value});
+        this.types.push(target);
         if (this.item) {
-          if(this.item.attributes) {
-            this.item.attributes['types'] = this.types.map(t => t.name);
-          }
+          this.setValue(this.types.map(t => t.name));
         }
         this.formControl.setValue(this.types.map(t => t.name));
       }
@@ -53,27 +83,6 @@ export class RnTypesCtrlComponent extends RnCtrlComponent implements OnInit {
     }
     this.formControl.setValue(this.types.map(t => t.name));
     //console.log(this.formControl.value);
-  }
-
-  protected  override initialize(): void {
-    //console.log('types-ctrl', this.item);
-    if(this.item) {
-      this.types = this.getItemTypes(this.item);
-      this.formControl.setValue(Array.from(new Set(this.types.map(t => t.name!))));
-    }
-    //console.log('item-view init ', this.item);
-    this.sessionService.itemActivated$.subscribe(item => {
-      //console.log('types-ctrl item Activated', this.item);
-      //console.log(this);
-      if (item) {
-        //const names = new Set(this.getItemTypes(this.item).map(t => t.name!));
-        //const allTypes = this.itemService.getTypes();
-        //this.formControl.setValue(allTypes.filter(t => names.has(t.name!)));
-        this.types = this.getItemTypes(item);
-        this.formControl.setValue(Array.from(new Set(this.types.map(t => t.name!))));
-      };
-      //console.log(this.formControl);
-    });
   }
 
 }

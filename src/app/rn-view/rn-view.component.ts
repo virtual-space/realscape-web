@@ -83,7 +83,7 @@ export class RnViewComponent extends RnCtrlComponent implements OnInit, OnChange
 
   }
 
-  onEventHandler(event: ItemEvent) {
+  override onEventHandler(event: ItemEvent) {
     console.log('*** onEventHandler ', this, event);
     
     if (event.event) {
@@ -214,25 +214,49 @@ export class RnViewComponent extends RnCtrlComponent implements OnInit, OnChange
     return true;
   }
 
-  getUpdateParams(item: Item) {
-    console.log("&&& getUpdateParams &&&", item);
+  getUpdateParams(data: {[index: string]: any}) {
+    console.log("&&& getUpdateParams &&&", data);
     const params: {[index: string]: any} = {};
-    let attrs = item.attributes? item.attributes : {};
-    params['attributes'] = attrs;
-    if (item.type) {
-      params['type'] = item.type.name!;
+    let attrs = data['attributes'];
+    if (attrs) {
+      params['attributes'] = attrs;
+    } else {
+      params['attributes'] = {};
+      attrs = params['attributes'];
+    }
+    
+    if ('type' in data) {
+      if (Object.prototype.toString.call(data['type']) === "[object String]") {
+        params['type'] =data['type']
+      }
     }
     if ('name' in attrs) {
         params['name'] = attrs['name'];
         delete attrs['name'];
-    } else if(item.name) {
-      params['name'] = item.name;
+    } else if('name' in data) {
+      params['name'] = data['name'];
     }
-    if (item.parent_id) {
-      params['parent_id'] = item.parent_id
+    if ('parent_id' in data && data['parent_id']) {
+      params['parent_id'] = data['parent_id']
     } else if (this.item) {
       params['parent_id'] = this.item.id
     }
+    if ('location' in data && !! data['location']) {
+      params['location'] = data['location'];
+    }
+    if ('valid_from' in data) {
+      params['valid_from'] = data['valid_from'];
+    }
+    if ('valid_to' in data) {
+      params['valid_to'] = data['valid_to'];
+    }
+    if ('status' in data) {
+      params['status'] = data['status'];
+    }
+    if('types' in data) {
+      attrs['types'] = data['types'];
+    }
+
     return params;
   }
 
@@ -267,7 +291,7 @@ export class RnViewComponent extends RnCtrlComponent implements OnInit, OnChange
                     }
                     
                     console.log(result.data);
-                    this.itemService.create(this.getUpdateParams(result.item), (progress) => { this.uploadProgress = progress }).subscribe(
+                    this.itemService.create(this.getUpdateParams(result.data), (progress) => { this.uploadProgress = progress }).subscribe(
                       (res) => {
                         if (res && res['id']) {
                           console.log(`Success created item id: ${res['id']}`);
@@ -404,7 +428,7 @@ export class RnViewComponent extends RnCtrlComponent implements OnInit, OnChange
                     }
                     console.log(attrs);
                     
-                    let arg = this.getUpdateParams(result.item);
+                    let arg = this.getUpdateParams(result.data);
                     //console.log(arg);
                     this.itemService.update(item.id!, arg).subscribe(res => {
                       if(this.onRefresh) {

@@ -1,7 +1,7 @@
 import { Component, ElementRef, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 //import * as mapboxgl from "mapbox-gl";
 
-import { isInstanceOf, Item, itemIsInstanceOf } from '../services/item.service'
+import { isInstanceOf, Item, ItemEvent, itemIsInstanceOf } from '../services/item.service'
 //import * as MapboxGl from '!mapbox-gl';
 
 //const mapboxgl:any = require('mapbox-gl/dist/mapbox-gl.js');
@@ -103,8 +103,9 @@ export class RnMapViewComponent extends RnViewComponent implements OnInit, OnDes
     }
   }
 
-  handleEvent(e: number) {
+  handleEvent(event: ItemEvent) {
     //console.log('map received event ', e, 'index is ', this.tabIndex);
+    let e = event.data['index'];
     if (e === this.tabIndex) {
       this.selectedTabIndex = e;
       this.loadMap()

@@ -14,6 +14,7 @@ import * as MapboxDraw from "mapbox-gl-draw";
 import * as MapboxGeocoder from "@mapbox/mapbox-gl-geocoder";
 import 'mapbox-gl-draw/dist/mapbox-gl-draw.css';
 import { RnCtrlComponent } from '../rn-ctrl/rn-ctrl.component';
+import { Item, ItemEvent } from '../services/item.service';
 
 @Component({
   selector: 'app-rn-location-ctrl',
@@ -42,14 +43,7 @@ export class RnLocationCtrlComponent extends RnCtrlComponent implements OnInit {
   //REMOVE THE MARKERS FROM POLYGON
   //REMOVE THE DELETE METHOD
 
-  override initialize() {
-    if(this.formGroup) {
-      this.formGroup.removeControl('location');
-      this.formGroup.addControl('location', this.formControl);
-      if(this.location) {
-        this.formControl.setValue(JSON.stringify(this.location));
-      }
-    }
+  override ngOnInit(): void {
     if (!this.item || (this.item.location == null)) {
       if (navigator.geolocation) {
         //console.log("getting the current location");
@@ -97,10 +91,32 @@ export class RnLocationCtrlComponent extends RnCtrlComponent implements OnInit {
       });*/
       //console.log('loading with existing data',this)
     }
+    
+    this.rebuildFormControl();
     if (this.events) {
+      //console.log('subscribing')
       this.subscription = this.events.subscribe(e => {
         this.handleEvent(e);
       });
+    }
+  }
+
+  override itemChanged(item?: Item): void {
+    this.rebuildFormControl();
+  }
+
+  rebuildFormControl() {
+    //console.log(this.formControl);
+    //this.formControl.setValue(this.getValue());
+    
+
+    if(this.formGroup) {
+      this.formGroup.removeControl('location');
+      this.formGroup.addControl('location', this.formControl);
+      if(this.location) {
+        this.formControl.setValue(JSON.stringify(this.location));
+        console.log(JSON.stringify(this.location));
+      }
     }
   }
 
@@ -110,7 +126,7 @@ export class RnLocationCtrlComponent extends RnCtrlComponent implements OnInit {
   }
 
   onClearClick(): void {
-    console.log("Clear Location Data")
+    //console.log("Clear Location Data")
     var featureCollection = this.draw.getAll()
     featureCollection.features = []
     this.draw.set(featureCollection)
@@ -271,8 +287,9 @@ export class RnLocationCtrlComponent extends RnCtrlComponent implements OnInit {
     return new Promise((resolve) => setTimeout(resolve, time));
   }
 
-  handleEvent(e: number) {
-    console.log('map received event ', e, 'index is ', this.tabIndex);
+  handleEvent(event: ItemEvent) {
+    console.log('map received event ', event, 'tab index is ', this.tabIndex);
+    let e = event.data['index'];
     if (e === this.tabIndex) {
       this.loadMap();
     }

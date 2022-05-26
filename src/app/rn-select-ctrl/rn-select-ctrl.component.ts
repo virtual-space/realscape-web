@@ -13,11 +13,21 @@ interface SelectItem {
   styleUrls: ['./rn-select-ctrl.component.sass']
 })
 export class RnSelectCtrlComponent  extends RnCtrlComponent implements OnInit {
+
   selectedValue?: string;
 
   selectItems: SelectItem[] = [];
 
+  override ngOnInit(): void {
+    this.rebuildSelect();
+  }
+
+  override itemChanged(item?: Item): void {
+    this.rebuildSelect();
+  }
+
   rebuildSelect() {
+    this.formControl.setValue(this.getValue());
     this.selectItems = [];
     if (this.item) {
       const attrs = this.collectItemAttributes(this.item, {});
@@ -35,10 +45,15 @@ export class RnSelectCtrlComponent  extends RnCtrlComponent implements OnInit {
       }
       this.selectedValue = this.formControl.value;
     }
-  }
-
-  override itemChanged(item?: Item): void {
-    this.rebuildSelect();
+    if(this.formGroup) {
+      if(this.control) {
+        const field_name = this.getControlAttribute('field_name', this.control.name? this.control.name : 'value');
+        //console.log('edit_ctrl', field_name);
+        this.formGroup.removeControl(field_name);
+        this.formGroup.addControl(field_name, this.formControl);
+        //console.log('*** rebuild form control ***', this.formGroup);
+      }
+    }
   }
 
 }

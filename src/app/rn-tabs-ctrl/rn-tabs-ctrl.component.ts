@@ -1,7 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { Subject } from 'rxjs';
 import { RnCtrlComponent } from '../rn-ctrl/rn-ctrl.component';
-import { Item, itemIsInstanceOf } from '../services/item.service';
+import { Item, ItemEvent, itemIsInstanceOf } from '../services/item.service';
 
 @Component({
   selector: 'app-rn-tabs-ctrl',
@@ -11,7 +11,7 @@ import { Item, itemIsInstanceOf } from '../services/item.service';
 export class RnTabsCtrlComponent extends RnCtrlComponent implements OnInit {
   @Input() tabs: Item[] = [];
 
-  eventsSubject: Subject<number> = new Subject<number>();
+  eventsSubject: Subject<ItemEvent> = new Subject<ItemEvent>();
 
   override ngOnInit(): void {
     if (this.control) {
@@ -23,8 +23,9 @@ export class RnTabsCtrlComponent extends RnCtrlComponent implements OnInit {
   }
 
   onChangeTab(event: any) {
-    //console.log(event);
-    this.eventsSubject.next(event.index);
+    console.log(event);
+    this.eventsSubject.next({event: 'tab', data: {index: event.index}, item: this.item});
     //this.selectedTab = event.index;
   }
+  
 }

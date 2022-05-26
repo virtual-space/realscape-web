@@ -74,6 +74,19 @@ export class RnTypeSelectCtrlComponent  extends RnCtrlComponent implements OnIni
         this.selectedItem.name = 'New' + t.name;
         this.selectedItem.type_id = t.id;
         this.selectedItem.type = t;
+        if(this.item && this.item.location) {
+          this.selectedItem.location = this.item.location;
+        }
+        if (this.item && this.item.valid_from) {
+          this.selectedItem.valid_from = this.item.valid_from;
+        }
+        if (this.item && this.item.valid_to) {
+          this.selectedItem.valid_to = this.item.valid_to;
+        }
+        if (this.item && this.item.status) {
+          this.selectedItem.status = this.item.status;
+        }
+        this.selectedItem.attributes = this.collectTypeAttributes(t, {});
         if (this.onEvent) {
           this.onEvent.emit({event: "type", item: this.selectedItem, control: this.control});
         }
@@ -95,6 +108,19 @@ export class RnTypeSelectCtrlComponent  extends RnCtrlComponent implements OnIni
         this.selectedItem.name = 'New' + e.name;
         this.selectedItem.type_id = e.id;
         this.selectedItem.attributes = this.collectTypeAttributes(e, {});
+        this.selectedItem.type = e;
+        if(this.item && this.item.location) {
+          this.selectedItem.location = this.item.location;
+        }
+        if (this.item && this.item.valid_from) {
+          this.selectedItem.valid_from = this.item.valid_from;
+        }
+        if (this.item && this.item.valid_to) {
+          this.selectedItem.valid_to = this.item.valid_to;
+        }
+        if (this.item && this.item.status) {
+          this.selectedItem.status = this.item.status;
+        }
         
         if(this.formGroup) {
           //this.formGroup.removeControl('name');

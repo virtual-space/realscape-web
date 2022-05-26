@@ -28,13 +28,13 @@ export class RnCtrlComponent implements OnInit, OnChanges, ItemCallbacks {
   @Input() layout?: string = "column";
   @Input() align?: string = "center center";
   @Input() gap?: string = "1%";
-  @Input() events?: Observable<number>;
+  @Input() events?: Observable<ItemEvent>;
   @Output() onEvent = new EventEmitter<ItemEvent>();
   @Output() onEvents = new EventEmitter<ItemEvent>();
   
   @Output() onRefresh = new EventEmitter();
   @Output() onItems = new EventEmitter<Item[]>();
-
+  
   formControl = new FormControl('');
   
   constructor(protected itemService: ItemService,
@@ -47,6 +47,8 @@ export class RnCtrlComponent implements OnInit, OnChanges, ItemCallbacks {
               public viewContainerRef: ViewContainerRef) { }
 
   ngOnInit(): void {
+    //console.log(this);
+    //console.log(this.formGroup)
     if(!this.item) {
       this.item = this.control;
     }
@@ -168,13 +170,27 @@ export class RnCtrlComponent implements OnInit, OnChanges, ItemCallbacks {
         const type = this.itemService.getTypes().find(t => t.name === v['type']);
         if (type) {
           item = this.buildItem(type, v['name'], v['attributes'] );
+          //console.log('parsing_ctrl',v, type, item);
         }
         return item;
       });
-      //console.log(attrs);
+      //console.log(ctrls);
       return ctrls;
     }
     return []
+  }
+
+  getControlType(type: Type): string {
+    if (type.name && type.name.endsWith('Ctrl')) {
+      //console.log('found control type ', type.name);
+      return type.name;
+    }
+    if (type && type.base) {
+      //console.log('checking base ',type.base);
+      return this.getControlType(type.base);
+    }
+    //console.log('not a control type ',type);
+    return 'Ctrl';
   }
 
   getItemViews(item: Item): Item[] {
@@ -221,11 +237,17 @@ export class RnCtrlComponent implements OnInit, OnChanges, ItemCallbacks {
           if ('target' in control_attributes) {
             const key = control_attributes['target'];
             if (key) {
+              console.log(key);
               let namespace = control_attributes['namespace'];
               if (namespace) {
-                const namespace_parts = namespace.split('.');
+                console.log(namespace);
+                if (namespace === 'attributes') {
+                  let attrs = this.item.attributes? this.item.attributes : {};
+                  return attrs[key];
+                } else {
+                  const namespace_parts = namespace.split('.');
                 
-                let attrs = this.item.attributes? this.item.attributes : {};
+                  let attrs = this.item.attributes? this.item.attributes : {};
                 
                   let target_dict = attrs;
                   if(namespace_parts) {
@@ -238,6 +260,8 @@ export class RnCtrlComponent implements OnInit, OnChanges, ItemCallbacks {
                       } 
                     });
                   return target_dict[key];
+                  }
+                
                 }
               } else {
                   if (key === "valid_from") {
@@ -279,27 +303,32 @@ export class RnCtrlComponent implements OnInit, OnChanges, ItemCallbacks {
           console.log(control_attributes);
           let namespace = control_attributes['namespace'];
           if (namespace) {
-            console.log(namespace);
-            const namespace_parts = namespace.split('.');
-            console.log(namespace_parts);
-            let attrs = this.item.attributes? this.item.attributes : {};
-            
-              let target_dict = attrs;
-              if(namespace_parts) {
-                
-                namespace_parts.forEach((np: string, index: number) => {
-                  console.log(np);
-                  if(!(np === 'attributes' && index === 0)) {
-                    if(np in target_dict) {
-                      target_dict = target_dict[np];
-                    } else {
-                      target_dict[np] = {};
-                      target_dict = target_dict[np];
+            if (namespace === 'attributes') {
+              let attrs = this.item.attributes? this.item.attributes : {};
+              attrs[key] = value;
+            } else {
+              //console.log(namespace);
+              const namespace_parts = namespace.split('.');
+              //console.log(namespace_parts);
+              let attrs = this.item.attributes? this.item.attributes : {};
+              
+                let target_dict = attrs;
+                if(namespace_parts) {
+                  
+                  namespace_parts.forEach((np: string, index: number) => {
+                    console.log(np);
+                    if(!(np === 'attributes' && index === 0)) {
+                      if(np in target_dict) {
+                        target_dict = target_dict[np];
+                      } else {
+                        target_dict[np] = {};
+                        target_dict = target_dict[np];
+                      }
                     }
-                  }
-                   
-                });
-              target_dict[key] = value;
+                    
+                  });
+                target_dict[key] = value;
+              }
             } 
           } else {
             if (key === "valid_from") {
@@ -457,7 +486,30 @@ export class RnCtrlComponent implements OnInit, OnChanges, ItemCallbacks {
   }
 
   itemsChanged(items?: Item[]): void {
-    //console.log('*************************************** hello from control items changed!!!');
+    //console.log('*************************************** hello from control items changed!!!', this.control!.type!.name!);
+  }
+
+  onEventHandler(event: ItemEvent) {
+    console.log(event, this);
+    if (event.event) {
+      if (event.event === 'item') {
+        this.refreshValue(event);
+        //this.controls.forEach(c => c.refreshValue())
+        //this.rebuildControls();
+      } else if(event.event === 'type') {
+        //console.log(this);
+        this.item = event.item;
+        this.refreshValue(event);
+        //this.form_group.setValue(this.item!);
+        //console.log(this.form_group);
+        //this.rebuildControls();
+      }
+    }
+    this.onEvent.next(event);
+  }
+
+  refreshValue(event: ItemEvent) {
+    //console.log('*************************************** hello from control refresh value!!!');
   }
 
 }

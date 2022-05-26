@@ -5,6 +5,7 @@
                 <app-rn-tab-ctrl [item]="item" [control]="tab" [formGroup]="formGroup" [events]="eventsSubject.asObservable()" [tabIndex]="index"></app-rn-tab-ctrl>
             </ng-container>
             <ng-container *ngIf="!formGroup">
+                NoFormGroup
                 <app-rn-tab-ctrl [item]="item" [control]="tab" [events]="eventsSubject.asObservable()" [tabIndex]="index"></app-rn-tab-ctrl>
             </ng-container>
         </mat-tab>

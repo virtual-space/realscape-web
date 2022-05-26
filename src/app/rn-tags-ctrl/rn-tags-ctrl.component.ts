@@ -53,7 +53,7 @@ export class RnTagsCtrlComponent extends RnCtrlComponent implements OnInit {
   }
 
   protected  override initialize(): void {
-    console.log('tags-ctrl', this.item);
+    //console.log('tags-ctrl', this.item);
     if (this.item && this.item.attributes && 'tags' in this.item.attributes) {
       //const names = new Set(this.getItemTypes(this.item).map(t => t.name!));
       //const allTypes = this.itemService.getTypes();
@@ -63,13 +63,13 @@ export class RnTagsCtrlComponent extends RnCtrlComponent implements OnInit {
         this.tags.push({name: t});
       }
     };
-    console.log(this.tags);
+    //console.log(this.tags);
     this.formControl.setValue(this.tags.map(t => t.name));
-    console.log(this.formControl);
+    //console.log(this.formControl);
 
     this.sessionService.itemActivated$.subscribe(item => {
-      console.log('tags-ctrl item Activated', this.item);
-      console.log(this);
+      //console.log('tags-ctrl item Activated', this.item);
+      //console.log(this);
       
       if (item && item.attributes && 'tags' in item.attributes) {
         //const names = new Set(this.getItemTypes(this.item).map(t => t.name!));
@@ -84,7 +84,7 @@ export class RnTagsCtrlComponent extends RnCtrlComponent implements OnInit {
       };
       
       this.formControl.setValue(this.tags.map(t => t.name));
-      console.log(this.formControl);
+      //console.log(this.formControl);
     });
     
     //console.log(this.formControl);

@@ -33,14 +33,14 @@ export class RnBoardViewComponent  extends RnViewComponent implements OnInit {
         })
       }
     });
-    console.log('status',statuses);
+    //console.log('status',statuses);
     const columns: Column[] = [];
     for(let status of statuses) {
       const items: Item[] = this.items.filter(i => i.status === status);
       columns.push(new Column(status, items));
     }
     this.board = new Board(this.item? this.item.name! : 'Board', columns);
-    console.log(this.board)
+    //console.log(this.board)
   }
 
   drop(event: CdkDragDrop<Item[]>) {

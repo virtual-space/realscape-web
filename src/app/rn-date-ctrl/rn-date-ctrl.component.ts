@@ -1,5 +1,6 @@
 import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import { RnCtrlComponent } from '../rn-ctrl/rn-ctrl.component';
+import { Item } from '../services/item.service';
 
 @Component({
   selector: 'app-rn-date-ctrl',
@@ -7,6 +8,39 @@ import { RnCtrlComponent } from '../rn-ctrl/rn-ctrl.component';
   styleUrls: ['./rn-date-ctrl.component.sass']
 })
 export class RnDateCtrlComponent extends RnCtrlComponent implements OnInit {
+
+  override ngOnInit(): void {
+    this.rebuildFormControl();
+  }
+
+  override itemChanged(item?: Item): void {
+    this.rebuildFormControl();
+  }
+
+  rebuildFormControl() {
+    //console.log(this.formControl);
+    this.formControl.setValue(this.getValue());
+    if(this.formGroup) {
+        if(this.control) {
+          const field_name = this.getControlAttribute('field_name', this.control.name? this.control.name : 'value');
+          //console.log('edit_ctrl', field_name);
+          this.formGroup.removeControl(field_name);
+          this.formGroup.addControl(field_name, this.formControl);
+          //console.log('*** rebuild form control ***', this.formGroup);
+        }
+      }
+      if (this.formControl.value) {
+        this.date_value = new Date(this.formControl.value);
+        let ampm = 'AM';
+        let hours = this.date_value.getHours();
+        if (hours > 12) {
+          hours = hours - 12;
+          ampm = 'PM';
+        }
+        const minutes = this.date_value.getMinutes();
+        this.time_value = (('0' + hours).slice(-2) + ':' + ('0' + minutes).slice(-2) + ' ' + ampm);
+      }
+  }
 
   private date_value?: Date;
   public get date() { 
@@ -55,17 +89,7 @@ export class RnDateCtrlComponent extends RnCtrlComponent implements OnInit {
   }
 
   protected  override initialize(): void {
-    if (this.formControl.value) {
-      this.date_value = new Date(this.formControl.value);
-      let ampm = 'AM';
-      let hours = this.date_value.getHours();
-      if (hours > 12) {
-        hours = hours - 12;
-        ampm = 'PM';
-      }
-      const minutes = this.date_value.getMinutes();
-      this.time_value = (('0' + hours).slice(-2) + ':' + ('0' + minutes).slice(-2) + ' ' + ampm);
-    }
+    
   }
 
 
