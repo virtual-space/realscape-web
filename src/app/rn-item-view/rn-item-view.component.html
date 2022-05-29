@@ -106,30 +106,30 @@
           </mat-tab>
         </mat-tab-group>
       </div>
-      <div *ngIf="views.length === 1" fxFlexFill>
+      <div *ngIf="(views.length === 1)  && !shouldShowViewsAsItems(item)" fxFlexFill>
         <app-rn-view [items]="children" [view]="views[0]" [item]="item" (onEvent)="onItemEvent($event)" (onRefresh)="refreshView()" [events]="eventsSubject.asObservable()"></app-rn-view>
       </div>
   
       <div *ngIf="(views.length === 0) || shouldShowViewsAsItems(item)" fxFlexFill>
         <div [ngSwitch]="item!.type!.name!" fxFlexFill>
           <div *ngSwitchCase="'Image'" fxFlexFill>
-            <app-rn-image-view [items]="items" [item]="item" (onEvent)="onItemEvent($event)" (onRefresh)="refreshView()"   (onItems)="refreshItems($event)" [events]="eventsSubject.asObservable()"></app-rn-image-view>
+            <app-rn-image-view [items]="children" [item]="item" (onEvent)="onItemEvent($event)" (onRefresh)="refreshView()"   (onItems)="refreshItems($event)" [events]="eventsSubject.asObservable()"></app-rn-image-view>
           </div>
           <div *ngSwitchCase="'Document'" fxFlexFill>
-            <app-rn-document-view [items]="items" [item]="item" (onEvent)="onItemEvent($event)" (onRefresh)="refreshView()"   (onItems)="refreshItems($event)" [events]="eventsSubject.asObservable()"></app-rn-document-view>
+            <app-rn-document-view [items]="children" [item]="item" (onEvent)="onItemEvent($event)" (onRefresh)="refreshView()"   (onItems)="refreshItems($event)" [events]="eventsSubject.asObservable()"></app-rn-document-view>
           </div>
           <div *ngSwitchCase="'Page'" fxFlexFill>
-            <app-rn-page-view [items]="items" [item]="item" (onEvent)="onItemEvent($event)" (onRefresh)="refreshView()"   (onItems)="refreshItems($event)" [events]="eventsSubject.asObservable()"></app-rn-page-view>
+            <app-rn-page-view [items]="children" [item]="item" (onEvent)="onItemEvent($event)" (onRefresh)="refreshView()"   (onItems)="refreshItems($event)" [events]="eventsSubject.asObservable()"></app-rn-page-view>
           </div>
           <div *ngSwitchCase="'Video'" fxFlexFill>
-            <app-rn-video-view [items]="items" [item]="item" (onEvent)="onItemEvent($event)" (onRefresh)="refreshView()"   (onItems)="refreshItems($event)" [events]="eventsSubject.asObservable()"></app-rn-video-view>
+            <app-rn-video-view [items]="children" [item]="item" (onEvent)="onItemEvent($event)" (onRefresh)="refreshView()"   (onItems)="refreshItems($event)" [events]="eventsSubject.asObservable()"></app-rn-video-view>
           </div>
           <div *ngSwitchDefault fxFlexFill>
             <div *ngIf="children.length > 0" fxFlexFill>
               <app-rn-list-view [items]="children"  (onEvent)="onItemEvent($event)" (onRefresh)="refreshView()"   (onItems)="refreshItems($event)" [events]="eventsSubject.asObservable()"></app-rn-list-view>
             </div>
             <div *ngIf="children.length === 0" fxFlexFill>
-              <app-rn-card-view [items]="items" [view]="getItemDefaultView(item)" [item]="item" (onEvent)="onItemEvent($event)" (onRefresh)="refreshView()"  (onItems)="refreshItems($event)" [events]="eventsSubject.asObservable()"></app-rn-card-view>
+              <app-rn-card-view [items]="children" [view]="getItemDefaultView(item)" [item]="item" (onEvent)="onItemEvent($event)" (onRefresh)="refreshView()"  (onItems)="refreshItems($event)" [events]="eventsSubject.asObservable()"></app-rn-card-view>
             </div>
           </div>
         </div>

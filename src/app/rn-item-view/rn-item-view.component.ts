@@ -89,6 +89,7 @@ export class RnItemViewComponent extends RnViewComponent implements OnInit, OnCh
   reloadItem(item: Item): void {
     console.log('*** reloading ',item);
     this.views = this.getItemViews(item);
+    console.log(this.views);
     this.query = this.getItemQuery(item);
     this.id = item.id;
     const active_view = this.views[this.activeViewIndex];

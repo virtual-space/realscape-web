@@ -14,6 +14,7 @@ export class ItemService {
   constructor(protected http: HttpClient,
               protected router: Router,
               protected authService: AuthService) {
+    console.log('*** constructing item service ***');
   }
 
   protected getEndpoint() {
@@ -175,7 +176,7 @@ export class ItemService {
         params = params.append('valid_from', query.valid_from.toDateString());
       }
       if (query.valid_to) {
-        params = params.append('valid_from', query.valid_to.toDateString());
+        params = params.append('valid_to', query.valid_to.toDateString());
       }
       if (query.status) {
         params = params.append('status', query.status);
@@ -259,15 +260,62 @@ export class ItemService {
   }
 
   public setTypes(types: Type[]) {
-    localStorage.setItem('types', JSON.stringify(types))
+    let types_string = localStorage.getItem('types');
+    
+    if (types_string) {
+      const types_data = JSON.parse(types_string);
+      const batch_count = types_data['batch_count'];
+      const prefix = types_data['prefix'];
+      console.log('removing ',batch_count, 'batches');
+      for (let i = 0; i < batch_count; i++) {
+        const key = prefix + '_' + i.toString();
+        localStorage.removeItem(key);
+      }
+    }
+
+    localStorage.removeItem('types');
+
+    const batch_size = 1000;
+    const prefix =  'types';
+    const batch_num = Math.floor(types.length / batch_size) + 1;
+    if(batch_num > 0) {
+      for (let i = 0; i < batch_num; i++) {
+        const key = prefix + '_' + i.toString();
+        const batch_entries: Type[] = [];
+        for (let j = 0; j < batch_size; j++) {
+          const type_index = i * batch_size + j;
+          if (type_index < types.length) {
+            batch_entries.push(types[type_index]);
+          } else {
+            break;
+          }
+        }
+        localStorage.setItem(key, JSON.stringify(batch_entries))
+      }
+      localStorage.setItem('types', JSON.stringify({prefix: prefix, batch_count: batch_num}));
+      console.log({prefix: prefix, batch_count: batch_num});
+    }
   }
 
   public getTypes(): Type[] {
     let types_string = localStorage.getItem('types');
+    const types: Type[] = [];
     if (types_string) {
-      return JSON.parse(types_string);
+      const types_data = JSON.parse(types_string);
+      const batch_count = types_data['batch_count'];
+      const prefix = types_data['prefix'];
+      for (let i = 0; i < batch_count; i++) {
+        const key = prefix + '_' + i.toString();
+        let batch = localStorage.getItem(key);
+        if(batch) {
+          const batch_entries = JSON.parse(batch);
+          batch_entries.forEach((be:Type) => {
+            types.push(be);
+          });
+        }
+      }
     }
-    return [];
+    return types;
   }
 
   public setApps(apps: Item[]) {

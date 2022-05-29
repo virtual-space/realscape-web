@@ -1,4 +1,3 @@
-
 <div *ngIf="item" fxFlexFill>
     <div [ngSwitch]="item.attributes!['content_type']">
       <pdf-viewer *ngSwitchCase="'application/pdf'"

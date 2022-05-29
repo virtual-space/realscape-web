@@ -193,6 +193,20 @@ export class RnCtrlComponent implements OnInit, OnChanges, ItemCallbacks {
     return 'Ctrl';
   }
 
+  getViewType(type: Type): string {
+    //console.log(type);
+    if (type.name && type.name.endsWith('View')) {
+      //console.log('found view type ', type.name);
+      return type.name;
+    }
+    if (type && type.base) {
+      //console.log('checking base ',type.base);
+      return this.getViewType(type.base);
+    }
+    //console.log('not a view type ',type);
+    return 'View';
+  }
+
   getItemViews(item: Item): Item[] {
     const attributes = this.itemService.collectItemAttributes(item, {});
     if ('views' in attributes) {

@@ -1,4 +1,4 @@
-<div [ngSwitch]="view!.type!.name!" fxFlexFill>
+<div [ngSwitch]="getViewType(view.type)" fxFlexFill *ngIf="view && view.type">
   <div *ngSwitchCase="'ListView'" fxFlexFill>
       <app-rn-list-view [items]="items" (onEvent)="onEvent" (onRefresh)="childRefresh()"> (onItems)="childItems" (onItems)="childItems($event)"  [events]="events" fxFlexFill></app-rn-list-view>
   </div>
@@ -12,25 +12,22 @@
     <app-rn-board-view  [items]="items" [item]="item" (onEvent)="onEvent" [events]="events"  (onRefresh)="childRefresh()" (onItems)="childItems($event)" fxFlexFill></app-rn-board-view>
   </div>
   <div *ngSwitchCase="'DocumentView'" fxFlexFill>
-    <app-rn-document-view  (onEvent)="onEvent" (onRefresh)="childRefresh()" [events]="events"  (onItems)="childItems($event)" fxFlexFill></app-rn-document-view>
+    <app-rn-document-view [items]="items" [item]="item" (onEvent)="onEvent" (onRefresh)="childRefresh()" [events]="events"  (onItems)="childItems($event)" fxFlexFill></app-rn-document-view>
   </div>
   <div *ngSwitchCase="'DrawingView'" fxFlexFill>
-    <app-rn-drawing-view  (onEvent)="onEvent" (onRefresh)="childRefresh()"  (onItems)="childItems" fxFlexFill></app-rn-drawing-view>
+    <app-rn-drawing-view [items]="items" [item]="item" (onEvent)="onEvent" (onRefresh)="childRefresh()"  (onItems)="childItems" fxFlexFill></app-rn-drawing-view>
   </div>
   <div *ngSwitchCase="'ImageView'" fxFlexFill>
-    <app-rn-image-view  (onEvent)="onEvent" (onRefresh)="childRefresh()" [events]="events"  (onItems)="childItems" fxFlexFill></app-rn-image-view>
+    <app-rn-image-view [items]="items" [item]="item" (onEvent)="onEvent" (onRefresh)="childRefresh()" [events]="events"  (onItems)="childItems" fxFlexFill></app-rn-image-view>
   </div>
   <div *ngSwitchCase="'VideoView'" fxFlexFill>
-    <app-rn-video-view  (onEvent)="onEvent" (onRefresh)="childRefresh()" [events]="events"  (onItems)="childItems" fxFlexFill></app-rn-video-view>
+    <app-rn-video-view [items]="items" [item]="item" (onEvent)="onEvent" (onRefresh)="childRefresh()" [events]="events"  (onItems)="childItems" fxFlexFill></app-rn-video-view>
   </div>
   <div *ngSwitchCase="'PageView'" fxFlexFill>
-    <app-rn-page-view  (onEvent)="onEvent" (onRefresh)="childRefresh()" [events]="events"  (onItems)="childItems" fxFlexFill></app-rn-page-view>
-  </div>
-  <div *ngSwitchCase="'PanelView'" fxFlexFill>
-    <app-rn-panel-view  (onEvent)="onEvent" (onRefresh)="childRefresh()"  (onItems)="childItems" fxFlexFill></app-rn-panel-view>
+    <app-rn-page-view [items]="items" [item]="item" (onEvent)="onEvent" (onRefresh)="childRefresh()" [events]="events"  (onItems)="childItems" fxFlexFill></app-rn-page-view>
   </div>
   <div *ngSwitchCase="'SceneView'" fxFlexFill>
-    <app-rn-scene-view  (onEvent)="onEvent" (onRefresh)="childRefresh()"   (onItems)="childItems" fxFlexFill></app-rn-scene-view>
+    <app-rn-scene-view [items]="items" [item]="item" (onEvent)="onEvent" (onRefresh)="childRefresh()"   (onItems)="childItems" fxFlexFill></app-rn-scene-view>
   </div>
   <div *ngSwitchCase="'PropertiesView'" fxFlexFill>
     <app-rn-properties-view  (onEvent)="onEvent" (onRefresh)="childRefresh()" (onItems)="childItems" fxFlexFill></app-rn-properties-view>

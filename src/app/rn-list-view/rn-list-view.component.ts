@@ -29,6 +29,7 @@ export class RnListViewComponent extends RnViewComponent implements ItemCallback
 
   override itemsChanged(items?: Item[]): void {
     if (items) {
+      //console.log(items);
       this.dataSource.data = items;
     }
     //console.log('*************************************** hello from list view changed!!!');

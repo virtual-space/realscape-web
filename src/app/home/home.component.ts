@@ -25,13 +25,17 @@ export class HomeComponent implements OnInit {
             const role = apps.items.find(a => itemIsInstanceOf(a, 'Role'));
             if (role && role.items) {
               const apps_item = role.items.find(a => itemIsInstanceOf(a, 'Apps'));
-              console.log(apps_item)
+              //console.log(apps_item)
               if (apps_item && apps_item.items) {
                 this.itemService.setApps(apps_item.items);
                 const initial_app = apps_item.items.find(aa => aa.attributes? (aa.attributes['initial'] === 'true') : false);
                 if (initial_app) {
                   this.router.navigate(['/items', initial_app.id!]);
                 } 
+              }
+              const dialogs_item = role.items.find(d => itemIsInstanceOf(d, 'Dialogs'));
+              if (dialogs_item && dialogs_item.items) {
+                this.itemService.setDialogs(dialogs_item.items);
               }
             }
           } else {
