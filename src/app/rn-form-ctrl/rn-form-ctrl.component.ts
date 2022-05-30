@@ -1,7 +1,7 @@
 import { Component, Input, OnInit, SimpleChanges } from '@angular/core';
 import { RnCtrlComponent } from '../rn-ctrl/rn-ctrl.component';
 import { FormGroup, FormControl } from '@angular/forms';
-import { Item, ItemEvent, itemIsInstanceOf, Type } from '../services/item.service';
+import { Item, ItemEvent, itemIsInstanceOf, Query, Type } from '../services/item.service';
 import { Subject } from 'rxjs';
 
 @Component({
@@ -17,6 +17,17 @@ export class RnFormCtrlComponent extends RnCtrlComponent implements OnInit {
 
     override ngOnInit(): void {
       //console.log(this);
+      if(this.control && this.item) {
+        const attrs = this.collectItemAttributes(this.control, {});
+        if (attrs && 'query' in attrs) {
+          if(attrs['query']) {
+            const query = this.getItemQuery(this.item);
+            this.item = this.itemFromQuery(query? query : new Query());
+            console.log('query:', query, 'item:', this.item);
+            //this.itemFromQuery(this.getItemQuery(this.item))
+          }
+        }
+      }
       this.formGroup = new FormGroup({});
       this.controls = this.getControls();
       //console.log(this.controls)
@@ -131,6 +142,7 @@ export class RnFormCtrlComponent extends RnCtrlComponent implements OnInit {
     }
     */
     onButtonClick(button: Item) {
+      console.log(button);
       if (this.onEvent) {
         //console.log(this.form_group);
         this.onEvent.emit({event: 'click', 

@@ -208,16 +208,7 @@ export class ItemService {
       if ('name' in item.attributes) {
         params = params.append('name', item.attributes['name']);
       }
-      if ('home' in item.attributes) {
-        params = params.append('home', item.attributes['home']);
-      }
-      if ('public' in item.attributes) {
-        params = params.append('public', item.attributes['public']);
-      }
-      if ('my_items' in item.attributes) {
-        params = params.append('my_items', item.attributes['my_items']);
-      }
-      if ('parent_id' in item.attributes) {
+      if ('parent_id' in item.attributes && item.attributes['parent_id'] !== undefined) {
         params = params.append('parent_id', item.attributes['parent_id']);
       }
       if ('lat' in item.attributes) {

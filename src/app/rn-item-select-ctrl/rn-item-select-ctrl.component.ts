@@ -25,86 +25,120 @@ export class RnItemSelectCtrlComponent extends RnCtrlComponent implements OnInit
 
     override ngOnInit(): void {
       if (this.item) {
-        let types = this.itemService.getTypes();
-        this.linkType = types.find(t => t.name === 'Link');
-        if (this.linkType)
-        {
-          let attributes = this.collectItemAttributes(this.item, {});
-          let query = new Query();
-          if ('types' in attributes) {
-            query.types = attributes['types'];
-          }
-          
+        const itemQuery = this.getItemQuery(this.item);
+        if (itemQuery) {
+          const query = itemQuery? itemQuery : new Query();
           this.itemService.items(query).subscribe(items => {
-              this.items = items;
-              if (this.items.length > 0) {
+            this.items = items;
+            if (this.items.length > 0) {
+              const value = this.getValue();
+              if(value !== undefined) {
+                const i = this.items.find(ii => ii.id === value);
+                if (i) {
+                  const icon = this.getItemIcon(i);
+                  const field_name = this.getFieldName();
+                  if (i && i.name && i.id && this.linkType) {
+                    this.selectedName = i.name;
+                    this.selectedId = i.id;
+                    this.selectedIcon = icon;
+                    this.selectedItem = i;
+                    if(this.formGroup) {
+                      this.formControl = new FormControl(this.selectedId);
+                      this.formGroup.removeControl(field_name);
+                      this.formGroup.addControl(field_name, this.formControl);
+                    }
+                    console.log(this.selectedItem);
+                    if (this.onEvent) {
+                      this.onEvent.emit({event: field_name, item: this.selectedItem, control: this.control});
+                    }
+                  }
+                }
+              } else {
                 const i = this.items[0];
-                //console.log(i);
                 const icon = this.getItemIcon(i);
+                const field_name = this.getFieldName();
                 if (i && i.name && i.id && this.linkType) {
                   this.selectedName = i.name;
                   this.selectedId = i.id;
                   this.selectedIcon = icon;
                   this.selectedItem = i;
-                  this.selectedItem = new Item();
-                  this.selectedItem.name = i.name + ' Link';
-                  this.selectedItem.linked_item_id = i.id;
-                  this.selectedItem.attributes = Object.assign({}, i.attributes? i.attributes : {});
-                  this.selectedItem.type_id = this.linkType.id!;
-                  this.selectedItem.type = this.linkType;
                   if(this.formGroup) {
-                    this.formGroup.removeControl('linked_item_id');
-                    this.formGroup.removeControl('type');
-                    this.formGroup.addControl('linked_item_id', new FormControl(this.selectedId));
-                    this.formGroup.addControl('type', new FormControl(this.linkType!.name!));
-                    const nameControl = this.formGroup.controls['name'];
-                    if (nameControl) {
-                      this.formGroup.controls['name'].setValue(this.selectedItem.name);
-                    }
+                    this.formControl = new FormControl(this.selectedId);
+                    this.formGroup.removeControl(field_name);
+                    this.formGroup.addControl(field_name, this.formControl);
                   }
                   console.log(this.selectedItem);
                   if (this.onEvent) {
-                    this.onEvent.emit({event: "item", item: this.selectedItem, control: this.control});
+                    this.onEvent.emit({event: field_name, item: this.selectedItem, control: this.control});
                   }
                 }
+                
               }
+              
+            }
           });
+        } else {
+          const value = this.getValue();
+         
+          //console.log('*** field_name, value, control ***', field_name, value, this.control);
+          if (value !== undefined) {
+            this.itemService.getItem(value).subscribe(item => {
+              this.items = [item];
+              this.selectedName = item.name!;
+              this.selectedId = item.id!;
+              this.selectedIcon = this.getItemIcon(item);
+              this.selectedItem = item;
+              const field_name = this.getFieldName();
+              if(this.formGroup) {
+                this.formControl = new FormControl(this.selectedId);
+                this.formGroup.removeControl(field_name);
+                this.formGroup.addControl(field_name, this.formControl);
+              }
+            });
+          }
+          
         }
+        
       }
+    }
+
+    getItems(): string {
+      return this.getControlAttribute('suffix', '', this.control);
+    }
+
+    getSuffix(): string {
+      return this.getControlAttribute('suffix', '', this.control);
+    }
+
+    getFieldName(): string {
+      return this.getControlAttribute('field_name', '', this.control);
+    }
+
+    getTarget(): string {
+      return this.getControlAttribute('target', '', this.control);
     }
 
     
     onSelectChange(event: MatSelectChange) {
       const e = this.items.filter(i => i.id === event.value)[0];
       const icon = this.getItemIcon(e);
-      if (e && e.name && e.id && icon && this.linkType) {
+      if (e && e.name && e.id && icon) {
         this.selectedId = e.id;
         this.selectedName = e.name;
         this.selectedIcon = icon;
-
         this.selectedItem = e;
-        this.selectedItem = new Item();
-        this.selectedItem.name = e.name + ' Link';
-        this.selectedItem.linked_item_id = e.id;
-        this.selectedItem.attributes = Object.assign({}, e.attributes? e.attributes : {});
-        this.selectedItem.type_id = this.linkType.id!;
-        this.selectedItem.type = this.linkType;
+
+        const field_name = this.getFieldName();
 
         if(this.formGroup) {
           this.formControl = new FormControl(this.selectedId);
-            this.formGroup.removeControl('linked_item_id');
-            this.formGroup.removeControl('type');
-            this.formGroup.addControl('linked_item_id', new FormControl(this.selectedId));
-            this.formGroup.addControl('type', new FormControl(this.linkType!.name!));
-            const nameControl = this.formGroup.controls['name'];
-            if (nameControl) {
-              this.formGroup.controls['name'].setValue(this.selectedItem.name);
-            }
+          this.formGroup.removeControl(field_name);
+          this.formGroup.addControl(field_name, this.formControl);
         }
 
         //console.log(this.selectedItem);
         if (this.onEvent) {
-          this.onEvent.emit({event: "item", item: this.selectedItem, control: this.control});
+          this.onEvent.emit({event: field_name, item: this.selectedItem, control: this.control});
         }
       }
     }

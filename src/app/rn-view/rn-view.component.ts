@@ -214,57 +214,11 @@ export class RnViewComponent extends RnCtrlComponent implements OnInit, OnChange
     return true;
   }
 
-  getUpdateParams(data: {[index: string]: any}, add_parent=false) {
-    console.log("&&& getUpdateParams &&&", data);
-    const params: {[index: string]: any} = {};
-    let attrs = data['attributes'];
-    if (attrs) {
-      params['attributes'] = attrs;
-    } else {
-      params['attributes'] = {};
-      attrs = params['attributes'];
-    }
-    
-    if ('type' in data) {
-      if (Object.prototype.toString.call(data['type']) === "[object String]") {
-        params['type'] =data['type']
-      }
-    }
-    if ('name' in attrs) {
-        params['name'] = attrs['name'];
-        delete attrs['name'];
-    } else if('name' in data) {
-      params['name'] = data['name'];
-    }
-    if ('parent_id' in data && data['parent_id']) {
-      params['parent_id'] = data['parent_id']
-    } else if (add_parent && this.item && !itemIsInstanceOf(this.item, 'App')) {
-      params['parent_id'] = this.item.id
-    }
-    if ('location' in data && !! data['location']) {
-      params['location'] = data['location'];
-    }
-    if ('valid_from' in data) {
-      params['valid_from'] = data['valid_from'];
-    }
-    if ('valid_to' in data) {
-      params['valid_to'] = data['valid_to'];
-    }
-    if ('status' in data) {
-      params['status'] = data['status'];
-    }
-    if('types' in data) {
-      attrs['types'] = data['types'];
-    }
-
-    return params;
-  }
-
   onAdd(item?: Item) {
     if (this.canAddItem()) {
       //console.log(item);
       const dialogs = this.itemService.getDialogs();
-      console.log(dialogs);
+      //console.log(dialogs);
       if (dialogs) {
         const createDialogs = dialogs.filter(d => itemIsInstanceOf(d, 'ItemCreateDialog'));
 
@@ -275,12 +229,18 @@ export class RnViewComponent extends RnCtrlComponent implements OnInit, OnChange
 
             const form = dialog.items.find(d => itemIsInstanceOf(d, 'Ctrl'));
             if (form) {
-              const dialogRef = this.dialog.open(RnDialogComponent, {
+              const target_item = item? item : new Item();
+              if (this.item && !itemIsInstanceOf(this.item, 'App')) {
+                target_item.parent_id = this.item.id;
+              }
+              console.log(target_item);
+              this.dialog.open(RnDialogComponent, {
                 width: '95vw',
                 height: '75vh',
-                data: {item: item? item : {}, view: form }
+                data: {item: target_item, view: form }
               });
       
+              /*
               dialogRef.afterClosed().subscribe(result => {
                 if (result) {
                   console.log(result);
@@ -317,6 +277,7 @@ export class RnViewComponent extends RnCtrlComponent implements OnInit, OnChange
                     });
                 }
               });
+              */
             }
           }
         } 

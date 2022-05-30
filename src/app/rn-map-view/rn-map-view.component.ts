@@ -251,6 +251,9 @@ export class RnMapViewComponent extends RnViewComponent implements OnInit, OnDes
   */
 
   getItemsWithPositions(): Item[] {
+    if (this.item && this.item.location && this.item.location.coordinates) {
+      return this.items.filter(i => i.location && i.location.coordinates).concat(this.item);
+    }
     return this.items.filter(i => i.location && i.location.coordinates);
   }
 
@@ -286,10 +289,11 @@ export class RnMapViewComponent extends RnViewComponent implements OnInit, OnDes
     //console.log(this);
     const viewBounds = this.getViewLocationBounds();
     console.log('viewbounds ', viewBounds);
-    if(viewBounds) {
+    if(viewBounds !== undefined) {
       return viewBounds;
     } else {
       this.getItemsWithPositions().forEach(ip => {
+        console.log(ip);
         if(ip.location.type === 'Point'){
           bounds = bounds.extend(ip.location.coordinates);
         } else {
@@ -302,6 +306,7 @@ export class RnMapViewComponent extends RnViewComponent implements OnInit, OnDes
           }
         }
       });
+      return bounds;
     }
     
     console.log(bounds);
@@ -310,7 +315,11 @@ export class RnMapViewComponent extends RnViewComponent implements OnInit, OnDes
 
   fitMapToBounds() {
     console.log('fitting map to bounds');
-    this.map?.fitBounds(this.getBoundingBox());
+    const bb = this.getBoundingBox();
+    if (bb) {
+      this.map?.fitBounds(bb);
+    }
+    
     //this.map?.setZoom(15);
   }
 

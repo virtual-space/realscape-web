@@ -21,7 +21,7 @@ export class RnTypeSelectCtrlComponent  extends RnCtrlComponent implements OnIni
   override ngOnInit(): void {
     const all_types: Type[] = this.itemService.getTypes();
     if(all_types) {
-      const creatable_types = all_types.filter(t => this.collectTypeAttributes(t, {})['creatable'] === 'true');
+      const all_creatable_types = all_types.filter(t => this.collectTypeAttributes(t, {})['creatable'] === 'true');
       let attributes: {[index:string]:any} = {};
       if (this.item) {
         attributes = this.collectTypeAttributes(this.item.type!, attributes);
@@ -37,7 +37,7 @@ export class RnTypeSelectCtrlComponent  extends RnCtrlComponent implements OnIni
           //const includedTypes = new Set(types.filter(t => includedTypeNames.has(t.name)).map(t => t['id']));
           //this.types = this.types.filter(t => includedTypes.has(t['id']) || includedTypes.has(t['base_id']) );
           const includedTypes:Type[] = [];
-          for (let type of creatable_types) {
+          for (let type of all_creatable_types) {
             for(let type_name of includedTypeNames) {
               if (isInstanceOf(type, type_name)) {
                 //console.log('************************* found instance ', type.name, 'of', type_name);
@@ -49,7 +49,8 @@ export class RnTypeSelectCtrlComponent  extends RnCtrlComponent implements OnIni
           this.types = includedTypes;
           //console.log('************************* resulting types ', includedTypes);
       } else {
-        this.types = creatable_types;
+        // whitelist only from now
+        // this.types = all_creatable_types;
       }
     }
   }
@@ -86,6 +87,9 @@ export class RnTypeSelectCtrlComponent  extends RnCtrlComponent implements OnIni
         if (this.item && this.item.status) {
           this.selectedItem.status = this.item.status;
         }
+        if (this.item && this.item.parent_id) {
+          this.selectedItem.parent_id = this.item.parent_id;
+        }
         this.selectedItem.attributes = this.collectTypeAttributes(t, {});
         if (this.onEvent) {
           this.onEvent.emit({event: "type", item: this.selectedItem, control: this.control});
@@ -120,6 +124,9 @@ export class RnTypeSelectCtrlComponent  extends RnCtrlComponent implements OnIni
         }
         if (this.item && this.item.status) {
           this.selectedItem.status = this.item.status;
+        }
+        if (this.item && this.item.parent_id) {
+          this.selectedItem.parent_id = this.item.parent_id;
         }
         
         if(this.formGroup) {

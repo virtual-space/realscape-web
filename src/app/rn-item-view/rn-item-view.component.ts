@@ -89,6 +89,7 @@ export class RnItemViewComponent extends RnViewComponent implements OnInit, OnCh
   reloadItem(item: Item): void {
     console.log('*** reloading ',item);
     this.views = this.getItemViews(item);
+    this.controls = this.getItemControls(item);
     console.log(this.views);
     this.query = this.getItemQuery(item);
     this.id = item.id;
@@ -100,26 +101,26 @@ export class RnItemViewComponent extends RnViewComponent implements OnInit, OnCh
       view_query.parent_id = this.id; 
       this.itemService.items(view_query).subscribe(items => {
         this.children = items;
-        this.sessionService.activateItems(this.children);
+        //this.sessionService.activateItems(this.children);
       });
     } else if (item.items && item.items.length > 0) {
       console.log('children = items', item.items);
       this.children = [...item.items];
-      this.sessionService.activateItems(this.children);
+      //this.sessionService.activateItems(this.children);
     } else if (this.query) {
       console.log('children = query')
       this.itemService.items(this.query).subscribe(items => {
         this.children = items;
-        this.sessionService.activateItems(this.children);
+        //this.sessionService.activateItems(this.children);
       });
     } else {
       console.log('children = chidlren')
       this.itemService.children(this.id!).subscribe(children => {
         this.children = children;
-        this.sessionService.activateItems(this.children);
+        //this.sessionService.activateItems(this.children);
       });
     }
-    this.sessionService.activateItem(item);
+    //this.sessionService.activateItem(item);
   }
 
   shouldShowChildren(item: Item): boolean {
@@ -141,7 +142,7 @@ export class RnItemViewComponent extends RnViewComponent implements OnInit, OnCh
   override ngOnChanges(changes: SimpleChanges): void {
     if(changes['item']) {
       if (this.item) {
-        console.log('item view reloading item', this.item);
+        console.log('********************* item view reloading item', this.item);
         this.reloadItem(this.item);
       }
       
@@ -248,7 +249,8 @@ export class RnItemViewComponent extends RnViewComponent implements OnInit, OnCh
   override itemChanged(item?: Item): void {
     console.log("*** item_view item_changed ***");
     if (item) {
-     // this.sessionService.activateItem(item);
+      //this.item = item;
+      this.refreshView();
     }
     
   }

@@ -11,35 +11,45 @@ export class RnButtonCtrlComponent extends RnCtrlComponent implements OnInit {
 
   public onClick(event: Event) {
     console.log(event);
+    console.log(this.formGroup!.value)
     if (this.item) {
-      if (this.control && this.control.items) {
-        for(var i of this.control.items) {
-          if (itemIsInstanceOf(i, "Save")) {
-              console.log("*** save_item ***", this.item);
-              this.itemService.update(this.item!.id!, this.item).subscribe(item => {
-                if (this.onRefresh) {
-                  this.onRefresh.emit();
-                }
-              });
-          } else if (itemIsInstanceOf(i, "Find")) {
-            console.log("*** find_item ***");
-            this.itemService.search(this.item).subscribe(items => {
-              this.sessionService.activateItems(items);
+      if (this.control) {
+        const attrs = this.collectItemAttributes(this.control, {});
+        if ('command' in attrs) {
+          const command = attrs['command'];
+          if (command === "Save") {
+            console.log("*** save_item ***", this.item);
+            this.itemService.update(this.item!.id!, this.getUpdateParams2(this.formGroup!.value)).subscribe(item => {
+              this.sessionService.activateItem(item);
             });
-          } else if (itemIsInstanceOf(i, "Reset")) {
-            if (this.onRefresh) {
-              this.onRefresh.emit();
-            }
-            console.log("*** reset_item ***");
-          } else if (itemIsInstanceOf(i, "Delete")) {
-            console.log("*** delete_item ***");
+        } else if (command === "Create") {
+          console.log("*** create_item ***", this.formGroup!.value);
+          this.itemService.create(this.getUpdateParams2(this.formGroup!.value, true)).subscribe(item => {
+            this.sessionService.activateItem(item);
+          });
+        } else if (command === "Find") {
+          console.log("*** find_item ***", this.formGroup!.value);
+          this.itemService.items(this.queryFromItem(this.getUpdateParams2(this.formGroup!.value))).subscribe(items => {
+            this.sessionService.activateItems(items);
+          });
+        } else if (command === "Reset") {
+          /*
+          if (this.onRefresh) {
+            this.onRefresh.emit();
+          }*/
+          console.log("*** reset_item ***");
+          if (this.item) {
+            this.sessionService.activateItem(this.item);
           } else {
-            console.log("*** unknown ***");
+            this.sessionService.activateItem(new Item());
           }
+        } else if (command === "Delete") {
+          console.log("*** delete_item ***");
+        } else {
+          console.log("*** unknown ***");
         }
+        }
+      }
     }
-    }
-    
   }
-
 }

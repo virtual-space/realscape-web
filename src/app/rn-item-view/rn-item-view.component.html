@@ -77,8 +77,22 @@
       </nav>
   </div>
   <div fxFlexFill>
-    <div fxLayoutAlign="center center" *ngIf="item" fxFlexFill>
+    <div fxLayoutAlign="center center" *ngIf="item" fxFlexFill fxLayout="column">
       <!-- <app-rn-query-view *ngIf="query"></app-rn-query-view> -->
+      <div *ngIf="controls.length > 0" fxFlexFill>
+        <div [fxLayout.gt-sm]="layout"  fxLayout="column" fxLayoutGap="1%" fxFlexFill>
+          <div *ngFor="let child of controls; let index = index" fxFlex="1 0 auto">
+              <div fxFlex *ngIf="formGroup">
+                <app-rn-ctrl [control]="child" [item]="item" (onRefresh)="childRefresh()" (onItems)="childItems($event)" [formGroup]="formGroup"  [events]="events" [tabIndex]="tabIndex">
+                </app-rn-ctrl>
+              </div>
+              <div fxFlexFill *ngIf="!formGroup">
+                <app-rn-ctrl [control]="child" [item]="item" (onRefresh)="childRefresh()" (onItems)="childItems($event)" [events]="events" [tabIndex]="tabIndex">
+                </app-rn-ctrl>
+              </div>
+          </div>
+        </div>
+      </div>
       <div *ngIf="(views.length > 1) && !shouldShowViewsAsItems(item)" class="tab-group-container" fxFlexFill>
           <mat-tab-group [selectedIndex]="selectedView.value" dynamicHeight mat-align-tabs="center" backgroundColor="primary"
                        (selectedTabChange)="onChangeTab($event)"

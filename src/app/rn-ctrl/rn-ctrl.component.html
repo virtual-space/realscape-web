@@ -115,16 +115,14 @@
                     <app-rn-label-ctrl [item]="item" [control]="control"  [events]="events" [tabIndex]="tabIndex" (onRefresh)="childRefresh()" (onItems)="childItems($event)"></app-rn-label-ctrl>
                 </div>
             </div>
-            <!--
-            <ng-container *ngSwitchCase="'FormCtrl'">
-                <ng-container *ngIf="formGroup">
-                    <app-rn-form-ctrl [item]="item" [control]="control" [formGroup]="formGroup"  [events]="events" [tabIndex]="tabIndex"></app-rn-form-ctrl>
-                </ng-container>
-                <ng-container *ngIf="!formGroup">
-                    <app-rn-form-ctrl [item]="item" [control]="control"  [events]="events" [tabIndex]="tabIndex"></app-rn-form-ctrl>
-                </ng-container>
-            </ng-container>
-            -->
+            <div *ngSwitchCase="'FormCtrl'" fxFlexFill>
+                <div *ngIf="formGroup"  fxFlexFill>
+                    <app-rn-form-ctrl [item]="item" [control]="control" [formGroup]="formGroup"  [events]="events" [tabIndex]="tabIndex"  (onRefresh)="childRefresh()" (onItems)="childItems($event)"></app-rn-form-ctrl>
+                </div>
+                <div *ngIf="!formGroup"   fxFlexFill>
+                    <app-rn-form-ctrl [item]="item" [control]="control"  [events]="events" [tabIndex]="tabIndex"  (onRefresh)="childRefresh()" (onItems)="childItems($event)"></app-rn-form-ctrl>
+                </div>
+            </div>
             <div *ngSwitchCase="'FuncCtrl'"  fxFlexFill>
                 <div *ngIf="formGroup"  fxFlexFill>
                     <app-rn-func-ctrl [item]="item" [control]="control" [formGroup]="formGroup"  [events]="events" [tabIndex]="tabIndex" (onRefresh)="childRefresh()" (onItems)="childItems($event)"></app-rn-func-ctrl>

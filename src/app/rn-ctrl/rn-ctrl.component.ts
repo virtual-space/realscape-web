@@ -286,8 +286,10 @@ export class RnCtrlComponent implements OnInit, OnChanges, ItemCallbacks {
                     return this.item.name;
                   } else if (key === "location") {
                     return this.item.location;
-                  }else if (key === "status") {
+                  } else if (key === "status") {
                     return this.item.status;
+                  } else if (key === "parent_id") {
+                    return this.item.parent_id;
                   }
               }
             }
@@ -353,8 +355,10 @@ export class RnCtrlComponent implements OnInit, OnChanges, ItemCallbacks {
               this.item.name = value;
             } else if (key === "location") {
               this.item.location = JSON.parse(value);
-            }else if (key === "status") {
+            } else if (key === "status") {
               this.item.status = value;
+            } else if (key === "parent_id") {
+              this.item.parent_id = value;
             }
         }
         }
@@ -470,6 +474,108 @@ export class RnCtrlComponent implements OnInit, OnChanges, ItemCallbacks {
       result.status = item.status;
     }
     return result;
+  }
+
+  getUpdateParams2(data: {[index: string]: any}, add_parent=false) {
+    console.log("&&& getUpdateParams2 &&&", data, this.item);
+    const params: {[index: string]: any} = {};
+    let attrs = data['attributes'];
+    if (attrs) {
+      params['attributes'] = attrs;
+    } else {
+      params['attributes'] = {};
+      attrs = params['attributes'];
+    }
+    
+    if ('type' in data) {
+      if (Object.prototype.toString.call(data['type']) === "[object String]") {
+        params['type'] =data['type']
+      }
+    }
+    if ('name' in attrs) {
+        const name = attrs['name'];
+        if(!(!name || name.trim() === "" || (name.trim()).length === 0)) {
+          params['name'] = attrs['name'];
+        }
+       
+        delete attrs['name'];
+    } else if('name' in data) {
+      const name = data['name'];
+      if(!(!name || name.trim() === "" || (name.trim()).length === 0)) {
+        params['name'] = data['name'];
+      } 
+    }
+    if ('parent_id' in data && data['parent_id']) {
+      params['parent_id'] = data['parent_id']
+    } else if (add_parent && this.item && !itemIsInstanceOf(this.item, 'App')) {
+      params['parent_id'] = this.item.id
+    }
+    if ('types' in data && !!data['types']) {
+      attrs['types'] = data['types'];
+    }
+    if ('location' in data && !!data['location']) {
+      params['location'] = data['location'];
+    }
+    if ('valid_from' in data  && data['valid_from'] !== undefined) {
+      params['valid_from'] = data['valid_from'];
+    }
+    if ('valid_to' in data && data['valid_to'] !== undefined) {
+      params['valid_to'] = data['valid_to'];
+    }
+    if ('status' in data && data['status'] !== undefined) {
+      params['status'] = data['status'];
+    }
+    if('types' in data) {
+      attrs['types'] = data['types'];
+    }
+    console.log(params);
+    return params;
+  }
+
+  getUpdateParams(data: {[index: string]: any}, add_parent=false) {
+    console.log("&&& getUpdateParams &&&", data);
+    const params: {[index: string]: any} = {};
+    let attrs = data['attributes'];
+    if (attrs) {
+      params['attributes'] = attrs;
+    } else {
+      params['attributes'] = {};
+      attrs = params['attributes'];
+    }
+    
+    if ('type' in data) {
+      if (Object.prototype.toString.call(data['type']) === "[object String]") {
+        params['type'] =data['type']
+      }
+    }
+    if ('name' in attrs) {
+        params['name'] = attrs['name'];
+        delete attrs['name'];
+    } else if('name' in data) {
+      params['name'] = data['name'];
+    }
+    if ('parent_id' in data && data['parent_id']) {
+      params['parent_id'] = data['parent_id']
+    } else if (add_parent && this.item && !itemIsInstanceOf(this.item, 'App')) {
+      params['parent_id'] = this.item.id
+    }
+    if ('location' in data && !! data['location']) {
+      params['location'] = data['location'];
+    }
+    if ('valid_from' in data) {
+      params['valid_from'] = data['valid_from'];
+    }
+    if ('valid_to' in data) {
+      params['valid_to'] = data['valid_to'];
+    }
+    if ('status' in data) {
+      params['status'] = data['status'];
+    }
+    if('types' in data) {
+      attrs['types'] = data['types'];
+    }
+
+    return params;
   }
 
   getItemQuery(item: Item): Query | undefined {

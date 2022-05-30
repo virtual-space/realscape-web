@@ -1,5 +1,5 @@
 <div *ngIf="control" fxLayoutAlign="center center" fxFlexFill>
-    <button mat-raised-button color="primary" (click)="onClick($event)">{{control.name}}</button>
+    <button mat-raised-button color="primary" (click)="onClick($event)" [mat-dialog-close]="true">{{control.name}}</button>
 </div>
      
 
