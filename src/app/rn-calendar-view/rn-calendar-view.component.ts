@@ -76,53 +76,72 @@ export class RnCalendarViewComponent implements OnInit {
 
   ngOnInit(): void {
     //console.log('init',this.items)
+    this.populateItems();
+  }
+
+  populateItems() {
     this.dataSource.data = this.items;
+    //this.dataSource.data.push(this.item)
+    this.events = [];
+
+    if(this.item) {
+      if(this.item.valid_from){
+        //console.log('has valid_from',value.valid_from)
+        if(this.item.valid_to){
+          //console.log('has valid_to',value.valid_to)
+          this.events.push({
+            start: new Date(this.item.valid_from),
+            end: new Date(this.item.valid_to),
+            id: this.item.id,
+            title: this.item.name!,
+            color: this.colors.yellow,
+            actions: this.actions,
+          })
+        } else {
+          this.events.push({
+            start: new Date(this.item.valid_from),
+            id: this.item.id,
+            title: this.item.name!,
+            color: this.colors.yellow,
+            actions: this.actions,
+          })
+        }
+      }
+    }
+
     this.dataSource.data.forEach(value => {
       //console.log(value)
       if(value.valid_from){
-        this.events.push({
-          start: startOfDay(new Date()),
-          title: value.name,
-          color: this.colors.yellow,
-          actions: this.actions,
-        })
+        //console.log('has valid_from',value.valid_from)
+        if(value.valid_to){
+          //console.log('has valid_to',value.valid_to)
+          this.events.push({
+            start: new Date(value.valid_from),
+            end: new Date(value.valid_to),
+            id: value.id,
+            title: value.name,
+            color: this.colors.yellow,
+            actions: this.actions,
+          })
+        } else {
+          this.events.push({
+            start: new Date(value.valid_from),
+            id: value.id,
+            title: value.name,
+            color: this.colors.yellow,
+            actions: this.actions,
+          })
+        }
+      } else {
+        //console.log(value.id, "does not have a valid start date")
       }
     })
   }
 
   ngOnChanges(changes: SimpleChanges): void {
     //console.log('changes',this.items)
-    if(changes['items']) {
-      this.dataSource.data = this.items;
-      //this.dataSource.data.push(this.item)
-      this.events = [];
-      this.dataSource.data.forEach(value => {
-        //console.log(value)
-        if(value.valid_from){
-          //console.log('has valid_from',value.valid_from)
-          if(value.valid_to){
-            //console.log('has valid_to',value.valid_to)
-            this.events.push({
-              start: new Date(value.valid_from),
-              end: new Date(value.valid_to),
-              id: value.id,
-              title: value.name,
-              color: this.colors.yellow,
-              actions: this.actions,
-            })
-          } else {
-            this.events.push({
-              start: new Date(value.valid_from),
-              id: value.id,
-              title: value.name,
-              color: this.colors.yellow,
-              actions: this.actions,
-            })
-          }
-        } else {
-          //console.log(value.id, "does not have a valid start date")
-        }
-      })
+    if(changes['items'] || changes['item']) {
+      this.populateItems();
     }
   }
 

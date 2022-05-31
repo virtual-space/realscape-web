@@ -55,11 +55,11 @@ export class RnViewComponent extends RnCtrlComponent implements OnInit, OnChange
   }
 
   getItemViewTarget(items: Item[]): Item | undefined {
-    //console.log(this);
+    ////console.log(this);
     if (this.view && this.view.attributes) {
-      //console.log(this.view.attributes);
-      //console.log('select_name' in this.view.attributes);
-      //console.log(this.view.attributes['select_name']);
+      ////console.log(this.view.attributes);
+      ////console.log('select_name' in this.view.attributes);
+      ////console.log(this.view.attributes['select_name']);
       let select_name: string | undefined;
       let select_type: string | undefined;
       if('select_name' in this.view.attributes) {
@@ -71,7 +71,7 @@ export class RnViewComponent extends RnCtrlComponent implements OnInit, OnChange
         //let select_name = this.view.attributes['select_name'] ? ('select_name' in this.view.attributes) : undefined
         //let select_type = this.view.attributes['select_type'] ? ('select_type' in this.view.attributes) : undefined
         let result =  items.filter(i => i.name === select_name && i.type!.name === select_type).find(e => true);
-        //console.log('select ', select_name, select_type, result);
+        ////console.log('select ', select_name, select_type, result);
         return result;
     }
     return undefined;
@@ -84,7 +84,7 @@ export class RnViewComponent extends RnCtrlComponent implements OnInit, OnChange
   }
 
   override onEventHandler(event: ItemEvent) {
-    console.log('*** onEventHandler ', this, event);
+    //console.log('*** onEventHandler ', this, event);
     
     if (event.event) {
        if(event.event == 'edit' && event.item) {
@@ -98,7 +98,7 @@ export class RnViewComponent extends RnCtrlComponent implements OnInit, OnChange
   }
 
   onViewEventHandler(event: string) {
-    console.log('event received by ', this);
+    //console.log('event received by ', this);
   }
 
   isExternalType(item: Item): boolean {
@@ -216,9 +216,9 @@ export class RnViewComponent extends RnCtrlComponent implements OnInit, OnChange
 
   onAdd(item?: Item) {
     if (this.canAddItem()) {
-      //console.log(item);
+      ////console.log(item);
       const dialogs = this.itemService.getDialogs();
-      //console.log(dialogs);
+      ////console.log(dialogs);
       if (dialogs) {
         const createDialogs = dialogs.filter(d => itemIsInstanceOf(d, 'ItemCreateDialog'));
 
@@ -233,51 +233,12 @@ export class RnViewComponent extends RnCtrlComponent implements OnInit, OnChange
               if (this.item && !itemIsInstanceOf(this.item, 'App')) {
                 target_item.parent_id = this.item.id;
               }
-              console.log(target_item);
+              //console.log(target_item);
               this.dialog.open(RnDialogComponent, {
                 width: '95vw',
                 height: '75vh',
                 data: {item: target_item, view: form }
               });
-      
-              /*
-              dialogRef.afterClosed().subscribe(result => {
-                if (result) {
-                  console.log(result);
-                  this.uploading = true;
-        
-                  if (result.file) {
-                    this.uploadingFile = true;
-                    this.uploadProgress = 0;
-                  }
-                  
-                  console.log(result.data);
-                  this.itemService.create(this.getUpdateParams(result.data, true), (progress) => { this.uploadProgress = progress }).subscribe(
-                    (res) => {
-                      if (res && res['id']) {
-                        console.log(`Success created item id: ${res['id']}`);
-                        if(this.onRefresh) {
-                          this.onRefresh.emit();
-                        }
-                      }
-                    },
-                    (err) => {
-                      this.uploadingFile = false;
-                      this.uploadProgress = 0;
-                      this.uploading = false;
-                      this.snackBar.open(err['error']['Error'], 'Dismiss');
-                    },
-                    () => {
-                      this.uploadingFile = false;
-                      this.uploadProgress = 0;
-                      this.uploading = false;
-                      if(this.onRefresh) {
-                        this.onRefresh.emit();
-                      }
-                    });
-                }
-              });
-              */
             }
           }
         } 
@@ -288,7 +249,7 @@ export class RnViewComponent extends RnCtrlComponent implements OnInit, OnChange
 
   onAddLink(item?: Item) {
     if (this.canAddItem()) {
-      //console.log(item);
+      ////console.log(item);
       const dialogs = this.itemService.getDialogs();
       if (dialogs) {
         const createDialogs = dialogs.filter(d => itemIsInstanceOf(d, 'ItemLinkDialog'));
@@ -300,15 +261,16 @@ export class RnViewComponent extends RnCtrlComponent implements OnInit, OnChange
 
             const form = dialog.items.find(d => itemIsInstanceOf(d, 'Ctrl'));
             if (form) {
-              const dialogRef = this.dialog.open(RnDialogComponent, {
+              this.dialog.open(RnDialogComponent, {
                 width: '95vw',
                 height: '75vh',
                 data: {item: item? item : {}, view: form }
               });
       
+              /*
               dialogRef.afterClosed().subscribe(result => {
                 if (result) {
-                  console.log(result);
+                  //console.log(result);
                   this.uploading = true;
         
                   if (result.file) {
@@ -319,11 +281,11 @@ export class RnViewComponent extends RnCtrlComponent implements OnInit, OnChange
                   if (item) {
                     result.data['parent_id'] = item.id;
                   }
-                  console.log(result.data);
+                  //console.log(result.data);
                   this.itemService.create(result.data, (progress) => { this.uploadProgress = progress }).subscribe(
                     (res) => {
                       if (res && res['id']) {
-                        console.log(`Success created item id: ${res['id']}`);
+                        //console.log(`Success created item id: ${res['id']}`);
                         if(this.onRefresh) {
                           this.onRefresh.emit();
                         }
@@ -344,7 +306,7 @@ export class RnViewComponent extends RnCtrlComponent implements OnInit, OnChange
                       }
                     });
                 }
-              });
+              });*/
             }
           }
         } 
@@ -354,7 +316,7 @@ export class RnViewComponent extends RnCtrlComponent implements OnInit, OnChange
   }
 
   onEdit(item: Item) {
-    //console.log(event);
+    ////console.log(event);
     if(this.canEditOrDeleteItem()) {
       const dialogs = this.itemService.getDialogs();
       if (dialogs) {
@@ -366,38 +328,38 @@ export class RnViewComponent extends RnCtrlComponent implements OnInit, OnChange
           if (dialog && dialog.items) {
             const form = dialog.items.find(d => itemIsInstanceOf(d, 'Ctrl'));
             if (form) {
-              const dialogRef = this.dialog.open(RnDialogComponent, {
+              this.dialog.open(RnDialogComponent, {
                 width: '95vw',
                 height: '75vh',
                 data: {item: item, view: form}
               });
-    
+              /*
               dialogRef.afterClosed().subscribe(result => {
                 if (result) {
-                  console.log(result);
+                  //console.log(result);
                   this.uploading = true;
         
                   if (result.file) {
                     this.uploadingFile = true;
                     this.uploadProgress = 0;
                   }
-                  //console.log(result);
+                  ////console.log(result);
                   let attrs = this.itemService.collectItemAttributes(this.item!, {});
                   if ('types' in result.data) {
                     attrs = Object.assign(attrs, {types: result.data.types});
                   }
-                  console.log(attrs);
+                  //console.log(attrs);
                   
                   let arg = this.getUpdateParams(result.data);
-                  //console.log(arg);
+                  ////console.log(arg);
                   this.itemService.update(item.id!, arg).subscribe(res => {
                     if(this.onRefresh) {
-                      console.log('refreshing',this);
+                      //console.log('refreshing',this);
                       this.onRefresh.emit();
                     }
                   });
                 }
-              });
+              });*/
             }
           }
         }
@@ -419,15 +381,16 @@ export class RnViewComponent extends RnCtrlComponent implements OnInit, OnChange
             if (form) {
               const target_view = this.getItemViews(this.item!).find(v => v.name === item.name && v.type!.name === item.type!.name!);
               if(target_view) {
-                const dialogRef = this.dialog.open(RnDialogComponent, {
+                target_view.attributes = Object.assign(target_view.attributes? target_view.attributes : {}, {host: this.item!})
+                this.dialog.open(RnDialogComponent, {
                   width: '95vw',
                   height: '75vh',
                   data: {item: target_view, view: form}
                 });
-      
+                /*
                 dialogRef.afterClosed().subscribe(result => {
                   if (result) {
-                    console.log(result);
+                    //console.log(result);
                     this.uploading = true;
           
                     if (result.file) {
@@ -437,7 +400,7 @@ export class RnViewComponent extends RnCtrlComponent implements OnInit, OnChange
                     
                     let views = this.getItemViews(this.item!).map(v => { return {name: v.name, type: v.type!.name, attributes: v.attributes}});
                     const view = views.find(v => v.name === item.name && v.type === item.type!.name!);
-                    console.log(view);
+                    //console.log(view);
                     if(view) {
                       view.name = result.data.name;
                       view.type = result.item.type.name;
@@ -448,7 +411,7 @@ export class RnViewComponent extends RnCtrlComponent implements OnInit, OnChange
                     this.itemService.update(this.item!.id!,{attributes: attr_data} ).subscribe(
                         (res) => {
                           if (res && res['id']) {
-                            console.log(`Success created item id: ${res['id']}`);
+                            //console.log(`Success created item id: ${res['id']}`);
                             if(this.onRefresh) {
                               this.onRefresh.emit();
                             }
@@ -469,7 +432,7 @@ export class RnViewComponent extends RnCtrlComponent implements OnInit, OnChange
                           }
                         });
                   }
-                });
+                });*/
               }
             }
           }
@@ -493,16 +456,16 @@ export class RnViewComponent extends RnCtrlComponent implements OnInit, OnChange
             const item_query = this.getItemQuery(item);
             if (form) {
               let query = this.itemFromQuery(item_query ? item_query : new Item() );
-
-              const dialogRef = this.dialog.open(RnDialogComponent, {
+              query.attributes = Object.assign(query.attributes? query.attributes : {}, {host: this.item!})
+              this.dialog.open(RnDialogComponent, {
                 width: '95vw',
                 height: '75vh',
                 data: {item: query, view: form}
               });
-    
+              /*
               dialogRef.afterClosed().subscribe(result => {
                 if (result) {
-                  console.log(result);
+                  //console.log(result);
                   this.uploading = true;
         
                   if (result.file) {
@@ -517,7 +480,7 @@ export class RnViewComponent extends RnCtrlComponent implements OnInit, OnChange
                   this.itemService.update(this.item!.id!,{attributes: attr_data} ).subscribe(
                       (res) => {
                         if (res && res['id']) {
-                          console.log(`Success updated item id: ${res['id']}`);
+                          //console.log(`Success updated item id: ${res['id']}`);
                           if(this.onRefresh) {
                             this.onRefresh.emit();
                           }
@@ -538,7 +501,7 @@ export class RnViewComponent extends RnCtrlComponent implements OnInit, OnChange
                         }
                       });
                 }
-              });
+              });*/
             }
           }
         }
@@ -563,15 +526,15 @@ export class RnViewComponent extends RnCtrlComponent implements OnInit, OnChange
               if(target_view) {
                 const view_query = this.getItemQuery(target_view);
                 const query = this.itemFromQuery(view_query ? view_query : new Item());
-                const dialogRef = this.dialog.open(RnDialogComponent, {
+                this.dialog.open(RnDialogComponent, {
                   width: '95vw',
                   height: '75vh',
                   data: {item: query, view: form}
                 });
-      
+                /*
                 dialogRef.afterClosed().subscribe(result => {
                   if (result) {
-                    console.log(result);
+                    //console.log(result);
                     this.uploading = true;
           
                     if (result.file) {
@@ -585,7 +548,7 @@ export class RnViewComponent extends RnCtrlComponent implements OnInit, OnChange
                     }                            
                     let views = this.getItemViews(this.item!).map(v => { return {name: v.name, type: v.type!.name, attributes: v.attributes}});
                     const view = views.find(v => v.name === item.name && v.type === item.type!.name!);
-                    console.log(view);
+                    //console.log(view);
                     if(view) {
                       view.attributes = Object.assign(view.attributes? view.attributes : {}, {query: this.queryFromItem(result_item)});
                     }
@@ -604,7 +567,7 @@ export class RnViewComponent extends RnCtrlComponent implements OnInit, OnChange
                     this.itemService.update(this.item!.id!,{attributes: attr_data} ).subscribe(
                         (res) => {
                           if (res && res['id']) {
-                            console.log(`Success created item id: ${res['id']}`);
+                            //console.log(`Success created item id: ${res['id']}`);
                             if(this.onRefresh) {
                               this.onRefresh.emit();
                             }
@@ -625,7 +588,7 @@ export class RnViewComponent extends RnCtrlComponent implements OnInit, OnChange
                           }
                         });
                   }
-                });
+                });*/
               }
             }
           }
@@ -642,7 +605,7 @@ export class RnViewComponent extends RnCtrlComponent implements OnInit, OnChange
           if (event.type === HttpEventType.UploadProgress) {
             if (event.total) {
               let uploadProgress = Math.round(event.loaded / event.total * 100);
-              console.log(`Uploaded! ${uploadProgress}%`);
+              //console.log(`Uploaded! ${uploadProgress}%`);
             }
             
             /*
@@ -651,7 +614,7 @@ export class RnViewComponent extends RnCtrlComponent implements OnInit, OnChange
             }*/
             //this.snackBar.open("File uploaded");
           } else if (event.type === HttpEventType.Response) {
-            //console.log(event);
+            ////console.log(event);
             if (event.status === 200 || event.status === 201) {
               if(this.onRefresh) {
                 this.onRefresh.emit();
@@ -660,7 +623,7 @@ export class RnViewComponent extends RnCtrlComponent implements OnInit, OnChange
             this.snackBar.open(event.statusText);
             
           } else {
-            console.log(event);
+            //console.log(event);
             this.snackBar.open("File uploaded");
           }
         });
@@ -670,7 +633,7 @@ export class RnViewComponent extends RnCtrlComponent implements OnInit, OnChange
 
   onAddView(item?: Item) {
     if (this.item && this.canAddView()) {
-      //console.log(item);
+      ////console.log(item);
       const dialogs = this.itemService.getDialogs();
       if (dialogs) {
         const createDialogs = dialogs.filter(d => itemIsInstanceOf(d, 'ItemCreateDialog'));
@@ -683,18 +646,19 @@ export class RnViewComponent extends RnCtrlComponent implements OnInit, OnChange
             const form = dialog.items.find(d => itemIsInstanceOf(d, 'Ctrl'));
             if (form) {
               const view_item = new Item();
-              view_item.attributes = {types: ["View"]};
-              view_item.name = "New View";
-
-              const dialogRef = this.dialog.open(RnDialogComponent, {
+              view_item.attributes = Object.assign({types: ["View"]}, {host: this.item!});
+              view_item.name = "New ListView";
+              view_item.type = this.itemService.getTypes().find(t => t.name === 'ListView');
+              //console.log(view_item);
+              this.dialog.open(RnDialogComponent, {
                 width: '95vw',
-                height: '90vh',
+                height: '75vh',
                 data: {item: view_item, view: form }
               });
-      
+              /*
               dialogRef.afterClosed().subscribe(result => {
                 if (result) {
-                  console.log(result);
+                  //console.log(result);
                   this.uploading = true;
         
                   if (result.file) {
@@ -704,13 +668,13 @@ export class RnViewComponent extends RnCtrlComponent implements OnInit, OnChange
                   
                   let views = this.getItemViews(this.item!).map(v => { return {name: v.name, type: v.type!.name, attributes: v.attributes}})
                                   .concat({name: result.data['name'], type:  result.data['type'], attributes: result.data['attributes']});
-                  console.log(views);
+                  //console.log(views);
 
                   let attr_data = Object.assign(this.item!.attributes, {views: views})
                   this.itemService.update(this.item!.id!,{attributes: attr_data} ).subscribe(
                       (res) => {
                         if (res && res['id']) {
-                          console.log(`Success created item id: ${res['id']}`);
+                          //console.log(`Success created item id: ${res['id']}`);
                           if(this.onRefresh) {
                             this.onRefresh.emit();
                           }
@@ -731,7 +695,7 @@ export class RnViewComponent extends RnCtrlComponent implements OnInit, OnChange
                         }
                       });
                 }
-              });
+              });*/
             }
           }
         } 
@@ -748,7 +712,7 @@ export class RnViewComponent extends RnCtrlComponent implements OnInit, OnChange
     
     if( item && item.id) {
       dialogRef.afterClosed().subscribe(result => {
-        console.log(result);
+        //console.log(result);
         if(result) {
           this.uploading = true;
             this.itemService.delete(item.id!).subscribe(res => {
@@ -769,14 +733,14 @@ export class RnViewComponent extends RnCtrlComponent implements OnInit, OnChange
         data: {title: 'Delete item', message: 'Warning you are about to delete a view. Are you sure you want to do this?'}
       });
   
-      console.log(item);
-      console.log(this.getItemViews(this.item!));
+      //console.log(item);
+      //console.log(this.getItemViews(this.item!));
       const target_view = this.getItemViews(this.item!).find(v => v.name === item.name && v.type!.name === item.type!.name!);
       if(target_view) {
         dialogRef.afterClosed().subscribe(result => {
           let views = this.getItemViews(this.item!).filter(v => !(v.name === item.name && v.type!.name === item.type!.name!))
                     .map(v => { return {name: v.name, type: v.type!.name, attributes: v.attributes}});
-                    console.log(views);
+                    //console.log(views);
 
           let attr_data = Object.assign(this.item!.attributes, {views: views});
 
@@ -809,7 +773,7 @@ export class RnViewComponent extends RnCtrlComponent implements OnInit, OnChange
   }
 
   override itemsChanged(items?: Item[]): void {
-    //console.log('*************************************** hello from view items changed!!!');
+    ////console.log('*************************************** hello from view items changed!!!');
   }
 
   override ngOnChanges(changes: SimpleChanges): void {

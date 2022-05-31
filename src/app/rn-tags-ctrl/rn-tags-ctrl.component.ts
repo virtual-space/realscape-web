@@ -3,6 +3,7 @@ import { RnCtrlComponent } from '../rn-ctrl/rn-ctrl.component';
 import {COMMA, ENTER} from '@angular/cdk/keycodes';
 import {MatChipInputEvent} from '@angular/material/chips';
 import { FormControl } from '@angular/forms';
+import { Item } from '../services/item.service';
 
 export interface Tag {
   name: string;
@@ -18,6 +19,37 @@ export class RnTagsCtrlComponent extends RnCtrlComponent implements OnInit {
   readonly separatorKeysCodes = [ENTER, COMMA] as const;
   tags: Tag[] = [];
 
+  override ngOnInit(): void {
+    this.rebuildTagsControl();
+  }
+
+  override itemChanged(item?: Item): void {
+    this.rebuildTagsControl();
+  }
+
+  rebuildTagsControl() {
+    this.formControl.setValue([]);
+    if(this.item) {
+      this.tags = [];
+      const value = this.getValue();
+      if(value) {
+        value.forEach((v: any) => {
+          this.tags.push({name: v});
+        });
+      }
+      this.formControl.setValue(Array.from(new Set(this.tags.map(t => t.name))));
+   }
+   if(this.formGroup) {
+      if(this.control) {
+        const field_name = this.getControlAttribute('field_name', this.control.name? this.control.name : 'value');
+        ////console.log('edit_ctrl', field_name);
+        this.formGroup.removeControl(field_name);
+        this.formGroup.addControl(field_name, this.formControl);
+        ////console.log('*** rebuild types control ***', this.formGroup);
+      }
+    }
+  }
+
   add(event: MatChipInputEvent): void {
     const value = (event.value || '').trim();
 
@@ -32,14 +64,14 @@ export class RnTagsCtrlComponent extends RnCtrlComponent implements OnInit {
     }
 
     this.formControl.setValue(this.tags.map(t => t.name));
-    //console.log(this.formControl.value);
+    ////console.log(this.formControl.value);
     // Clear the input value
     event.chipInput!.clear();
   }
 
   remove(tag: Tag): void {
     const index = this.tags.indexOf(tag);
-    console.log(index);
+    //console.log(index);
     if (index >= 0) {
       this.tags.splice(index, 1);
     }
@@ -49,45 +81,7 @@ export class RnTagsCtrlComponent extends RnCtrlComponent implements OnInit {
       }
     }
     this.formControl.setValue(this.tags.map(t => t.name));
-    //console.log(this.formControl.value);
-  }
-
-  protected  override initialize(): void {
-    //console.log('tags-ctrl', this.item);
-    if (this.item && this.item.attributes && 'tags' in this.item.attributes) {
-      //const names = new Set(this.getItemTypes(this.item).map(t => t.name!));
-      //const allTypes = this.itemService.getTypes();
-      //this.formControl.setValue(allTypes.filter(t => names.has(t.name!)));
-      this.tags = [];
-      for(let t of this.item.attributes['tags']) {
-        this.tags.push({name: t});
-      }
-    };
-    //console.log(this.tags);
-    this.formControl.setValue(this.tags.map(t => t.name));
-    //console.log(this.formControl);
-
-    this.sessionService.itemActivated$.subscribe(item => {
-      //console.log('tags-ctrl item Activated', this.item);
-      //console.log(this);
-      
-      if (item && item.attributes && 'tags' in item.attributes) {
-        //const names = new Set(this.getItemTypes(this.item).map(t => t.name!));
-        //const allTypes = this.itemService.getTypes();
-        //this.formControl.setValue(allTypes.filter(t => names.has(t.name!)));
-        this.tags = [];
-        for(let t of item.attributes['tags']) {
-          this.tags.push({name: t});
-        }
-
-        item.attributes['tags'] = this.tags.map(t => t.name);
-      };
-      
-      this.formControl.setValue(this.tags.map(t => t.name));
-      //console.log(this.formControl);
-    });
-    
-    //console.log(this.formControl);
+    ////console.log(this.formControl.value);
   }
 
 }
