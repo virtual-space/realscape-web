@@ -5,6 +5,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { DomSanitizer } from '@angular/platform-browser';
 import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs';
+import { SecurePipe6 } from '../secure-pipe';
 import { AuthService } from '../services/auth.service';
 import { Instance, Item, ItemEvent, itemIsInstanceOf, ItemService, Query, Type } from '../services/item.service';
 import { SessionService } from '../services/session.service';
@@ -44,7 +45,8 @@ export class RnCtrlComponent implements OnInit, OnChanges, ItemCallbacks {
               protected route: ActivatedRoute,
               protected dialog: MatDialog,
               protected snackBar: MatSnackBar,
-              public viewContainerRef: ViewContainerRef) { }
+              public viewContainerRef: ViewContainerRef,
+              protected securePipe6: SecurePipe6) { }
 
   ngOnInit(): void {
     ////console.log(this);

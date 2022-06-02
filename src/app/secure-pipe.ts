@@ -160,6 +160,44 @@ export class SecurePipe5 implements PipeTransform {
 }
 
 @Pipe({
+    name: 'secure6'
+})
+export class SecurePipe6 implements PipeTransform {
+
+    constructor(private http: HttpClient, private sanitizer: DomSanitizer) { }
+
+    /*
+    transform(url: any): Observable<SafeUrl> {
+        return this.http.get(url, {responseType: 'blob'}).pipe(
+            switchMap(response => response.text()),
+            map(response => this.sanitizer.bypassSecurityTrustUrl('data:image/png;base64,' + response)));
+    }
+    */
+
+    process(val: Blob): Observable<ArrayBuffer> {
+        //console.log(val);
+        return from(val.text()).pipe(
+            map((res:string) => {
+                const res_decoded = atob(res);
+                var buf = new ArrayBuffer(res_decoded.length); // 2 bytes for each char
+                var bufView = new Uint8Array(buf);
+                for (var i=0, strLen=res_decoded.length; i < strLen; i++) {
+                    bufView[i] = res_decoded.charCodeAt(i);
+                }
+                return buf;
+            })
+        );
+    }
+
+    transform(url: any): Observable<ArrayBuffer> {
+        return this.http.get(url, { responseType: 'blob' }).pipe(
+            switchMap(val => this.process(val)));
+    }
+
+
+}
+
+@Pipe({
     name: 'denul'
 })
 export class DenulPipe implements PipeTransform {
