@@ -72,21 +72,8 @@ export class RnBoardViewComponent  extends RnViewComponent implements OnInit {
     //console.log(this.board)
   }
 
-  drop1(event: CdkDragDrop<string[]>) {
-    if (event.previousContainer === event.container) {
-      moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
-    } else {
-      transferArrayItem(
-        event.previousContainer.data,
-        event.container.data,
-        event.previousIndex,
-        event.currentIndex,
-      );
-    }
-  }
-
   drop(event: CdkDragDrop<Item[]>) {
-    console.log('event',event);
+    //console.log('event',event);
     if (event.previousContainer === event.container) {
       if (event.previousIndex !== event.currentIndex) {
         const dataCopy = Object.assign({}, event.container.data);
@@ -97,28 +84,20 @@ export class RnBoardViewComponent  extends RnViewComponent implements OnInit {
         console.log('after',dataCopy);
       }
     } else {
-      console.log('event',event);
-      //this.itemService.update()
+      //console.log('event',event);
+
       transferArrayItem(event.previousContainer.data,
         event.container.data,
         event.previousIndex,
         event.currentIndex);
-        
-      //event.container[currentIndex] is where the item is being dropped to
-      //event.previousContainer[previousIndex] is where the item is being dropped to
-      var item = event.item.data;
-      console.log(item);
-      const columnid = event.container.id
-      console.log(columnid);
-      let columnsplit: any = columnid.split('-')
-      const columnIndex: number = +columnsplit[columnsplit.length-1]
-      console.log(columnIndex);
-      console.log(this.columns);
-      item.status = this.columns[columnIndex];
+
+      const item = event.item.data;
+      const status = event.container.element.nativeElement.getAttribute('data-column-name');
+      item.status = status;
       if(item && item.id){
-        console.log('updating',item.name,'status to',item.status)
+        //console.log('updating',item.name,'status to',item.status)
         this.itemService.update(item.id,{status: item.status}).subscribe(res => {
-          console.log(res)
+          //console.log(res)
         });
       }
     }

@@ -6,6 +6,7 @@
         </div>
 
         <div class="example-list"
+        [attr.data-column-name]="column"
         cdkDropList
         [cdkDropListData]="column_items[column]"
         (cdkDropListDropped)="drop($event)" fxFlexfill>

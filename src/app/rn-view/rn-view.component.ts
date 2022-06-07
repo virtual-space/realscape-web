@@ -111,7 +111,7 @@ export class RnViewComponent extends RnCtrlComponent implements OnInit, OnChange
   openQRCodeDialog(item?: Item) {
     const dialogRef = this.dialog.open(QrCodeComponent, {
       width: '400px',
-      data: { code: environment['home'] + '/items/' + (this.item? this.item.id : ''), name: this.item? this.item.name : 'realnet' }
+      data: { code: environment['home'] + '/items/' + (item? item.id : ''), name: item? item.name : 'realnet' }
     });
 
     dialogRef.afterClosed().subscribe(result => {});
