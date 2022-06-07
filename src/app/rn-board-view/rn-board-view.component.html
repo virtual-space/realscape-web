@@ -1,15 +1,121 @@
-<div cdkDropListGroup *ngIf="board" fxLayoutAlign="center center">
-    <div class="example-container" *ngFor="let column of board.columns">
+<div cdkDropListGroup fxLayoutAlign="center center" fxLayout.gt-sm="row" fxLayout="column">
+    <div class="example-container" *ngFor="let column of columns" fxFlex fxLayout="column">
 
-        <h2>{{ column.name }}</h2>
+        <div fxLayoutAlign="center center">
+            <h2>{{ column }}</h2> 
+        </div>
 
         <div class="example-list"
         cdkDropList
-        [cdkDropListData]="column.items"
-        (cdkDropListDropped)="drop($event)">
-        <div class="example-box" *ngFor="let item of column.items" cdkDrag fxLayout="row" fxLayoutAlign="start center">
-            <mat-icon mat-card-image>{{item.type!.icon!}}</mat-icon>
-            <span>{{item.name}}</span>
+        [cdkDropListData]="column_items[column]"
+        (cdkDropListDropped)="drop($event)" fxFlexfill>
+        <div class="example-box" *ngFor="let task of column_items[column]" fxLayout="column" fxLayoutAlign="center center" fxFlexFill>
+            <div cdkDrag fxFlexFill fxLayoutAlign="center center"  [cdkDragData]="task">
+                <mat-card class="example-card" fxFlexFill>
+                    <mat-card-title><mat-icon>{{getItemIcon(task)}}</mat-icon>
+                    <span>{{task.name}}</span></mat-card-title>
+                    <mat-card-subtitle>
+                        Assigned to: Staff Member 12
+                    </mat-card-subtitle>
+                    <mat-card-content>
+                        <div fxLayout="row">
+                            <div fxLayout="column">
+                                <div fxLayout="row">
+                                    <div>Progress: 36%</div>
+                                    <div>Deadline: 07:45 PM</div>
+                                </div>
+                                <div fxLayout="row">
+                                    <div>Priority: High</div>
+                                    <div>Risk: Low</div>
+                                </div>
+                            </div>
+                            <div fxLayout="column">
+                                <mat-card-actions fxLayout="row" fxLayoutAlign="center center">
+                                    <button mat-button [matMenuTriggerFor]="menuMore"><mat-icon class="menu">more_vert</mat-icon></button>
+                                    <mat-menu #menuMore="matMenu">
+                                      <button mat-menu-item (click)="openEditDialog(task)">
+                                        <mat-icon>edit</mat-icon>
+                                        <span>Edit</span>
+                                      </button>
+                                      <button mat-menu-item  (click)="openDeleteDialog(task)">
+                                        <mat-icon>delete_forever</mat-icon>
+                                        <span>Delete</span>
+                                      </button>
+                                    </mat-menu>
+                                    <button mat-button (click)="openQRCodeDialog(task)">QRCode</button>
+                                    <button *ngIf="!isLinkItem(task) && !isItemLinkItem(task)" mat-button [routerLink]="['/items', task.id]">Open</button>
+                                    <button *ngIf="isLinkItem(task) && isItemLinkItem(task)" mat-button [routerLink]="['/items', getItemLinkedItemId(task)]">Open</button>
+                                    <a *ngIf="isLinkItem(task) && !isItemLinkItem(task)" mat-button [href]="getItemLink(task)">Open</a>
+                                  </mat-card-actions>
+                            </div>
+                        </div>
+                    </mat-card-content>
+                    
+                  </mat-card>
+                  <ng-template cdkDragPreview matchSize>
+                    <div class="example-box">
+                        <mat-card class="example-card" fxFlexFill>
+                            <mat-card-title><mat-icon>{{getItemIcon(task)}}</mat-icon>
+                            <span>{{task.name}}</span></mat-card-title>
+                            <mat-card-subtitle>Assigned to: Staff Member 12</mat-card-subtitle>
+                            <mat-card-content>
+                                <div fxLayout="row">
+                                    <div fxLayout="column">
+                                        <div fxLayout="row">
+                                            <div>Progress: 36%</div>
+                                            <div>Deadline: 07:45 PM</div>
+                                        </div>
+                                        <div fxLayout="row">
+                                            <div>Priority: High</div>
+                                            <div>Risk: Low</div>
+                                        </div>
+                                    </div>
+                                    <div fxLayout="column">
+                                        <mat-card-actions fxLayout="row" fxLayoutAlign="end end">
+                                            <button mat-button [matMenuTriggerFor]="menuMore"><mat-icon class="menu">more_vert</mat-icon></button>
+                                            <mat-menu #menuMore="matMenu">
+                                              <button mat-menu-item (click)="openEditDialog(task)">
+                                                <mat-icon>edit</mat-icon>
+                                                <span>Edit</span>
+                                              </button>
+                                              <button mat-menu-item  (click)="openDeleteDialog(task)">
+                                                <mat-icon>delete_forever</mat-icon>
+                                                <span>Delete</span>
+                                              </button>
+                                            </mat-menu>
+                                            <button mat-button (click)="openQRCodeDialog(task)">QRCode</button>
+                                            <button *ngIf="!isLink() && !isItemLink()" mat-button [routerLink]="['/items', task.id]">Open</button>
+                                            <button *ngIf="isLink() && isItemLink()" mat-button [routerLink]="['/items', getLinkedItemId()]">Open</button>
+                                            <a *ngIf="isLink() && !isItemLink()" mat-button [href]="getLink()">Open</a>
+                                          </mat-card-actions>
+                                    </div>
+                                </div>
+                            </mat-card-content>
+                            
+                          </mat-card>
+                    </div>
+                  </ng-template>
+            </div>
+            
         </div>
     </div>
 </div>
+
+<!--
+<div cdkDropListGroup *ngIf="board">
+    <div cdkDropList *ngIf="board"
+              [cdkDropListData]="board!.columns[0].items"
+              (cdkDropListDropped)="drop($event)">
+              <div class="example-box" *ngFor="let item of board!.columns[0].items" cdkDrag>{{item.name}}</div>
+    </div>
+</div>
+
+<div cdkDropListGroup *ngIf="board">
+    <div cdkDropList *ngFor="let column of [1,2,3]"
+              [cdkDropListData]="todo"
+              (cdkDropListDropped)="drop1($event)">
+              <div class="example-box" *ngFor="let item of todo" cdkDrag>{{item}}</div>
+    </div>
+</div>
+-->
+

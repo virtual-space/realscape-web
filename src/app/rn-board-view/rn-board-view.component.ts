@@ -18,7 +18,12 @@ export class Column {
 })
 export class RnBoardViewComponent  extends RnViewComponent implements OnInit {
 
-  board?: Board;
+  todo = ['Get to work', 'Pick up groceries', 'Go home', 'Fall asleep'];
+
+  done = ['Get up', 'Brush teeth', 'Take a shower', 'Check e-mail', 'Walk dog'];
+
+  columns: string[] = [];
+  column_items: {[index:string]:Item[]} = {};
 
   override ngOnInit(): void {
     this.rebuildBoard();
@@ -26,6 +31,17 @@ export class RnBoardViewComponent  extends RnViewComponent implements OnInit {
 
   rebuildBoard() {
     const statuses = new Set<string>();
+
+    ["To Do", "In Progress", "Done", "On Hold"].forEach((ii: string) => {
+      statuses.add(ii)
+    });
+
+    if (this.item && this.item.attributes && this.item.attributes['values']) {
+      this.item.attributes['values'].forEach((ii: string) => {
+        statuses.add(ii)
+      })
+    }
+
     this.items.forEach(i => {
       if (i.attributes && i.attributes['values']) {
         i.attributes['values'].forEach((ii: string) => {
@@ -33,19 +49,53 @@ export class RnBoardViewComponent  extends RnViewComponent implements OnInit {
         })
       }
     });
+
     //console.log('status',statuses);
-    const columns: Column[] = [];
+    this.columns = [];
+    this.column_items = {};
+
     for(let status of statuses) {
-      const items: Item[] = this.items.filter(i => i.status === status);
-      columns.push(new Column(status, items));
+      //const items: Item[] = this.items.filter(i => i.status === status);
+      this.columns.push(status);
+      this.column_items[status] = [];
+      //console.log(this.items.filter(i => i.status === status))
     }
-    this.board = new Board(this.item? this.item.name! : 'Board', columns);
+    this.items.forEach(i => {
+      if (i.status) {
+        this.column_items[i.status].push(i);
+      } else {
+        i.status = "To Do";
+        this.column_items["To Do"].push(i);
+      }
+    });
+    //this.board = new Board(this.item? this.item.name! : 'Board', Object.keys(columns).map((key: string) => columns[key]));
     //console.log(this.board)
   }
 
-  drop(event: CdkDragDrop<Item[]>) {
+  drop1(event: CdkDragDrop<string[]>) {
     if (event.previousContainer === event.container) {
       moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
+    } else {
+      transferArrayItem(
+        event.previousContainer.data,
+        event.container.data,
+        event.previousIndex,
+        event.currentIndex,
+      );
+    }
+  }
+
+  drop(event: CdkDragDrop<Item[]>) {
+    console.log('event',event);
+    if (event.previousContainer === event.container) {
+      if (event.previousIndex !== event.currentIndex) {
+        const dataCopy = Object.assign({}, event.container.data);
+        console.log('before',dataCopy);
+        console.log('moving from ',event.previousIndex, ' to ', event.currentIndex);
+        //moveItemInArray(dataCopy, event.previousIndex, event.currentIndex);
+        //moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
+        console.log('after',dataCopy);
+      }
     } else {
       console.log('event',event);
       //this.itemService.update()
@@ -53,18 +103,20 @@ export class RnBoardViewComponent  extends RnViewComponent implements OnInit {
         event.container.data,
         event.previousIndex,
         event.currentIndex);
-
-      var item = event.container.data[0]
+        
+      //event.container[currentIndex] is where the item is being dropped to
+      //event.previousContainer[previousIndex] is where the item is being dropped to
+      var item = event.item.data;
+      console.log(item);
       const columnid = event.container.id
+      console.log(columnid);
       let columnsplit: any = columnid.split('-')
       const columnIndex: number = +columnsplit[columnsplit.length-1]
-      if(this.board && this.board.columns){
-        item.status = this.board.columns[columnIndex].name
-      }
+      item.status = this.columns[columnIndex];
       if(item && item.id){
         console.log('updating',item.name,'status to',item.status)
         this.itemService.update(item.id,{status: item.status}).subscribe(res => {
-          //console.log(res)
+          console.log(res)
         });
       }
     }

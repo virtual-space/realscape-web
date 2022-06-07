@@ -182,12 +182,20 @@ export class RnViewComponent extends RnCtrlComponent implements OnInit, OnChange
     return this.extractLink(this.item);
   }
 
+  getItemLink(item: Item): string {
+    return this.extractLink(item);
+  }
+
   extractLinkedItemId(item?: Item): string {
     return item? this.itemService.getLinkedItemId(item) : '';
   }
 
   getLinkedItemId(): string {
     return this.extractLinkedItemId(this.item);
+  }
+
+  getItemLinkedItemId(item: Item): string {
+    return this.extractLinkedItemId(item);
   }
 
   linkCheck(item?: Item) : boolean {
@@ -198,12 +206,20 @@ export class RnViewComponent extends RnCtrlComponent implements OnInit, OnChange
     return this.linkCheck(this.item);
   }
 
+  isLinkItem(item: Item): boolean {
+    return this.linkCheck(item);
+  }
+
   itemLinkCheck(item?: Item) : boolean {
     return item? this.itemService.isInternalLink(item) : false;
   }
 
   isItemLink(): boolean {
     return this.itemLinkCheck(this.item);
+  }
+
+  isItemLinkItem(item: Item): boolean {
+    return this.itemLinkCheck(item);
   }
 
   isCtrlView(item: Item) {
