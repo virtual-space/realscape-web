@@ -112,6 +112,8 @@ export class RnBoardViewComponent  extends RnViewComponent implements OnInit {
       console.log(columnid);
       let columnsplit: any = columnid.split('-')
       const columnIndex: number = +columnsplit[columnsplit.length-1]
+      console.log(columnIndex);
+      console.log(this.columns);
       item.status = this.columns[columnIndex];
       if(item && item.id){
         console.log('updating',item.name,'status to',item.status)
