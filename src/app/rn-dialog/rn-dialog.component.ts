@@ -1,6 +1,6 @@
 import {  Component, Inject, OnInit } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { Item, ItemEvent } from '../services/item.service';
+import { Item, ItemEvent, ItemService } from '../services/item.service';
 
 export interface RnDialogData {
   view: Item;
@@ -16,6 +16,7 @@ export class RnDialogComponent implements OnInit {
   item?: Item;
   constructor(
     public dialogRef: MatDialogRef<RnDialogComponent>,
+    protected itemService: ItemService,
     @Inject(MAT_DIALOG_DATA) public data: RnDialogData,
   ) {}
 
@@ -49,6 +50,25 @@ export class RnDialogComponent implements OnInit {
       }
       
     }
+  }
+
+  linkCheck(item?: Item) : boolean {
+    return item? this.itemService.isLink(item) : false;
+  }
+
+  extractLinkedItemId(item?: Item): string {
+    return item? this.itemService.getLinkedItemId(item) : '';
+  }
+
+  itemLinkCheck(item?: Item) : boolean {
+    return item? this.itemService.isInternalLink(item) : false;
+  }
+
+  extractParentRelativeLink(item?: Item): string {
+    if (item && item.id) {
+      return '/items/' + item.id;
+    }
+    return '';
   }
 
 }

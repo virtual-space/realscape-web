@@ -131,15 +131,15 @@
                     <app-rn-func-ctrl [item]="item" [control]="control"  [events]="events" [tabIndex]="tabIndex" (onRefresh)="childRefresh()" (onItems)="childItems($event)"></app-rn-func-ctrl>
                 </div>
             </div>
-            <!--
-            <ng-container *ngSwitchCase="'ItemCtrl'">
+            <div *ngSwitchCase="'ItemCtrl'">
                 <ng-container *ngIf="formGroup">
                     <app-rn-item-ctrl  [item]="item" [control]="control" [formGroup]="formGroup"  [events]="events" [tabIndex]="tabIndex" (onRefresh)="onRefresh" (onItems)="onItems"></app-rn-item-ctrl>
                 </ng-container>
                 <ng-container *ngIf="!formGroup">
-                    <app-rn-item-ctrl  [item]="item" [control]="control"  [events]="events" [tabIndex]="tabIndex" (onRefresh)="onRefresh" (onItems)="onItems"></app-rn-item-ctrl>
+                    <app-rn-item-ctrl  [item]="item" [control]="control"  [events]="events" [tabIndex]="tabIndex" (onRefresh)="childRefresh()" (onItems)="childItems($event)"></app-rn-item-ctrl>
                 </ng-container>
-            </ng-container>
+            </div>
+            <!--
             <ng-container *ngSwitchCase="'UploadCtrl'">
                 <ng-container *ngIf="formGroup">
                     <app-rn-upload-ctrl  [item]="item" [control]="control"  [formGroup]="formGroup"  [events]="events" [tabIndex]="tabIndex" (onRefresh)="onRefresh" (onItems)="onItems"></app-rn-upload-ctrl>
@@ -223,13 +223,18 @@
                         </div>
                     </div>
                     <div *ngIf="controls.length === 0">
-                        Control: {{control!.type!.name!}}
+                        Control: {{control.type}}
                     </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
-<div *ngIf="!control">
-    ...
+<div *ngIf="!control && item">
+    <ng-container *ngIf="formGroup">
+        <app-rn-item-ctrl  [item]="item" [control]="control" [formGroup]="formGroup"  [events]="events" [tabIndex]="tabIndex" (onRefresh)="onRefresh" (onItems)="onItems"></app-rn-item-ctrl>
+    </ng-container>
+    <ng-container *ngIf="!formGroup">
+        <app-rn-item-ctrl  [item]="item" [control]="control"  [events]="events" [tabIndex]="tabIndex" (onRefresh)="childRefresh()" (onItems)="childItems($event)"></app-rn-item-ctrl>
+    </ng-container>
 </div>

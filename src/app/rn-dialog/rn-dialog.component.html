@@ -1,1 +1,12 @@
+<div mat-dialog-title class="dialog-title" *ngIf="item && !data.view" fxLayout="row">
+    <div fxFlex="1 1 90%"></div>
+    <div fxFlex="1 1 10%">
+        <a *ngIf="!linkCheck(item) && !itemLinkCheck(item)" mat-icon-button [href]="extractParentRelativeLink(item)"><mat-icon>open_in_new</mat-icon></a>
+        <a *ngIf="linkCheck(item) && itemLinkCheck(item)" mat-icon-button [routerLink]="['/items', extractLinkedItemId(item)]"><mat-icon>open_in_new</mat-icon></a>
+        <button mat-icon-button aria-label="close dialog" mat-dialog-close>
+            <mat-icon>close</mat-icon>
+        </button>
+    </div>
+    
+</div>
 <app-rn-ctrl [item]="item" [control]="data.view" (onEvent)="onEvent($event)"></app-rn-ctrl>

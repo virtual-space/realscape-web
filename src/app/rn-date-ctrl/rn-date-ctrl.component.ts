@@ -19,6 +19,7 @@ export class RnDateCtrlComponent extends RnCtrlComponent implements OnInit {
 
   rebuildFormControl() {
     //console.log(this.formControl);
+    console.log(this.getValue());
     this.formControl.setValue(this.getValue());
     if(this.formGroup) {
         if(this.control) {

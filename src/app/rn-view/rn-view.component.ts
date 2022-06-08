@@ -263,6 +263,18 @@ export class RnViewComponent extends RnCtrlComponent implements OnInit, OnChange
     }
   }
 
+  onDisplay(item?: Item) {
+    if (item) {
+      ////console.log(item);
+      this.dialog.open(RnDialogComponent, {
+        width: '95vw',
+        height: '75vh',
+        data: {item: item }
+      });
+  
+    }
+  }
+
   onAddLink(item?: Item) {
     if (this.canAddItem()) {
       ////console.log(item);

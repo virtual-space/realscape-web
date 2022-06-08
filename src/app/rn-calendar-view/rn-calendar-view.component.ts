@@ -13,21 +13,20 @@ import {
   isSameMonth,
   addHours,
 } from 'date-fns';
+import { RnViewComponent } from '../rn-view/rn-view.component';
 
 @Component({
   selector: 'app-rn-calendar-view',
   templateUrl: './rn-calendar-view.component.html',
   styleUrls: ['./rn-calendar-view.component.sass']
 })
-export class RnCalendarViewComponent implements OnInit {
+export class RnCalendarViewComponent extends RnViewComponent implements OnInit {
 
-  @Input() item?: Item;
-  @Input() items: Item[] = [];
   dataSource = new MatTableDataSource<any>(this.items);
   Month = CalendarView.Month;
   Week = CalendarView.Week;
   Day = CalendarView.Day;
-  view: CalendarView = this.Month;
+  calendarView: CalendarView = this.Month;
   viewDate: Date = new Date();
   activeDayIsOpen: boolean = false;
 
@@ -47,63 +46,63 @@ export class RnCalendarViewComponent implements OnInit {
   };
 
   actions: CalendarEventAction[] = [
-    /*{
+    {
       label: '<i class="material-icons">edit</i>',
       a11yLabel: 'Edit',
       onClick: ({ event }: { event: CalendarEvent }): void => {
-        //this.onEditDialog(event['item']);
-      },
-    },*//*
+        this.openEditDialog(event.meta!);
+      }
+    },
     {
       label: '<i class="material-icons">delete</i>',
       a11yLabel: 'Delete',
       onClick: ({ event }: { event: CalendarEvent }): void => {
-        //this.onDeleteDialog(event['item']);
-      },
-    },*/
-    /*{
+        this.openDeleteDialog(event.meta!);
+      }
+    },
+    {
       label: '<i class="material-icons">qr_code</i>',
       a11yLabel: 'QRCode',
       onClick: ({ event }: { event: CalendarEvent }): void => {
-        //this.onQRCode(event['item']);
-      },
-    },*/
+        this.openQRCodeDialog(event.meta!);
+      }
+    }
   ];
 
-  events: CalendarEvent[] = [];
+  calendarEvents: CalendarEvent<Item>[] = [];
 
-  constructor(private itemService: ItemService, protected router: Router) { }
-
-  ngOnInit(): void {
-    //console.log('init',this.items)
+  override ngOnInit(): void {
+    console.log('init',this.items)
     this.populateItems();
   }
 
   populateItems() {
     this.dataSource.data = this.items;
     //this.dataSource.data.push(this.item)
-    this.events = [];
+    this.calendarEvents = [];
 
     if(this.item) {
       if(this.item.valid_from){
         //console.log('has valid_from',value.valid_from)
         if(this.item.valid_to){
           //console.log('has valid_to',value.valid_to)
-          this.events.push({
+          this.calendarEvents.push({
             start: new Date(this.item.valid_from),
             end: new Date(this.item.valid_to),
             id: this.item.id,
             title: this.item.name!,
             color: this.colors.yellow,
             actions: this.actions,
+            meta: this.item
           })
         } else {
-          this.events.push({
+          this.calendarEvents.push({
             start: new Date(this.item.valid_from),
             id: this.item.id,
             title: this.item.name!,
             color: this.colors.yellow,
             actions: this.actions,
+            meta: this.item
           })
         }
       }
@@ -115,21 +114,23 @@ export class RnCalendarViewComponent implements OnInit {
         //console.log('has valid_from',value.valid_from)
         if(value.valid_to){
           //console.log('has valid_to',value.valid_to)
-          this.events.push({
+          this.calendarEvents.push({
             start: new Date(value.valid_from),
             end: new Date(value.valid_to),
             id: value.id,
             title: value.name,
             color: this.colors.yellow,
             actions: this.actions,
+            meta: value
           })
         } else {
-          this.events.push({
+          this.calendarEvents.push({
             start: new Date(value.valid_from),
             id: value.id,
             title: value.name,
             color: this.colors.yellow,
             actions: this.actions,
+            meta: value
           })
         }
       } else {
@@ -138,7 +139,7 @@ export class RnCalendarViewComponent implements OnInit {
     })
   }
 
-  ngOnChanges(changes: SimpleChanges): void {
+  override ngOnChanges(changes: SimpleChanges): void {
     //console.log('changes',this.items)
     if(changes['items'] || changes['item']) {
       this.populateItems();
@@ -146,41 +147,24 @@ export class RnCalendarViewComponent implements OnInit {
   }
 
   onItemClick(item: any) {
-    console.log(item)
-    if (!this.isLink(item) && !this.isItemLink(item)) {
-      //route to item
-      this.router.navigate(['/items', item.id]);
-    } else if (this.isLink(item) && !this.isItemLink(item)) {
-      //route to item via link
-      this.router.navigate(['/items', this.getLinkedItemId(item)]);
-    } else if (this.isLink(item) && !this.isItemLink(item)) {
-      //route to extenal link in a new window
-      window.open(this.getLink(item), '_blank');
-    }
-  }
-
-  getLink(item: Item): string {
-    return this.itemService.getLink(item);
-  }
-
-  getLinkedItemId(item: Item): string {
-    return this.itemService.getLinkedItemId(item);
-  }
-
-  isLink(item: Item): boolean {
-    return this.itemService.isLink(item);
-  }
-
-  isItemLink(item: Item): boolean {
-    return this.itemService.isInternalLink(item);
+    //console.log(item);
+    this.onDisplay(item.meta);
   }
 
   setView(view: CalendarView) {
-    this.view = view;
+    this.calendarView = view;
   }
 
   onCalendarClick(event: any) {
-    console.log("calendarclick",event)
+    console.log("calendarclick",event);
+    if (this.canAddItem()) {
+      let item: Item = this.item? { ... this.item} : new Item();
+      item.valid_from = event.date;
+      item.valid_to = event.date;
+      console.log(item);
+      this.onAdd(item);
+    }
+    /*
     if (isSameMonth(event.date, this.viewDate)) {
       if (event.events && event.events.length) {
         if ((isSameDay(this.viewDate, event.date) && this.activeDayIsOpen) || event.events.length === 0) {
@@ -190,7 +174,7 @@ export class RnCalendarViewComponent implements OnInit {
         }
         this.viewDate = event.date;
       }
-    }
+    }*/
   }
 
 }

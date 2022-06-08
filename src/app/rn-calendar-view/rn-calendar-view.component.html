@@ -2,7 +2,7 @@
     <div fxLayout="column" fxFlexFill>
       <div fxLayout="row" fxLayoutAlign="center center">
         <div>
-          <button mat-mini-fab color="primary" mwlCalendarPreviousView [(viewDate)]="viewDate" [view]="view"><mat-icon>fast_rewind</mat-icon></button>
+          <button mat-mini-fab color="primary" mwlCalendarPreviousView [(viewDate)]="viewDate" [view]="calendarView"><mat-icon>fast_rewind</mat-icon></button>
         </div>
         <div>
           <mat-button-toggle-group name="fontStyle" aria-label="Font Style">
@@ -12,7 +12,7 @@
           </mat-button-toggle-group>
         </div>
         <div>
-          <h6>{{ viewDate | calendarDate:(view + 'ViewTitle'):'en' }}</h6>
+          <h6>{{ viewDate | calendarDate:(calendarView + 'ViewTitle'):'en' }}</h6>
         </div>
         <!-- <div style="width:1px;visibility:hidden;">
           <input matInput [matDatepicker]="picker" [(ngModel)]="viewDate"> 
@@ -22,14 +22,14 @@
           <button mat-mini-fab color="primary" (click)="picker.open()"><mat-icon>today</mat-icon></button>
         </div>-->
         <div>
-          <button mat-mini-fab color="primary" mwlCalendarNextView [(viewDate)]="viewDate" [view]="view"><mat-icon>fast_forward</mat-icon></button>
+          <button mat-mini-fab color="primary" mwlCalendarNextView [(viewDate)]="viewDate" [view]="calendarView"><mat-icon>fast_forward</mat-icon></button>
         </div>
       </div>
-      <div [ngSwitch]="view">
+      <div [ngSwitch]="calendarView">
         <mwl-calendar-month-view
           *ngSwitchCase="'month'"
           [viewDate]="viewDate"
-          [events]="events"
+          [events]="calendarEvents"
           [activeDayIsOpen]="activeDayIsOpen"
           (dayClicked)="onCalendarClick($event.day)"
           (eventClicked)="onItemClick($event.event)"
@@ -38,7 +38,7 @@
         <mwl-calendar-week-view
           *ngSwitchCase="'week'"
           [viewDate]="viewDate"
-          [events]="events"
+          [events]="calendarEvents"
           (dayHeaderClicked)="onCalendarClick($event)"
           (hourSegmentClicked)="onCalendarClick($event)"
           (eventClicked)="onItemClick($event.event)"
@@ -47,7 +47,7 @@
         <mwl-calendar-day-view
           *ngSwitchCase="'day'"
           [viewDate]="viewDate"
-          [events]="events"
+          [events]="calendarEvents"
           (hourSegmentClicked)="onCalendarClick($event)"
           (eventClicked)="onItemClick($event.event)"
         >

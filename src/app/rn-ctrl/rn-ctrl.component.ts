@@ -247,6 +247,7 @@ export class RnCtrlComponent implements OnInit, OnChanges, ItemCallbacks {
       }
       
       if (this.item) {
+        console.log(this.item);
         const item_attributes = this.collectItemAttributes(this.item, {});
         if (item_attributes && control_attributes) {
 
