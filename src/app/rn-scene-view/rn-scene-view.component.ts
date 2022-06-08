@@ -16,6 +16,7 @@ export class RnSceneViewComponent extends RnViewComponent implements OnInit {
   //public sceneData: string = ''; 
 
   override initialize(): void {
+    this.rendererService.initialize();
     const entity = document.querySelector('#entity');
     if(entity) {
       this.securePipe6.transform(this.getDataLink()).subscribe(res => {

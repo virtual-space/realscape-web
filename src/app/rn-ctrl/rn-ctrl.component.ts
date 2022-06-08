@@ -8,6 +8,7 @@ import { Observable } from 'rxjs';
 import { SecurePipe6 } from '../secure-pipe';
 import { AuthService } from '../services/auth.service';
 import { Instance, Item, ItemEvent, itemIsInstanceOf, ItemService, Query, Type } from '../services/item.service';
+import { RendererService } from '../services/renderer.service';
 import { SessionService } from '../services/session.service';
 
 export interface ItemCallbacks {
@@ -41,6 +42,7 @@ export class RnCtrlComponent implements OnInit, OnChanges, ItemCallbacks {
   constructor(protected itemService: ItemService,
               protected authService: AuthService,
               protected sessionService: SessionService,
+              protected rendererService: RendererService,
               protected sanitizer: DomSanitizer,
               protected route: ActivatedRoute,
               protected dialog: MatDialog,

@@ -1,9 +1,20 @@
 <div fxFlexFill>
-    <a-scene embedded renderer="colorManagement: true">
+    <a-scene embedded renderer="colorManagement: true;" 
+    model-viewer="gltfModel: #triceratops; title: Triceratops">
         <a-assets>
           <!--<a-asset-item id="a1" src="{{sceneData}}"></a-asset-item>-->
+          <a-asset-item id="triceratops"
+            src="https://cdn.aframe.io/examples/ar/models/triceratops/scene.gltf"
+            response-type="arraybuffer" crossorigin="anonymous"></a-asset-item>
+
+          <a-asset-item id="reticle"
+            src="https://cdn.aframe.io/examples/ar/models/reticle/reticle.gltf"
+            response-type="arraybuffer" crossorigin="anonymous"></a-asset-item>
+
+          <img id="shadow" src="https://cdn.glitch.com/20600112-c04b-492c-8190-8a5ccc06f37d%2Fshadow.png?v=1606338852399">
+          <!--<a-asset-item id="messageText" src="message.html"></a-asset-item>-->
         </a-assets>
-        <a-entity id="entity" position="0 0 -3" rotation="0 -45 0" animation-mixer></a-entity>
+        <!--<a-entity id="entity" position="0 0 -3" rotation="0 -45 0" animation-mixer></a-entity>-->
         <!-- <a-entity [gltf-model]="getDataLink() | secure1 | async" position="0 2 -2"></a-entity> -->
         <!--<a-box position="-1 0.5 -3" rotation="0 45 0" color="#4CC3D9"></a-box>
         <a-sphere position="0 1.25 -5" radius="1.25" color="#EF2D5E"></a-sphere>
