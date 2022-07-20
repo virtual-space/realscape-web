@@ -87,8 +87,8 @@ export class RnCalendarViewComponent extends RnViewComponent implements OnInit {
         if(this.item.valid_to){
           //console.log('has valid_to',value.valid_to)
           this.calendarEvents.push({
-            start: new Date(this.item.valid_from),
-            end: new Date(this.item.valid_to),
+            start: new Date(this.item.valid_from + 'Z'),
+            end: new Date(this.item.valid_to + 'Z'),
             id: this.item.id,
             title: this.item.name!,
             color: this.colors.yellow,
@@ -97,7 +97,7 @@ export class RnCalendarViewComponent extends RnViewComponent implements OnInit {
           })
         } else {
           this.calendarEvents.push({
-            start: new Date(this.item.valid_from),
+            start: new Date(this.item.valid_from + 'Z'),
             id: this.item.id,
             title: this.item.name!,
             color: this.colors.yellow,
@@ -115,8 +115,8 @@ export class RnCalendarViewComponent extends RnViewComponent implements OnInit {
         if(value.valid_to){
           //console.log('has valid_to',value.valid_to)
           this.calendarEvents.push({
-            start: new Date(value.valid_from),
-            end: new Date(value.valid_to),
+            start: new Date(value.valid_from + 'Z'),
+            end: new Date(value.valid_to + 'Z'),
             id: value.id,
             title: value.name,
             color: this.colors.yellow,
@@ -125,7 +125,7 @@ export class RnCalendarViewComponent extends RnViewComponent implements OnInit {
           })
         } else {
           this.calendarEvents.push({
-            start: new Date(value.valid_from),
+            start: new Date(value.valid_from + 'Z'),
             id: value.id,
             title: value.name,
             color: this.colors.yellow,

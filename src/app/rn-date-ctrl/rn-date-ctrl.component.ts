@@ -31,7 +31,7 @@ export class RnDateCtrlComponent extends RnCtrlComponent implements OnInit {
         }
       }
       if (this.formControl.value) {
-        this.date_value = new Date(this.formControl.value);
+        this.date_value = new Date(this.formControl.value + 'Z');
         let ampm = 'AM';
         let hours = this.date_value.getHours();
         if (hours > 12) {
@@ -44,8 +44,8 @@ export class RnDateCtrlComponent extends RnCtrlComponent implements OnInit {
   }
 
   private date_value?: Date;
-  public get date() { 
-    return this.date_value; 
+  public get date() {
+    return this.date_value;
   }
   public set date(newValue) {
     this.date_value = newValue;
@@ -62,10 +62,10 @@ export class RnDateCtrlComponent extends RnCtrlComponent implements OnInit {
   }
 
 
-  public get datetime() { 
+  public get datetime() {
     if (this.date_value) {
       if (this.time_value) {
-        const result = new Date(this.date_value);
+        const result = new Date(this.date_value + 'Z');
         const time = this.time_value.split(":");
         if (time.length === 2) {
           const hours = parseInt(time[0]);
@@ -90,7 +90,7 @@ export class RnDateCtrlComponent extends RnCtrlComponent implements OnInit {
   }
 
   protected  override initialize(): void {
-    
+
   }
 
 
