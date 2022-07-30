@@ -3,7 +3,7 @@ import { Map, NavigationControl, Marker, SymbolLayout, LngLat, Popup, LngLatBoun
 import { Subscription } from 'rxjs';
 // @ts-ignore
 import * as MapboxDraw from "mapbox-gl-draw";
-
+import * as mapboxgl from 'mapbox-gl';
 import 'mapbox-gl-draw/dist/mapbox-gl-draw.css';
 
 import { isInstanceOf, Item, ItemEvent, itemIsInstanceOf } from '../services/item.service'
@@ -332,12 +332,10 @@ export class RnMapViewComponent extends RnViewComponent implements OnInit, OnDes
             const m = new Marker(customMarkerIcon);
             this.markers.push(m);
             m.setLngLat(ip.location.coordinates);
-            this.attachPopup(m, ip);
+            this.attachPopup(ip, m);
             m.addTo(map);
           } else if (ip.location.type === 'Polygon'){
             console.log("adding polygon...", ip.name)
-            //const m = new Marker();
-            //this.markers.push(m);
             var sumlat = 0
             var sumlong = 0
             var count = 0
@@ -347,12 +345,7 @@ export class RnMapViewComponent extends RnViewComponent implements OnInit, OnDes
               sumlong += coord[1]
               count += 1
             })
-            //console.log(sumlat,sumlong,count)
-            //m.setLngLat([sumlat/count,sumlong/count]);
-            //this.attachPopup(m, ip);
-            //m.addTo(map);
-            //now add the polygon itself.
-            //console.log('current polygon',ip)
+
             if(ip.id){
               map.addSource(ip.id,{
                 'type': 'geojson',
@@ -377,16 +370,11 @@ export class RnMapViewComponent extends RnViewComponent implements OnInit, OnDes
                   'fill-opacity': 0.5
                 }
               });
-              let popupLink = this.itemService.getLink(ip);
               map.on('click', 'l' + ip.id, (e) => {
                 if (e) {
-                  new Popup()
-                    .setLngLat(e.lngLat)
-                    .setHTML('<h3><a href="' + popupLink + '">' + ip.name + '</a></h3>')
-                    .addTo(map);
+                  this.attachPopup(ip, map, { lngLat: e.lngLat });
                 }
-
-                });
+              });
               map.addLayer({
                 'id': 'l' + ip.id + 'outline',
                 'type': 'line',
@@ -411,18 +399,25 @@ export class RnMapViewComponent extends RnViewComponent implements OnInit, OnDes
     this.fitMapToBounds();
   }
 
-  attachPopup(marker: Marker, item: Item): void {
-      let popupContent: any = this.createPopup(item);
+  attachPopup(item: Item, mapOrMarker: Marker | Map, options?: { lngLat: mapboxgl.LngLatLike}): void {
+    let popupContent: any = this.createPopup(item);
 
-      const divContainer = document.createElement('div');
-      divContainer.appendChild(popupContent.location.nativeElement);
+    const divContainer = document.createElement('div');
+    divContainer.appendChild(popupContent.location.nativeElement);
 
-      const popup = new Popup();
-      popup.setLngLat(marker.getLngLat());
-      popup.setDOMContent(divContainer);
-      popup.setMaxWidth("300px");
+    const popup = new Popup();
+    popup.setDOMContent(divContainer);
+    popup.setMaxWidth("300px");
 
-      marker.setPopup(popup);
+    if (mapOrMarker instanceof Marker) {
+      popup.setLngLat(mapOrMarker.getLngLat());
+      mapOrMarker.setPopup(popup);
+    } else {
+      if (options && options.lngLat) {
+        popup.setLngLat(options.lngLat);
+      }
+      popup.addTo(mapOrMarker);
+    }
   }
 
   createPopup(item: Item): any {
