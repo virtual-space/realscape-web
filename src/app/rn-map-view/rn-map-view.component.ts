@@ -1,26 +1,15 @@
 import { Component, ElementRef, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
-//import * as mapboxgl from "mapbox-gl";
-
-import { isInstanceOf, Item, ItemEvent, itemIsInstanceOf } from '../services/item.service'
-//import * as MapboxGl from '!mapbox-gl';
-
-//const mapboxgl:any = require('mapbox-gl/dist/mapbox-gl.js');
-//const mapboxgl:any = require('mapbox-gl');
-
-import { RnListViewComponent } from '../rn-list-view/rn-list-view.component';
-import { environment } from 'src/environments/environment';
 import { Map, NavigationControl, Marker, SymbolLayout, LngLat, Popup, LngLatBounds, LngLatBoundsLike, } from 'mapbox-gl';
-import { RnViewComponent } from '../rn-view/rn-view.component';
 import { Subscription } from 'rxjs';
-import { E } from '@angular/cdk/keycodes';
-import { createComponentDefinitionMap } from '@angular/compiler/src/render3/partial/component';
 // @ts-ignore
 import * as MapboxDraw from "mapbox-gl-draw";
-import 'mapbox-gl-draw/dist/mapbox-gl-draw.css';
-import { RnDialogComponent } from '../rn-dialog/rn-dialog.component';
-import { RnCardViewComponent } from '../rn-card-view/rn-card-view.component';
-import * as mapboxgl from 'mapbox-gl';
 
+import 'mapbox-gl-draw/dist/mapbox-gl-draw.css';
+
+import { isInstanceOf, Item, ItemEvent, itemIsInstanceOf } from '../services/item.service'
+import { environment } from 'src/environments/environment';
+import { RnViewComponent } from '../rn-view/rn-view.component';
+import { RnCardViewComponent } from '../rn-card-view/rn-card-view.component';
 @Component({
   selector: 'app-rn-map-view',
   templateUrl: './rn-map-view.component.html',
