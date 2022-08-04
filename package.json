@@ -5,6 +5,7 @@
     "ng": "ng",
     "artifact-build": "ng build --aot --configuration=production",
     "artifact-build-dev": "ng build --aot --configuration=development",
+    "artifact-build-test": "ng build --aot --configuration=test",
     "start": "ng serve",
     "next-version": "npm --no-git-tag-version version patch",
     "build": "ng build",

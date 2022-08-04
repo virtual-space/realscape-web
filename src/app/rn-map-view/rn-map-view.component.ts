@@ -1,24 +1,15 @@
 import { Component, ElementRef, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
-//import * as mapboxgl from "mapbox-gl";
-
-import { isInstanceOf, Item, ItemEvent, itemIsInstanceOf } from '../services/item.service'
-//import * as MapboxGl from '!mapbox-gl';
-
-//const mapboxgl:any = require('mapbox-gl/dist/mapbox-gl.js');
-//const mapboxgl:any = require('mapbox-gl');
-
-import { RnListViewComponent } from '../rn-list-view/rn-list-view.component';
-import { environment } from 'src/environments/environment';
 import { Map, NavigationControl, Marker, SymbolLayout, LngLat, Popup, LngLatBounds, LngLatBoundsLike, } from 'mapbox-gl';
-import { RnViewComponent } from '../rn-view/rn-view.component';
 import { Subscription } from 'rxjs';
-import { E } from '@angular/cdk/keycodes';
-import { createComponentDefinitionMap } from '@angular/compiler/src/render3/partial/component';
 // @ts-ignore
 import * as MapboxDraw from "mapbox-gl-draw";
+import * as mapboxgl from 'mapbox-gl';
 import 'mapbox-gl-draw/dist/mapbox-gl-draw.css';
-import { RnDialogComponent } from '../rn-dialog/rn-dialog.component';
 
+import { isInstanceOf, Item, ItemEvent, itemIsInstanceOf } from '../services/item.service'
+import { environment } from 'src/environments/environment';
+import { RnViewComponent } from '../rn-view/rn-view.component';
+import { RnCardViewComponent } from '../rn-card-view/rn-card-view.component';
 @Component({
   selector: 'app-rn-map-view',
   templateUrl: './rn-map-view.component.html',
@@ -29,7 +20,7 @@ export class RnMapViewComponent extends RnViewComponent implements OnInit, OnDes
   @ViewChild('mapElement') set content(content: ElementRef) {
     if(content) {
       //console.log(content);
-      
+
     }
   }
 
@@ -128,12 +119,12 @@ export class RnMapViewComponent extends RnViewComponent implements OnInit, OnDes
         container: 'map',
         style: this.style,
         zoom: this.zoom,
-        center: [this.lng, this.lat] 
+        center: [this.lng, this.lat]
       });
       this.map.addControl(new NavigationControl());
         this.draw = new MapboxDraw(
           {
-            controls: 
+            controls:
             {
               point: true,
               polygon: true
@@ -160,7 +151,7 @@ export class RnMapViewComponent extends RnViewComponent implements OnInit, OnDes
           this.fitMapToBounds();
           //map.fitBounds(bounds);
         });
-        
+
         /*this.map.on('load', this.onMapLoaded);
         this.map.on('draw.create', e => {
           console.log('draw.create',e)
@@ -169,7 +160,7 @@ export class RnMapViewComponent extends RnViewComponent implements OnInit, OnDes
             this.marker = undefined;
           }
         });
-    
+
         this.map.on('draw.delete', e => {
           console.log('draw.delete',e)
           this.marker = new Marker({draggable: true})
@@ -184,9 +175,9 @@ export class RnMapViewComponent extends RnViewComponent implements OnInit, OnDes
             this.loadMarkers(this.map);
           }
         });
-        
-        
-        
+
+
+
     } else {
       console.log('refreshing map')
     }
@@ -204,7 +195,7 @@ export class RnMapViewComponent extends RnViewComponent implements OnInit, OnDes
           container: 'map',
           style: this.style,
           zoom: this.zoom,
-          center: [this.lng, this.lat] 
+          center: [this.lng, this.lat]
         });
         this.map.addControl(new NavigationControl());
         this.isLoaded = true;
@@ -246,7 +237,7 @@ export class RnMapViewComponent extends RnViewComponent implements OnInit, OnDes
     });
   }
 
-  /* 
+  /*
   Do not call this directly, use the loadFunction() provided to delay this until after the map finishes loading.
   */
 
@@ -261,9 +252,9 @@ export class RnMapViewComponent extends RnViewComponent implements OnInit, OnDes
     if (this.item && this.item.items)
     {
       const view = this.item.items.find((item,index) => itemIsInstanceOf(item, 'MapView') && (index === this.tabIndex));
-    
+
       if (view && view.location) {
-        
+
         let bounds = new LngLatBounds();
         if(view.location.type === 'Point'){
           bounds = bounds.extend(view.location.coordinates);
@@ -279,7 +270,7 @@ export class RnMapViewComponent extends RnViewComponent implements OnInit, OnDes
         return bounds;
       }
     }
-    
+
     return undefined;
   }
 
@@ -308,7 +299,7 @@ export class RnMapViewComponent extends RnViewComponent implements OnInit, OnDes
       });
       return bounds;
     }
-    
+
     console.log(bounds);
     return bounds;
   }
@@ -319,7 +310,7 @@ export class RnMapViewComponent extends RnViewComponent implements OnInit, OnDes
     if (bb) {
       this.map?.fitBounds(bb);
     }
-    
+
     //this.map?.setZoom(15);
   }
 
@@ -332,15 +323,19 @@ export class RnMapViewComponent extends RnViewComponent implements OnInit, OnDes
         itemsWithPositions.forEach(ip => {
           if(ip.location.type === 'Point'){
             console.log("adding point...", ip.name)
-            const m = new Marker();
+            let customMarkerIcon = undefined;
+            if (ip.attributes && ip.attributes['icon']) {
+              customMarkerIcon = document.createElement('div');
+              customMarkerIcon.className = 'marker';
+              customMarkerIcon.innerHTML = `<span class="material-icons">${ip?.attributes['icon']}</span>`
+            }
+            const m = new Marker(customMarkerIcon);
             this.markers.push(m);
             m.setLngLat(ip.location.coordinates);
-            this.attachPopup(m, ip);
+            this.attachPopup(ip, m);
             m.addTo(map);
           } else if (ip.location.type === 'Polygon'){
             console.log("adding polygon...", ip.name)
-            //const m = new Marker();
-            //this.markers.push(m);
             var sumlat = 0
             var sumlong = 0
             var count = 0
@@ -350,12 +345,7 @@ export class RnMapViewComponent extends RnViewComponent implements OnInit, OnDes
               sumlong += coord[1]
               count += 1
             })
-            //console.log(sumlat,sumlong,count)
-            //m.setLngLat([sumlat/count,sumlong/count]);
-            //this.attachPopup(m, ip);
-            //m.addTo(map);
-            //now add the polygon itself.
-            //console.log('current polygon',ip)
+
             if(ip.id){
               map.addSource(ip.id,{
                 'type': 'geojson',
@@ -380,16 +370,11 @@ export class RnMapViewComponent extends RnViewComponent implements OnInit, OnDes
                   'fill-opacity': 0.5
                 }
               });
-              let popupLink = this.itemService.getLink(ip);
               map.on('click', 'l' + ip.id, (e) => {
                 if (e) {
-                  new Popup()
-                    .setLngLat(e.lngLat)
-                    .setHTML('<h3><a href="' + popupLink + '">' + ip.name + '</a></h3>')
-                    .addTo(map);
+                  this.attachPopup(ip, map, { lngLat: e.lngLat });
                 }
-                
-                });
+              });
               map.addLayer({
                 'id': 'l' + ip.id + 'outline',
                 'type': 'line',
@@ -414,46 +399,33 @@ export class RnMapViewComponent extends RnViewComponent implements OnInit, OnDes
     this.fitMapToBounds();
   }
 
-  attachPopup(marker: Marker, item: Item): any {
-    const popup = new Popup({className: 'my-class'});
-    popup.setLngLat(marker.getLngLat());
-    //let popupContent: any = this.createPopup(item)
-    //console.log(popupContent)
-    let popupLink = this.itemService.getLink(item);
-    popup.setHTML('<h3><a href="' + popupLink + '">' + item.name + '</a></h3>')
-    //popup.setDOMContent(popupContent);
+  attachPopup(item: Item, mapOrMarker: Marker | Map, options?: { lngLat: mapboxgl.LngLatLike}): void {
+    let popupContent: any = this.createPopup(item);
+
+    const divContainer = document.createElement('div');
+    divContainer.appendChild(popupContent.location.nativeElement);
+
+    const popup = new Popup();
+    popup.setDOMContent(divContainer);
     popup.setMaxWidth("300px");
-    marker.setPopup(popup);
-    return popup;
+
+    if (mapOrMarker instanceof Marker) {
+      popup.setLngLat(mapOrMarker.getLngLat());
+      mapOrMarker.setPopup(popup);
+    } else {
+      if (options && options.lngLat) {
+        popup.setLngLat(options.lngLat);
+      }
+      popup.addTo(mapOrMarker);
+    }
   }
 
-  /* 
-  This is supposed to dynamically create a component and be loaded with popup.setDOMContent()
-  Currently just exploratory for how to create a node object without using component factory.
-  */
- /*
   createPopup(item: Item): any {
-    
-    const listComp = new RnListViewComponent(
-      this.itemService,
-      this.sessionService,
-      this.authService,
-      this.sanitizer,
-      this.route,
-      this.dialog,
-      this.snackBar,
-      this.viewContainerRef
-    );
-    listComp.items = [item];
-    const viewContainerRef = listComp.viewContainerRef;
-    viewContainerRef.clear();
-    console.log('container ref',viewContainerRef)
-    const componentRef = viewContainerRef.createComponent(RnListViewComponent)
-    console.log('container ref2',viewContainerRef)
-    console.log('listcomp',listComp)
+    const componentRef = this.viewContainerRef.createComponent(RnCardViewComponent);
+    componentRef.instance.item = item;
+
     return componentRef;
-    
-  }*/
+  }
 
   private sleep (time: any): any {
     return new Promise((resolve) => setTimeout(resolve, time));
