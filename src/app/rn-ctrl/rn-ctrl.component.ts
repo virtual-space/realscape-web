@@ -5,9 +5,10 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { DomSanitizer } from '@angular/platform-browser';
 import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs';
+import { RnDialogComponent } from '../rn-dialog/rn-dialog.component';
 import { SecurePipe6 } from '../secure-pipe';
 import { AuthService } from '../services/auth.service';
-import { Instance, Item, ItemEvent, itemIsInstanceOf, ItemService, Query, Type } from '../services/item.service';
+import { Instance, Item, ItemEvent, itemIsInstanceOf, ItemService, MenuItem, Query, Type } from '../services/item.service';
 import { RendererService } from '../services/renderer.service';
 import { SessionService } from '../services/session.service';
 
@@ -211,6 +212,31 @@ export class RnCtrlComponent implements OnInit, OnChanges, ItemCallbacks {
     return 'View';
   }
 
+  getItemMenuItems(item: Item): MenuItem[] {
+    const attributes = this.itemService.collectItemAttributes(item, {});
+    if ('menu' in attributes) {
+      return attributes['menu'];
+    }
+    return [];
+  }
+
+  presentForm(formName: string) {
+    const forms = this.itemService.getForms();
+    ////console.log(dialogs);
+    if (forms) {
+      const form = forms.filter(d => d.name === formName);
+      console.log(form);
+      if (form) {
+        //console.log(target_item);
+        this.dialog.open(RnDialogComponent, {
+          width: '95vw',
+          height: '75vh',
+          data: {view: form[0] }
+        });
+      }
+    }
+  }
+
   getItemViews(item: Item): Item[] {
     const attributes = this.itemService.collectItemAttributes(item, {});
     if ('views' in attributes) {
@@ -397,6 +423,10 @@ export class RnCtrlComponent implements OnInit, OnChanges, ItemCallbacks {
 
   isAccordion(item: Item) {
     return itemIsInstanceOf(item, "AccordionCtrl");
+  }
+
+  isSteps(item: Item) {
+    return itemIsInstanceOf(item, "StepsCtrl");
   }
 
   isTabs(item: Item) {

@@ -24,6 +24,10 @@
               </div>
               
               <mat-menu #menuMore="matMenu" xPosition="before">
+                  <button *ngFor="let menuItem of getItemMenuItems(item!)" mat-menu-item (click)="presentForm(menuItem.form!)">
+                    <mat-icon>{{menuItem.icon}}</mat-icon>
+                    <span>{{menuItem.name}}</span>
+                  </button>
                   <button *ngIf="canAddItem()" mat-menu-item (click)="addItem()">
                     <mat-icon>add</mat-icon>
                     <span>Add Item</span>

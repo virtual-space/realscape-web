@@ -752,3 +752,9 @@ export class ItemEvent {
   data?: any;
 }
 
+export class MenuItem {
+  name?: string;
+  icon?: string;
+  form?: string;
+}
+

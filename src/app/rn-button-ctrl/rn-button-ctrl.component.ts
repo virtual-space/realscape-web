@@ -92,7 +92,8 @@ export class RnButtonCtrlComponent extends RnCtrlComponent implements OnInit {
             });
             */
         } else if (command === "Create") {
-          //console.log("*** create_item ***", this.formGroup!.value);
+          console.log("*** create_item ***", this.formGroup!.value);
+          console.log(this.item);
           if (this.item && this.formGroup) {
             let target_id = this.item!.id!;
             let result = this.formGroup.value;

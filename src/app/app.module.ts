@@ -38,7 +38,8 @@ import { MatDividerModule} from '@angular/material/divider';
 import { MatSliderModule } from '@angular/material/slider';
 import { MatTreeModule } from '@angular/material/tree';
 import { MatSidenavModule } from '@angular/material/sidenav';
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner'
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatStepperModule} from '@angular/material/stepper';
 import {MatCardModule} from '@angular/material/card';
 import {MatTooltipModule} from '@angular/material/tooltip';
 
@@ -105,6 +106,8 @@ import { RnTypesCtrlComponent } from './rn-types-ctrl/rn-types-ctrl.component';
 import { RnCodeCtrlComponent } from './rn-code-ctrl/rn-code-ctrl.component';
 import { RnExpCtrlComponent } from './rn-exp-ctrl/rn-exp-ctrl.component';
 import { RnAccordionCtrlComponent } from './rn-accordion-ctrl/rn-accordion-ctrl.component';
+import { RnStepsCtrlComponent } from './rn-steps-ctrl/rn-steps-ctrl.component';
+import { RnStepCtrlComponent } from './rn-step-ctrl/rn-step-ctrl.component';
 
 
 @NgModule({
@@ -168,7 +171,9 @@ import { RnAccordionCtrlComponent } from './rn-accordion-ctrl/rn-accordion-ctrl.
     RnTypesCtrlComponent,
     RnCodeCtrlComponent,
     RnExpCtrlComponent,
-    RnAccordionCtrlComponent
+    RnAccordionCtrlComponent,
+    RnStepsCtrlComponent,
+    RnStepCtrlComponent
   ],
   imports: [
     BrowserModule,
@@ -209,6 +214,7 @@ import { RnAccordionCtrlComponent } from './rn-accordion-ctrl/rn-accordion-ctrl.
     MatProgressSpinnerModule,
     MatCardModule,
     MatTooltipModule,
+    MatStepperModule,
     QRCodeModule,
     CodemirrorModule,
     PdfViewerModule,
