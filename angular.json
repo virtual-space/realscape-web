@@ -65,6 +65,29 @@
                 }
               ]
             },
+            "test": {
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.test.ts"
+                }
+              ],
+              "optimization": true,
+              "outputHashing": "all",
+              "sourceMap": false,
+              "namedChunks": false,
+              "aot": true,
+              "extractLicenses": true,
+              "vendorChunk": false,
+              "buildOptimizer": true,
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "2mb",
+                  "maximumError": "8mb"
+                }
+              ]
+            },
             "development": {
               "fileReplacements": [
                 {
@@ -119,6 +142,9 @@
           "configurations": {
             "production": {
               "browserTarget": "realscape-web:build:production"
+            },
+            "test": {
+              "browserTarget": "realscape-web:build:test"
             },
             "development": {
               "browserTarget": "realscape-web:build:development"
