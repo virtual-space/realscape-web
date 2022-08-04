@@ -20,31 +20,17 @@ export class HomeComponent implements OnInit {
       console.log(types);
       this.itemService.setTypes(types);
       this.itemService.apps().subscribe(apps => {
-        if (apps && apps.items) {
-          if (loggedIn) {
-            const role = apps.items.find(a => itemIsInstanceOf(a, 'Role'));
-            if (role && role.items) {
-              const apps_item = role.items.find(a => itemIsInstanceOf(a, 'Apps'));
-              //console.log(apps_item)
-              if (apps_item && apps_item.items) {
-                this.itemService.setApps(apps_item.items);
-                const initial_app = apps_item.items.find(aa => aa.attributes? (aa.attributes['initial'] === 'true') : false);
-                if (initial_app) {
-                  this.router.navigate(['/items', initial_app.id!]);
-                } 
+        if (apps) {
+          this.itemService.setApps(apps);
+            const initial_app = apps.find(aa => aa.attributes? (aa.attributes['initial'] === 'true') : false);
+            this.itemService.forms().subscribe(forms => {
+              this.itemService.setForms(forms);
+              if (initial_app) {
+                this.router.navigate(['/items', initial_app.id!]);
+              } else {
+                this.router.navigate(['/items', apps[0].id!]);
               }
-              const dialogs_item = role.items.find(d => itemIsInstanceOf(d, 'Dialogs'));
-              if (dialogs_item && dialogs_item.items) {
-                this.itemService.setDialogs(dialogs_item.items);
-              }
-            }
-          } else {
-            this.itemService.setApps(apps.items);
-            const initial_app = apps.items.find(aa => aa.attributes? (aa.attributes['initial'] === 'true') : false);
-            if (initial_app) {
-              this.router.navigate(['/items', initial_app.id!]);
-            }
-          }
+            });
         } 
       });
     });

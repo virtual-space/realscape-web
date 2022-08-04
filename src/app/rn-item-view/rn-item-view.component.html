@@ -13,8 +13,8 @@
               
               <mat-menu #menu="matMenu">
                   <ng-container  *ngFor="let app of apps">
-                      <ng-container [ngSwitch]="app!.type!.name">
-                        <app-rn-login-view [login]="app" [button]="true" *ngSwitchCase="'LoginApp'"></app-rn-login-view>
+                      <ng-container [ngSwitch]="app!.name">
+                        <app-rn-login-view [login]="app" [button]="true" *ngSwitchCase="'Login'"></app-rn-login-view>
                         <button mat-menu-item color="primary" routerLinkActive="nav-active" routerLink="/items/{{app.id}}" *ngSwitchDefault><mat-icon>{{getIcon(app)}}</mat-icon><span>{{app.name}}</span></button>
                       </ng-container>
                   </ng-container>

@@ -322,6 +322,18 @@ export class ItemService {
     return [];
   }
 
+  public setForms(apps: Item[]) {
+    localStorage.setItem('forms', JSON.stringify(apps));
+  }
+
+  public getForms(): Item[] {
+    let apps_string = localStorage.getItem('forms');
+    if (apps_string) {
+      return JSON.parse(apps_string);
+    }
+    return [];
+  }
+
   public setDialogs(dialogs: Item[]) {
     localStorage.setItem('dialogs', JSON.stringify(dialogs));
   }
@@ -343,6 +355,18 @@ export class ItemService {
     }
     return this.http.get<[Type]>(url).pipe(
       catchError(this.handleError('/items', []))
+    );
+  }
+
+  public forms(): Observable<[Item]> {
+    let url = this.getAccessibleEndpoint(true);
+    if (this.authService.isLoggedIn()) {
+      url = url + 'forms';
+    } else {
+      url = url + '/public/forms';
+    }
+    return this.http.get<[Type]>(url).pipe(
+      catchError(this.handleError('/forms', []))
     );
   }
 
@@ -556,13 +580,13 @@ export class ItemService {
     }
   }
 
-  public apps(): Observable<Item> {
-    let path = environment['api']  + '/public/profile';
+  public apps(): Observable<[Item]> {
+    let path = environment['api']  + '/public/apps';
     if (this.authService.isLoggedIn()) {
-      path = environment['api']  + '/profile';
+      path = environment['api']  + '/apps';
     } 
-    return this.http.get<Item>(path).pipe(
-      catchError(this.handleError('/profile', []))
+    return this.http.get<[Item]>(path).pipe(
+      catchError(this.handleError('/public/apps', []))
     );
   }
 
