@@ -9,7 +9,7 @@ import { Item, itemIsInstanceOf } from '../services/item.service';
 })
 export class RnStepsCtrlComponent extends RnCtrlComponent implements OnInit {
   @Input() steps: Item[] = [];
-
+  
   override ngOnInit(): void {
     if (this.control) {
       this.steps = this.getItemControls(this.control).filter(i => itemIsInstanceOf(i, 'StepCtrl'));
