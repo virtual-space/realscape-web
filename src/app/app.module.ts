@@ -221,7 +221,8 @@ import { RnAccordionCtrlComponent } from './rn-accordion-ctrl/rn-accordion-ctrl.
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi:true },
-    SecurePipe6
+    SecurePipe6,
+    SecurePipe2,
   ],
   bootstrap: [AppComponent],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]

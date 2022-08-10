@@ -19,8 +19,8 @@
           <vg-fullscreen></vg-fullscreen>
         </vg-controls>
         <video [vgMedia]="$any(media)" #media id="singleVideo" preload="auto" crossorigin>
-          <source [src]="getDataLink() | secure3 | async" type="video/mp4">
-          <!-- 
+          <source *ngIf="videoSource" [src]="videoSource" type="video/mp4">
+          <!--
             <source src="http://static.videogular.com/assets/videos/videogular.ogg" type="video/ogg">
           <source src="http://static.videogular.com/assets/videos/videogular.webm" type="video/webm">
           <track kind="subtitles" label="English" src="http://static.videogular.com/assets/subs/pale-blue-dot.vtt"
@@ -28,7 +28,7 @@
           <track kind="subtitles" label="Español" src="http://static.videogular.com/assets/subs/pale-blue-dot-es.vtt"
             srclang="es">
           -->
-          
+
         </video>
       </vg-player>
 </div>
