@@ -10,7 +10,7 @@ import { Item, itemIsInstanceOf, Query } from '../services/item.service';
 export class RnButtonCtrlComponent extends RnCtrlComponent implements OnInit {
 
   public onClick(event: Event) {
-    //console.log(event);
+    console.log(event);
     //console.log(this.formGroup!.value)
     if (this.item) {
       if (this.control) {
@@ -132,6 +132,29 @@ export class RnButtonCtrlComponent extends RnCtrlComponent implements OnInit {
                   this.sessionService.activateItem(item);
                 });
               }
+              //result = this.getUpdateParams2(this.formGroup!.value,true);
+              
+            }
+          }
+        } else if (command === "Invoke") {
+          console.log("*** invoke_item ***", this.formGroup!.value);
+          console.log(this.item);
+          if (this.item && this.formGroup) {
+            let target_id = this.item!.id!;
+            let result = this.formGroup.value;
+            if (result) {
+              //console.log(result);
+              //console.log(this.item);
+              result = this.getUpdateParams2(this.formGroup!.value,false);
+                if (!('type' in result)) {
+                  if ('type' in this.item.attributes!) {
+                    result['type'] = this.item.attributes!['type'];
+                  }
+                }
+                this.itemService.invoke(this.item.attributes!['path'], this.item.attributes!['method'], result).subscribe(item => {
+                  //console.log('updated item', JSON.stringify(item));
+                  this.sessionService.activateItem(item);
+                });
               //result = this.getUpdateParams2(this.formGroup!.value,true);
               
             }

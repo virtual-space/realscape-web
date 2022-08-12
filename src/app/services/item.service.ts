@@ -21,6 +21,10 @@ export class ItemService {
     return (environment['api'] || '') + '/items';
   }
 
+  protected getInvokePath(endpoint: string) {
+    return (environment['api'] || '') + '/endpoints/' + endpoint + '/invoke';
+  }
+
   protected getHomeEndpoint() {
     return (environment['home'] || '') + '/items';
   }
@@ -149,6 +153,15 @@ export class ItemService {
         }
       }),
       catchError(this.handleErrorAndRethrow('/items', []))
+    );
+  }
+
+  public invoke(endpoint: string, method: any, params: any, progressFn?: (a: number) => void): Observable<Item> {
+    return this.http.post<Item>(this.getInvokePath(endpoint), params).pipe(
+      mergeMap((invoked: Item) => {
+        return of(invoked);
+      }),
+      catchError(this.handleErrorAndRethrow('/endpoints', []))
     );
   }
   

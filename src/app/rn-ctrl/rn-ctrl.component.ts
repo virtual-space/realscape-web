@@ -225,7 +225,7 @@ export class RnCtrlComponent implements OnInit, OnChanges, ItemCallbacks {
     ////console.log(dialogs);
     if (forms) {
       const form = forms.filter(d => d.name === formName);
-      console.log(form);
+      //console.log(form);
       if (form) {
         //console.log(target_item);
         this.dialog.open(RnDialogComponent, {
@@ -275,7 +275,7 @@ export class RnCtrlComponent implements OnInit, OnChanges, ItemCallbacks {
       }
       
       if (this.item) {
-        console.log(this.item);
+        //console.log(this.item);
         const item_attributes = this.collectItemAttributes(this.item, {});
         if (item_attributes && control_attributes) {
 
