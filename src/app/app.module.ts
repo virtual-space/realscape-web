@@ -227,7 +227,8 @@ import { RnStepCtrlComponent } from './rn-step-ctrl/rn-step-ctrl.component';
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi:true },
-    SecurePipe6
+    SecurePipe6,
+    SecurePipe2,
   ],
   bootstrap: [AppComponent],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
