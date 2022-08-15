@@ -32,6 +32,6 @@ export class RnEditCtrlComponent extends RnCtrlComponent implements OnInit {
             //console.log('*** rebuild form control ***', this.formGroup);
           }
       }
-      console.log(this.formGroup);
+      //console.log(this.formGroup);
     }
 }

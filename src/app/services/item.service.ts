@@ -21,6 +21,10 @@ export class ItemService {
     return (environment['api'] || '') + '/items';
   }
 
+  protected getInvokePath(endpoint: string) {
+    return (environment['api'] || '') + '/endpoints/' + endpoint + '/invoke';
+  }
+
   protected getHomeEndpoint() {
     return (environment['home'] || '') + '/items';
   }
@@ -149,6 +153,15 @@ export class ItemService {
         }
       }),
       catchError(this.handleErrorAndRethrow('/items', []))
+    );
+  }
+
+  public invoke(endpoint: string, method: any, params: any, progressFn?: (a: number) => void): Observable<Item> {
+    return this.http.post<Item>(this.getInvokePath(endpoint), params).pipe(
+      mergeMap((invoked: Item) => {
+        return of(invoked);
+      }),
+      catchError(this.handleErrorAndRethrow('/endpoints', []))
     );
   }
   
@@ -322,6 +335,18 @@ export class ItemService {
     return [];
   }
 
+  public setForms(apps: Item[]) {
+    localStorage.setItem('forms', JSON.stringify(apps));
+  }
+
+  public getForms(): Item[] {
+    let apps_string = localStorage.getItem('forms');
+    if (apps_string) {
+      return JSON.parse(apps_string);
+    }
+    return [];
+  }
+
   public setDialogs(dialogs: Item[]) {
     localStorage.setItem('dialogs', JSON.stringify(dialogs));
   }
@@ -343,6 +368,18 @@ export class ItemService {
     }
     return this.http.get<[Type]>(url).pipe(
       catchError(this.handleError('/items', []))
+    );
+  }
+
+  public forms(): Observable<[Item]> {
+    let url = this.getAccessibleEndpoint(true);
+    if (this.authService.isLoggedIn()) {
+      url = url + 'forms';
+    } else {
+      url = url + '/public/forms';
+    }
+    return this.http.get<[Type]>(url).pipe(
+      catchError(this.handleError('/forms', []))
     );
   }
 
@@ -466,7 +503,8 @@ export class ItemService {
       return this.authService.getLoginUrl(new Authenticator(item.attributes['authenticator_name'].toString(), 
                                                item.attributes['authenticator_type'].toString(),
                                                item.attributes['client_id'].toString(),
-                                               item.attributes['api']!.toString()));
+                                               item.attributes['api']!.toString(),
+                                               item.attributes['tenant']!.toString()));
     }
     if (item && item.link && item.link.startsWith('http')) {
       if (item.link.startsWith(base)) {
@@ -556,13 +594,13 @@ export class ItemService {
     }
   }
 
-  public apps(): Observable<Item> {
-    let path = environment['api']  + '/public/profile';
+  public apps(): Observable<[Item]> {
+    let path = environment['api']  + '/public/apps';
     if (this.authService.isLoggedIn()) {
-      path = environment['api']  + '/profile';
+      path = environment['api']  + '/apps';
     } 
-    return this.http.get<Item>(path).pipe(
-      catchError(this.handleError('/profile', []))
+    return this.http.get<[Item]>(path).pipe(
+      catchError(this.handleError('/public/apps', []))
     );
   }
 
@@ -718,6 +756,7 @@ export class Query {
   valid_from?: Date;
   valid_to?: Date;
   status?: string;
+  my_items?: boolean;
 }
 
 export class ItemEvent {
@@ -726,5 +765,12 @@ export class ItemEvent {
   control?: Item;
   view?: Item;
   data?: any;
+}
+
+export class MenuItem {
+  name?: string;
+  icon?: string;
+  form?: string;
+  import?: boolean;
 }
 

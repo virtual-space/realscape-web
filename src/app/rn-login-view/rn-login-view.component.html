@@ -7,7 +7,7 @@
     </div>
 </ng-container>
 <ng-container *ngIf="button">
-    <button mat-menu-item color="primary" (click)="doLogin()" *ngIf="!isLoggedIn()"><mat-icon>key</mat-icon><span>Login</span></button>
+    <button mat-menu-item color="primary" (click)="doLogin()" *ngIf="!isLoggedIn()"><mat-icon>key</mat-icon><span>{{login!.name}}</span></button>
     <button mat-menu-item color="primary" (click)="doLogout()" *ngIf="isLoggedIn()"><mat-icon>key_off</mat-icon><span>Logout</span></button>
 </ng-container>
 

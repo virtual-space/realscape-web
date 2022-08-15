@@ -55,10 +55,10 @@ export class RnLocationCtrlComponent extends RnCtrlComponent implements OnInit {
           }
           this.lat = position.coords.latitude;
           this.lng = position.coords.longitude;
-          /*
+          
           this.sleep(500).then(() => {//do not remove the sleep functions
             this.loadMap();//this fixes 99% of the loading issues
-          });*/
+          });
           //console.log('loading with user location',this);
         });
       }

@@ -28,7 +28,8 @@ export class RnLoginViewComponent implements OnInit {
       this.authService.login(new Authenticator(this.login!.attributes!['authenticator_name']!.toString(), 
                                                this.login!.attributes!['authenticator_type']!.toString(),
                                                this.login!.attributes!['client_id']!.toString(),
-                                               this.login!.attributes!['api']!.toString()));
+                                               this.login!.attributes!['api']!.toString(),
+                                               this.login!.attributes!['tenant']!.toString()));
     }
     
   }

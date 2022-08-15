@@ -16,7 +16,7 @@ export class RnFormCtrlComponent extends RnCtrlComponent implements OnInit {
     eventsSubject: Subject<ItemEvent> = new Subject<ItemEvent>();
 
     override ngOnInit(): void {
-      //console.log(this);
+      console.log(this);
       if(this.control && this.item) {
         const attrs = this.collectItemAttributes(this.control, {});
         if (attrs && 'query' in attrs) {

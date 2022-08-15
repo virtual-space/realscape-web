@@ -14,7 +14,7 @@
               <mat-menu #menu="matMenu">
                   <ng-container  *ngFor="let app of apps">
                       <ng-container [ngSwitch]="app!.type!.name">
-                        <app-rn-login-view [login]="app" [button]="true" *ngSwitchCase="'LoginApp'"></app-rn-login-view>
+                        <app-rn-login-view [login]="app" [button]="true" *ngSwitchCase="'Login'"></app-rn-login-view>
                         <button mat-menu-item color="primary" routerLinkActive="nav-active" routerLink="/items/{{app.id}}" *ngSwitchDefault><mat-icon>{{getIcon(app)}}</mat-icon><span>{{app.name}}</span></button>
                       </ng-container>
                   </ng-container>
@@ -24,16 +24,23 @@
               </div>
               
               <mat-menu #menuMore="matMenu" xPosition="before">
+                  <button *ngFor="let menuItem of getItemMenuItems(item!)" mat-menu-item (click)="presentForm(menuItem.form!, menuItem.import, uploader)">
+                    <mat-icon>{{menuItem.icon}}</mat-icon>
+                    <span>{{menuItem.name}}</span>
+                  </button>
+                  <input hidden type="file" #uploader (change)="importFile($event)"/>
+                  <!--
                   <button *ngIf="canAddItem()" mat-menu-item (click)="addItem()">
                     <mat-icon>add</mat-icon>
                     <span>Add Item</span>
                   </button>
-                  <!--
+                  
                   <button *ngIf="canAddItem()" mat-menu-item (click)="addLink()">
                     <mat-icon>link</mat-icon>
                     <span>Link Item</span>
                   </button>
                   -->
+                  <!--
                   <button *ngIf="canEditOrDeleteItem()" mat-menu-item (click)="editItem()">
                     <mat-icon>edit</mat-icon>
                     <span>Edit Item</span>
@@ -65,12 +72,14 @@
                     <mat-icon>delete</mat-icon>
                     <span>Delete View</span>
                   </button>
+                  -->
                   <!--
                   <button *ngIf="canEditOrDeleteView()" mat-menu-item (click)="editViewQuery()">
                     <mat-icon>search</mat-icon>
                     <span>Edit View Query</span>
                   </button>
                   -->
+                  <mat-divider></mat-divider>
                   <button mat-menu-item (click)="onRefreshClick()">
                     <mat-icon>refresh</mat-icon>
                     <span>Refresh</span>

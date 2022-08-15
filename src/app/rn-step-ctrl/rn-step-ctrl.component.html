@@ -1,0 +1,12 @@
+<div fxFlexFill fxLayout="column" fxLayoutAlign="center center">
+    <div *ngFor="let child of controls; let index = index" fxFlexFill>
+        <div fxFlexFill fxLayout="column" fxLayoutAlign="center center">
+            <div *ngIf="formGroup" fxFlexFill>
+                <app-rn-ctrl [control]="child" [item]="item" [formGroup]="formGroup" [events]="events" [tabIndex]="tabIndex"></app-rn-ctrl>
+            </div>
+            <div *ngIf="!formGroup" fxFlexFill>
+                <app-rn-ctrl [control]="child" [item]="item" [events]="events" [tabIndex]="tabIndex" fxFlex="1 1 100%"></app-rn-ctrl>
+            </div>
+        </div>
+    </div>
+</div>
