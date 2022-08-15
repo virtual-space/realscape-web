@@ -756,6 +756,7 @@ export class Query {
   valid_from?: Date;
   valid_to?: Date;
   status?: string;
+  my_items?: boolean;
 }
 
 export class ItemEvent {
@@ -770,5 +771,6 @@ export class MenuItem {
   name?: string;
   icon?: string;
   form?: string;
+  import?: boolean;
 }
 

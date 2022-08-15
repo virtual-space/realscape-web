@@ -1,7 +1,7 @@
 import { Component, Input, OnChanges, OnDestroy, OnInit, QueryList, SimpleChanges, ViewChild, ViewChildren } from '@angular/core';
 import { Subject } from 'rxjs';
 import {ActivatedRoute, Router} from '@angular/router';
-import { Item, itemIsInstanceOf, ItemEvent } from '../services/item.service';
+import { Item, itemIsInstanceOf, ItemEvent, Query } from '../services/item.service';
 
 import {FormControl} from "@angular/forms";
 import { RnViewComponent } from '../rn-view/rn-view.component';
@@ -16,7 +16,7 @@ export class RnItemViewComponent extends RnViewComponent implements OnInit, OnCh
   @Input() id?: string;
   @Input() children: Item[] = [];
   @Input() views: Item[] = [];
-  @Input() query?: Item;
+  @Input() query?: Query;
   @Input() apps: Item[] = [];
   @Input() activeViewIndex: number = 0;
 
@@ -108,12 +108,21 @@ export class RnItemViewComponent extends RnViewComponent implements OnInit, OnCh
       this.children = [...item.items];
       //this.sessionService.activateItems(this.children);
     } else if (this.query) {
-      ////console.log('children = query')
+      //console.log(this.query.my_items);
+      //console.log(this.item);
+      if (this.query) {
+        if (this.query.my_items)
+        {
+          this.query.parent_id = this.id;
+        }
+      }
+      //if (q.my_)
       this.itemService.items(this.query).subscribe(items => {
         this.children = items;
         //this.sessionService.activateItems(this.children);
       });
     } else {
+      console.log('*** 4 ***');
       ////console.log('children = chidlren')
       this.itemService.children(this.id!).subscribe(children => {
         this.children = children;

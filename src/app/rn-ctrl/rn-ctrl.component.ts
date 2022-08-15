@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges, ViewContainerRef } from '@angular/core';
+import { Component, ElementRef, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges, ViewContainerRef } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -220,8 +220,11 @@ export class RnCtrlComponent implements OnInit, OnChanges, ItemCallbacks {
     return [];
   }
 
-  presentForm(formName: string) {
-    const forms = this.itemService.getForms();
+  presentForm(formName: string, importDialog: any, uploader: any) {
+    if (importDialog) {
+      uploader.click();
+    } else {
+      const forms = this.itemService.getForms();
     ////console.log(dialogs);
     if (forms) {
       const form = forms.filter(d => d.name === formName);
@@ -234,6 +237,7 @@ export class RnCtrlComponent implements OnInit, OnChanges, ItemCallbacks {
           data: {view: form[0] }
         });
       }
+    }
     }
   }
 
