@@ -42,9 +42,9 @@ export class AuthService {
 
   public getLoginUrl(auth: Authenticator) {
     if (auth.type === 'password') {
-      return this.getEndpoint() + '/public/login?client_id=' + auth.client_id + '&response_type=token';
+      return this.getEndpoint() + '/' + auth.tenant + '/login?client_id=' + auth.client_id + '&response_type=token';
     } else {
-      return this.getEndpoint() + '/public/login/' + auth.name + '?client_id=' + auth.client_id + '&response_type=token';
+      return this.getEndpoint() + '/' + auth.tenant + '/login/' + auth.name + '?client_id=' + auth.client_id + '&response_type=token';
     }
   }
 
@@ -78,14 +78,17 @@ export class Authenticator {
   type: string;
   client_id: string;
   api: string;
+  tenant: string;
 
   constructor(name: string, 
               type: string, 
               client_id: string,
-              api: string) {
+              api: string,
+              tenant: string) {
     this.name = name;
     this.type = type;
     this.client_id = client_id;
     this.api = api;
+    this.tenant = tenant;
   }
 }

@@ -503,7 +503,8 @@ export class ItemService {
       return this.authService.getLoginUrl(new Authenticator(item.attributes['authenticator_name'].toString(), 
                                                item.attributes['authenticator_type'].toString(),
                                                item.attributes['client_id'].toString(),
-                                               item.attributes['api']!.toString()));
+                                               item.attributes['api']!.toString(),
+                                               item.attributes['tenant']!.toString()));
     }
     if (item && item.link && item.link.startsWith('http')) {
       if (item.link.startsWith(base)) {
