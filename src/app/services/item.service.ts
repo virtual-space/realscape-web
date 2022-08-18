@@ -164,7 +164,7 @@ export class ItemService {
       catchError(this.handleErrorAndRethrow('/endpoints', []))
     );
   }
-  
+
   /*
   public update(id: string, params: any): Observable<Item> {
     return this.http.put(this.getEndpoint() + '/' + id, params).pipe(
@@ -266,7 +266,7 @@ export class ItemService {
 
   public setTypes(types: Type[]) {
     let types_string = localStorage.getItem('types');
-    
+
     if (types_string) {
       const types_data = JSON.parse(types_string);
       const batch_count = types_data['batch_count'];
@@ -393,7 +393,7 @@ export class ItemService {
     return this.getAccessibleEndpoint() + '/' + id + '/data';
   }
 
-  
+
   public importFile(id: string, file: File): Observable<any> {
     const formData: FormData = new FormData();
     formData.append('file', file, file.name);
@@ -452,7 +452,7 @@ export class ItemService {
         return this.getTypeIcon(type.base);
       }
     }
-    
+
     return 'help_center';
   }
 
@@ -467,7 +467,7 @@ export class ItemService {
         attrs = Object.assign(attrs, type.attributes);
       }
     }
-    
+
     return ret;
   }
 
@@ -480,7 +480,7 @@ export class ItemService {
         ret = Object.assign(ret, item.attributes);
       }
     }
-    
+
     return ret;
   }
 
@@ -500,7 +500,7 @@ export class ItemService {
     }
 
     if (itemIsInstanceOf(item,'LoginApp') && item.attributes) {
-      return this.authService.getLoginUrl(new Authenticator(item.attributes['authenticator_name'].toString(), 
+      return this.authService.getLoginUrl(new Authenticator(item.attributes['authenticator_name'].toString(),
                                                item.attributes['authenticator_type'].toString(),
                                                item.attributes['client_id'].toString(),
                                                item.attributes['api']!.toString(),
@@ -598,7 +598,7 @@ export class ItemService {
     let path = environment['api']  + '/public/apps';
     if (this.authService.isLoggedIn()) {
       path = environment['api']  + '/apps';
-    } 
+    }
     return this.http.get<[Item]>(path).pipe(
       catchError(this.handleError('/public/apps', []))
     );
@@ -608,7 +608,7 @@ export class ItemService {
     let params = new HttpParams();
     params = params.append('my_items', 'true');
     params = params.append('types', 'Dialogs');
-    
+
     const httpOptions = {
       params: params
     };
@@ -665,6 +665,9 @@ export class Item {
   status?: string;
   linked_item_id?: string;
   linked_item?: Item;
+  priority?: string;
+  risk?: string;
+  progress?: string;
 }
 /*
 export function getTypeAttributes(type: Type): {[index: string]:any} {
@@ -678,7 +681,7 @@ export function buildChildItem(instance: Instance, attributes: {[index: string]:
   const target = new Item();
   target.name = instance.name;
   target.type = instance.type;
-  const items:Item[] = []; 
+  const items:Item[] = [];
   if (instance.type) {
     if (instance.type.instances) {
       instance.type.instances.forEach(instance => {
@@ -695,7 +698,7 @@ export function buildChildItem(instance: Instance, attributes: {[index: string]:
 }
 
 export function expandItem(item: Item): Item {
-  
+
   if (item.items) {
     return item;
   }
@@ -714,7 +717,7 @@ export function expandItem(item: Item): Item {
   target.type = item.type;
   target.type_id = item.type_id;
 
-  const items:Item[] = []; 
+  const items:Item[] = [];
   if (target.type) {
     if (target.type.instances) {
       target.type.instances.forEach(instance => {
@@ -727,7 +730,7 @@ export function expandItem(item: Item): Item {
 }
 */
 export function isInstanceOf(type: Type, type_name: string): boolean {
-  
+
   if (type.name === type_name) {
     ////console.log('*** ', type.name, ' is instance of ', type_name)
     return true;
