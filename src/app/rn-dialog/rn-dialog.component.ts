@@ -6,6 +6,7 @@ import { Item, ItemEvent, ItemService } from '../services/item.service';
 export interface RnDialogData {
   view: Item;
   item: Item;
+  form: Item;
 }
 
 @Component({
@@ -15,6 +16,7 @@ export interface RnDialogData {
 })
 export class RnDialogComponent implements OnInit {
   item?: Item;
+  formItem?: Item;
   public formGroup = new FormGroup({});
   constructor(
     public dialogRef: MatDialogRef<RnDialogComponent>,
@@ -24,6 +26,7 @@ export class RnDialogComponent implements OnInit {
 
   ngOnInit(): void {
     this.item = this.data.item;
+    this.formItem = this.data.form;
   }
 
   onNoClick(): void {
@@ -35,7 +38,7 @@ export class RnDialogComponent implements OnInit {
   }
 
   onEvent(event: ItemEvent) {
-    //console.log(event);
+    console.log(event);
     if (event.item) {
       if (event.event === 'click') {
         if(event.control && event.control.attributes && event.control.attributes['close'] === 'true') {

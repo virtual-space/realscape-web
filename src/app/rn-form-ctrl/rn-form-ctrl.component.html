@@ -2,22 +2,20 @@
     <form [formGroup]="formGroup">
         <div fxFlex="1 1 100%" fxLayoutAlign="center center" *ngIf="controls">
             <div [fxLayout]="layout" [fxLayoutGap]="gap" [fxLayoutAlign]="align" fxFlex="1 1 100%">
-                <div mat-dialog-title>
-                    {{control.name}}
-                </div>
                 <div  fxFlexFill>
                     <div *ngFor="let child of controls; let index = index">
-                        <div [ngSwitch]="getControlType(child)" fxFlexFill>
+                        <div [ngSwitch]="getItemControlType(child)" fxFlexFill>
                             <div *ngSwitchCase="'TypeSelectCtrl'"   [fxFlex]="getControlAttribute('flex', '1 1 auto', child)"
                                                                     [fxFlexOffset]="getControlAttribute('offset', '1%', child)"
                                                                     [fxFlexAlign]="getControlAttribute('align', 'center', child)">
-                                <app-rn-type-select-ctrl [item]="item" 
+                                <app-rn-type-select-ctrl [item]="item" [activeType]="formType"
                                                             [control]="child"
                                                             [events]="eventsSubject.asObservable()" 
                                                             [formGroup]="formGroup"
                                                             (onRefresh)="childRefresh()"
                                                             [fieldName]="getControlAttribute('field_name', '', child)" 
-                                                            (onEvent)="onEventHandler($event)">
+                                                            (selectedTypeChanged)="selectedTypeChanged($event)"
+                                                            (onEvent)="onEvent">
                                 </app-rn-type-select-ctrl>
                             </div>
                             <div *ngSwitchCase="'AttrsCtrl'" 
@@ -30,7 +28,7 @@
                                                     [formGroup]="formGroup"
                                                     (onRefresh)="childRefresh()"
                                                     [fieldName]="getControlAttribute('field_name', '', child)"
-                                                    (onEvent)="onEventHandler($event)">
+                                                    (onEvent)="onEvent">
                                 </app-rn-attrs-ctrl>
                             </div>
                             <div *ngSwitchCase="'SelectCtrl'"   [fxFlex]="getControlAttribute('flex', '1 1 auto', child)"
@@ -42,19 +40,20 @@
                                                     [formGroup]="formGroup"
                                                     (onRefresh)="childRefresh()"
                                                     [fieldName]="getControlAttribute('field_name', '', child)" 
-                                                    (onEvent)="onEventHandler($event)">
+                                                    (onEvent)="onEvent">
                                 </app-rn-select-ctrl>
                             </div>
                             <div *ngSwitchCase="'ItemSelectCtrl'"   [fxFlex]="getControlAttribute('flex', '1 1 auto', child)"
                                                                     [fxFlexOffset]="getControlAttribute('offset', '1%', child)"
                                                                     [fxFlexAlign]="getControlAttribute('align', 'center', child)">
-                                <app-rn-item-select-ctrl [item]="item" 
+                                
+                                <app-rn-item-select-ctrl [item]="item" [activeItem]="activeItem"
                                                             [control]="child" 
                                                             [events]="eventsSubject.asObservable()"
                                                             [formGroup]="formGroup" 
                                                             (onRefresh)="childRefresh()"
                                                             [fieldName]="getControlAttribute('field_name', '', child)"
-                                                            (onEvent)="onEventHandler($event)">
+                                                            (onEvent)="onEvent">
                                 </app-rn-item-select-ctrl>
                             </div>
                             
@@ -67,7 +66,7 @@
                                                     [formGroup]="formGroup"
                                                     (onRefresh)="childRefresh()"
                                                     [fieldName]="getControlAttribute('field_name', '', child)" 
-                                                    (onEvent)="onEventHandler($event)">
+                                                    (onEvent)="onEvent">
                                 </app-rn-edit-ctrl>
                             </div>
                             <div *ngSwitchCase="'LocationCtrl'" [fxFlex]="getControlAttribute('flex', '1 1 auto', child)"
@@ -79,7 +78,7 @@
                                                         [formGroup]="formGroup" 
                                                         (onRefresh)="childRefresh()"
                                                         [fieldName]="getControlAttribute('field_name', '', child)"
-                                                        (onEvent)="onEventHandler($event)">
+                                                        (onEvent)="onEvent">
                                 </app-rn-location-ctrl>
                             </div>
                             <div *ngSwitchCase="'TagsCtrl'" [fxFlex]="getControlAttribute('flex', '1 1 auto', child)"
@@ -91,7 +90,7 @@
                                                     [formGroup]="formGroup" 
                                                     (onRefresh)="childRefresh()"
                                                     [fieldName]="getControlAttribute('field_name', '', child)"
-                                                    (onEvent)="onEventHandler($event)">
+                                                    (onEvent)="onEvent">
                                 </app-rn-tags-ctrl>
                             </div>
                             <div *ngSwitchCase="'DateCtrl'" [fxFlex]="getControlAttribute('flex', '1 1 auto', child)"
@@ -103,7 +102,7 @@
                                                     [formGroup]="formGroup"
                                                     (onRefresh)="childRefresh()"
                                                     [fieldName]="getControlAttribute('field_name', '', child)" 
-                                                    (onEvent)="onEventHandler($event)">
+                                                    (onEvent)="onEvent">
                                 </app-rn-date-ctrl>
                             </div>
                             <div *ngSwitchCase="'LabelCtrl'" [fxFlex]="getControlAttribute('flex', '1 1 auto', child)"
@@ -115,7 +114,7 @@
                                                     [formGroup]="formGroup" 
                                                     (onRefresh)="childRefresh()"
                                                     [fieldName]="getControlAttribute('field_name', '', child)"
-                                                    (onEvent)="onEventHandler($event)">
+                                                    (onEvent)="onEvent">
                                 </app-rn-label-ctrl>
                             </div>
                             <div *ngSwitchCase="'TabsCtrl'" [fxFlex]="getControlAttribute('flex', '1 1 100%', child)"
@@ -127,11 +126,51 @@
                                                     [formGroup]="formGroup" 
                                                     (onRefresh)="childRefresh()"
                                                     [fieldName]="getControlAttribute('field_name', '', child)"
-                                                    (onEvent)="onEventHandler($event)">
+                                                    (onEvent)="onEvent">
                                 </app-rn-tabs-ctrl>
                             </div>
                             <div *ngSwitchDefault>
-                                Control: {{child!.type!.name!}} {{getControlType(control)}}
+                                <div *ngIf="isSteps(child)"  fxFlexFill>
+                                    <app-rn-steps-ctrl  [item]="item"  [formItem]="formItem" [control]="child" [formGroup]="formGroup"  [events]="eventsSubject.asObservable()" 
+                                        [fxFlex]="getControlAttribute('flex', '1 1 100%', child)"
+                                        [fxFlexOffset]="getControlAttribute('offset', '1%', child)"
+                                        [fxFlexAlign]="getControlAttribute('align', 'center', child)" (onRefresh)="childRefresh()" (onEvent)="onEvent">
+                                    </app-rn-steps-ctrl>
+                                </div>
+                                <div *ngIf="isView(child)" fxFlexFill>
+                                    <app-rn-view  [item]="item"  [formItem]="formItem"  [formType]="formType" [view]="child" [control]="child" [formGroup]="formGroup"  [events]="events" [tabIndex]="tabIndex" 
+                                            [fxFlex]="getControlAttribute('flex', '1 1 100%', child)"
+                                            [fxFlexOffset]="getControlAttribute('offset', '1%', child)"
+                                            [fxFlexAlign]="getControlAttribute('align', 'center', child)"  (onRefresh)="childRefresh()" (onItems)="childItems($event)">
+                                    </app-rn-view>
+                                </div>
+                                <div *ngIf="isForm(child)" fxFlexFill>
+                                    <app-rn-form-ctrl [item]="item" [formItem]="typeForm" [control]="typeForm" [formGroup]="formGroup"  [events]="events" [tabIndex]="tabIndex" 
+                                             (onRefresh)="childRefresh()" (onItems)="childItems($event)">
+                                    </app-rn-form-ctrl>
+                                    
+<!--
+                                    <app-rn-form-ctrl embedded="true" [item]="item" [formType]="formType" [view]="typeForm" [control]="typeForm" [formGroup]="formGroup"  [events]="events" [tabIndex]="tabIndex" 
+                                            [fxFlex]="getControlAttribute('flex', '1 1 100%', child)"
+                                            [fxFlexOffset]="getControlAttribute('offset', '1%', child)"
+                                            [fxFlexAlign]="getControlAttribute('align', 'center', child)"  (onRefresh)="childRefresh()" (onItems)="childItems($event)">
+                                    </app-rn-form-ctrl>
+     -->                               
+                                </div>
+                                <div *ngIf="isTabs(child)"  fxFlexFill>
+                                    <app-rn-tabs-ctrl  [item]="item"  [formItem]="formItem"  [formType]="formType" [control]="child" [formGroup]="formGroup"  [events]="events" [tabIndex]="tabIndex" 
+                                        [fxFlex]="getControlAttribute('flex', '1 1 100%', child)"
+                                        [fxFlexOffset]="getControlAttribute('offset', '1%', child)"
+                                        [fxFlexAlign]="getControlAttribute('align', 'center', child)" (onRefresh)="childRefresh()" (onItems)="childItems($event)"  (onType)="onTypeHandlerCtrl($event)">
+                                    </app-rn-tabs-ctrl>
+                                </div>
+                                <div *ngIf="isAccordion(child)" fxFlexFill>
+                                    <app-rn-accordion-ctrl [item]="item"  [formItem]="formItem"  [formType]="formType" [control]="child" [formGroup]="formGroup"  [events]="events" [tabIndex]="tabIndex" 
+                                    (onRefresh)="childRefresh()" (onItems)="childItems($event)"  (onType)="onTypeHandlerCtrl($event)"></app-rn-accordion-ctrl>
+                                </div>
+                                <div *ngIf="!isSteps(child) && !isView(child) && !isTabs(child) && !isAccordion(child) && !isForm(child)"  fxFlexFill>
+                                    432Control: {{child!.type!.name!}} {{getControlType(child)}}
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -141,19 +180,21 @@
                     <div *ngFor="let child of buttons; let index = index" fxFlex>
                         <app-rn-button-ctrl *ngIf="isNormalButton(child)"
                                                     [item]="item" 
+                                                    [formItem]="formItem"
                                                     [control]="child"
                                                     [events]="eventsSubject.asObservable()"
                                                     [formGroup]="formGroup"
                                                     (onRefresh)="childRefresh()"
-                                                    (onEvent)="onEventHandler($event)">
+                                                    (onEvent)="onEvent">
                         </app-rn-button-ctrl>
                         <app-rn-button-ctrl *ngIf="isDefaultButton(child)" cdkFocusInitial
                                                     [item]="item" 
+                                                    [formItem]="formItem"
                                                     [control]="child"
                                                     [events]="eventsSubject.asObservable()"
                                                     [formGroup]="formGroup"
                                                     (onRefresh)="childRefresh()"
-                                                    (onEvent)="onEventHandler($event)">
+                                                    (onEvent)="onEvent">
                         </app-rn-button-ctrl>
                     </div>
                 </div>
@@ -161,6 +202,8 @@
         </div>
     </form>
     <ng-container *ngIf="views.length === 1">
-        <app-rn-view [items]="controls" [view]="views[0]" [item]="item" (onEvent)="onEventHandler($event)"></app-rn-view>
+        blah
+        <app-rn-view [items]="controls" [view]="views[0]" [item]="item" (onEvent)="onEvent" [formItem]="formItem"></app-rn-view>
     </ng-container>
 </div>
+

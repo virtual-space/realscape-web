@@ -32,8 +32,12 @@ export class RnCtrlComponent implements OnInit, OnChanges, ItemCallbacks {
   @Input() align?: string = "center center";
   @Input() gap?: string = "1%";
   @Input() events?: Observable<ItemEvent>;
+  @Input() formItem?: Item;
+  @Input() formType?: Type;
+  @Input() formParents?: Item[];
   @Output() onEvent = new EventEmitter<ItemEvent>();
   @Output() onEvents = new EventEmitter<ItemEvent>();
+  @Output() onType = new EventEmitter<Type>();
 
   @Output() onRefresh = new EventEmitter();
   @Output() onItems = new EventEmitter<Item[]>();
@@ -186,7 +190,78 @@ export class RnCtrlComponent implements OnInit, OnChanges, ItemCallbacks {
     return []
   }
 
+  getItemFormControls(item: Item, form_name: string): Item[] {
+    const attributes = this.itemService.collectItemAttributes(item, {});
+    if ('forms' in attributes) {
+      for(let form in attributes['forms']) {
+        let f: any = attributes['forms'].find((f:any) => f.name.toLowerCase() === form_name.toLowerCase());
+        if (f && f['name'].toLowerCase() === form_name.toLowerCase()) {
+          const forms = this.itemService.getForms();
+          ////console.log(dialogs);
+          if (forms) {
+            const form = forms.find(d => d.name === f['form']);
+            if (form) {
+              return this.getItemControls(form);
+            }
+          }
+        }
+      }
+     
+    }
+    return []
+  }
+
+  getTypeFormControls(type: Type, form_name: string): Item[] {
+    const attributes = this.itemService.collectTypeAttributes(type, {});
+    if ('forms' in attributes) {
+      for(let form in attributes['forms']) {
+        let f: any = attributes['forms'].find((f:any) => f.name.toLowerCase() === form_name.toLowerCase());
+        if (f && f['name'].toLowerCase() === form_name.toLowerCase()) {
+          const forms = this.itemService.getForms();
+          ////console.log(dialogs);
+          if (forms) {
+            const form = forms.find(d => d.name === f['form']);
+            if (form) {
+              return this.getItemControls(form);
+            }
+          }
+        }
+      }
+     
+    }
+    return []
+  }
+
+  getTypeForms(type: Type): {[index: string]:any} {
+
+    let result: {[index: string]:any}  = {};
+    const attributes = this.itemService.collectTypeAttributes(type, {});
+    //console.log(attributes);
+    if ('forms' in attributes) {
+      const forms = this.itemService.getForms();
+      if (forms) {
+        for (var f of attributes['forms']) {
+          //console.log(f);
+          result[f['name'].toLowerCase()] = forms.find(d => d.name === f['form']);
+        }
+      }
+    }
+    return result;
+  }
+
+  getTypeForm(type: Type, form_name: string): Item | undefined {
+    const tf = this.getTypeForms(type);
+    //console.log("*** form_name:", form_name);
+    //console.log("*** tf:", tf);
+    if (tf) {
+      //console.log("*** tf[form_name]:", tf[form_name]);
+      return tf[form_name];
+    }
+    return undefined;
+  }
+
   getControlType(type: Type): string {
+    //console.log(type);
     if (type.name && type.name.endsWith('Ctrl')) {
       ////console.log('found control type ', type.name);
       return type.name;
@@ -194,6 +269,15 @@ export class RnCtrlComponent implements OnInit, OnChanges, ItemCallbacks {
     if (type && type.base) {
       ////console.log('checking base ',type.base);
       return this.getControlType(type.base);
+    }
+    ////console.log('not a control type ',type);
+    return 'Ctrl';
+  }
+
+  getItemControlType(item: Item): string {
+    //console.log(type);
+    if (item.type) {
+      return this.getControlType(item.type);
     }
     ////console.log('not a control type ',type);
     return 'Ctrl';
@@ -235,7 +319,9 @@ export class RnCtrlComponent implements OnInit, OnChanges, ItemCallbacks {
         this.dialog.open(RnDialogComponent, {
           width: '95vw',
           height: '75vh',
-          data: {view: form[0] }
+          data: {view: form[0], 
+                 item: this.item,
+                 form: form[0] }
         });
       }
     }
@@ -258,6 +344,16 @@ export class RnCtrlComponent implements OnInit, OnChanges, ItemCallbacks {
       });
     }
     return []
+  }
+
+  onTypeHandlerCtrl(type: Type) {
+   this.TypeChangedEventHandler(type);
+  }
+
+  TypeChangedEventHandler(type: Type): void {
+    this.formType = type;
+    console.log(this.formType);
+    console.log('*** right hadnler executed ***')
   }
 
   public getAttribute(item: Item, key: string, def: string): string {
@@ -628,21 +724,22 @@ export class RnCtrlComponent implements OnInit, OnChanges, ItemCallbacks {
 
   getItemQuery(item: Item): Query | undefined {
     const attributes = this.itemService.collectItemAttributes(item, {});
-    //console.log(item, attributes);
+    console.log(item, attributes);
     if ('query' in attributes && Object.keys(attributes['query']).length > 0) {
       let query: Query = new Query();
       query = {... attributes['query']};
+      console.log('query:',query);
       return query;
     }
     return undefined;
   }
 
   controlChanged(control?: Item) {
-    ////console.log('*************************************** hello from control control changed!!!');
+    //console.log('*************************************** hello from control control changed!!!');
   }
 
   itemChanged(item?: Item) {
-    ////console.log('*************************************** hello from control item changed!!!');
+    //console.log('*************************************** hello from control item changed!!!');
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -654,18 +751,18 @@ export class RnCtrlComponent implements OnInit, OnChanges, ItemCallbacks {
   }
 
   itemsChanged(items?: Item[]): void {
-    ////console.log('*************************************** hello from control items changed!!!', this.control!.type!.name!);
+    console.log('*************************************** hello from control items changed!!!', this.control!.type!.name!);
   }
 
   onEventHandler(event: ItemEvent) {
-    //console.log(event, this);
+    console.log(event, this);
     if (event.event) {
       if (event.event === 'item') {
         this.refreshValue(event);
         //this.controls.forEach(c => c.refreshValue())
         //this.rebuildControls();
       } else if(event.event === 'type') {
-        ////console.log(this);
+        console.log(this);
         this.item = event.item;
         this.refreshValue(event);
         //this.form_group.setValue(this.item!);
@@ -677,7 +774,7 @@ export class RnCtrlComponent implements OnInit, OnChanges, ItemCallbacks {
   }
 
   refreshValue(event: ItemEvent) {
-    ////console.log('*************************************** hello from control refresh value!!!');
+    console.log('*************************************** hello from control refresh value!!!');
   }
 
 }

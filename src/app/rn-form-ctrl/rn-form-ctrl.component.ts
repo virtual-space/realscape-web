@@ -3,6 +3,7 @@ import { RnCtrlComponent } from '../rn-ctrl/rn-ctrl.component';
 import { FormGroup, FormControl } from '@angular/forms';
 import { Item, ItemEvent, itemIsInstanceOf, Query, Type } from '../services/item.service';
 import { Subject } from 'rxjs';
+import { EventEmitter } from 'stream';
 
 @Component({
   selector: 'app-rn-form-ctrl',
@@ -14,9 +15,14 @@ export class RnFormCtrlComponent extends RnCtrlComponent implements OnInit {
     buttons: Item[] = [];
     views: Item[] = [];
     eventsSubject: Subject<ItemEvent> = new Subject<ItemEvent>();
+    typeForms?: {[index: string]:any};
+    typeForm?: Item;
+    embedded: boolean = false;
+    activeItem?: Item;
 
-    override ngOnInit(): void {
-      console.log(this);
+    
+    override initialize(): void {
+      //console.log(this);
       if(this.control && this.item) {
         const attrs = this.collectItemAttributes(this.control, {});
         if (attrs && 'query' in attrs) {
@@ -30,9 +36,10 @@ export class RnFormCtrlComponent extends RnCtrlComponent implements OnInit {
       }
       this.formGroup = new FormGroup({});
       this.controls = this.getControls();
+      //this.onTypeHandlerCtrl = this.onTypeHandlerCtrl;
       //console.log(this.controls)
       this.buttons = this.getButtons();
-      this.views = [];
+      //this.views = [];
       //console.log(this.getItemViews(this.item!));
       //console.log(this.getItemViews(this.control!));
       //this.rebuildControls();
@@ -85,22 +92,54 @@ export class RnFormCtrlComponent extends RnCtrlComponent implements OnInit {
     }
   
     override itemChanged(item?: Item): void {
+      console.log('*** item changed ***');
       //this.rebuildControls();
     }
 
     getButtons(): Item[] {
+      //console.log('&&& 1');
       if (this.control) {
-          return this.getItemControls(this.control).filter(c => itemIsInstanceOf(c, "ButtonCtrl"));
+        //console.log('&&& 2');
+        //console.log(this.control);
+        let buttons = this.getItemControls(this.control).filter(c => itemIsInstanceOf(c, "ButtonCtrl"));
+        //console.log(buttons);
+        if (itemIsInstanceOf(this.control, "Form"))
+        {
+          const control_attrs = this.collectItemAttributes(this.control, {});
+          const source = control_attrs['source'];
+          const form_type = control_attrs['form_type'];
+          if (source === "item" && this.item) {
+            //console.log(buttons);
+            return buttons.concat(this.getItemFormControls(this.item, form_type).filter(c => itemIsInstanceOf(c, "ButtonCtrl")));
+          }
+          //console.log(buttons);
+        }
+        return buttons;
       }
 
       return [];
     }
 
     getControls(): Item[] {
+      let ctrls: Item[] = [];
       if (this.control) {
-        return this.getItemControls(this.control).filter(c => !itemIsInstanceOf(c, "ButtonCtrl"));
+        ctrls = this.getItemControls(this.control).filter(c => !itemIsInstanceOf(c, "ButtonCtrl"));
+        //if this is a form control that should source this from item attributes menu
+        if (itemIsInstanceOf(this.control, "Form"))
+        {
+          //console.log('formcontrol')
+          const control_attrs = this.collectItemAttributes(this.control, {});
+          const source = control_attrs['source'];
+          const form_type = control_attrs['form_type'];
+          if (source === "item" && this.item) {
+            ctrls = ctrls.concat(this.getItemFormControls(this.item, form_type).filter(c => !itemIsInstanceOf(c, "ButtonCtrl")));
+          }
+          
+        }
+        //console.log(ctrls);
+        return ctrls;
       }
-      return [];
+      return ctrls;
     }
 
     isDefaultButton(item: Item) {
@@ -114,11 +153,47 @@ export class RnFormCtrlComponent extends RnCtrlComponent implements OnInit {
     }
 
     override  refreshValue(event: ItemEvent): void {
-      //console.log('*** form-ctrl refresh ***');
+      console.log('*** form-ctrl refresh ***');
       this.eventsSubject.next(event);
       this.rebuildControls();
     }
 
+    override TypeChangedEventHandler(type: Type): void {
+      console.log('*** right hadnler ***')
+    }
+
+    selectedTypeChanged(type: Type) {
+      this.formType = type;
+      this.typeForms = this.getTypeForms(type);
+      this.typeForm = this.getTypeForm(type, 'create');
+      this.formGroup = new FormGroup({});
+      this.controls = this.getControls();
+      //this.onTypeHandlerCtrl = this.onTypeHandlerCtrl;
+      //console.log(this.controls)
+      this.buttons = this.getButtons();
+      this.views = [];
+      //this.controls = this.getControls();
+      //this.buttons = this.getButtons();
+      //this.views = [];
+      //console.log(this)
+      //console.log(type);
+    }
+
+    getForm(form_name: string) {
+      if (this.formType && this.typeForms) {
+        return this.typeForms[form_name]
+      }
+      return undefined;
+    }
+
+    /*
+    override onEventHandler(event: ItemEvent) {
+      console.log(event, this);
+    }*/
+    /*
+    override onTypeHandlerCtrl(type: Type): void {
+      console.log('***form:',type);
+    }*/
     
 
     /*

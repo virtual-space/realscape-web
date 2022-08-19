@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component,  EventEmitter,  Input,  OnInit, Output } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { MatSelectChange } from '@angular/material/select';
 import { RnCtrlComponent } from '../rn-ctrl/rn-ctrl.component';
@@ -17,8 +17,14 @@ export class RnTypeSelectCtrlComponent  extends RnCtrlComponent implements OnIni
   selectedIcon = "";
 
   selectedItem?: Item;
+  initializing: boolean = true;
+
+  @Input() activeType?: Type;
+
+  @Output() selectedTypeChanged = new EventEmitter<Type>();
 
   override ngOnInit(): void {
+    //console.log("*** type select on init ***");
     const all_types: Type[] = this.itemService.getTypes();
     if(all_types) {
       const all_creatable_types = all_types.filter(t => this.collectTypeAttributes(t, {})['creatable'] === 'true');
@@ -29,6 +35,8 @@ export class RnTypeSelectCtrlComponent  extends RnCtrlComponent implements OnIni
           attributes = Object.assign(attributes, this.item.attributes);
         }
       }
+      //console.log(this.types);
+      //console.log(attributes);
       //console.log('item ', this.item, ' attributes ', attributes);
       if ('types' in attributes) {
           
@@ -51,6 +59,11 @@ export class RnTypeSelectCtrlComponent  extends RnCtrlComponent implements OnIni
       } else {
         // whitelist only from now
         // this.types = all_creatable_types;
+        console.log(this.item);
+      }
+
+      if (!this.activeType && this.types.length > 0) {
+        this.activeType = this.types[0];
       }
     }
   }
@@ -58,6 +71,8 @@ export class RnTypeSelectCtrlComponent  extends RnCtrlComponent implements OnIni
   activateType(t: Type) {
     const icon = this.getTypeIcon(t);
     if (t && t.name && t.id) {
+      //console.log('*** activating type:', t.name);
+      this.activeType = t;
       this.selectedIcon = icon;
       this.selectedName = t.name;
       this.selectedId = t.id;
@@ -95,8 +110,10 @@ export class RnTypeSelectCtrlComponent  extends RnCtrlComponent implements OnIni
         this.selectedItem.attributes = Object.assign(this.selectedItem.attributes, {host: this.item.attributes['host']});
       }
       
-     if (this.onEvent) {
-        this.onEvent.emit({event: "type", item: this.selectedItem, control: this.control});
+     if (this.selectedTypeChanged && !this.initializing) {
+        //console.log("*** type select control emitting onType:",t);
+        //console.log(this.onType);
+        this.selectedTypeChanged.emit(t);
       }
     } else {
       console.log('skipped')
@@ -112,15 +129,19 @@ export class RnTypeSelectCtrlComponent  extends RnCtrlComponent implements OnIni
         return;
       }
     }*/
-    if (this.types.length > 0) {
-      this.activateType(this.types[0]);
+    //console.log('*** after_View_init at:',this.activeType);
+    if (this.activeType) {
+      this.activateType(this.activeType);
+      this.initializing = false;
     }
   }
 
     
   onSelectChange(event: MatSelectChange) {
       const e = this.types.filter(t => t.name === event.value)[0];
+      //console.log(e);
       this.activateType(e);
+      this.initializing = false;
       /*
       const icon = this.getTypeIcon(e);
       if (e && e.name && e.id && icon) {
