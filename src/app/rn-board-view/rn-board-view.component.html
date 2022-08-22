@@ -2,7 +2,7 @@
     <div class="example-container" *ngFor="let column of columns" fxFlex fxLayout="column">
 
         <div fxLayoutAlign="center center">
-            <h2>{{ column }}</h2> 
+            <h2>{{ column }}</h2>
         </div>
 
         <div class="example-list"
@@ -22,12 +22,12 @@
                         <div fxLayout="row">
                             <div fxLayout="column">
                                 <div fxLayout="row">
-                                    <div>Progress: 36%</div>
+                                    <div>Progress: {{task.progress}}</div>
                                     <div>Deadline: 07:45 PM</div>
                                 </div>
                                 <div fxLayout="row">
-                                    <div>Priority: High</div>
-                                    <div>Risk: Low</div>
+                                    <div>Priority: {{task.priority}}</div>
+                                    <div>Risk: {{task.risk}}</div>
                                 </div>
                             </div>
                             <div fxLayout="column">
@@ -51,7 +51,7 @@
                             </div>
                         </div>
                     </mat-card-content>
-                    
+
                   </mat-card>
                   <ng-template cdkDragPreview matchSize>
                     <div class="example-box">
@@ -63,12 +63,12 @@
                                 <div fxLayout="row">
                                     <div fxLayout="column">
                                         <div fxLayout="row">
-                                            <div>Progress: 36%</div>
+                                            <div>Progress: {{task.progress}}</div>
                                             <div>Deadline: 07:45 PM</div>
                                         </div>
                                         <div fxLayout="row">
-                                            <div>Priority: High</div>
-                                            <div>Risk: Low</div>
+                                            <div>Priority: {{task.priority}}</div>
+                                            <div>Risk: {{task.risk}}</div>
                                         </div>
                                     </div>
                                     <div fxLayout="column">
@@ -92,12 +92,12 @@
                                     </div>
                                 </div>
                             </mat-card-content>
-                            
+
                           </mat-card>
                     </div>
                   </ng-template>
             </div>
-            
+
         </div>
     </div>
 </div>
