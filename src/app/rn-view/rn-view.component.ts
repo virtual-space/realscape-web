@@ -232,11 +232,12 @@ export class RnViewComponent extends RnCtrlComponent implements OnInit, OnChange
 
   onAdd(item?: Item) {
     if (this.canAddItem()) {
-      ////console.log(item);
+      console.log('onAdd:',item);
+      console.log('onAddItems:', item!.type)
       const forms = this.itemService.getForms();
       ////console.log(dialogs);
       if (forms) {
-        const form = forms.filter(d => d.name === 'CreateItem');
+        const form = forms.filter(d => d.name === 'Create');
         console.log(form);
         if (form) {
           const target_item = item? item : new Item();
@@ -296,7 +297,7 @@ export class RnViewComponent extends RnCtrlComponent implements OnInit, OnChange
     if(this.canEditOrDeleteItem()) {
       const forms = this.itemService.getForms();
       if(forms) {
-        const form = forms.filter(d => d.name === 'EditItem');
+        const form = forms.filter(d => d.name === 'Edit');
         console.log(form);
         if (form) {
           //console.log(target_item);

@@ -299,13 +299,14 @@ export class RnCtrlComponent implements OnInit, OnChanges, ItemCallbacks {
 
   getItemMenuItems(item: Item): MenuItem[] {
     const attributes = this.itemService.collectItemAttributes(item, {});
+    //console.log(item);
     if ('menu' in attributes) {
       return attributes['menu'];
     }
     return [];
   }
 
-  presentForm(formName: string, importDialog: any, uploader: any) {
+  presentForm(formName: string, importDialog: any, uploader: any, item: Item) {
     if (importDialog) {
       uploader.click();
     } else {
@@ -320,7 +321,7 @@ export class RnCtrlComponent implements OnInit, OnChanges, ItemCallbacks {
           width: '95vw',
           height: '75vh',
           data: {view: form[0], 
-                 item: this.item,
+                 item: item,
                  form: form[0] }
         });
       }

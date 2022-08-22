@@ -145,18 +145,27 @@ export class RnButtonCtrlComponent extends RnCtrlComponent implements OnInit {
             if (result) {
               //console.log(result);
               //console.log(this.item);
+              console.log(this.control);
               console.log(this.formItem);
               let attrs = this.collectItemAttributes(this.item, {});
 
               if (this.formItem) {
                 attrs = this.collectItemAttributes(this.formItem, attrs);
+              } else if(this.control) {
+                attrs = this.collectItemAttributes(this.control, attrs);
               }
-              result = this.getUpdateParams2(this.formGroup!.value,false);
+              //result = this.getUpdateParams2(this.formGroup!.value,false);
+              result = Object.assign(this.formGroup!.value, {});
               if (!('type' in result)) {
                 if ('type' in this.item.attributes!) {
                   result['type'] = this.item.attributes!['type'];
                 }
               }
+
+              if(this.item && !itemIsInstanceOf(this.item, 'App')) {
+                result['parent_id'] = this.item.id;
+              }
+
               this.itemService.invoke(attrs['path'], attrs['method'], result).subscribe(item => {
                 //console.log('updated item', JSON.stringify(item));
                 this.sessionService.activateItem(item);

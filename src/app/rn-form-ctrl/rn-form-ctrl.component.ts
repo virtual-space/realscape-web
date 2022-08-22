@@ -33,8 +33,13 @@ export class RnFormCtrlComponent extends RnCtrlComponent implements OnInit {
             //this.itemFromQuery(this.getItemQuery(this.item))
           }
         }
+        if (attrs && 'form' in attrs) {
+          console.log(attrs['form']);
+        }
       }
-      this.formGroup = new FormGroup({});
+      if (!this.formGroup) {
+        this.formGroup = new FormGroup({});
+      }
       this.controls = this.getControls();
       //this.onTypeHandlerCtrl = this.onTypeHandlerCtrl;
       //console.log(this.controls)
@@ -113,6 +118,19 @@ export class RnFormCtrlComponent extends RnCtrlComponent implements OnInit {
             return buttons.concat(this.getItemFormControls(this.item, form_type).filter(c => itemIsInstanceOf(c, "ButtonCtrl")));
           }
           //console.log(buttons);
+        } else if (itemIsInstanceOf(this.control, "FormCtrl")) {
+          
+          const control_attrs = this.collectItemAttributes(this.control, {});
+          const form = control_attrs['form'];
+          console.log('form_ctrl form:', form);
+          const forms = this.itemService.getForms();
+          ////console.log(dialogs);
+          if (forms) {
+            const f = forms.find(d => d.name === form);
+            if (f) {
+              buttons = buttons.concat(this.getItemControls(f).filter(c => itemIsInstanceOf(c, "ButtonCtrl")));
+            }
+          }
         }
         return buttons;
       }
@@ -122,6 +140,9 @@ export class RnFormCtrlComponent extends RnCtrlComponent implements OnInit {
 
     getControls(): Item[] {
       let ctrls: Item[] = [];
+      console.log("form control:",this.control);
+      console.log("form item:",this.item);
+      console.log("form active item:", this.activeItem);
       if (this.control) {
         ctrls = this.getItemControls(this.control).filter(c => !itemIsInstanceOf(c, "ButtonCtrl"));
         //if this is a form control that should source this from item attributes menu
@@ -135,6 +156,19 @@ export class RnFormCtrlComponent extends RnCtrlComponent implements OnInit {
             ctrls = ctrls.concat(this.getItemFormControls(this.item, form_type).filter(c => !itemIsInstanceOf(c, "ButtonCtrl")));
           }
           
+        } else if (itemIsInstanceOf(this.control, "FormCtrl")) {
+          
+          const control_attrs = this.collectItemAttributes(this.control, {});
+          const form = control_attrs['form'];
+          console.log('form_ctrl form:', form);
+          const forms = this.itemService.getForms();
+          ////console.log(dialogs);
+          if (forms) {
+            const f = forms.find(d => d.name === form);
+            if (f) {
+              ctrls = ctrls.concat(this.getItemControls(f).filter(c => !itemIsInstanceOf(c, "ButtonCtrl")));
+            }
+          }
         }
         //console.log(ctrls);
         return ctrls;
@@ -177,6 +211,13 @@ export class RnFormCtrlComponent extends RnCtrlComponent implements OnInit {
       //this.views = [];
       //console.log(this)
       //console.log(type);
+    }
+
+    initialTypeAssigned(type: Type) {
+      console.log('initial_type_set:', type);
+      this.formType = type;
+      this.typeForms = this.getTypeForms(type);
+      this.typeForm = this.getTypeForm(type, 'create');
     }
 
     getForm(form_name: string) {

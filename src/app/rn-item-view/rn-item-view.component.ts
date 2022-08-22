@@ -3,7 +3,7 @@ import { Subject } from 'rxjs';
 import {ActivatedRoute, Router} from '@angular/router';
 import { Item, itemIsInstanceOf, ItemEvent, Query } from '../services/item.service';
 
-import {FormControl} from "@angular/forms";
+import {FormControl, FormGroup} from "@angular/forms";
 import { RnViewComponent } from '../rn-view/rn-view.component';
 
 @Component({
@@ -29,6 +29,7 @@ export class RnItemViewComponent extends RnViewComponent implements OnInit, OnCh
   selectedView = new FormControl(0);
 
   override ngOnInit(): void {
+    this.formGroup = new FormGroup({});
     ////console.log('item-view init ', this.item);
     this.sessionService.itemActivated$.subscribe(item => {
         this.itemChanged(item);

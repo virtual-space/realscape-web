@@ -6,19 +6,54 @@
           {{control.name!}}
         </mat-panel-title>
         <mat-panel-description>
-          Currently I am {{panelOpenState ? 'open' : 'closed'}}
+          Currently I am {{panelOpenState ? 'open' : 'closed1'}}
         </mat-panel-description>
       </mat-expansion-panel-header>
 
 
     <div *ngFor="let child of controls; let index = index" fxFlexFill>
         <div fxFlexFill fxLayout="column" fxLayoutAlign="center center">
+          <div *ngIf="isForm(child)" fxFlexFill>
+            <div *ngIf="formGroup" fxFlexFill>
+                <app-rn-form-ctrl [item]="item" [control]="child"  [formGroup]="formGroup"  [events]="events" [tabIndex]="tabIndex"></app-rn-form-ctrl>
+            </div>
+            <div *ngIf="!formGroup" fxFlexFill>
+                <app-rn-form-ctrl [item]="item" [control]="child"  [events]="events" [tabIndex]="tabIndex"></app-rn-form-ctrl>
+            </div>
+          </div>
+          <!--
+            <ng-container *ngIf="formGroup && !isSteps(control) && !isView(control) && !isTabs(control) && !isAccordion(control) && !isForm(control)">
+              <app-rn-form-ctrl [item]="item"  [formItem]="formItem"  [formType]="formType" [view]="control" [control]="control" [formGroup]="formGroup"  [events]="events" [tabIndex]="tabIndex" 
+                (onRefresh)="childRefresh()" (onItems)="childItems($event)"></app-rn-form-ctrl>
+            </ng-container>
+            <ng-container *ngIf="!formGroup && !isSteps(control) && !isView(control) && !isTabs(control) && !isAccordion(control) && !isForm(control)">
+                <app-rn-form-ctrl  [item]="item"  [formItem]="formItem"  [formType]="formType" [view]="control" [control]="control"  [events]="events" [tabIndex]="tabIndex" [control]="control" 
+                  (onRefresh)="childRefresh()" (onItems)="childItems($event)"></app-rn-form-ctrl>
+            </ng-container>
+            <div *ngIf="isAccordion(control)" fxFlexFill>
+                <div *ngIf="formGroup" fxFlexFill>
+                    <app-rn-accordion-ctrl [item]="item" [formItem]="formItem"  [formType]="formType" [control]="control" [formGroup]="formGroup"  [events]="events" [tabIndex]="tabIndex" (onRefresh)="childRefresh()" (onItems)="childItems($event)" (onType)="onTypeHandlerCtrl($event)"></app-rn-accordion-ctrl>
+                </div>
+                <div *ngIf="!formGroup" fxFlexFill>
+                    <app-rn-accordion-ctrl [item]="item" [formItem]="formItem"  [formType]="formType" [control]="control"  [events]="events" [tabIndex]="tabIndex" (onRefresh)="childRefresh()" (onItems)="childItems($event)" (onType)="onTypeHandlerCtrl($event)"></app-rn-accordion-ctrl>
+                </div>
+            </div>
+            <div *ngIf="isTabs(control)" fxFlexFill>
+                <div *ngIf="formGroup" fxFlexFill>
+                    <app-rn-tabs-ctrl [item]="item" [formItem]="formItem"  [formType]="formType" [control]="control" [formGroup]="formGroup"  [events]="events" [tabIndex]="tabIndex" (onRefresh)="childRefresh()" (onItems)="childItems($event)" (onType)="onTypeHandlerCtrl($event)"></app-rn-tabs-ctrl>
+                </div>
+                <div *ngIf="!formGroup" fxFlexFill>
+                    <app-rn-tabs-ctrl [item]="item" [formItem]="formItem"  [formType]="formType" [control]="control"  [events]="events" [tabIndex]="tabIndex" (onRefresh)="childRefresh()" (onItems)="childItems($event)" (onType)="onTypeHandlerCtrl($event)"></app-rn-tabs-ctrl>
+                </div>
+            </div>
+            
             <div *ngIf="formGroup" fxFlexFill>
                 <app-rn-ctrl [control]="child" [item]="item" [formGroup]="formGroup" [events]="events" [tabIndex]="tabIndex"></app-rn-ctrl>
             </div>
             <div *ngIf="!formGroup" fxFlexFill>
                 <app-rn-ctrl [control]="child" [item]="item" [events]="events" [tabIndex]="tabIndex" fxFlex="1 1 100%"></app-rn-ctrl>
             </div>
+            -->
         </div>
     </div>
 

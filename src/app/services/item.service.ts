@@ -22,7 +22,11 @@ export class ItemService {
   }
 
   protected getInvokePath(endpoint: string) {
-    return (environment['api'] || '') + '/endpoints/' + endpoint + '/invoke';
+    if (this.authService.isLoggedIn()) {
+      return (environment['api'] || '') + '/endpoints/' + endpoint + '/invoke';
+    } else {
+      return (environment['api'] || '') + '/public/endpoints/' + endpoint + '/invoke';
+    }
   }
 
   protected getHomeEndpoint() {

@@ -24,7 +24,7 @@
               </div>
               
               <mat-menu #menuMore="matMenu" xPosition="before">
-                  <button *ngFor="let menuItem of getItemMenuItems(item!)" mat-menu-item (click)="presentForm(menuItem.form!, menuItem.import, uploader)">
+                  <button *ngFor="let menuItem of getItemMenuItems(item!)" mat-menu-item (click)="presentForm(menuItem.form!, menuItem.import, uploader, item!)">
                     <mat-icon>{{menuItem.icon}}</mat-icon>
                     <span>{{menuItem.name}}</span>
                   </button>
@@ -80,9 +80,18 @@
                   </button>
                   -->
                   <mat-divider></mat-divider>
+                  <button mat-menu-item  (click)="onQRCode()">
+                    <mat-icon>qr_code</mat-icon>
+                    <span>QRCode</span>
+                  </button>
                   <button mat-menu-item (click)="onRefreshClick()">
                     <mat-icon>refresh</mat-icon>
                     <span>Refresh</span>
+                  </button>
+                  <mat-divider></mat-divider>
+                  <button mat-menu-item  (click)="deleteItem()">
+                    <mat-icon>delete_forever</mat-icon>
+                    <span>Delete</span>
                   </button>
                 </mat-menu>
              </nav>

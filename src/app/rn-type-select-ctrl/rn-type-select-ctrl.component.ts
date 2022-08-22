@@ -22,6 +22,7 @@ export class RnTypeSelectCtrlComponent  extends RnCtrlComponent implements OnIni
   @Input() activeType?: Type;
 
   @Output() selectedTypeChanged = new EventEmitter<Type>();
+  @Output() initialTypeAssigned = new EventEmitter<Type>();
 
   override ngOnInit(): void {
     //console.log("*** type select on init ***");
@@ -109,12 +110,6 @@ export class RnTypeSelectCtrlComponent  extends RnCtrlComponent implements OnIni
       if (this.item && this.item.attributes && 'host' in this.item.attributes) {
         this.selectedItem.attributes = Object.assign(this.selectedItem.attributes, {host: this.item.attributes['host']});
       }
-      
-     if (this.selectedTypeChanged && !this.initializing) {
-        //console.log("*** type select control emitting onType:",t);
-        //console.log(this.onType);
-        this.selectedTypeChanged.emit(t);
-      }
     } else {
       console.log('skipped')
     }
@@ -133,15 +128,25 @@ export class RnTypeSelectCtrlComponent  extends RnCtrlComponent implements OnIni
     if (this.activeType) {
       this.activateType(this.activeType);
       this.initializing = false;
+      if (this.initialTypeAssigned) {
+        //console.log("*** type select control emitting onType:",t);
+        //console.log(this.onType);
+        this.initialTypeAssigned.emit(this.activeType);
+      }
     }
   }
 
     
   onSelectChange(event: MatSelectChange) {
       const e = this.types.filter(t => t.name === event.value)[0];
-      //console.log(e);
+      console.log('*** select_change:',e);
       this.activateType(e);
-      this.initializing = false;
+      //this.initializing = false;
+      if (this.selectedTypeChanged) {
+        //console.log("*** type select control emitting onType:",t);
+        //console.log(this.onType);
+        this.selectedTypeChanged.emit(e);
+      }
       /*
       const icon = this.getTypeIcon(e);
       if (e && e.name && e.id && icon) {

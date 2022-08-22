@@ -141,6 +141,9 @@ export class RnItemSelectCtrlComponent extends RnCtrlComponent implements OnInit
           this.formControl = new FormControl(this.selectedId);
           this.formGroup.removeControl(field_name);
           this.formGroup.addControl(field_name, this.formControl);
+          console.log(this.formGroup);
+        } else {
+          console.log('*** no form group ***');
         }
 
         if (this.selectedItemChanged) {

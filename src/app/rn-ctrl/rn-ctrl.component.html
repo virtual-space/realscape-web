@@ -35,7 +35,6 @@
             </div>
             <div *ngSwitchCase="'TypeSelectCtrl'"  fxFlexFill>
                 <div *ngIf="formGroup"  fxFlexFill>
-                    thiiis
                     <app-rn-type-select-ctrl [item]="item" [formItem]="formItem"  [formType]="formType" [control]="control" [formGroup]="formGroup"  [events]="events" [tabIndex]="tabIndex" (onRefresh)="onRefresh" (onEvent)="onEvent" (onItems)="onItems" (onType)="onTypeHandlerCtrl($event)"></app-rn-type-select-ctrl>
                 </div>
                 <div *ngIf="!formGroup"  fxFlexFill>
@@ -140,6 +139,14 @@
                     <app-rn-item-ctrl  [item]="item" [formItem]="formItem"  [formType]="formType" [control]="control"  [events]="events" [tabIndex]="tabIndex" (onRefresh)="childRefresh()" (onItems)="childItems($event)" (onType)="onTypeHandlerCtrl($event)"></app-rn-item-ctrl>
                 </ng-container>
             </div>
+            <div *ngSwitchCase="'ButtonCtrl'">
+                <ng-container *ngIf="formGroup">
+                    <app-rn-button-ctrl  [item]="item"  [formItem]="formItem"[control]="control" [formGroup]="formGroup"  [events]="events" [tabIndex]="tabIndex" (onRefresh)="onRefresh" (onItems)="onItems" (onType)="onTypeHandlerCtrl($event)"></app-rn-button-ctrl>
+                </ng-container>
+                <ng-container *ngIf="!formGroup">
+                    <app-rn-button-ctrl  [item]="item" [formItem]="formItem"  [formType]="formType" [control]="control"  [events]="events" [tabIndex]="tabIndex" (onRefresh)="childRefresh()" (onItems)="childItems($event)" (onType)="onTypeHandlerCtrl($event)"></app-rn-button-ctrl>
+                </ng-container>
+            </div>
             <!--
             <ng-container *ngSwitchCase="'UploadCtrl'">
                 <ng-container *ngIf="formGroup">
@@ -151,14 +158,30 @@
             </ng-container>
             -->
             <div *ngSwitchDefault fxFlexFill>
-                <ng-container *ngIf="formGroup">
+                <div *ngIf="formGroup && !isSteps(control) && !isView(control) && !isTabs(control) && !isAccordion(control) && !isForm(control)" fxFlexFill>
                     <app-rn-form-ctrl [item]="item"  [formItem]="formItem"  [formType]="formType" [view]="control" [control]="control" [formGroup]="formGroup"  [events]="events" [tabIndex]="tabIndex" 
                       (onRefresh)="childRefresh()" (onItems)="childItems($event)"></app-rn-form-ctrl>
-                </ng-container>
-                <ng-container *ngIf="!formGroup">
+                </div>
+                <div *ngIf="!formGroup && !isSteps(control) && !isView(control) && !isTabs(control) && !isAccordion(control) && !isForm(control)" fxFlexFill>
                     <app-rn-form-ctrl  [item]="item"  [formItem]="formItem"  [formType]="formType" [view]="control" [control]="control"  [events]="events" [tabIndex]="tabIndex" [control]="control" 
                       (onRefresh)="childRefresh()" (onItems)="childItems($event)"></app-rn-form-ctrl>
-                </ng-container>
+                </div>
+                <div *ngIf="isAccordion(control)" fxFlexFill>
+                    <div *ngIf="formGroup" fxFlexFill>
+                        <app-rn-accordion-ctrl [item]="item" [formItem]="formItem"  [formType]="formType" [control]="control" [formGroup]="formGroup"  [events]="events" [tabIndex]="tabIndex" (onRefresh)="childRefresh()" (onItems)="childItems($event)" (onType)="onTypeHandlerCtrl($event)"></app-rn-accordion-ctrl>
+                    </div>
+                    <div *ngIf="!formGroup" fxFlexFill>
+                        <app-rn-accordion-ctrl [item]="item" [formItem]="formItem"  [formType]="formType" [control]="control"  [events]="events" [tabIndex]="tabIndex" (onRefresh)="childRefresh()" (onItems)="childItems($event)" (onType)="onTypeHandlerCtrl($event)"></app-rn-accordion-ctrl>
+                    </div>
+                </div>
+                <div *ngIf="isTabs(control)" fxFlexFill>
+                    <div *ngIf="formGroup" fxFlexFill>
+                        <app-rn-tabs-ctrl [item]="item" [formItem]="formItem"  [formType]="formType" [control]="control" [formGroup]="formGroup"  [events]="events" [tabIndex]="tabIndex" (onRefresh)="childRefresh()" (onItems)="childItems($event)" (onType)="onTypeHandlerCtrl($event)"></app-rn-tabs-ctrl>
+                    </div>
+                    <div *ngIf="!formGroup" fxFlexFill>
+                        <app-rn-tabs-ctrl [item]="item" [formItem]="formItem"  [formType]="formType" [control]="control"  [events]="events" [tabIndex]="tabIndex" (onRefresh)="childRefresh()" (onItems)="childItems($event)" (onType)="onTypeHandlerCtrl($event)"></app-rn-tabs-ctrl>
+                    </div>
+                </div>
                 <!--
                 <div *ngIf="isForm(control)">
                     <ng-container *ngIf="formGroup">
@@ -176,9 +199,9 @@
 </div>
 <div *ngIf="!control && item">
     <ng-container *ngIf="formGroup">
-        <app-rn-item-ctrl  [item]="item"  [formItem]="formItem"  [formType]="formType" [control]="control" [formGroup]="formGroup"  [events]="events" [tabIndex]="tabIndex" (onRefresh)="onRefresh" (onItems)="onItems"  (onType)="onTypeHandlerCtrl($event)"></app-rn-item-ctrl>
+        222<app-rn-item-ctrl  [item]="item"  [formItem]="formItem"  [formType]="formType" [control]="control" [formGroup]="formGroup"  [events]="events" [tabIndex]="tabIndex" (onRefresh)="onRefresh" (onItems)="onItems"  (onType)="onTypeHandlerCtrl($event)"></app-rn-item-ctrl>
     </ng-container>
     <ng-container *ngIf="!formGroup">
-        <app-rn-item-ctrl  [item]="item"  [formItem]="formItem"  [formType]="formType" [control]="control"  [events]="events" [tabIndex]="tabIndex" (onRefresh)="childRefresh()" (onItems)="childItems($event)"  (onType)="onTypeHandlerCtrl($event)"></app-rn-item-ctrl>
+        333<app-rn-item-ctrl  [item]="item"  [formItem]="formItem"  [formType]="formType" [control]="control"  [events]="events" [tabIndex]="tabIndex" (onRefresh)="childRefresh()" (onItems)="childItems($event)"  (onType)="onTypeHandlerCtrl($event)"></app-rn-item-ctrl>
     </ng-container>
 </div>
