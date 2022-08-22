@@ -752,6 +752,7 @@ export function itemIsInstanceOf(item: Item, type_name: string): boolean {
 
 export class Query {
   types?: string[];
+  parent_types?: string[];
   tags?: string[];
   name?: string;
   parent_id?: string;

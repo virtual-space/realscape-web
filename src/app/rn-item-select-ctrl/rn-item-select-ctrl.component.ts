@@ -1,4 +1,4 @@
-import { Component, OnInit} from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { MatSelectChange } from '@angular/material/select';
 import { RnCtrlComponent } from '../rn-ctrl/rn-ctrl.component';
@@ -21,13 +21,19 @@ export class RnItemSelectCtrlComponent extends RnCtrlComponent implements OnInit
 
     linkType?: Type;
 
-    
+    @Input() activeItem?: Item;
+
+    @Output() selectedItemChanged = new EventEmitter<Item>();
 
     override ngOnInit(): void {
+      console.log('select', this);
       if (this.item) {
         const itemQuery = this.getItemQuery(this.item);
+        console.log(this.item);
         if (itemQuery) {
           const query = itemQuery? itemQuery : new Query();
+          console.log(query);
+          query.types = query.parent_types;
           this.itemService.items(query).subscribe(items => {
             this.items = items;
             if (this.items.length > 0) {
@@ -57,7 +63,7 @@ export class RnItemSelectCtrlComponent extends RnCtrlComponent implements OnInit
                 const i = this.items[0];
                 const icon = this.getItemIcon(i);
                 const field_name = this.getFieldName();
-                if (i && i.name && i.id && this.linkType) {
+                if (i && i.name && i.id) {
                   this.selectedName = i.name;
                   this.selectedId = i.id;
                   this.selectedIcon = icon;
@@ -111,6 +117,7 @@ export class RnItemSelectCtrlComponent extends RnCtrlComponent implements OnInit
     }
 
     getFieldName(): string {
+      console.log('get_field_name:',this.control);
       return this.getControlAttribute('field_name', '', this.control);
     }
 
@@ -134,6 +141,12 @@ export class RnItemSelectCtrlComponent extends RnCtrlComponent implements OnInit
           this.formControl = new FormControl(this.selectedId);
           this.formGroup.removeControl(field_name);
           this.formGroup.addControl(field_name, this.formControl);
+        }
+
+        if (this.selectedItemChanged) {
+          //console.log("*** type select control emitting onType:",t);
+          //console.log(this.onType);
+          this.selectedItemChanged.emit(e);
         }
 
         //console.log(this.selectedItem);

@@ -46,6 +46,9 @@
   <div *ngSwitchCase="'ItemView'" fxFlexFill>
     <app-rn-item-view [item]="getItemViewTarget(items)"  (onEvent)="onEvent" [events]="events"  (onRefresh)="childRefresh()" (onItems)="childItems($event)" fxFlexFill></app-rn-item-view>
   </div>
+  <div *ngSwitchCase="'PanelView'" fxFlexFill>
+    <app-rn-panel-view [items]="items" [item]="item" (onEvent)="onEvent" (onRefresh)="childRefresh()" [events]="events"  (onItems)="childItems" ></app-rn-panel-view>
+  </div>
   <div *ngSwitchDefault fxFlexFill>
     <div *ngIf="controls.length > 0" fxFlexFill>
       <div [fxLayout]="layout" [fxLayoutGap]="gap" [fxLayoutAlign]="align" fxFlexFill>
