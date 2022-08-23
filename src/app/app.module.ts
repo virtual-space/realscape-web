@@ -108,6 +108,7 @@ import { RnExpCtrlComponent } from './rn-exp-ctrl/rn-exp-ctrl.component';
 import { RnAccordionCtrlComponent } from './rn-accordion-ctrl/rn-accordion-ctrl.component';
 import { RnStepsCtrlComponent } from './rn-steps-ctrl/rn-steps-ctrl.component';
 import { RnStepCtrlComponent } from './rn-step-ctrl/rn-step-ctrl.component';
+import { RnMediaCtrlComponent } from './rn-media-ctrl/rn-media-ctrl.component';
 
 
 @NgModule({
@@ -173,7 +174,8 @@ import { RnStepCtrlComponent } from './rn-step-ctrl/rn-step-ctrl.component';
     RnExpCtrlComponent,
     RnAccordionCtrlComponent,
     RnStepsCtrlComponent,
-    RnStepCtrlComponent
+    RnStepCtrlComponent,
+    RnMediaCtrlComponent
   ],
   imports: [
     BrowserModule,

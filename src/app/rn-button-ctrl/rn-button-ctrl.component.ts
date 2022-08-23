@@ -162,8 +162,23 @@ export class RnButtonCtrlComponent extends RnCtrlComponent implements OnInit {
                 }
               }
 
-              if(this.item && !itemIsInstanceOf(this.item, 'App')) {
+              let includeParent = true;
+              let includeId = false;
+
+              if ('edit' in attrs && attrs['edit'] === 'true') {
+                  includeParent = false;
+                  includeId = true;
+              } else if(itemIsInstanceOf(this.item, 'App')) {
+                includeParent = false;
+              }
+
+              console.log('includeParent, includeId:', includeParent, includeId);
+
+              if(includeParent) {
                 result['parent_id'] = this.item.id;
+              }
+              if(includeId) {
+                result['id'] = this.item.id;
               }
 
               this.itemService.invoke(attrs['path'], attrs['method'], result).subscribe(item => {

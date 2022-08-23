@@ -26,7 +26,7 @@ export class RnEditCtrlComponent extends RnCtrlComponent implements OnInit {
       if(this.formGroup) {
           if(this.control) {
             const field_name = this.getControlAttribute('field_name', this.control.name? this.control.name : 'value');
-            //console.log('edit_ctrl', field_name);
+            console.log('edit_ctrl', field_name);
             this.formGroup.removeControl(field_name);
             this.formGroup.addControl(field_name, this.formControl);
             //console.log('*** rebuild form control ***', this.formGroup);

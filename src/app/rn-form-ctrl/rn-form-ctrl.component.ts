@@ -44,6 +44,9 @@ export class RnFormCtrlComponent extends RnCtrlComponent implements OnInit {
       //this.onTypeHandlerCtrl = this.onTypeHandlerCtrl;
       //console.log(this.controls)
       this.buttons = this.getButtons();
+
+      this.typeForms = this.getTypeForms(this.item!.type!);
+      this.typeForm = this.getTypeForm(this.item!.type!, 'edit');
       //this.views = [];
       //console.log(this.getItemViews(this.item!));
       //console.log(this.getItemViews(this.control!));

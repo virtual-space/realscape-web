@@ -46,7 +46,7 @@ export class RnLocationCtrlComponent extends RnCtrlComponent implements OnInit {
   override ngOnInit(): void {
     if (!this.item || (this.item.location == null)) {
       if (navigator.geolocation) {
-        //console.log("getting the current location");
+        console.log("*** getting the current location");
         navigator.geolocation.getCurrentPosition((position) => {
           //console.log(position);
           this.location = {
@@ -64,6 +64,7 @@ export class RnLocationCtrlComponent extends RnCtrlComponent implements OnInit {
       }
     } else {
       this.location = this.item.location;
+      console.log("object location:",this.location);
       if(this.location){
         if(this.location['type'] === 'Point'){
           this.lng = this.location['coordinates'][0];
@@ -84,6 +85,9 @@ export class RnLocationCtrlComponent extends RnCtrlComponent implements OnInit {
         } else {
           console.log("ERROR: Invalid type.")
         }
+        this.sleep(500).then(() => {//do not remove the sleep functions
+          this.loadMap();//this fixes 99% of the loading issues
+        });
       }
       /*
       this.sleep(500).then(() => {

@@ -539,6 +539,10 @@ export class RnCtrlComponent implements OnInit, OnChanges, ItemCallbacks {
     return itemIsInstanceOf(item, "View");
   }
 
+  isMedia(item: Item) {
+    return itemIsInstanceOf(item, "MediaCtrl");
+  }
+
   childRefresh() {
     if (this.onRefresh) {
       this.onRefresh.emit();

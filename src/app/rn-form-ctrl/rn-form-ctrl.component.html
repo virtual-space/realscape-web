@@ -161,7 +161,6 @@
                                     </app-rn-view>
                                 </div>
                                 <div *ngIf="isForm(child)" fxFlexFill>
-                                    hejhej {{formType!.name}}
                                     <app-rn-form-ctrl [item]="item" [formItem]="typeForm" [control]="typeForm" [formGroup]="formGroup"  [events]="events" [tabIndex]="tabIndex"
                                              (onRefresh)="childRefresh()" (onItems)="childItems($event)">
                                     </app-rn-form-ctrl>
@@ -185,7 +184,11 @@
                                     <app-rn-accordion-ctrl [item]="item"  [formItem]="formItem"  [formType]="formType" [control]="child" [formGroup]="formGroup"  [events]="events" [tabIndex]="tabIndex" 
                                     (onRefresh)="childRefresh()" (onItems)="childItems($event)"  (onType)="onTypeHandlerCtrl($event)"></app-rn-accordion-ctrl>
                                 </div>
-                                <div *ngIf="!isSteps(child) && !isView(child) && !isTabs(child) && !isAccordion(child) && !isForm(child)"  fxFlexFill>
+                                <div *ngIf="isMedia(child)" fxFlexFill>
+                                    <app-rn-media-ctrl [item]="item"  [formItem]="formItem"  [formType]="formType" [control]="child" [formGroup]="formGroup"  [events]="events" [tabIndex]="tabIndex" 
+                                    (onRefresh)="childRefresh()" (onItems)="childItems($event)"  (onType)="onTypeHandlerCtrl($event)"></app-rn-media-ctrl>
+                                </div>
+                                <div *ngIf="!isSteps(child) && !isView(child) && !isTabs(child) && !isAccordion(child) && !isForm(child) && !isMedia(child)"  fxFlexFill>
                                     404Control: {{child!.type!.name!}} {{getControlType(child)}}
                                 </div>
                             </div>

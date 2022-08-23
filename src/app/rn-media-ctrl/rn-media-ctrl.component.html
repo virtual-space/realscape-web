@@ -1,0 +1,21 @@
+<div *ngIf="item" fxFlexFill>
+    <div fxLayout="column" fxLayoutAlign="center center">
+        <div *ngFor="let child of items">
+            <div [ngSwitch]="child!.type!.name!" fxFlexFill>
+                <div *ngSwitchCase="'Image'" fxFlexFill>
+                  <app-rn-image-view [items]="items" [item]="child" (onEvent)="onItemEvent($event)"></app-rn-image-view>
+                </div>
+                <div *ngSwitchCase="'Document'" fxFlexFill>
+                  <app-rn-document-view [items]="items" [item]="child" (onEvent)="onItemEvent($event)"></app-rn-document-view>
+                </div>
+                <div *ngSwitchCase="'Page'" fxFlexFill>
+                  <app-rn-page-view [items]="items" [item]="child" (onEvent)="onItemEvent($event)"></app-rn-page-view>
+                </div>
+                <div *ngSwitchCase="'Video'" fxFlexFill>
+                  <app-rn-video-view [items]="items" [item]="child" (onEvent)="onItemEvent($event)"></app-rn-video-view>
+                </div>
+            </div>
+        </div>
+        
+    </div>
+</div>
