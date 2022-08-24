@@ -154,6 +154,7 @@ export class RnButtonCtrlComponent extends RnCtrlComponent implements OnInit {
               } else if(this.control) {
                 attrs = this.collectItemAttributes(this.control, attrs);
               }
+              console.log(attrs);
               //result = this.getUpdateParams2(this.formGroup!.value,false);
               result = Object.assign(this.formGroup!.value, {});
               if (!('type' in result)) {
@@ -169,7 +170,7 @@ export class RnButtonCtrlComponent extends RnCtrlComponent implements OnInit {
                   includeParent = false;
                   includeId = true;
               } else if(itemIsInstanceOf(this.item, 'App')) {
-                includeParent = false;
+                includeParent = 'my_items' in attrs && attrs['my_items'] === 'true';
               }
 
               console.log('includeParent, includeId:', includeParent, includeId);

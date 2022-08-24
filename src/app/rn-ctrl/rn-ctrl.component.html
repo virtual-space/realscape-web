@@ -199,9 +199,9 @@
 </div>
 <div *ngIf="!control && item">
     <ng-container *ngIf="formGroup">
-        222<app-rn-item-ctrl  [item]="item"  [formItem]="formItem"  [formType]="formType" [control]="control" [formGroup]="formGroup"  [events]="events" [tabIndex]="tabIndex" (onRefresh)="onRefresh" (onItems)="onItems"  (onType)="onTypeHandlerCtrl($event)"></app-rn-item-ctrl>
+        <app-rn-item-ctrl  [item]="item"  [formItem]="formItem"  [formType]="formType" [control]="control" [formGroup]="formGroup"  [events]="events" [tabIndex]="tabIndex" (onRefresh)="onRefresh" (onItems)="onItems"  (onType)="onTypeHandlerCtrl($event)"></app-rn-item-ctrl>
     </ng-container>
     <ng-container *ngIf="!formGroup">
-        333<app-rn-item-ctrl  [item]="item"  [formItem]="formItem"  [formType]="formType" [control]="control"  [events]="events" [tabIndex]="tabIndex" (onRefresh)="childRefresh()" (onItems)="childItems($event)"  (onType)="onTypeHandlerCtrl($event)"></app-rn-item-ctrl>
+        <app-rn-item-ctrl  [item]="item"  [formItem]="formItem"  [formType]="formType" [control]="control"  [events]="events" [tabIndex]="tabIndex" (onRefresh)="childRefresh()" (onItems)="childItems($event)"  (onType)="onTypeHandlerCtrl($event)"></app-rn-item-ctrl>
     </ng-container>
 </div>

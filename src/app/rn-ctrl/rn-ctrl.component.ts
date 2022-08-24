@@ -174,6 +174,7 @@ export class RnCtrlComponent implements OnInit, OnChanges, ItemCallbacks {
 
   getItemControls(item: Item): Item[] {
     const attributes = this.itemService.collectItemAttributes(item, {});
+    console.log(attributes);
     if ('controls' in attributes) {
       const ctrls = attributes['controls'].map((v:any) => {
         let item: Item = new Item();
@@ -184,7 +185,7 @@ export class RnCtrlComponent implements OnInit, OnChanges, ItemCallbacks {
         }
         return item;
       });
-      ////console.log(ctrls);
+      console.log(ctrls);
       return ctrls;
     }
     return []

@@ -84,7 +84,7 @@ export class RnViewComponent extends RnCtrlComponent implements OnInit, OnChange
   }
 
   override onEventHandler(event: ItemEvent) {
-    //console.log('*** onEventHandler ', this, event);
+    console.log('*** onEventHandler ', this, event);
     
     if (event.event) {
        if(event.event == 'edit' && event.item) {
@@ -237,7 +237,7 @@ export class RnViewComponent extends RnCtrlComponent implements OnInit, OnChange
       const forms = this.itemService.getForms();
       ////console.log(dialogs);
       if (forms) {
-        const form = forms.filter(d => d.name === 'Create');
+        const form = forms.filter(d => d.name === 'Add');
         console.log(form);
         if (form) {
           const target_item = item? item : new Item();
@@ -293,12 +293,13 @@ export class RnViewComponent extends RnCtrlComponent implements OnInit, OnChange
   }
 
   onEdit(item: Item) {
-    ////console.log(event);
+    ///console.log(event);
     if(this.canEditOrDeleteItem()) {
       const forms = this.itemService.getForms();
       if(forms) {
         const form = forms.filter(d => d.name === 'Edit');
         console.log(form);
+        console.log(item);
         if (form) {
           //console.log(target_item);
           this.dialog.open(RnDialogComponent, {

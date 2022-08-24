@@ -188,8 +188,12 @@
                                     <app-rn-media-ctrl [item]="item"  [formItem]="formItem"  [formType]="formType" [control]="child" [formGroup]="formGroup"  [events]="events" [tabIndex]="tabIndex" 
                                     (onRefresh)="childRefresh()" (onItems)="childItems($event)"  (onType)="onTypeHandlerCtrl($event)"></app-rn-media-ctrl>
                                 </div>
-                                <div *ngIf="!isSteps(child) && !isView(child) && !isTabs(child) && !isAccordion(child) && !isForm(child) && !isMedia(child)"  fxFlexFill>
-                                    404Control: {{child!.type!.name!}} {{getControlType(child)}}
+                                <div *ngIf="isButton(child)" fxFlexFill>
+                                    <app-rn-button-ctrl [item]="item"  [formItem]="formItem"  [formType]="formType" [control]="child" [formGroup]="formGroup"  [events]="events" [tabIndex]="tabIndex" 
+                                    (onRefresh)="childRefresh()" (onItems)="childItems($event)"  (onType)="onTypeHandlerCtrl($event)"></app-rn-button-ctrl>
+                                </div>
+                                <div *ngIf="!isSteps(child) && !isView(child) && !isTabs(child) && !isAccordion(child) && !isForm(child) && !isMedia(child) && !isButton(child)"  fxFlexFill>
+                                    404Control: {{child.type!.name}} {{getControlType(child)}}
                                 </div>
                             </div>
                         </div>

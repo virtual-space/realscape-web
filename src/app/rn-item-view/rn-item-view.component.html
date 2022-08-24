@@ -146,11 +146,14 @@
           <div *ngSwitchCase="'Video'" fxFlexFill>
             <app-rn-video-view [items]="children" [item]="item" (onEvent)="onItemEvent($event)" (onRefresh)="refreshView()"   (onItems)="refreshItems($event)" [events]="eventsSubject.asObservable()"></app-rn-video-view>
           </div>
+          <div *ngSwitchCase="'Form'" fxFlexFill>
+            <app-rn-form-ctrl [controls]="children" [item]="item" [control]="item" (onEvent)="onItemEvent($event)" (onRefresh)="refreshView()"   (onItems)="refreshItems($event)" [events]="eventsSubject.asObservable()"></app-rn-form-ctrl>
+          </div>
           <div *ngSwitchDefault fxFlexFill>
             <div *ngIf="children.length > 0" fxFlexFill>
               <app-rn-list-view [items]="children"  (onEvent)="onItemEvent($event)" (onRefresh)="refreshView()"   (onItems)="refreshItems($event)" [events]="eventsSubject.asObservable()"></app-rn-list-view>
             </div>
-            <div *ngIf="children.length === 0" fxFlexFill>
+            <div *ngIf="children.length === 0" fxFlexFill>404
               <app-rn-card-view [items]="children" [view]="getItemDefaultView(item)" [item]="item" (onEvent)="onItemEvent($event)" (onRefresh)="refreshView()"  (onItems)="refreshItems($event)" [events]="eventsSubject.asObservable()"></app-rn-card-view>
             </div>
           </div>
