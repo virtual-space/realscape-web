@@ -10,7 +10,6 @@ import { isInstanceOf, Item, Type } from '../services/item.service';
   styleUrls: ['./rn-type-select-ctrl.component.sass']
 })
 export class RnTypeSelectCtrlComponent  extends RnCtrlComponent implements OnInit {
-  types: Type[] = [];
 
   selectedName = "";
   selectedId = "";
@@ -25,54 +24,76 @@ export class RnTypeSelectCtrlComponent  extends RnCtrlComponent implements OnIni
   @Output() initialTypeAssigned = new EventEmitter<Type>();
 
   override ngOnInit(): void {
-    //console.log("*** type select on init ***");
+    ////console.logog("*** type select on init ***");
     const all_types: Type[] = this.itemService.getTypes();
-    if(all_types) {
-      const all_creatable_types = all_types.filter(t => this.collectTypeAttributes(t, {})['creatable'] === 'true');
-      let attributes: {[index:string]:any} = {};
-      if (this.item) {
-        attributes = this.collectTypeAttributes(this.item.type!, attributes);
-        if (this.item.attributes) {
-          attributes = Object.assign(attributes, this.item.attributes);
+    const all_creatable_types = all_types.filter(t => this.collectTypeAttributes(t, {})['creatable'] === 'true');
+    if (this.types.length === 0) {
+      if(all_types) {
+        let attributes: {[index:string]:any} = {};
+        if (this.item) {
+          attributes = this.collectTypeAttributes(this.item.type!, attributes);
+          if (this.item.attributes) {
+            attributes = Object.assign(attributes, this.item.attributes);
+          }
+        }
+        if (this.control) {
+          const ctrl_attributes = this.collectItemAttributes(this.control, {});
+          if('types' in ctrl_attributes && Object.keys(ctrl_attributes['types']).length > 0) {
+            //console.logog('ctl_attrs:', ctrl_attributes['types'] );
+            attributes['types'] = ctrl_attributes['types'];
+          }
+        }
+        ////console.logog(this.item);
+        ////console.logog('ctrl:', this.control);
+        //console.logog('attributes', attributes);
+        ////console.logog(this.types);
+        ////console.logog(attributes);
+        ////console.logog('item ', this.item, ' attributes ', attributes);
+        if ('types' in attributes) {
+            
+            const includedTypeNames: Set<string> = new Set(attributes['types']);
+            ////console.logog('************************* included type names ', includedTypeNames);
+            //const includedTypes = new Set(types.filter(t => includedTypeNames.has(t.name)).map(t => t['id']));
+            //this.types = this.types.filter(t => includedTypes.has(t['id']) || includedTypes.has(t['base_id']) );
+            const includedTypes:Type[] = [];
+            for (let type of all_creatable_types) {
+              for(let type_name of includedTypeNames) {
+                if (isInstanceOf(type, type_name)) {
+                  ////console.logog('************************* found instance ', type.name, 'of', type_name);
+                  includedTypes.push(type);  
+                  break;
+                }
+              }
+            } 
+            this.types = includedTypes;
+            ////console.logog('************************* resulting types ', includedTypes);
+        } else {
+          // whitelist only from now
+          // this.types = all_creatable_types;
+          //console.logog(this.item);
         }
       }
-      //console.log(this.types);
-      //console.log(attributes);
-      //console.log('item ', this.item, ' attributes ', attributes);
-      if ('types' in attributes) {
-          
-          const includedTypeNames: Set<string> = new Set(attributes['types']);
-          //console.log('************************* included type names ', includedTypeNames);
-          //const includedTypes = new Set(types.filter(t => includedTypeNames.has(t.name)).map(t => t['id']));
-          //this.types = this.types.filter(t => includedTypes.has(t['id']) || includedTypes.has(t['base_id']) );
-          const includedTypes:Type[] = [];
-          for (let type of all_creatable_types) {
-            for(let type_name of includedTypeNames) {
-              if (isInstanceOf(type, type_name)) {
-                //console.log('************************* found instance ', type.name, 'of', type_name);
-                includedTypes.push(type);  
-                break;
-              }
-            }
-          } 
-          this.types = includedTypes;
-          //console.log('************************* resulting types ', includedTypes);
-      } else {
-        // whitelist only from now
-        // this.types = all_creatable_types;
-        console.log(this.item);
-      }
-
-      if (!this.activeType && this.types.length > 0) {
-        this.activeType = this.types[0];
-      }
+    } else {
+      const includedTypes:Type[] = [];
+      for (let type of all_creatable_types) {
+        for(let included_type of this.types) {
+          if (isInstanceOf(type, included_type.name!)) {
+            includedTypes.push(type);  
+          }  
+        }
+      } 
+      this.types = includedTypes;
+    }
+    
+    if (!this.activeType && this.types.length > 0) {
+      this.activeType = this.types[0];
     }
   }
 
   activateType(t: Type) {
     const icon = this.getTypeIcon(t);
     if (t && t.name && t.id) {
-      //console.log('*** activating type:', t.name);
+      ////console.logog('*** activating type:', t.name);
       this.activeType = t;
       this.selectedIcon = icon;
       this.selectedName = t.name;
@@ -111,7 +132,7 @@ export class RnTypeSelectCtrlComponent  extends RnCtrlComponent implements OnIni
         this.selectedItem.attributes = Object.assign(this.selectedItem.attributes, {host: this.item.attributes['host']});
       }
     } else {
-      console.log('skipped')
+      //console.logog('skipped')
     }
   }
 
@@ -119,18 +140,18 @@ export class RnTypeSelectCtrlComponent  extends RnCtrlComponent implements OnIni
     /*
     if (this.item) {
       if (this.item.type) {
-        console.log('activate_type', this.item.type);
+        //console.logog('activate_type', this.item.type);
         this.activateType(this.item.type);
         return;
       }
     }*/
-    //console.log('*** after_View_init at:',this.activeType);
+    ////console.logog('*** after_View_init at:',this.activeType);
     if (this.activeType) {
       this.activateType(this.activeType);
       this.initializing = false;
       if (this.initialTypeAssigned) {
-        //console.log("*** type select control emitting onType:",t);
-        //console.log(this.onType);
+        ////console.logog("*** type select control emitting onType:",t);
+        ////console.logog(this.onType);
         this.initialTypeAssigned.emit(this.activeType);
       }
     }
@@ -139,12 +160,12 @@ export class RnTypeSelectCtrlComponent  extends RnCtrlComponent implements OnIni
     
   onSelectChange(event: MatSelectChange) {
       const e = this.types.filter(t => t.name === event.value)[0];
-      console.log('*** select_change:',e);
+      //console.logog('*** select_change:',e);
       this.activateType(e);
       //this.initializing = false;
       if (this.selectedTypeChanged) {
-        //console.log("*** type select control emitting onType:",t);
-        //console.log(this.onType);
+        ////console.logog("*** type select control emitting onType:",t);
+        ////console.logog(this.onType);
         this.selectedTypeChanged.emit(e);
       }
       /*

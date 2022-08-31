@@ -9,7 +9,7 @@ import { RnViewComponent } from '../rn-view/rn-view.component';
 export class RnDocumentViewComponent extends RnViewComponent implements OnInit {
 
   override ngOnInit(): void {
-    console.log(this.item)
+    //console.log(this.item)
   }
 
 

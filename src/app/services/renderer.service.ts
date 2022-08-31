@@ -12,7 +12,7 @@ export class RendererService {
   constructor() { }
 
   initialize() {
-    console.log('init renderer')
+    //console.log('init renderer')
     /*
     AFRAME.registerComponent('ar-hit-test', {
       schema: {targetEl: {type: 'selector'}},

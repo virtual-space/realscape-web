@@ -72,8 +72,28 @@ export class RnCalendarViewComponent extends RnViewComponent implements OnInit {
   calendarEvents: CalendarEvent<Item>[] = [];
 
   override ngOnInit(): void {
-    console.log('init',this.items)
+    //console.log('init',this.items)
     this.populateItems();
+  }
+
+  getItemValidFrom(item: Item): any {
+    if (item.valid_from) {
+      return item.valid_from;
+    } else if(item.linked_item) {
+      return this.getItemValidFrom(item.linked_item);
+    } else {
+      return undefined;
+    }
+  }
+
+  getItemValidTo(item: Item): any {
+    if (item.valid_to) {
+      return item.valid_to;
+    } else if(item.linked_item) {
+      return this.getItemValidTo(item.linked_item);
+    } else {
+      return undefined;
+    }
   }
 
   populateItems() {
@@ -83,9 +103,9 @@ export class RnCalendarViewComponent extends RnViewComponent implements OnInit {
 
     if(this.item) {
       if(this.item.valid_from){
-        //console.log('has valid_from',value.valid_from)
+        ////console.log('has valid_from',value.valid_from)
         if(this.item.valid_to){
-          //console.log('has valid_to',value.valid_to)
+          ////console.log('has valid_to',value.valid_to)
           this.calendarEvents.push({
             start: new Date(this.item.valid_from + 'Z'),
             end: new Date(this.item.valid_to + 'Z'),
@@ -109,14 +129,16 @@ export class RnCalendarViewComponent extends RnViewComponent implements OnInit {
     }
 
     this.dataSource.data.forEach(value => {
-      //console.log(value)
-      if(value.valid_from){
-        //console.log('has valid_from',value.valid_from)
-        if(value.valid_to){
-          //console.log('has valid_to',value.valid_to)
+      const valid_from = this.getItemValidFrom(value);
+      const valid_to = this.getItemValidTo(value);
+      ////console.log(value)
+      if(valid_from){
+        ////console.log('has valid_from',value.valid_from)
+        if(valid_to){
+          ////console.log('has valid_to',value.valid_to)
           this.calendarEvents.push({
-            start: new Date(value.valid_from + 'Z'),
-            end: new Date(value.valid_to + 'Z'),
+            start: new Date(valid_from + 'Z'),
+            end: new Date(valid_to + 'Z'),
             id: value.id,
             title: value.name,
             color: this.colors.yellow,
@@ -125,7 +147,7 @@ export class RnCalendarViewComponent extends RnViewComponent implements OnInit {
           })
         } else {
           this.calendarEvents.push({
-            start: new Date(value.valid_from + 'Z'),
+            start: new Date(valid_from + 'Z'),
             id: value.id,
             title: value.name,
             color: this.colors.yellow,
@@ -134,20 +156,20 @@ export class RnCalendarViewComponent extends RnViewComponent implements OnInit {
           })
         }
       } else {
-        //console.log(value.id, "does not have a valid start date")
+        ////console.log(value.id, "does not have a valid start date")
       }
     })
   }
 
   override ngOnChanges(changes: SimpleChanges): void {
-    //console.log('changes',this.items)
+    ////console.log('changes',this.items)
     if(changes['items'] || changes['item']) {
       this.populateItems();
     }
   }
 
   onItemClick(item: any) {
-    //console.log(item);
+    ////console.log(item);
     this.onDisplay(item.meta);
   }
 
@@ -156,12 +178,12 @@ export class RnCalendarViewComponent extends RnViewComponent implements OnInit {
   }
 
   onCalendarClick(event: any) {
-    console.log("calendarclick",event);
+    //console.log("calendarclick",event);
     if (this.canAddItem()) {
       let item: Item = this.item? { ... this.item} : new Item();
       item.valid_from = event.date;
       item.valid_to = event.date;
-      console.log(item);
+      //console.log(item);
       this.onAdd(item);
     }
     /*

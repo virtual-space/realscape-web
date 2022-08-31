@@ -21,15 +21,15 @@ export class RnAttrsCtrlComponent extends RnCtrlComponent implements OnInit, OnC
   collectAttributes() {
     let attrs: {[index: string]:any} = {};
     if (this.item) {
-      //console.log(this.item);
+      ////console.log(this.item);
       if (this.item.type) {
         attrs = this.collectTypeAttributes(this.item.type, attrs);
       }
-      //console.log(attrs);
+      ////console.log(attrs);
       if (this.item.attributes) {
         attrs = Object.assign(attrs, this.item.attributes);
       }
-      //console.log(attrs);
+      ////console.log(attrs);
     }
     return attrs;
   }
@@ -47,7 +47,7 @@ export class RnAttrsCtrlComponent extends RnCtrlComponent implements OnInit, OnC
   }
 
   override itemChanged(item?: Item): void {
-    console.log("*** attrs item changed ***");
+    //console.log("*** attrs item changed ***");
     this.rebuildFormGroup();
   }
 

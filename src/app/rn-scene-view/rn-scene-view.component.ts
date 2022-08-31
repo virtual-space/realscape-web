@@ -20,11 +20,11 @@ export class RnSceneViewComponent extends RnViewComponent implements OnInit {
     const entity = document.querySelector('#entity');
     if(entity) {
       this.securePipe6.transform(this.getDataLink()).subscribe(res => {
-        console.log(res);
+        //console.log(res);
         const b = new Blob([res], {
           type: "application/octet-stream"
         });
-        //console.log(b);
+        ////console.log(b);
         const u = URL.createObjectURL(b,);
         //this.sceneData = `url(${u})`;
         entity.setAttribute('gltf-model', `url(${u})`);

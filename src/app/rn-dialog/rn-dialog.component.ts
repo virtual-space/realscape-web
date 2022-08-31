@@ -1,12 +1,13 @@
 import {  Component, Inject, OnInit } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { Item, ItemEvent, ItemService } from '../services/item.service';
+import { Item, ItemEvent, ItemService, Type } from '../services/item.service';
 
 export interface RnDialogData {
   view: Item;
   item: Item;
   form: Item;
+  types: Type[];
 }
 
 @Component({
@@ -17,6 +18,7 @@ export interface RnDialogData {
 export class RnDialogComponent implements OnInit {
   item?: Item;
   formItem?: Item;
+  types: Type[] = [];
   public formGroup = new FormGroup({});
   constructor(
     public dialogRef: MatDialogRef<RnDialogComponent>,
@@ -27,6 +29,8 @@ export class RnDialogComponent implements OnInit {
   ngOnInit(): void {
     this.item = this.data.item;
     this.formItem = this.data.form;
+    this.types = this.data.types;
+    //console.log(this.types);
   }
 
   onNoClick(): void {
@@ -38,7 +42,7 @@ export class RnDialogComponent implements OnInit {
   }
 
   onEvent(event: ItemEvent) {
-    console.log(event);
+    //console.log(event);
     if (event.item) {
       if (event.event === 'click') {
         if(event.control && event.control.attributes && event.control.attributes['close'] === 'true') {
@@ -47,11 +51,11 @@ export class RnDialogComponent implements OnInit {
           this.dialogRef.close(event);
         }
       } else if (event.event === 'item') {
-        console.log(this.item);
+        //console.log(this.item);
         let location = this.item?.location;
         this.item = event.item;
         this.item.location = location;
-        console.log(this.item);
+        //console.log(this.item);
       }
       
     }

@@ -14,8 +14,9 @@ export class RnStepsCtrlComponent extends RnCtrlComponent implements OnInit {
     if (this.control) {
       this.steps = this.getItemControls(this.control).filter(i => itemIsInstanceOf(i, 'StepCtrl'));
     }
-    //console.log('tabsctrl item', this.item);
-    //console.log('tabsctrl formgroup ', this.formGroup);
+    //console.log('stepsctrl item', this.item);
+    //console.log('stepsctrl control', this.control);
+    //console.log('stepsctrl formgroup ', this.formGroup);
     
   }
 

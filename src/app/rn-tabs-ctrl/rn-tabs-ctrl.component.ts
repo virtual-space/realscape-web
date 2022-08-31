@@ -17,13 +17,13 @@ export class RnTabsCtrlComponent extends RnCtrlComponent implements OnInit {
     if (this.control) {
       this.tabs = this.getItemControls(this.control).filter(i => itemIsInstanceOf(i, 'TabCtrl'));
     }
-    //console.log('tabsctrl item', this.item);
-    //console.log('tabsctrl formgroup ', this.formGroup);
+    ////console.log('tabsctrl item', this.item);
+    ////console.log('tabsctrl formgroup ', this.formGroup);
     
   }
 
   onChangeTab(event: any) {
-    console.log(event);
+    //console.log(event);
     this.eventsSubject.next({event: 'tab', data: {index: event.index}, item: this.item});
     //this.selectedTab = event.index;
   }

@@ -20,11 +20,14 @@
                   </ng-container>
               </mat-menu>
               <div fxFlex="1 0 5%" fxLayoutAlign="center center">
+                <div>
+                  <mat-slide-toggle [(ngModel)]="hierarchy" (change)="hierarchyToggleChanged($event)"></mat-slide-toggle>
+                </div>
                 <button mat-mini-fab [matMenuTriggerFor]="menuMore" *ngIf="item" color="primary"><mat-icon>more_vert</mat-icon></button>
               </div>
               
               <mat-menu #menuMore="matMenu" xPosition="before">
-                  <button *ngFor="let menuItem of getItemMenuItems(item!)" mat-menu-item (click)="presentForm(menuItem.form!, menuItem.import, uploader, item!)">
+                  <button *ngFor="let menuItem of getItemMenuItems(item!)" mat-menu-item (click)="presentForm(menuItem.form!, menuItem.import, uploader, item!, getActiveView())">
                     <mat-icon>{{menuItem.icon}}</mat-icon>
                     <span>{{menuItem.name}}</span>
                   </button>
@@ -150,19 +153,37 @@
             <app-rn-form-ctrl [controls]="children" [item]="item" [control]="item" (onEvent)="onItemEvent($event)" (onRefresh)="refreshView()"   (onItems)="refreshItems($event)" [events]="eventsSubject.asObservable()"></app-rn-form-ctrl>
           </div>
           <div *ngSwitchDefault fxFlexFill>
+            <div fxFlexFill *ngIf="children.length > 0">
+              <app-rn-list-view [items]="children"  (onEvent)="onItemEvent($event)" (onRefresh)="refreshView()"   (onItems)="refreshItems($event)" [events]="eventsSubject.asObservable()"></app-rn-list-view>
+            </div>
+            <!--
             <div *ngIf="children.length > 0" fxFlexFill>
               <app-rn-list-view [items]="children"  (onEvent)="onItemEvent($event)" (onRefresh)="refreshView()"   (onItems)="refreshItems($event)" [events]="eventsSubject.asObservable()"></app-rn-list-view>
             </div>
-            <div *ngIf="children.length === 0" fxFlexFill>404
+            <div *ngIf="children.length === 0" fxFlexFill>404 {{item!.type!.name!}}
               <app-rn-card-view [items]="children" [view]="getItemDefaultView(item)" [item]="item" (onEvent)="onItemEvent($event)" (onRefresh)="refreshView()"  (onItems)="refreshItems($event)" [events]="eventsSubject.asObservable()"></app-rn-card-view>
             </div>
+            -->
           </div>
         </div>
       </div>
 
-      <div *ngIf="controls.length > 0" fxFlexFill>
+      <div *ngIf="controls.length > 0 && (item && item.type && item.type.name !== 'Form')" fxFlexFill>
         <div [fxLayout.gt-sm]="layout"  fxLayout="column" fxLayoutGap="1%" fxFlexFill>
-          <div *ngFor="let child of controls; let index = index" fxFlex="1 0 auto">
+          <div *ngIf="isSteps(item)" fxFlexFill>
+            <div *ngIf="formGroup">
+              <app-rn-steps-ctrl  [item]="item"  [formItem]="formItem" [control]="item" [formGroup]="formGroup"  [events]="eventsSubject.asObservable()" 
+                                         (onRefresh)="childRefresh()" (onEvent)="onEvent">
+              </app-rn-steps-ctrl>
+            </div>
+            <div *ngIf="!formGroup">
+              <app-rn-steps-ctrl  [item]="item"  [formItem]="formItem" [control]="item"  [events]="eventsSubject.asObservable()" 
+                                         (onRefresh)="childRefresh()" (onEvent)="onEvent">
+              </app-rn-steps-ctrl>
+            </div>
+          </div>
+          <div *ngIf="!isSteps(item)" fxFlexFill>
+            <div *ngFor="let child of controls; let index = index" fxFlex="1 0 auto">cc
               <div fxFlex *ngIf="formGroup">
                 <app-rn-ctrl [control]="child" [item]="item" (onRefresh)="childRefresh()" (onItems)="childItems($event)" [formGroup]="formGroup"  [events]="events" [tabIndex]="tabIndex">
                 </app-rn-ctrl>
@@ -171,6 +192,7 @@
                 <app-rn-ctrl [control]="child" [item]="item" (onRefresh)="childRefresh()" (onItems)="childItems($event)" [events]="events" [tabIndex]="tabIndex">
                 </app-rn-ctrl>
               </div>
+          </div>
           </div>
         </div>
       </div>
