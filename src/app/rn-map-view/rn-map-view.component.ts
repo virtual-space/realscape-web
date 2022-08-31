@@ -284,7 +284,7 @@ export class RnMapViewComponent extends RnViewComponent implements OnInit, OnDes
         //finding the center of the polygon.
         ips.forEach(ip => {
           const loc = this.getItemLocation(ip);
-          if (loc) {
+          if (loc && loc.coordinates && loc.coordinates.length > 0) {
             loc.coordinates[0].forEach((coord:any) => {
               sumlat += coord[0]
               sumlong += coord[1]
