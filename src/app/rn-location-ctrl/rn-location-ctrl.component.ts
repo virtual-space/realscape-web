@@ -46,9 +46,9 @@ export class RnLocationCtrlComponent extends RnCtrlComponent implements OnInit {
   override ngOnInit(): void {
     if (!this.item || (this.item.location == null)) {
       if (navigator.geolocation) {
-        //console.log("*** getting the current location");
+        ////console.log("*** getting the current location");
         navigator.geolocation.getCurrentPosition((position) => {
-          ////console.log(position);
+          //////console.log(position);
           this.location = {
             coordinates: [position.coords.longitude, position.coords.latitude],
             type: "Point"
@@ -59,12 +59,12 @@ export class RnLocationCtrlComponent extends RnCtrlComponent implements OnInit {
           this.sleep(500).then(() => {//do not remove the sleep functions
             this.loadMap();//this fixes 99% of the loading issues
           });
-          ////console.log('loading with user location',this);
+          //////console.log('loading with user location',this);
         });
       }
     } else {
       this.location = this.item.location;
-      //console.log("object location:",this.location);
+      ////console.log("object location:",this.location);
       if(this.location){
         if(this.location['type'] === 'Point'){
           this.lng = this.location['coordinates'][0];
@@ -81,9 +81,9 @@ export class RnLocationCtrlComponent extends RnCtrlComponent implements OnInit {
           });
           this.lat = sumlat/count;
           this.lng = sumlong/count;
-          ////console.log(this);
+          //////console.log(this);
         } else {
-          //console.log("ERROR: Invalid type.")
+          ////console.log("ERROR: Invalid type.")
         }
         this.sleep(500).then(() => {//do not remove the sleep functions
           this.loadMap();//this fixes 99% of the loading issues
@@ -93,12 +93,12 @@ export class RnLocationCtrlComponent extends RnCtrlComponent implements OnInit {
       this.sleep(500).then(() => {
         this.loadMap();
       });*/
-      ////console.log('loading with existing data',this)
+      //////console.log('loading with existing data',this)
     }
     
     this.rebuildFormControl();
     if (this.events) {
-      ////console.log('subscribing')
+      //////console.log('subscribing')
       this.subscription = this.events.subscribe(e => {
         this.handleEvent(e);
       });
@@ -110,7 +110,7 @@ export class RnLocationCtrlComponent extends RnCtrlComponent implements OnInit {
   }
 
   rebuildFormControl() {
-    ////console.log(this.formControl);
+    //////console.log(this.formControl);
     //this.formControl.setValue(this.getValue());
     
 
@@ -119,18 +119,18 @@ export class RnLocationCtrlComponent extends RnCtrlComponent implements OnInit {
       this.formGroup.addControl('location', this.formControl);
       if(this.location) {
         this.formControl.setValue(JSON.stringify(this.location));
-        //console.log(JSON.stringify(this.location));
+        ////console.log(JSON.stringify(this.location));
       }
     }
   }
 
   onCancelClick(): void {
-    //console.log("Close Edit Dialog")
+    ////console.log("Close Edit Dialog")
     //this.dialogRef.close();
   }
 
   onClearClick(): void {
-    ////console.log("Clear Location Data")
+    //////console.log("Clear Location Data")
     var featureCollection = this.draw.getAll()
     featureCollection.features = []
     this.draw.set(featureCollection)
@@ -140,7 +140,7 @@ export class RnLocationCtrlComponent extends RnCtrlComponent implements OnInit {
   }
 
   onLoad(event: any): void {
-    //console.log("Map Load", event);
+    ////console.log("Map Load", event);
   }
 
   onZoomEnd(event: any) {
@@ -149,7 +149,7 @@ export class RnLocationCtrlComponent extends RnCtrlComponent implements OnInit {
 
   loadMap(): void {
     if(!this.isLoaded){
-      ////console.log('loading map...')
+      //////console.log('loading map...')
       var error = null
       try {
         this.map = new Map({
@@ -176,31 +176,31 @@ export class RnLocationCtrlComponent extends RnCtrlComponent implements OnInit {
         this.map.addControl(this.draw, 'top-right');
         this.marker = new Marker({draggable: false})
         .setLngLat([this.lng, this.lat])
-        ////console.log('this.marker',this.marker)
+        //////console.log('this.marker',this.marker)
         //this.marker.on('dragend', this.onDragEnd);
         this.marker.on('dragend', () =>{
           if(this.marker){
             const lngLat: LngLat = this.marker.getLngLat()
-            ////console.log(lngLat)
+            //////console.log(lngLat)
             var featureCollection = this.draw.getAll()
             if(featureCollection.features[0]['geometry']['type'] === 'Point'){
               featureCollection.features[0]['geometry']['coordinates'] = [lngLat.lng,lngLat.lat];
               this.draw.set(featureCollection);
               this.formControl.setValue(JSON.stringify(featureCollection.features[0].geometry));
-              //console.log(this.formControl);
-              //console.log(this.formGroup);
+              ////console.log(this.formControl);
+              ////console.log(this.formGroup);
             }
           }
         });
         this.isLoaded = true;
       } catch (error) {
-        //console.log(error)
+        ////console.log(error)
       } finally { //execute the rest of the code outside of the try/catch block
         if(this.map && !error){
           //add the control code.
 
           this.map.on('draw.create', e => {
-            //console.log('draw.create',e)
+            ////console.log('draw.create',e)
             var featureCollection = this.draw.getAll()
             if (featureCollection.features.length !== 1){
               featureCollection.features[0] = featureCollection.features.pop()
@@ -212,22 +212,22 @@ export class RnLocationCtrlComponent extends RnCtrlComponent implements OnInit {
                 this.marker.setDraggable(true)
                 this.marker.addTo(this.map)
                 this.formControl.setValue(JSON.stringify(featureCollection.features[0].geometry));
-                ////console.log(this.formControl);
-                ////console.log(this.formGroup);
+                //////console.log(this.formControl);
+                //////console.log(this.formGroup);
               }
             } else if (featureCollection.features[0]['geometry']['type'] === 'Polygon'){
               if(this.marker){
                 this.marker.remove()
               }
               this.formControl.setValue(JSON.stringify(featureCollection.features[0].geometry));
-              ////console.log(this.formControl);
-              ////console.log(this.formGroup);
+              //////console.log(this.formControl);
+              //////console.log(this.formGroup);
             }
           });
           
           /*//removed since this will not be called while the trash control is commented out.
           this.map.on('draw.delete', e => {
-            //console.log('draw.delete',e)
+            ////console.log('draw.delete',e)
             var featureCollection = this.draw.getAll()
             featureCollection.features = []
             this.draw.set(featureCollection)
@@ -236,20 +236,20 @@ export class RnLocationCtrlComponent extends RnCtrlComponent implements OnInit {
 
           this.map.on('draw.update', e => {
             if(this.marker){
-              ////console.log('draw.update',e)
+              //////console.log('draw.update',e)
               var featureCollection = this.draw.getAll()
-              ////console.log(featureCollection)
+              //////console.log(featureCollection)
               if(featureCollection.features[0]['geometry']['type'] === 'Point'){
-                ////console.log('point')
-                ////console.log(featureCollection.features[0]['geometry']['coordinates'])
+                //////console.log('point')
+                //////console.log(featureCollection.features[0]['geometry']['coordinates'])
                 this.marker.setLngLat(featureCollection.features[0]['geometry']['coordinates']);
                 this.formControl.setValue(JSON.stringify(featureCollection.features[0].geometry));
-                ////console.log(this.formControl);
-                ////console.log(this.formGroup);
+                //////console.log(this.formControl);
+                //////console.log(this.formGroup);
               } else if (featureCollection.features[0]['geometry']['type'] === 'Polygon'){
                 this.formControl.setValue(JSON.stringify(featureCollection.features[0].geometry));
-                ////console.log(this.formControl);
-                ////console.log(this.formGroup);
+                //////console.log(this.formControl);
+                //////console.log(this.formGroup);
               }
             }
           });
@@ -283,7 +283,7 @@ export class RnLocationCtrlComponent extends RnCtrlComponent implements OnInit {
         }
       }
     } else {
-      //console.log('refreshing map')
+      ////console.log('refreshing map')
     }
   }
   
@@ -292,7 +292,7 @@ export class RnLocationCtrlComponent extends RnCtrlComponent implements OnInit {
   }
 
   handleEvent(event: ItemEvent) {
-    //console.log('map received event ', event, 'tab index is ', this.tabIndex);
+    ////console.log('map received event ', event, 'tab index is ', this.tabIndex);
     let e = event.data['index'];
     if (e === this.tabIndex) {
       this.loadMap();
@@ -306,7 +306,7 @@ export class RnLocationCtrlComponent extends RnCtrlComponent implements OnInit {
       data: { location: this.item? this.item.location : undefined}
     });
 
-    //console.log(this.item);
+    ////console.log(this.item);
 
     dialogRef.afterClosed().subscribe(result => {
       this.formControl.setValue(JSON.stringify(result.location));

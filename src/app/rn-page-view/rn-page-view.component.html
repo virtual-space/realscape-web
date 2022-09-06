@@ -1,1 +1,3 @@
-<div *ngIf="item" [innerHTML]="getDataLink() | secure5 | async | denul"></div>
+pageview
+<div *ngIf="html" [innerHTML]="html"></div>
+<div *ngIf="item && !html" [innerHTML]="getDataLink() | secure5 | async | denul"></div>

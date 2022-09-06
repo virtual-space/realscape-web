@@ -175,7 +175,7 @@ export class SecurePipe6 implements PipeTransform {
     */
 
     process(val: Blob): Observable<ArrayBuffer> {
-        ////console.log(val);
+        //////console.log(val);
         return from(val.text()).pipe(
             map((res:string) => {
                 const res_decoded = atob(res);
@@ -205,7 +205,7 @@ export class DenulPipe implements PipeTransform {
     constructor() { }
 
     transform(val?: any): string {
-        //console.log('|denul|',val);
+        ////console.log('|denul|',val);
         return val? val : ''
     }
 

@@ -19,20 +19,18 @@ export class RnItemSelectCtrlComponent extends RnCtrlComponent implements OnInit
     selectedItem?: Item;
     selectedType?: Type;
 
-    linkType?: Type;
-
     @Input() activeItem?: Item;
 
     @Output() selectedItemChanged = new EventEmitter<Item>();
 
     override ngOnInit(): void {
-      //console.log('select', this);
+      //console.log('*** item select', this);
       if (this.item) {
         const itemQuery = this.getItemQuery(this.item);
-        //console.log(this.item);
+        ////console.log(this.item);
         if (itemQuery) {
           const query = itemQuery? itemQuery : new Query();
-          //console.log(query);
+          ////console.log(query);
           query.types = query.parent_types;
           this.itemService.items(query).subscribe(items => {
             this.items = items;
@@ -43,7 +41,7 @@ export class RnItemSelectCtrlComponent extends RnCtrlComponent implements OnInit
                 if (i) {
                   const icon = this.getItemIcon(i);
                   const field_name = this.getFieldName();
-                  if (i && i.name && i.id && this.linkType) {
+                  if (i && i.name && i.id) {
                     this.selectedName = i.name;
                     this.selectedId = i.id;
                     this.selectedIcon = icon;
@@ -53,7 +51,7 @@ export class RnItemSelectCtrlComponent extends RnCtrlComponent implements OnInit
                       this.formGroup.removeControl(field_name);
                       this.formGroup.addControl(field_name, this.formControl);
                     }
-                    //console.log(this.selectedItem);
+                    ////console.log(this.selectedItem);
                     if (this.onEvent) {
                       this.onEvent.emit({event: field_name, item: this.selectedItem, control: this.control});
                     }
@@ -73,7 +71,7 @@ export class RnItemSelectCtrlComponent extends RnCtrlComponent implements OnInit
                     this.formGroup.removeControl(field_name);
                     this.formGroup.addControl(field_name, this.formControl);
                   }
-                  //console.log(this.selectedItem);
+                  ////console.log(this.selectedItem);
                   if (this.onEvent) {
                     this.onEvent.emit({event: field_name, item: this.selectedItem, control: this.control});
                   }
@@ -84,24 +82,84 @@ export class RnItemSelectCtrlComponent extends RnCtrlComponent implements OnInit
             }
           });
         } else {
-          const value = this.getValue();
+          ////console.log('no item query');
+          if (this.control) {
+            const ctrlQuery = this.getItemQuery(this.control);
+            if (ctrlQuery) {
+              this.itemService.items(ctrlQuery).subscribe(items => {
+                this.items = items;
+                if (this.items.length > 0) {
+                  const value = this.getValue();
+                  //console.log(value);
+                  if(value !== undefined) {
+                    const i = this.items.find(ii => ii.id === value);
+                    //console.log('i:', i);
+                    if (i) {
+                      const icon = this.getItemIcon(i);
+                      const field_name = this.getFieldName();
+                      if (i && i.name && i.id) {
+                        this.selectedName = i.name;
+                        this.selectedId = i.id;
+                        this.selectedIcon = icon;
+                        this.selectedItem = i;
+                        if(this.formGroup) {
+                          this.formControl = new FormControl(this.selectedId);
+                          this.formGroup.removeControl(field_name);
+                          this.formGroup.addControl(field_name, this.formControl);
+                        }
+                        ////console.log(this.selectedItem);
+                        if (this.onEvent) {
+                          this.onEvent.emit({event: field_name, item: this.selectedItem, control: this.control});
+                        }
+                      }
+                    }
+                  } else {
+                    const i = this.items[0];
+                    const icon = this.getItemIcon(i);
+                    const field_name = this.getFieldName();
+                    if (i && i.name && i.id) {
+                      this.selectedName = i.name;
+                      this.selectedId = i.id;
+                      this.selectedIcon = icon;
+                      this.selectedItem = i;
+                      if(this.formGroup) {
+                        this.formControl = new FormControl(this.selectedId);
+                        this.formGroup.removeControl(field_name);
+                        this.formGroup.addControl(field_name, this.formControl);
+                      }
+                      ////console.log(this.selectedItem);
+                      if (this.onEvent) {
+                        this.onEvent.emit({event: field_name, item: this.selectedItem, control: this.control});
+                      }
+                    }
+                    
+                  }
+                  
+                }
+              });
+            }
+            ////console.log(ctrlQuery);
+          } else {
+            const value = this.getValue();
          
-          ////console.log('*** field_name, value, control ***', field_name, value, this.control);
-          if (value !== undefined) {
-            this.itemService.getItem(value).subscribe(item => {
-              this.items = [item];
-              this.selectedName = item.name!;
-              this.selectedId = item.id!;
-              this.selectedIcon = this.getItemIcon(item);
-              this.selectedItem = item;
-              const field_name = this.getFieldName();
-              if(this.formGroup) {
-                this.formControl = new FormControl(this.selectedId);
-                this.formGroup.removeControl(field_name);
-                this.formGroup.addControl(field_name, this.formControl);
-              }
-            });
+            //////console.log('*** field_name, value, control ***', field_name, value, this.control);
+            if (value !== undefined) {
+              this.itemService.getItem(value).subscribe(item => {
+                this.items = [item];
+                this.selectedName = item.name!;
+                this.selectedId = item.id!;
+                this.selectedIcon = this.getItemIcon(item);
+                this.selectedItem = item;
+                const field_name = this.getFieldName();
+                if(this.formGroup) {
+                  this.formControl = new FormControl(this.selectedId);
+                  this.formGroup.removeControl(field_name);
+                  this.formGroup.addControl(field_name, this.formControl);
+                }
+              });
+            }
           }
+          
           
         }
         
@@ -117,7 +175,7 @@ export class RnItemSelectCtrlComponent extends RnCtrlComponent implements OnInit
     }
 
     getFieldName(): string {
-      //console.log('get_field_name:',this.control);
+      ////console.log('get_field_name:',this.control);
       return this.getControlAttribute('field_name', '', this.control);
     }
 
@@ -141,18 +199,18 @@ export class RnItemSelectCtrlComponent extends RnCtrlComponent implements OnInit
           this.formControl = new FormControl(this.selectedId);
           this.formGroup.removeControl(field_name);
           this.formGroup.addControl(field_name, this.formControl);
-          //console.log(this.formGroup);
+          ////console.log(this.formGroup);
         } else {
-          //console.log('*** no form group ***');
+          ////console.log('*** no form group ***');
         }
 
         if (this.selectedItemChanged) {
-          ////console.log("*** type select control emitting onType:",t);
-          ////console.log(this.onType);
+          //////console.log("*** type select control emitting onType:",t);
+          //////console.log(this.onType);
           this.selectedItemChanged.emit(e);
         }
 
-        ////console.log(this.selectedItem);
+        //////console.log(this.selectedItem);
         if (this.onEvent) {
           this.onEvent.emit({event: field_name, item: this.selectedItem, control: this.control});
         }

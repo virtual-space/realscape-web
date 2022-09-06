@@ -17,7 +17,7 @@ export class HomeComponent implements OnInit {
   ngOnInit(): void {
     const loggedIn = this.authService.isLoggedIn();
     this.itemService.types().subscribe(types => {
-      //console.log(types);
+      ////console.log(types);
       this.itemService.setTypes(types);
       this.itemService.apps().subscribe(apps => {
         if (apps) {

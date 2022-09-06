@@ -17,7 +17,7 @@ export class QrCodeComponent implements OnInit {
   ngOnInit() {
     this.qrdata = this.data.code;
     this.name = this.data.name;
-    //console.log(this);
+    ////console.log(this);
   }
 
   onClick(): void {

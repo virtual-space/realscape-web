@@ -17,8 +17,8 @@ export class RnListViewComponent extends RnViewComponent implements ItemCallback
 
   protected override initialize(): void {
     this.dataSource.data = this.items;
-    ////console.log('*************************************** hello from list view initialized!!!');
-    ////console.log('item-view init ', this.item);
+    //////console.log('*************************************** hello from list view initialized!!!');
+    //////console.log('item-view init ', this.item);
     this.sessionService.itemActivated$.subscribe(item => {
       this.itemChanged(item);
     });
@@ -29,10 +29,10 @@ export class RnListViewComponent extends RnViewComponent implements ItemCallback
 
   override itemsChanged(items?: Item[]): void {
     if (items) {
-      ////console.log(items);
+      //////console.log(items);
       this.dataSource.data = items;
     }
-    ////console.log('*************************************** hello from list view changed!!!');
+    //////console.log('*************************************** hello from list view changed!!!');
   }
 
 }

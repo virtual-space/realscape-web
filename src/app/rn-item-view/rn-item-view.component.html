@@ -152,7 +152,7 @@
           <div *ngSwitchCase="'Form'" fxFlexFill>
             <app-rn-form-ctrl [controls]="children" [item]="item" [control]="item" (onEvent)="onItemEvent($event)" (onRefresh)="refreshView()"   (onItems)="refreshItems($event)" [events]="eventsSubject.asObservable()"></app-rn-form-ctrl>
           </div>
-          <div *ngSwitchDefault fxFlexFill>
+          <div *ngSwitchDefault fxFlexFill>{{item!.type!.name!}} {{views.length}}
             <div fxFlexFill *ngIf="children.length > 0">
               <app-rn-list-view [items]="children"  (onEvent)="onItemEvent($event)" (onRefresh)="refreshView()"   (onItems)="refreshItems($event)" [events]="eventsSubject.asObservable()"></app-rn-list-view>
             </div>
