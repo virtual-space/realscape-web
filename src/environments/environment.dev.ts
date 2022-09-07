@@ -4,5 +4,6 @@ export const environment = {
   home: 'https://dev.realscape.io',
   client_id: 'IEmf5XYQJXIHvWcQtZ5FXbLM',
   appVersion: require('../../package.json').version + '-dev',
-  mapboxToken: 'pk.eyJ1IjoidjFydHU0bHNwNGMzIiwiYSI6ImNreW1mZXI5ZzA2aHQydG5zY2hiNWh0ZjAifQ.BovKKecsXgBq1wu7PlAUHQ'
+  mapboxToken: 'pk.eyJ1IjoidjFydHU0bHNwNGMzIiwiYSI6ImNreW1mZXI5ZzA2aHQydG5zY2hiNWh0ZjAifQ.BovKKecsXgBq1wu7PlAUHQ',
+  googleAnalytics: 'G-D4FF7MKL11'
 };

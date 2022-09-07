@@ -47,6 +47,7 @@
     "mapbox-gl-draw": "^0.16.0",
     "moment": "^2.29.2",
     "ng2-pdf-viewer": "^9.0.0",
+    "ngx-google-analytics": "^11.2.1",
     "ngx-markdown": "^13.1.0",
     "ngx-mat-timepicker": "^13.0.0",
     "rxjs": "~7.5.0",

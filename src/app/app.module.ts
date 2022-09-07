@@ -1,4 +1,5 @@
 import { NgModule, SecurityContext } from '@angular/core';
+import { environment } from '../environments/environment';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule } from '@angular/forms';
@@ -52,6 +53,7 @@ import { VgCoreModule } from '@videogular/ngx-videogular/core';
 import { VgControlsModule } from '@videogular/ngx-videogular/controls';
 import { VgOverlayPlayModule } from '@videogular/ngx-videogular/overlay-play';
 import { VgBufferingModule } from '@videogular/ngx-videogular/buffering';
+import { NgxGoogleAnalyticsModule, NgxGoogleAnalyticsRouterModule } from 'ngx-google-analytics';
 
 import { CallbackComponent } from './callback/callback.component';
 import { HomeComponent } from './home/home.component';
@@ -181,6 +183,8 @@ import { RnFormViewComponent } from './rn-form-view/rn-form-view.component';
   ],
   imports: [
     BrowserModule,
+    NgxGoogleAnalyticsModule.forRoot(environment.googleAnalytics),
+    NgxGoogleAnalyticsRouterModule,
     FormsModule,
     FlexLayoutModule,
     ReactiveFormsModule,
