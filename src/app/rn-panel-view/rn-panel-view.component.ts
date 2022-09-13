@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { RnViewComponent } from '../rn-view/rn-view.component';
 import { Item } from '../services/item.service';
@@ -12,10 +12,12 @@ export class RnPanelViewComponent extends RnViewComponent implements OnInit {
 
   panelForm?: Item;
 
+  @Input() views: Item[] = [];
+  
   public localFormGroup: FormGroup = new FormGroup({});
 
   protected override initialize(): void {
-    ////console.log(this);
+    console.log(this);
     let form_name = 'view';
     let handled = false;
     if (this.formGroup) {
@@ -30,7 +32,9 @@ export class RnPanelViewComponent extends RnViewComponent implements OnInit {
               const form = forms.find(d => d.name === attrs['form']);
               if (form) {
                 this.panelForm = form;
-                ////console.log('panel_form:', this.panelForm);
+                console.log('panel_form:', this.panelForm);
+              } else {
+                console.log('cannot find form:', attrs['form']);
               }
             }
           handled = true;
