@@ -847,7 +847,7 @@ export class RnCtrlComponent implements OnInit, OnChanges, ItemCallbacks {
   }
 
   itemsChanged(items?: Item[]): void {
-    ////console.log('*************************************** hello from control items changed!!!', this.control!.type!.name!);
+    //console.log('*************************************** hello from control items changed!!!', this.control!.type!.name!);
   }
 
   onEventHandler(event: ItemEvent) {

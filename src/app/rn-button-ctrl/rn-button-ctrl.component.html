@@ -1,4 +1,5 @@
 <div *ngIf="control" fxLayoutAlign="center center" fxFlexFill>
+    <input hidden type="file" #uploader  (change)="importFile($event)"/>
     <button mat-raised-button color="primary" (click)="onClick($event)" [mat-dialog-close]="true">{{control.name}}</button>
 </div>
      

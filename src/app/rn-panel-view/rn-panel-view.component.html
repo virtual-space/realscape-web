@@ -1,6 +1,3 @@
 <app-rn-form-ctrl [item]="item" [formItem]="panelForm" [control]="panelForm" [formGroup]="localFormGroup"  [events]="events" [tabIndex]="tabIndex" 
                                              (onRefresh)="childRefresh()" (onItems)="childItems($event)">
                                     </app-rn-form-ctrl>
-<div *ngIf="(views.length === 1)  && !shouldShowViewsAsItems(item)" fxFlexFill>
-    <app-rn-view [items]="children" [view]="views[0]" [item]="item" (onEvent)="onItemEvent($event)" (onRefresh)="refreshView()" [events]="eventsSubject.asObservable()"></app-rn-view>
-                                      </div>

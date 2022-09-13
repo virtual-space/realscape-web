@@ -29,6 +29,14 @@ export class ItemService {
     }
   }
 
+  protected getPostFilePath(endpoint: string) {
+    if (this.authService.isLoggedIn()) {
+      return (environment['api'] || '') + '/endpoints/' + endpoint + '/invoke';
+    } else {
+      return (environment['api'] || '') + '/public/endpoints/' + endpoint + '/invoke';
+    }
+  }
+
   protected getHomeEndpoint() {
     return (environment['home'] || '') + '/items';
   }
@@ -160,7 +168,7 @@ export class ItemService {
     );
   }
 
-  public invoke(endpoint: string, method: any, params: any, progressFn?: (a: number) => void): Observable<Item> {
+  public invoke(endpoint: string, method: any, params: any, progressFn?: (a: number) => void): Observable<[Item]> {
     return this.http.post<Item>(this.getInvokePath(endpoint), params).pipe(
       mergeMap((invoked: Item) => {
         return of(invoked);
@@ -411,6 +419,17 @@ export class ItemService {
         observe: 'events'
       })
       .pipe(catchError(this.handleErrorAndRethrow('/items', [])));
+  }
+
+  public postFileToEndpoint(endpoint: string, file: File): Observable<any> {
+    const formData: FormData = new FormData();
+    formData.append('file', file, file.name);
+    return this.http
+      .post(this.getPostFilePath(endpoint), formData, {
+        reportProgress: true,
+        observe: 'events'
+      })
+      .pipe(catchError(this.handleErrorAndRethrow('/endpoints', [])));
   }
 
   public uploadFile(id: string, file: File): Observable<any> {

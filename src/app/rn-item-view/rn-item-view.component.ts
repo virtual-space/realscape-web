@@ -38,6 +38,11 @@ export class RnItemViewComponent extends RnViewComponent implements OnInit, OnCh
         this.itemChanged(item);
     });
     this.sessionService.itemsActivated$.subscribe(items => {
+      
+      if (items) {
+        this.refreshItems(items);
+      }
+      
       this.itemsChanged(items);
     });
     this.onRefresh.subscribe(e => {
@@ -78,7 +83,7 @@ export class RnItemViewComponent extends RnViewComponent implements OnInit, OnCh
   }
 
   refreshItems(items: Item[]) {
-    //////console.log('*** refresh_items ***');
+    console.log('*** refresh_items ***', items);
     this.items = [...items];
     if (this.item) {
       this.item.items = [...items];
@@ -284,7 +289,7 @@ export class RnItemViewComponent extends RnViewComponent implements OnInit, OnCh
   }
 
   override itemsChanged(items?: Item[]): void {
-    //////console.log("*** item_view items_changed ***");
+    //console.log("*** item_view items_changed ***");
     //this.sessionService.activateItems(items);
   }
 

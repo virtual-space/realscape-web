@@ -19,6 +19,7 @@ export class SessionService {
 
   // Service message commands
   activateItems(items?: Item[]) {
+    console.log('*** activating items: ', items);
     this.itemsActivatedSource.next(items);
   }
 

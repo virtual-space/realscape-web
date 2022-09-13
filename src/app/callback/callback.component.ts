@@ -15,7 +15,7 @@ export class CallbackComponent implements OnInit {
 
   ngOnInit(): void {
     this.route.fragment.subscribe((fragment) => {
-      // ////console.log("My hash fragment is here => ", fragment);
+      console.log("My hash fragment is here => ", fragment);
       if (fragment) {
         const access_token = new URLSearchParams(fragment).get('access_token');
         if (access_token) {

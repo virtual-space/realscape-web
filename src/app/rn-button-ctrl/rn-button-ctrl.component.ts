@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { HttpEvent, HttpEventType } from '@angular/common/http';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { RnCtrlComponent } from '../rn-ctrl/rn-ctrl.component';
 import { Item, itemIsInstanceOf, Query } from '../services/item.service';
 
@@ -8,6 +9,8 @@ import { Item, itemIsInstanceOf, Query } from '../services/item.service';
   styleUrls: ['./rn-button-ctrl.component.sass']
 })
 export class RnButtonCtrlComponent extends RnCtrlComponent implements OnInit {
+
+  @ViewChild('uploader') uploader!: ElementRef;
 
   public onClick(event: Event) {
     ////console.log(event);
@@ -196,9 +199,9 @@ export class RnButtonCtrlComponent extends RnCtrlComponent implements OnInit {
                 result['id'] = this.item.id;
               }
 
-              this.itemService.invoke(attrs['path'], attrs['method'], result).subscribe(item => {
-                //////console.log('updated item', JSON.stringify(item));
-                this.sessionService.activateItem(item);
+              this.itemService.invoke(attrs['path'], attrs['method'], result).subscribe(items => {
+                console.log('invoked items', JSON.stringify(items));
+                this.sessionService.activateItems(items);
               });
               //result = this.getUpdateParams2(this.formGroup!.value,true);
               
@@ -220,13 +223,65 @@ export class RnButtonCtrlComponent extends RnCtrlComponent implements OnInit {
           } else {
             this.sessionService.activateItem(new Item());
           }
-        } else if (command === "Delete") {
+        } else if (command === "Import") {
+          console.log('*** Import ***');
+          console.log(this.uploader);
+          this.presentForm('', true, this.uploader.nativeElement, this.item, undefined)
+          //////console.log("*** delete_item ***");
+        }
+          else if (command === "Delete") {
           //////console.log("*** delete_item ***");
         } else {
-          //////console.log("*** unknown ***");
+          console.log("*** unknown ***", command);
         }
         }
       }
     }
+  }
+
+  importFile(event: any) {
+    console.log(this.control);
+    if (this.control && this.item && this.item.id) {
+      const attrs = this.collectItemAttributes(this.control, this.collectItemAttributes(this.item, {}));
+      let endpoint_id = this.item.id;
+      if ('path' in attrs) {
+        endpoint_id = attrs['path'];
+      }
+      this.itemService.postFileToEndpoint(endpoint_id, event.target.files[0]).subscribe(
+        (event: HttpEvent<Object>) => {
+          if (event.type === HttpEventType.UploadProgress) {
+            if (event.total) {
+              let uploadProgress = Math.round(event.loaded / event.total * 100);
+              ////console.logog(`Uploaded! ${uploadProgress}%`);
+            }
+            
+            /*
+            if (progressFn) {
+              progressFn(uploadProgress);
+            }*/
+            //this.snackBar.open("File uploaded");
+          } else if (event.type === HttpEventType.Response) {
+            console.log(event);
+            if (event.status === 200 || event.status === 201) {
+              console.log("*** 1")
+              if(this.onRefresh) {
+                console.log("*** 2")
+                if (event.body) {
+                  const items: Item[] = Object.values(event.body);
+                  this.sessionService.activateItems(items);
+                }
+                  
+                //this.onRefresh.emit(event.body);
+              }
+            }
+            this.snackBar.open(event.statusText);
+            
+          } else {
+            ////console.logog(event);
+            this.snackBar.open("File uploaded");
+          }
+        });
+    }
+    
   }
 }
