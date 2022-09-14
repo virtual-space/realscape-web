@@ -169,8 +169,8 @@ export class ItemService {
   }
 
   public invoke(endpoint: string, method: any, params: any, progressFn?: (a: number) => void): Observable<[Item]> {
-    return this.http.post<Item>(this.getInvokePath(endpoint), params).pipe(
-      mergeMap((invoked: Item) => {
+    return this.http.post<[Item]>(this.getInvokePath(endpoint), params).pipe(
+      mergeMap((invoked: [Item]) => {
         return of(invoked);
       }),
       catchError(this.handleErrorAndRethrow('/endpoints', []))

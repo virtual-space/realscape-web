@@ -200,6 +200,7 @@ export class RnButtonCtrlComponent extends RnCtrlComponent implements OnInit {
               }
 
               this.itemService.invoke(attrs['path'], attrs['method'], result).subscribe(items => {
+                //const i = Object.values(items);
                 console.log('invoked items', JSON.stringify(items));
                 this.sessionService.activateItems(items);
               });
