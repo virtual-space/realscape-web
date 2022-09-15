@@ -28,13 +28,15 @@ export class RnListViewComponent extends RnViewComponent implements ItemCallback
     { columnDef: 'symbol',   header: 'Symbol', cell: (element: any) => `${element.symbol}`   },
   ];
 */
-  columns = [
+  base_columns = [
     { columnDef: 'icon', header: 'Icon.', type: 'icon',   cell: (element: any) => `${element.attributes.icon}` },
-    { columnDef: 'name',     header: 'Name',  type: 'string', cell: (element: any) => `${element.name}`     },
+    { columnDef: 'name',     header: 'Name',  type: 'name', cell: (element: any) => `${this.extractValue(element, 'name')}`     },
     { columnDef: 'menu',   header: 'menu', type: 'menu', cell: (element: any) => `${element}`   },
    /* { columnDef: 'tags',   header: 'Weight', cell: (element: any) => `${element.weight}`   },
     { columnDef: 'menu',   header: 'Symbol', cell: (element: any) => `${element.symbol}`   },*/
   ];
+
+  columns = this.base_columns;
 
   displayedColumns  = this.columns.map(c => c.columnDef);
 
@@ -44,13 +46,48 @@ export class RnListViewComponent extends RnViewComponent implements ItemCallback
     //console.log('list-view init item:', this.item);
     //console.log('list-view init control:', this.control);
     //console.log('list-view init view:', this.view);
-    console.log('list-view columns:', this.getColumns());
+    let cols = this.getColumns();
+    cols = cols.filter(c => c.target !== 'name');
+    if(cols.length > 0) {
+      console.log('list-view columns:', cols);
+      let c1 = cols.filter(c => c.target !== 'name')
+      this.columns = this.base_columns.concat(cols.map(c => { return {columnDef: c.target!, header: c.name!, type: c.target!, cell: (element:any) => `${this.extractValue(element,c.target!)}`} }));
+      this.displayedColumns  = this.columns.map(c => c.columnDef);
+      
+    }
     this.sessionService.itemActivated$.subscribe(item => {
       this.itemChanged(item);
     });
     this.sessionService.itemsActivated$.subscribe(items => {
       this.itemsChanged(items);
     });
+  }
+
+  extractValue(element: any, type: string) {
+    
+    if(element) {
+      if(type) {
+        console.log(type);
+        if(type === 'name') {
+          console.log('hasname');
+          return element.name;
+        }
+        else if (type === 'valid_from') {
+          return  element.valid_from;
+        }
+        else if (type === 'valid_to') {
+          return  element.valid_to;
+        }
+        else if (type === 'status') {
+          return  element.status;
+        }
+        else  {
+          return  element['attributes'][type]
+        }
+      }
+      return element;
+    }
+    return null;
   }
 
   override itemsChanged(items?: Item[]): void {

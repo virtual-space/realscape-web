@@ -2,24 +2,35 @@
 //    overflow-x: auto
 
 
+.mat-header-cell
+  flex-direction: column
+  justify-content: center
+
+.mat-cell
+  text-align: center
+  justify-content: center
+  max-width: 100% !important
+
 .mat-table
-  //min-width: auto !important
+  min-width: auto !important
   width: 100% !important
-//  table-layout: auto
+  table-layout: auto
 //  border-collapse: collapse
+
 
 td, th
   text-align: center !important
   vertical-align: middle !important
-  min-width: auto !important
+  //min-width: auto !important
+  min-width: 100%
 
 .mat-column-icon
   min-width: 32px
+  max-width: 32px
   width: 32px
 
 .mat-column-name
-  min-width: 256px
-  width: 256px
+  min-width: 56px
 
 .mat-column-tags
   min-width: 64px
