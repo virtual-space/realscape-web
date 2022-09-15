@@ -429,7 +429,7 @@ export class RnMapViewComponent extends RnViewComponent implements OnInit, OnDes
               if (icon) {
                 customMarkerIcon = document.createElement('div');
                 customMarkerIcon.className = 'marker';
-                customMarkerIcon.innerHTML = `<span class="material-icons">${icon}</span>`
+                customMarkerIcon.innerHTML = `<div fxLayout='column' fxLayoutAlign='center center'><div class="material-icons">${icon}</div><div>${ip.name}</div></div>`
               }
               const m = new Marker(customMarkerIcon);
               this.markers.push(m);
@@ -443,8 +443,8 @@ export class RnMapViewComponent extends RnViewComponent implements OnInit, OnDes
               var count = 0
               //finding the center of the polygon.
               loc.coordinates[0].forEach((coord:any) => {
-                sumlat += coord[0]
-                sumlong += coord[1]
+                sumlong += coord[0]
+                sumlat += coord[1]
                 count += 1
               })
   
@@ -487,6 +487,18 @@ export class RnMapViewComponent extends RnViewComponent implements OnInit, OnDes
                     'line-width': 3
                   }
                 })
+                let customMarkerIcon = undefined;
+                let icon = this.getItemIcon(ip);
+                if (icon) {
+                  customMarkerIcon = document.createElement('div');
+                  customMarkerIcon.className = 'marker';
+                  customMarkerIcon.innerHTML = `<div fxLayout='column' fxLayoutAlign='center center'><div class="material-icons">${icon}</div><div>${ip.name}</div></div>`
+                }
+                const m = new Marker(customMarkerIcon);
+                this.markers.push(m);
+                m.setLngLat(new LngLat(sumlong/count, sumlat/count));
+                //this.attachPopup(ip, m);
+                m.addTo(map);
               } else {
                 ////console.log(`Error: The item somehow doesn't have a name. item:`,ip)
               }
