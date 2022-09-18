@@ -18,20 +18,20 @@ export class RnDateCtrlComponent extends RnCtrlComponent implements OnInit {
   }
 
   rebuildFormControl() {
-    //////console.log(this.formControl);
-    //////console.log(this.getValue());
+    ////////console.logthis.formControl);
+    ////////console.logthis.getValue());
     this.formControl.setValue(this.getValue());
     if(this.formGroup) {
         if(this.control) {
           const field_name = this.getControlAttribute('field_name', this.control.name? this.control.name : 'value');
-          //////console.log('edit_ctrl', field_name);
+          ////////console.log'edit_ctrl', field_name);
           this.formGroup.removeControl(field_name);
           this.formGroup.addControl(field_name, this.formControl);
-          //////console.log('*** rebuild form control ***', this.formGroup);
+          ////////console.log'*** rebuild form control ***', this.formGroup);
         }
       }
       if (this.formControl.value) {
-        console.log(this.formControl.value);
+        //console.logthis.formControl.value);
         this.date_value = new Date(this.formControl.value);
         let ampm = 'AM';
         let hours = this.date_value.getHours();
@@ -64,8 +64,8 @@ export class RnDateCtrlComponent extends RnCtrlComponent implements OnInit {
 
 
   public get datetime() {
-    //console.log(this.date_value);
-    //console.log(this.time_value);
+    ////console.logthis.date_value);
+    ////console.logthis.time_value);
     if (this.date_value) {
       if (this.time_value) {
         const result = new Date(this.date_value);

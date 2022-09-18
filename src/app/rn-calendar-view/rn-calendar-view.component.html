@@ -33,6 +33,7 @@
           [activeDayIsOpen]="activeDayIsOpen"
           (dayClicked)="onCalendarClick($event.day)"
           (eventClicked)="onItemClick($event.event)"
+          (eventTimesChanged)="eventTimesChanged($event)"
         >
         </mwl-calendar-month-view>
         <mwl-calendar-week-view
@@ -42,6 +43,7 @@
           (dayHeaderClicked)="onCalendarClick($event)"
           (hourSegmentClicked)="onCalendarClick($event)"
           (eventClicked)="onItemClick($event.event)"
+          (eventTimesChanged)="eventTimesChanged($event)"
         >
         </mwl-calendar-week-view>
         <mwl-calendar-day-view
@@ -50,6 +52,7 @@
           [events]="calendarEvents"
           (hourSegmentClicked)="onCalendarClick($event)"
           (eventClicked)="onItemClick($event.event)"
+          (eventTimesChanged)="eventTimesChanged($event)"
         >
         </mwl-calendar-day-view>
       </div>

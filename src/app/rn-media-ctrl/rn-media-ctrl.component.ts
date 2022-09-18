@@ -10,8 +10,8 @@ import { Item, ItemEvent } from '../services/item.service';
 export class RnMediaCtrlComponent extends RnViewComponent implements OnInit {
 
     protected override initialize(): void {
-      ////console.log(this.item);
-      ////console.log(this.control);
+      //////console.logthis.item);
+      //////console.logthis.control);
       if (this.item) {
         this.itemService.items({parent_id: this.item.id}).subscribe(items => {
           this.items = items;
@@ -25,7 +25,7 @@ export class RnMediaCtrlComponent extends RnViewComponent implements OnInit {
     }
 
     onItemEvent(event: ItemEvent) {
-      //////console.log(event);
+      ////////console.logevent);
     }
 
 }

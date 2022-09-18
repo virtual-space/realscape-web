@@ -19,7 +19,7 @@ export class RnMapViewComponent extends RnViewComponent implements OnInit, OnDes
 
   @ViewChild('mapElement') set content(content: ElementRef) {
     if(content) {
-      //////console.log(content);
+      ////////console.logcontent);
 
     }
   }
@@ -39,20 +39,20 @@ export class RnMapViewComponent extends RnViewComponent implements OnInit, OnDes
   selectedTabIndex = 0;
 
   override ngOnInit(): void {
-    ////console.log(this);
+    //////console.logthis);
     if (this.item) {
       //this.items.push(this.item);
       this.location = this.getItemLocation(this.item);
-      ////console.log(this.location);
+      //////console.logthis.location);
       if (!this.location) {
         this.location = this.getMapCenter();
       }
-      ////console.log(this.location);
+      //////console.logthis.location);
       if (this.item.location == null) {
         if (navigator.geolocation) {
-          ////console.log("getting the current location");
+          //////console.log"getting the current location");
           navigator.geolocation.getCurrentPosition((position) => {
-            //////console.log(position);
+            ////////console.logposition);
             this.lat = position.coords.latitude;
             this.lng = position.coords.longitude;
             this.sleep(500).then(() => {
@@ -77,9 +77,9 @@ export class RnMapViewComponent extends RnViewComponent implements OnInit, OnDes
             });
             this.lat = sumlat/count;
             this.lng = sumlong/count;
-            ////console.log(this);
+            //////console.logthis);
           } else {
-            ////console.log("ERROR: Invalid type.")
+            //////console.log"ERROR: Invalid type.")
           }
         }
         this.sleep(500).then(() => {
@@ -101,7 +101,7 @@ export class RnMapViewComponent extends RnViewComponent implements OnInit, OnDes
   }
 
   handleEvent(event: ItemEvent) {
-    //////console.log('map received event ', e, 'index is ', this.tabIndex);
+    ////////console.log'map received event ', e, 'index is ', this.tabIndex);
     let e = event.data['index'];
     if (e === this.tabIndex) {
       this.selectedTabIndex = e;
@@ -111,7 +111,7 @@ export class RnMapViewComponent extends RnViewComponent implements OnInit, OnDes
 
   addToMap(location: any) {
     if (this.canAddItem()) {
-      //////console.log('*** addToMap ***')
+      ////////console.log'*** addToMap ***')
       let item: Item = this.item? { ... this.item} : new Item();
       item.location = location;
       this.onAdd(item);
@@ -120,7 +120,7 @@ export class RnMapViewComponent extends RnViewComponent implements OnInit, OnDes
 
   loadMap(): void {
     if(!this.isLoaded && (this.tabIndex === this.selectedTabIndex)){
-      ////console.log('loading map...')
+      //////console.log'loading map...')
       this.map = new Map({
         accessToken: this.token,
         container: 'map',
@@ -142,26 +142,26 @@ export class RnMapViewComponent extends RnViewComponent implements OnInit, OnDes
         );
         this.map.addControl(this.draw, 'top-right');
         this.map.on('draw.create', e => {
-          ////console.log('draw.create',e);
+          //////console.log'draw.create',e);
           if (e['features'][0]['geometry']['type'] === 'Point') {
-            ////console.log('Point');
+            //////console.log'Point');
             this.addToMap(e['features'][0]['geometry']);
             this.draw.delete(e['features'][0]['id']);
           } else if (e['features'][0]['geometry']['type'] === 'Polygon') {
-            ////console.log('Polygon');
+            //////console.log'Polygon');
             this.addToMap(e['features'][0]['geometry']);
             this.draw.delete(e['features'][0]['id']);
           }
         });
         this.map.on('resize', event => {
-          ////console.log(event);
+          //////console.logevent);
           this.fitMapToBounds();
           //map.fitBounds(bounds);
         });
 
         /*this.map.on('load', this.onMapLoaded);
         this.map.on('draw.create', e => {
-          ////console.log('draw.create',e)
+          //////console.log'draw.create',e)
           if (this.marker) {
             this.marker.remove();
             this.marker = undefined;
@@ -169,7 +169,7 @@ export class RnMapViewComponent extends RnViewComponent implements OnInit, OnDes
         });
 
         this.map.on('draw.delete', e => {
-          ////console.log('draw.delete',e)
+          //////console.log'draw.delete',e)
           this.marker = new Marker({draggable: true})
             .setLngLat([this.lng, this.lat])
             .addTo(e.target);
@@ -186,16 +186,16 @@ export class RnMapViewComponent extends RnViewComponent implements OnInit, OnDes
 
 
     } else {
-      ////console.log('refreshing map')
+      //////console.log'refreshing map')
     }
   }
 
   /*
   loadMap(): void {
-    //////console.log("rn-map-view.this",this)
+    ////////console.log"rn-map-view.this",this)
     var error = null;
     if(!this.isLoaded){
-      ////console.log('loading map...')
+      //////console.log'loading map...')
       try {
         this.map = new Map({
           accessToken: this.token,
@@ -207,7 +207,7 @@ export class RnMapViewComponent extends RnViewComponent implements OnInit, OnDes
         this.map.addControl(new NavigationControl());
         this.isLoaded = true;
       } catch (error) {
-        ////console.log('Error: Attempted to load map before tab is loaded.')
+        //////console.log'Error: Attempted to load map before tab is loaded.')
       } finally {
         if(!error){
           if(this.items.length !== 0 || (this.item && this.item.location)){
@@ -215,19 +215,19 @@ export class RnMapViewComponent extends RnViewComponent implements OnInit, OnDes
               this.loadFunction()
             }
           } else {
-            ////console.log('No data provided')
+            //////console.log'No data provided')
           }
         }
       }
     } else {
-      ////console.log('refreshing map')
+      //////console.log'refreshing map')
       if(this.items.length !== 0 || (this.item && this.item.location)){
         if (this.map){
           //this needs to clear the existing map data.
           this.loadFunction()
         }
       } else {
-        ////console.log('No data provided')
+        //////console.log'No data provided')
       }
     }
   }
@@ -275,9 +275,9 @@ export class RnMapViewComponent extends RnViewComponent implements OnInit, OnDes
         return location;
       }
       let ips = this.getItemsWithPositions();
-      //console.log(ips);
+      ////console.logips);
       if (ips.length > 0) {
-        //console.log('4');
+        ////console.log'4');
         var sumlat = 0
         var sumlong = 0
         var count = 0
@@ -308,7 +308,7 @@ export class RnMapViewComponent extends RnViewComponent implements OnInit, OnDes
 
 
   getItemsWithPositions(): Item[] {
-    ////console.log(this.items);
+    //////console.logthis.items);
     if (this.item && this.itemHasLocation(this.item)) {
       return this.items.filter(i => this.itemHasLocation(i)).concat(this.item);
     }
@@ -331,10 +331,10 @@ export class RnMapViewComponent extends RnViewComponent implements OnInit, OnDes
               bounds = bounds.extend(coord);
             })
           } else {
-            ////console.log('Error: an item with a position is neither a point or a polygon.')
+            //////console.log'Error: an item with a position is neither a point or a polygon.')
           }
         }
-        //console.log(bounds);
+        ////console.logbounds);
         return bounds;
       }
     }
@@ -363,21 +363,21 @@ export class RnMapViewComponent extends RnViewComponent implements OnInit, OnDes
       bb.extend([sw.lng, sw.lat + delta_lat]);
       bb.extend([sw.lng, sw.lat - delta_lat]);
     }
-    ////console.log(lng, lat);
+    //////console.loglng, lat);
     return bb;
   }
 
   getBoundingBox() :LngLatBoundsLike {
     let bounds = new LngLatBounds();
     //view bounding box overrides the item ones
-    //////console.log(this);
+    ////////console.logthis);
     const viewBounds = this.getViewLocationBounds();
-    ////console.log('viewbounds ', viewBounds);
+    //////console.log'viewbounds ', viewBounds);
     if(viewBounds !== undefined) {
       return viewBounds;
     } else {
       this.getItemsWithPositions().forEach(ip => {
-        ////console.log(ip);
+        //////console.logip);
         const loc = this.getItemLocation(ip);
         if (loc) {
           if(loc.type === 'Point'){
@@ -388,22 +388,22 @@ export class RnMapViewComponent extends RnViewComponent implements OnInit, OnDes
                 bounds = bounds.extend(coord);
               })
             } else {
-              ////console.log('Error: an item with a position is neither a point or a polygon.')
+              //////console.log'Error: an item with a position is neither a point or a polygon.')
             }
           }
         }
       });
       bounds = this.correctBoundingBox(bounds);
-      ////console.log(bounds);
+      //////console.logbounds);
       return bounds;
     }
 
-    ////console.log(bounds);
+    //////console.logbounds);
     return bounds;
   }
 
   fitMapToBounds() {
-    ////console.log('fitting map to bounds');
+    //////console.log'fitting map to bounds');
     const bb = this.getBoundingBox();
     if (bb) {
       this.map?.fitBounds(bb);
@@ -413,17 +413,17 @@ export class RnMapViewComponent extends RnViewComponent implements OnInit, OnDes
   }
 
   loadMarkers(map: Map): void {
-    ////console.log("loading markers")
+    //////console.log"loading markers")
     if(map){
        // Instantiate LatLngBounds object
       const itemsWithPositions = this.getItemsWithPositions();
-      ////console.log(itemsWithPositions);
+      //////console.logitemsWithPositions);
       if (itemsWithPositions.length > 0) {
         itemsWithPositions.forEach(ip => {
           const loc = this.getItemLocation(ip);
           if (loc) {
             if(loc.type == 'Point'){
-              ////console.log("adding point...", ip.name)
+              //////console.log"adding point...", ip.name)
               let customMarkerIcon = undefined;
               let icon = this.getItemIcon(ip);
               if (icon) {
@@ -437,7 +437,7 @@ export class RnMapViewComponent extends RnViewComponent implements OnInit, OnDes
               this.attachPopup(ip, m);
               m.addTo(map);
             } else if (loc.type === 'Polygon'){
-              ////console.log("adding polygon...", ip.name)
+              //////console.log"adding polygon...", ip.name)
               var sumlat = 0
               var sumlong = 0
               var count = 0
@@ -500,16 +500,16 @@ export class RnMapViewComponent extends RnViewComponent implements OnInit, OnDes
                 //this.attachPopup(ip, m);
                 m.addTo(map);
               } else {
-                ////console.log(`Error: The item somehow doesn't have a name. item:`,ip)
+                //////console.log`Error: The item somehow doesn't have a name. item:`,ip)
               }
             } else {
-              ////console.log('Error: an item with a position is neither a point or a polygon.')
+              //////console.log'Error: an item with a position is neither a point or a polygon.')
             }
           }
         });
       }
     } else {
-      ////console.log("sequencing error: loadMarkers has occured before the map has loaded.")
+      //////console.log"sequencing error: loadMarkers has occured before the map has loaded.")
     }
     this.fitMapToBounds();
   }

@@ -14,7 +14,7 @@ export class ItemService {
   constructor(protected http: HttpClient,
               protected router: Router,
               protected authService: AuthService) {
-    ////////console.log('*** constructing item service ***');
+    //////////console.log'*** constructing item service ***');
   }
 
   protected getEndpoint() {
@@ -68,7 +68,7 @@ export class ItemService {
 
   protected handleErrorAndRethrow(operation = 'operation', result?: any) {
     return (error: any): Observable<any> => {
-      //////console.log(error);
+      ////////console.logerror);
       return throwError(error);
     };
   }
@@ -105,12 +105,12 @@ export class ItemService {
     );
   }*/
   public update(id: string, params: any): Observable<Item> {
-    //////console.log(params);
+    ////////console.logparams);
     let requestParams = Object.assign({attributes: {types: []} }, params);
     if ('types' in params && params['types'].length > 0) {
       requestParams.attributes.types = Object.assign(requestParams.attributes.types, params.types);
     }
-    //////console.log(params);
+    ////////console.logparams);
     return this.http.put<Item>(this.getEndpoint() + '/' + id, requestParams).pipe(
       catchError(this.handleError('/items', []))
     );
@@ -138,14 +138,14 @@ export class ItemService {
               switch (event.type) {
                 case HttpEventType.UploadProgress: {
                   let uploadProgress = Math.round(event.loaded / event.total * 100);
-                  //////console.log(`Uploaded! ${uploadProgress}%`);
+                  ////////console.log`Uploaded! ${uploadProgress}%`);
                   if (progressFn) {
                     progressFn(uploadProgress);
                   }
                   return created;
                 }
                 case HttpEventType.Response: {
-                  //////console.log('Successfully uploaded!');
+                  ////////console.log'Successfully uploaded!');
                   return created;
                 }
                 default:
@@ -193,7 +193,7 @@ export class ItemService {
 */
   private getParams(query: Query): HttpParams {
     let params = new HttpParams();
-    ////////console.log(query);
+    //////////console.logquery);
     if (query) {
       if (query.name) {
         params = params.append('name', query.name);
@@ -283,7 +283,7 @@ export class ItemService {
       const types_data = JSON.parse(types_string);
       const batch_count = types_data['batch_count'];
       const prefix = types_data['prefix'];
-      //////console.log('removing ',batch_count, 'batches');
+      ////////console.log'removing ',batch_count, 'batches');
       for (let i = 0; i < batch_count; i++) {
         const key = prefix + '_' + i.toString();
         localStorage.removeItem(key);
@@ -310,7 +310,7 @@ export class ItemService {
         localStorage.setItem(key, JSON.stringify(batch_entries))
       }
       localStorage.setItem('types', JSON.stringify({prefix: prefix, batch_count: batch_num}));
-      //////console.log({prefix: prefix, batch_count: batch_num});
+      ////////console.log{prefix: prefix, batch_count: batch_num});
     }
   }
 
@@ -488,7 +488,7 @@ export class ItemService {
 
   collectTypeAttributes(type: Type, attrs: {[index: string]:any}) {
     let ret = attrs;
-    ////////console.log('collecting type attributes ', type.name!);
+    //////////console.log'collecting type attributes ', type.name!);
     if (type) {
       if (type.base) {
         attrs = Object.assign(attrs, this.collectTypeAttributes(type.base, attrs));
@@ -503,7 +503,7 @@ export class ItemService {
 
   collectItemAttributes(item: Item, attrs: {[index: string]:any}) {
     let ret = attrs;
-    ////////console.log('collecting type attributes ', type.name!);
+    //////////console.log'collecting type attributes ', type.name!);
     if (item) {
       ret = this.collectTypeAttributes(item.type!, attrs);
       if(item.attributes) {
@@ -591,7 +591,7 @@ export class ItemService {
 
   getQueryString(query: Query): string {
     let result = 'Show items ';
-    //////console.log(query);
+    ////////console.logquery);
 
     if (query.types && query.types.length > 0) {
       result += ' of type ';
@@ -759,14 +759,14 @@ export function expandItem(item: Item): Item {
 export function isInstanceOf(type: Type, type_name: string): boolean {
   
   if (type.name === type_name) {
-    ////////console.log('*** ', type.name, ' is instance of ', type_name)
+    //////////console.log'*** ', type.name, ' is instance of ', type_name)
     return true;
   }
 
   if (type.base) {
     return isInstanceOf(type.base, type_name);
   }
-  ////////console.log('*** ', type.name, ' is NOT an instance of ', type_name)
+  //////////console.log'*** ', type.name, ' is NOT an instance of ', type_name)
   return false;
 }
 

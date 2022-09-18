@@ -30,7 +30,7 @@ export class RnDialogComponent implements OnInit {
     this.item = this.data.item;
     this.formItem = this.data.form;
     this.types = this.data.types;
-    ////console.log(this.types);
+    //////console.logthis.types);
   }
 
   onNoClick(): void {
@@ -42,7 +42,7 @@ export class RnDialogComponent implements OnInit {
   }
 
   onEvent(event: ItemEvent) {
-    ////console.log(event);
+    //////console.logevent);
     if (event.item) {
       if (event.event === 'click') {
         if(event.control && event.control.attributes && event.control.attributes['close'] === 'true') {
@@ -51,11 +51,11 @@ export class RnDialogComponent implements OnInit {
           this.dialogRef.close(event);
         }
       } else if (event.event === 'item') {
-        ////console.log(this.item);
+        //////console.logthis.item);
         let location = this.item?.location;
         this.item = event.item;
         this.item.location = location;
-        ////console.log(this.item);
+        //////console.logthis.item);
       }
       
     }

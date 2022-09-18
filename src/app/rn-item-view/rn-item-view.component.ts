@@ -33,7 +33,7 @@ export class RnItemViewComponent extends RnViewComponent implements OnInit, OnCh
 
   override ngOnInit(): void {
     this.formGroup = new FormGroup({});
-    ////////console.log('item-view init ', this.item);
+    //////////console.log'item-view init ', this.item);
     this.sessionService.itemActivated$.subscribe(item => {
         this.itemChanged(item);
     });
@@ -53,7 +53,7 @@ export class RnItemViewComponent extends RnViewComponent implements OnInit, OnCh
       this.reloadItem(this.item);
     } else {
         this.route.paramMap.subscribe(params => {
-          ////////console.log(params);
+          //////////console.logparams);
           const id = params.get('id');
           if(id && (!this.item || id != this.id)) {
             this.retrieve(id, this.hierarchy);
@@ -64,7 +64,7 @@ export class RnItemViewComponent extends RnViewComponent implements OnInit, OnCh
   }
 
   retrieve(id: string, hierarchy:boolean=false): void {
-    //////console.log('*** retrieve ', id);
+    ////////console.log'*** retrieve ', id);
     this.itemService.getItem(id,hierarchy).subscribe(item => {
       if (item) {
         this.item = item;
@@ -74,7 +74,7 @@ export class RnItemViewComponent extends RnViewComponent implements OnInit, OnCh
   }
 
   refreshView(): void {
-    ////////console.log('*** refreshView ***');
+    //////////console.log'*** refreshView ***');
     if (this.id) {
       this.retrieve(this.id, this.hierarchy);
     } else if(this.item) {
@@ -83,7 +83,7 @@ export class RnItemViewComponent extends RnViewComponent implements OnInit, OnCh
   }
 
   refreshItems(items: Item[]) {
-    console.log('*** refresh_items ***', items);
+    //console.log'*** refresh_items ***', items);
     this.items = [...items];
     if (this.item) {
       this.item.items = [...items];
@@ -96,18 +96,18 @@ export class RnItemViewComponent extends RnViewComponent implements OnInit, OnCh
   }
 
   reloadItem(item: Item): void {
-    ////console.log('*** reloading ',item);
+    //////console.log'*** reloading ',item);
     this.views = this.getItemViews(item);
-    ////console.log('*** controls before reload item:', this.controls);
+    //////console.log'*** controls before reload item:', this.controls);
     this.controls = this.getItemControls(item);
-    ////console.log('*** controls after reload item:', this.controls);
-    ////////console.log(this.views);
+    //////console.log'*** controls after reload item:', this.controls);
+    //////////console.logthis.views);
     this.query = this.getItemQuery(item);
     this.id = item.id;
     const active_view = this.views[this.activeViewIndex];
     const view_query = this.getItemQuery(active_view);
-    ////console.log('*** query ', this.query);
-    ////console.log('*** view_query ', view_query);
+    //////console.log'*** query ', this.query);
+    //////console.log'*** view_query ', view_query);
     if (view_query) {
       //view_query.parent_id = this.id; 
       if (view_query.my_items)
@@ -119,12 +119,12 @@ export class RnItemViewComponent extends RnViewComponent implements OnInit, OnCh
         //this.sessionService.activateItems(this.children);
       });
     } else if (item.items && item.items.length > 0) {
-      ////////console.log('children = items', item.items);
+      //////////console.log'children = items', item.items);
       this.children = [...item.items];
       //this.sessionService.activateItems(this.children);
     } else if (this.query) {
-      //////console.log(this.query.my_items);
-      //////console.log(this.item);
+      ////////console.logthis.query.my_items);
+      ////////console.logthis.item);
       if (this.query) {
         if (this.query.my_items)
         {
@@ -137,11 +137,11 @@ export class RnItemViewComponent extends RnViewComponent implements OnInit, OnCh
         //this.sessionService.activateItems(this.children);
       });
     } else {
-      ////console.log('*** 4 ***', this);
-      ////////console.log('children = chidlren')
+      //////console.log'*** 4 ***', this);
+      //////////console.log'children = chidlren')
       if (this.hierarchy) {
         this.itemService.children(this.id!).subscribe(children => {
-          ////console.log('set children ', children);
+          //////console.log'set children ', children);
           this.children = children;
           //this.sessionService.activateItems(this.children);
         });
@@ -171,7 +171,7 @@ export class RnItemViewComponent extends RnViewComponent implements OnInit, OnCh
   override ngOnChanges(changes: SimpleChanges): void {
     if(changes['item']) {
       if (this.item) {
-        //////console.log('********************* item view reloading item', this.item);
+        ////////console.log'********************* item view reloading item', this.item);
         this.reloadItem(this.item);
       }
       
@@ -179,16 +179,16 @@ export class RnItemViewComponent extends RnViewComponent implements OnInit, OnCh
   }
 
   onItemEvent(event: ItemEvent) {
-    //////console.log(event);
+    ////////console.logevent);
   }
 
   onChangeTab(event: any) {
-    //////console.log(event);
+    ////////console.logevent);
     this.eventsSubject.next({event: 'tab', data: {index: event.index}, item: this.item});
     this.activeViewIndex = event.index;
     const active_view = this.views[this.activeViewIndex];
     const view_query = this.getItemQuery(active_view);
-    //////console.log('view_query ', view_query, active_view);
+    ////////console.log'view_query ', view_query, active_view);
     if (view_query) {
       view_query.parent_id = this.id; 
       this.itemService.items(view_query).subscribe(items => {
@@ -198,10 +198,10 @@ export class RnItemViewComponent extends RnViewComponent implements OnInit, OnCh
   }
 
   getItemDefaultView(item?: Item) {
-    ////////console.log(item);
+    //////////console.logitem);
     if (item && item.items) {
       const views = item.items.filter(i => itemIsInstanceOf(i, 'View'));
-      ////////console.log(views);
+      //////////console.logviews);
       if (views.length > 0) {
         if (views.length < this.activeViewIndex) {
           return views[this.activeViewIndex];
@@ -280,7 +280,7 @@ export class RnItemViewComponent extends RnViewComponent implements OnInit, OnCh
   }
 
   override itemChanged(item?: Item): void {
-    //////console.log("*** item_view item_changed ***");
+    ////////console.log"*** item_view item_changed ***");
     if (item) {
       //this.item = item;
       this.refreshView();
@@ -289,12 +289,12 @@ export class RnItemViewComponent extends RnViewComponent implements OnInit, OnCh
   }
 
   override itemsChanged(items?: Item[]): void {
-    //console.log("*** item_view items_changed ***");
+    ////console.log"*** item_view items_changed ***");
     //this.sessionService.activateItems(items);
   }
 
   hierarchyToggleChanged(event: any): void {
-    ////console.log("*** hierarchy toggle changed ***", event, this.hierarchy);
+    //////console.log"*** hierarchy toggle changed ***", event, this.hierarchy);
     if (this.id) {
       this.retrieve(this.id,this.hierarchy);
     }

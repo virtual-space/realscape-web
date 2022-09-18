@@ -2,7 +2,7 @@ import { Component, OnInit, Input, OnChanges, SimpleChanges } from '@angular/cor
 import { Item, ItemService } from '../services/item.service';
 import { Router } from '@angular/router';
 import { MatTableDataSource } from "@angular/material/table";
-import {CalendarEvent, CalendarEventAction, CalendarView} from 'angular-calendar';
+import {CalendarEvent, CalendarEventAction, CalendarEventTimesChangedEvent, CalendarView} from 'angular-calendar';
 import {
   startOfDay,
   endOfDay,
@@ -72,7 +72,7 @@ export class RnCalendarViewComponent extends RnViewComponent implements OnInit {
   calendarEvents: CalendarEvent<Item>[] = [];
 
   override ngOnInit(): void {
-    ////console.log('init',this.items)
+    //////console.log'init',this.items)
     this.populateItems();
   }
 
@@ -102,7 +102,7 @@ export class RnCalendarViewComponent extends RnViewComponent implements OnInit {
     this.calendarEvents = [];
 
     if (this.view) {
-      //console.log(this.view);
+      ////console.logthis.view);
       if(this.view.attributes) {
         if ('view' in this.view.attributes) {
           const viewType = this.view.attributes['view'];
@@ -118,26 +118,36 @@ export class RnCalendarViewComponent extends RnViewComponent implements OnInit {
     }
     if(this.item) {
       if(this.item.valid_from){
-        //////console.log('has valid_from',value.valid_from)
+        //console.log'has valid_from',this.item.valid_from)
         if(this.item.valid_to){
-          //////console.log('has valid_to',value.valid_to)
+          ////////console.log'has valid_to',value.valid_to)
           this.calendarEvents.push({
-            start: new Date(this.utcToLocal(this.item.valid_from)),
-            end: new Date(this.utcToLocal(this.item.valid_to)),
+            start: this.utcToLocal(this.item.valid_from),
+            end: this.utcToLocal(this.item.valid_to),
             id: this.item.id,
             title: this.item.name!,
             color: this.colors.yellow,
             actions: this.actions,
-            meta: this.item
+            meta: this.item,
+            resizable: {
+              beforeStart: true, // this allows you to configure the sides the event is resizable from
+              afterEnd: true
+            },
+            draggable: true
           })
         } else {
           this.calendarEvents.push({
-            start: new Date(this.utcToLocal(this.item.valid_from)),
+            start: this.utcToLocal(this.item.valid_from),
             id: this.item.id,
             title: this.item.name!,
             color: this.colors.yellow,
             actions: this.actions,
-            meta: this.item
+            meta: this.item,
+            resizable: {
+              beforeStart: true, // this allows you to configure the sides the event is resizable from
+              afterEnd: true
+            },
+            draggable: true
           })
         }
       }
@@ -146,60 +156,71 @@ export class RnCalendarViewComponent extends RnViewComponent implements OnInit {
     this.dataSource.data.forEach(value => {
       const valid_from = this.getItemValidFrom(value);
       const valid_to = this.getItemValidTo(value);
-      //////console.log(value)
+      //console.logvalue)
       if(valid_from){
-        //////console.log('has valid_from',value.valid_from)
+        //console.log'has valid_from',value.valid_from)
         if(valid_to){
-          //////console.log('has valid_to',value.valid_to)
+          ////////console.log'has valid_to',value.valid_to)
           this.calendarEvents.push({
-            start: new Date(this.utcToLocal(valid_from)),
-            end: new Date(this.utcToLocal(valid_to)),
+            start: this.utcToLocal(valid_from),
+            end: this.utcToLocal(valid_to),
             id: value.id,
             title: value.name,
             color: this.colors.yellow,
             actions: this.actions,
-            meta: value
+            meta: value,
+            resizable: {
+              beforeStart: true, // this allows you to configure the sides the event is resizable from
+              afterEnd: true
+            },
+            draggable: true
           })
         } else {
           this.calendarEvents.push({
-            start: new Date(this.utcToLocal(valid_from)),
+            start: this.utcToLocal(valid_from),
             id: value.id,
             title: value.name,
             color: this.colors.yellow,
             actions: this.actions,
-            meta: value
+            meta: value,
+            resizable: {
+              beforeStart: true, // this allows you to configure the sides the event is resizable from
+              afterEnd: true
+            },
+            draggable: true
           })
         }
       } else {
-        //////console.log(value.id, "does not have a valid start date")
+        ////////console.logvalue.id, "does not have a valid start date")
       }
     })
   }
 
   override ngOnChanges(changes: SimpleChanges): void {
-    //////console.log('changes',this.items)
+    ////////console.log'changes',this.items)
     if(changes['items'] || changes['item']) {
       this.populateItems();
     }
   }
 
   onItemClick(item: any) {
-    //////console.log(item);
+    ////////console.logitem);
     this.onDisplay(item.meta);
   }
 
   setView(view: CalendarView) {
-    ////console.log(view);
+    //////console.logview);
     this.calendarView = view;
   }
 
   onCalendarClick(event: any) {
-    //console.log("calendarclick",event.date.toISOString());
+    //console.logevent);
+    //console.log"calendarclick",event.date.toISOString());
     if (this.canAddItem()) {
       let item: Item = this.item? { ... this.item} : new Item();
-      item.valid_from = this.localToUTC(event.date);
-      item.valid_to = this.localToUTC(event.date);
-      ////console.log(item);
+      item.valid_from = event.date;//this.localToUTC(event.date);
+      item.valid_to = event.date; //this.localToUTC(event.date);
+      //////console.logitem);
       this.onAdd(item);
     }
     /*
@@ -213,6 +234,32 @@ export class RnCalendarViewComponent extends RnViewComponent implements OnInit {
         this.viewDate = event.date;
       }
     }*/
+  }
+
+  eventTimesChanged({
+    event,
+    newStart,
+    newEnd,
+  }: CalendarEventTimesChangedEvent): void {
+    console.log(event);
+    this.itemService.update(event.meta.id, {valid_from: this.localToUTC(new Date(newStart)).toUTCString(), valid_to: this.localToUTC(new Date(newEnd!)).toUTCString()}).subscribe(item => {
+      //console.log'updated item', item);
+      
+      //event.start = newStart;
+      //event.end = newEnd;
+      
+      const it = this.items.find(i => i.id === event.meta.id);
+      console.log(it);
+      if (it) {
+        it.valid_from = item.valid_from;
+        it.valid_to = item.valid_to;
+      }
+      console.log(it);
+      this.populateItems();
+    });
+    //event.start = newStart;
+    //event.end = newEnd;
+    
   }
 
 }

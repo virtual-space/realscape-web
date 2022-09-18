@@ -24,7 +24,7 @@ export class RnTypesCtrlComponent extends RnCtrlComponent implements OnInit {
   }
 
   rebuildTypesControl() {
-    ////////console.log('REBUILD TYPES', this);
+    //////////console.log'REBUILD TYPES', this);
     this.formControl.setValue([]);
     if(this.item) {
       this.types = [];
@@ -38,16 +38,16 @@ export class RnTypesCtrlComponent extends RnCtrlComponent implements OnInit {
           }
         });
       }
-      ////////console.log(this.types);
+      //////////console.logthis.types);
       this.formControl.setValue(Array.from(new Set(this.types.map(t => t.name!))));
    }
    if(this.formGroup) {
       if(this.control) {
         const field_name = this.getControlAttribute('field_name', this.control.name? this.control.name : 'value');
-        ////////console.log('edit_ctrl', field_name);
+        //////////console.log'edit_ctrl', field_name);
         this.formGroup.removeControl(field_name);
         this.formGroup.addControl(field_name, this.formControl);
-        ////////console.log('*** rebuild types control ***', this.formGroup);
+        //////////console.log'*** rebuild types control ***', this.formGroup);
       }
     }
   }
@@ -68,7 +68,7 @@ export class RnTypesCtrlComponent extends RnCtrlComponent implements OnInit {
       }
     }
     
-    ////////console.log(this.formControl.value);
+    //////////console.logthis.formControl.value);
     // Clear the input value
     event.chipInput!.clear();
   }
@@ -85,7 +85,7 @@ export class RnTypesCtrlComponent extends RnCtrlComponent implements OnInit {
       }
     }
     this.formControl.setValue(this.types.map(t => t.name));
-    ////////console.log(this.formControl.value);
+    //////////console.logthis.formControl.value);
   }
 
 }

@@ -24,13 +24,13 @@ export class RnItemSelectCtrlComponent extends RnCtrlComponent implements OnInit
     @Output() selectedItemChanged = new EventEmitter<Item>();
 
     override ngOnInit(): void {
-      //console.log('*** item select', this);
+      ////console.log'*** item select', this);
       if (this.item) {
         const itemQuery = this.getItemQuery(this.item);
-        ////console.log(this.item);
+        //////console.logthis.item);
         if (itemQuery) {
           const query = itemQuery? itemQuery : new Query();
-          ////console.log(query);
+          //////console.logquery);
           query.types = query.parent_types;
           this.itemService.items(query).subscribe(items => {
             this.items = items;
@@ -51,7 +51,7 @@ export class RnItemSelectCtrlComponent extends RnCtrlComponent implements OnInit
                       this.formGroup.removeControl(field_name);
                       this.formGroup.addControl(field_name, this.formControl);
                     }
-                    ////console.log(this.selectedItem);
+                    //////console.logthis.selectedItem);
                     if (this.onEvent) {
                       this.onEvent.emit({event: field_name, item: this.selectedItem, control: this.control});
                     }
@@ -71,7 +71,7 @@ export class RnItemSelectCtrlComponent extends RnCtrlComponent implements OnInit
                     this.formGroup.removeControl(field_name);
                     this.formGroup.addControl(field_name, this.formControl);
                   }
-                  ////console.log(this.selectedItem);
+                  //////console.logthis.selectedItem);
                   if (this.onEvent) {
                     this.onEvent.emit({event: field_name, item: this.selectedItem, control: this.control});
                   }
@@ -82,7 +82,7 @@ export class RnItemSelectCtrlComponent extends RnCtrlComponent implements OnInit
             }
           });
         } else {
-          ////console.log('no item query');
+          //////console.log'no item query');
           if (this.control) {
             const ctrlQuery = this.getItemQuery(this.control);
             if (ctrlQuery) {
@@ -90,10 +90,10 @@ export class RnItemSelectCtrlComponent extends RnCtrlComponent implements OnInit
                 this.items = items;
                 if (this.items.length > 0) {
                   const value = this.getValue();
-                  //console.log(value);
+                  ////console.logvalue);
                   if(value !== undefined) {
                     const i = this.items.find(ii => ii.id === value);
-                    //console.log('i:', i);
+                    ////console.log'i:', i);
                     if (i) {
                       const icon = this.getItemIcon(i);
                       const field_name = this.getFieldName();
@@ -107,7 +107,7 @@ export class RnItemSelectCtrlComponent extends RnCtrlComponent implements OnInit
                           this.formGroup.removeControl(field_name);
                           this.formGroup.addControl(field_name, this.formControl);
                         }
-                        ////console.log(this.selectedItem);
+                        //////console.logthis.selectedItem);
                         if (this.onEvent) {
                           this.onEvent.emit({event: field_name, item: this.selectedItem, control: this.control});
                         }
@@ -127,7 +127,7 @@ export class RnItemSelectCtrlComponent extends RnCtrlComponent implements OnInit
                         this.formGroup.removeControl(field_name);
                         this.formGroup.addControl(field_name, this.formControl);
                       }
-                      ////console.log(this.selectedItem);
+                      //////console.logthis.selectedItem);
                       if (this.onEvent) {
                         this.onEvent.emit({event: field_name, item: this.selectedItem, control: this.control});
                       }
@@ -138,11 +138,11 @@ export class RnItemSelectCtrlComponent extends RnCtrlComponent implements OnInit
                 }
               });
             }
-            ////console.log(ctrlQuery);
+            //////console.logctrlQuery);
           } else {
             const value = this.getValue();
          
-            //////console.log('*** field_name, value, control ***', field_name, value, this.control);
+            ////////console.log'*** field_name, value, control ***', field_name, value, this.control);
             if (value !== undefined) {
               this.itemService.getItem(value).subscribe(item => {
                 this.items = [item];
@@ -175,7 +175,7 @@ export class RnItemSelectCtrlComponent extends RnCtrlComponent implements OnInit
     }
 
     getFieldName(): string {
-      ////console.log('get_field_name:',this.control);
+      //////console.log'get_field_name:',this.control);
       return this.getControlAttribute('field_name', '', this.control);
     }
 
@@ -199,18 +199,18 @@ export class RnItemSelectCtrlComponent extends RnCtrlComponent implements OnInit
           this.formControl = new FormControl(this.selectedId);
           this.formGroup.removeControl(field_name);
           this.formGroup.addControl(field_name, this.formControl);
-          ////console.log(this.formGroup);
+          //////console.logthis.formGroup);
         } else {
-          ////console.log('*** no form group ***');
+          //////console.log'*** no form group ***');
         }
 
         if (this.selectedItemChanged) {
-          //////console.log("*** type select control emitting onType:",t);
-          //////console.log(this.onType);
+          ////////console.log"*** type select control emitting onType:",t);
+          ////////console.logthis.onType);
           this.selectedItemChanged.emit(e);
         }
 
-        //////console.log(this.selectedItem);
+        ////////console.logthis.selectedItem);
         if (this.onEvent) {
           this.onEvent.emit({event: field_name, item: this.selectedItem, control: this.control});
         }

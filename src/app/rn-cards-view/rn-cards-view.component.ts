@@ -9,6 +9,6 @@ import { RnViewComponent } from '../rn-view/rn-view.component';
 export class RnCardsViewComponent extends RnViewComponent implements OnInit {
 
     override ngOnInit(): void {
-      ////console.log(this);
+      //////console.logthis);
     }
 }

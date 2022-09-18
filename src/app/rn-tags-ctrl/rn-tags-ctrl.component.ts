@@ -42,10 +42,10 @@ export class RnTagsCtrlComponent extends RnCtrlComponent implements OnInit {
    if(this.formGroup) {
       if(this.control) {
         const field_name = this.getControlAttribute('field_name', this.control.name? this.control.name : 'value');
-        ////////console.log('edit_ctrl', field_name);
+        //////////console.log'edit_ctrl', field_name);
         this.formGroup.removeControl(field_name);
         this.formGroup.addControl(field_name, this.formControl);
-        ////////console.log('*** rebuild types control ***', this.formGroup);
+        //////////console.log'*** rebuild types control ***', this.formGroup);
       }
     }
   }
@@ -64,14 +64,14 @@ export class RnTagsCtrlComponent extends RnCtrlComponent implements OnInit {
     }
 
     this.formControl.setValue(this.tags.map(t => t.name));
-    ////////console.log(this.formControl.value);
+    //////////console.logthis.formControl.value);
     // Clear the input value
     event.chipInput!.clear();
   }
 
   remove(tag: Tag): void {
     const index = this.tags.indexOf(tag);
-    //////console.log(index);
+    ////////console.logindex);
     if (index >= 0) {
       this.tags.splice(index, 1);
     }
@@ -81,7 +81,7 @@ export class RnTagsCtrlComponent extends RnCtrlComponent implements OnInit {
       }
     }
     this.formControl.setValue(this.tags.map(t => t.name));
-    ////////console.log(this.formControl.value);
+    //////////console.logthis.formControl.value);
   }
 
 }

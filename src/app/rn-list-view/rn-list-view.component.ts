@@ -42,14 +42,14 @@ export class RnListViewComponent extends RnViewComponent implements ItemCallback
 
   protected override initialize(): void {
     this.dataSource.data = this.items;
-    //////console.log('*************************************** hello from list view initialized!!!');
-    //console.log('list-view init item:', this.item);
-    //console.log('list-view init control:', this.control);
-    //console.log('list-view init view:', this.view);
+    ////////console.log'*************************************** hello from list view initialized!!!');
+    ////console.log'list-view init item:', this.item);
+    ////console.log'list-view init control:', this.control);
+    ////console.log'list-view init view:', this.view);
     let cols = this.getColumns();
     cols = cols.filter(c => c.target !== 'name');
     if(cols.length > 0) {
-      console.log('list-view columns:', cols);
+      //console.log'list-view columns:', cols);
       let c1 = cols.filter(c => c.target !== 'name')
       this.columns = this.base_columns.concat(cols.map(c => { return {columnDef: c.target!, header: c.name!, type: c.target!, cell: (element:any) => `${this.extractValue(element,c.target!)}`} }));
       this.displayedColumns  = this.columns.map(c => c.columnDef);
@@ -67,9 +67,9 @@ export class RnListViewComponent extends RnViewComponent implements ItemCallback
     
     if(element) {
       if(type) {
-        console.log(type);
+        ////console.logtype);
         if(type === 'name') {
-          console.log('hasname');
+          ////console.log'hasname');
           return element.name;
         }
         else if (type === 'valid_from') {
@@ -92,14 +92,14 @@ export class RnListViewComponent extends RnViewComponent implements ItemCallback
 
   override itemsChanged(items?: Item[]): void {
     if (items) {
-      //////console.log(items);
+      ////////console.logitems);
       this.dataSource.data = items;
     }
-    //////console.log('*************************************** hello from list view changed!!!');
+    ////////console.log'*************************************** hello from list view changed!!!');
   }
 
   getColumns(): ListColumn[] {
-    console.log(this.view)
+    //console.logthis.view)
     if (this.view && this.view.attributes) {
         if ('columns' in this.view.attributes) {
           return this.view.attributes['columns'];
