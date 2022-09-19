@@ -13,12 +13,12 @@ export class RnButtonCtrlComponent extends RnCtrlComponent implements OnInit {
   @ViewChild('uploader') uploader!: ElementRef;
 
   public onClick(event: Event) {
-    //////console.logevent);
+    //console.log(event);
     ////////console.logthis.formGroup!.value)
     if (this.item) {
       if (this.control) {
         const attrs = this.collectItemAttributes(this.control, {});
-        ////////console.logattrs);
+        console.log(attrs);
         if ('command' in attrs) {
           const command = attrs['command'];
           if (command === "Save") {
@@ -140,8 +140,8 @@ export class RnButtonCtrlComponent extends RnCtrlComponent implements OnInit {
             }
           }
         } else if (command === "Invoke") {
-          //console.log"*** invoke_item ***", this.formGroup!.value);
-          ////console.logthis.item);
+          console.log("*** invoke_item ***", this.formGroup!.value);
+          console.log(this.item);
           if (this.item && this.formGroup) {
             let target_id = this.item!.id!;
             let result = this.formGroup.value;
@@ -204,6 +204,7 @@ export class RnButtonCtrlComponent extends RnCtrlComponent implements OnInit {
                 //const i = Object.values(items);
                 ////console.log'invoked items', JSON.stringify(items));
                 //this.sessionService.activateItems(items);
+                console.log('refreshing item');
                 this.sessionService.refresh();
               });
               //result = this.getUpdateParams2(this.formGroup!.value,true);
@@ -240,6 +241,19 @@ export class RnButtonCtrlComponent extends RnCtrlComponent implements OnInit {
         }
       }
     }
+  }
+
+  shouldClose() {
+    //console.log('should close');
+    if (this.control) {
+      //console.log('has control', this.control);
+      const attrs = this.collectItemAttributes(this.control, {});
+      if ('close' in attrs) {
+        //console.log('has attrs');
+        return attrs['close'].toLowerCase() === 'true';
+      }
+    }
+    return false;
   }
 
   importFile(event: any) {

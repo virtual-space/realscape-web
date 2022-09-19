@@ -183,7 +183,7 @@
             </div>
           </div>
           <div *ngIf="!isSteps(item)" fxFlexFill>
-            <div *ngFor="let child of controls; let index = index" fxFlex="1 0 auto">cc
+            <div *ngFor="let child of controls; let index = index" fxFlex="1 0 auto">
               <div fxFlex *ngIf="formGroup">
                 <app-rn-ctrl [control]="child" [item]="item" (onRefresh)="childRefresh()" (onItems)="childItems($event)" [formGroup]="formGroup"  [events]="events" [tabIndex]="tabIndex">
                 </app-rn-ctrl>

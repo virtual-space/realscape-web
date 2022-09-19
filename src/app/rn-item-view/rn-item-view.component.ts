@@ -45,6 +45,9 @@ export class RnItemViewComponent extends RnViewComponent implements OnInit, OnCh
       
       this.itemsChanged(items);
     });
+    this.sessionService.refreshed$.subscribe(() => {
+      this.refreshView();
+    });
     this.onRefresh.subscribe(e => {
       this.refreshView();
     });

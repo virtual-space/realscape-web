@@ -406,7 +406,7 @@ export class RnMapViewComponent extends RnViewComponent implements OnInit, OnDes
     //////console.log'fitting map to bounds');
     const bb = this.getBoundingBox();
     if (bb) {
-      this.map?.fitBounds(bb);
+      this.map?.fitBounds(bb, {duration: 0});
     }
 
     //this.map?.setZoom(15);
