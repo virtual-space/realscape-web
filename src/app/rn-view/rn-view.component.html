@@ -40,7 +40,7 @@
   <div *ngSwitchCase="'FormView'" fxFlexFill>
     <app-rn-form-view [items]="items"  (onEvent)="onEvent" (onRefresh)="childRefresh()" [events]="events" [view]="view" (onItems)="childItems($event)" fxFlexFill></app-rn-form-view>
   </div>
-  <div *ngSwitchCase="'CardsView'" fxFlexFill>
+  <div *ngSwitchCase="'CardView'" fxFlexFill>
     <app-rn-cards-view [items]="items"  (onEvent)="onEvent" (onRefresh)="childRefresh()" [events]="events" [view]="view" (onItems)="childItems($event)" fxFlexFill></app-rn-cards-view>
   </div>
   <div *ngSwitchCase="'TreeView'" fxFlexFill>
