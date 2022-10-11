@@ -1,6 +1,3 @@
-<div *ngIf="item" fxFlexFill>
-    <div>
-        <img [src]="getDataLink() | secure2 | async" class="image">
-    </div>
-    
+<div *ngIf="item" fxFlexFill fxLayoutAlign="center center">
+    <img [src]="getDataLink() | secure2 | async" class="image">
 </div>
