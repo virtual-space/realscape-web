@@ -34,6 +34,7 @@ export class RnViewComponent extends RnCtrlComponent implements OnInit, OnChange
     return this._items;
   }
   @Input() view?: Item;
+  @Output() onQueryChanged = new EventEmitter<any>();
 
   public isControl: boolean = false;
 
@@ -717,7 +718,7 @@ export class RnViewComponent extends RnCtrlComponent implements OnInit, OnChange
   }
 
   override itemsChanged(items?: Item[]): void {
-    //////console.logog('*************************************** hello from view items changed!!!');
+    //console.log('*************************************** hello from view items changed!!! ', items);
   }
 
   override ngOnChanges(changes: SimpleChanges): void {
@@ -728,6 +729,13 @@ export class RnViewComponent extends RnCtrlComponent implements OnInit, OnChange
      } else if(changes['items']) {
        this.itemsChanged(this.items);
      }
+  }
+
+  queryChangedHandler(event: any) {
+    //console.log(event);
+    if (this.onQueryChanged) {
+      this.onQueryChanged.emit(event);
+    }
   }
 
 }

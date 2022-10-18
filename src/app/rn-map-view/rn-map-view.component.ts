@@ -31,12 +31,17 @@ export class RnMapViewComponent extends RnViewComponent implements OnInit, OnDes
   style = 'mapbox://styles/mapbox/streets-v11';
   lat = 45.899977;
   lng = 6.172652;
+
+  lastBounds?: LngLatBounds;
   //location = {'type': 'Point','coordinates': [this.lng,this.lat] }
   location:any = null;
   zoom = 19;
   token = environment.mapboxToken;
   markers: Marker[] = [];
+  sources: string[] = [];
+  layers: string[] = [];
   selectedTabIndex = 0;
+  markersChanging = false;
 
   override ngOnInit(): void {
     //////console.logthis);
@@ -118,6 +123,10 @@ export class RnMapViewComponent extends RnViewComponent implements OnInit, OnDes
     }
   }
 
+  getLastBounds() {
+    return this.lastBounds;
+  }
+
   loadMap(): void {
     if(!this.isLoaded && (this.tabIndex === this.selectedTabIndex)){
       //////console.log'loading map...')
@@ -157,6 +166,66 @@ export class RnMapViewComponent extends RnViewComponent implements OnInit, OnDes
           //////console.logevent);
           this.fitMapToBounds();
           //map.fitBounds(bounds);
+        });
+
+        this.map.on('boxzoomend', event => {
+          console.log('A boxzoomend event occurred.', event);
+        });
+
+        this.map.on('dragend', event => {
+          //console.log('A dragend event occurred.', event);
+          //console.log(this.map?.getBounds());
+          if (this.onQueryChanged) {
+            if (this.map) {
+              const bounds = this.map.getBounds();
+              const ne = bounds.getNorthEast();
+              const sw = bounds.getSouthWest();
+              let lastBounds = this.getLastBounds();
+              if (lastBounds) {
+                const ne_old = lastBounds.getNorthEast();
+                const sw_old = lastBounds.getSouthWest();
+                const delta_lat = Math.abs(ne.lat - ne_old.lat);
+                const delta_lng = Math.abs(sw.lng - sw_old.lng);
+                if (delta_lat > 0.0001 && delta_lng > 0.0001) {
+                  this.lastBounds = bounds;
+                  const location = {type: "Polygon", coordinates: [[[ne.lng, sw.lat],[ne.lng, ne.lat],[sw.lng, ne.lat],[sw.lng,sw.lat],[ne.lng, sw.lat]]]}
+                  this.onQueryChanged.emit({location: location});
+                }
+                console.log('delta lat ', delta_lat, 'delta lng ', delta_lng);
+              } else {
+                this.lastBounds = bounds;
+              }
+              
+            }
+            
+          }
+        });
+
+        this.map.on('zoomend', event => {
+          //console.log('A zoomend event occurred.', event);
+          //console.log(this.map?.getBounds());
+          if (this.onQueryChanged) {
+            if (this.map) {
+              const bounds = this.map.getBounds();
+              const ne = bounds.getNorthEast();
+              const sw = bounds.getSouthWest();
+              let lastBounds = this.getLastBounds();
+              if (lastBounds) {
+                const ne_old = lastBounds.getNorthEast();
+                const sw_old = lastBounds.getSouthWest();
+                const delta_lat = Math.abs(ne.lat - ne_old.lat);
+                const delta_lng = Math.abs(sw.lng - sw_old.lng);
+                if (delta_lat > 0.0001 && delta_lng > 0.0001) {
+                  this.lastBounds = bounds;
+                  const location = {type: "Polygon", coordinates: [[[ne.lng, sw.lat],[ne.lng, ne.lat],[sw.lng, ne.lat],[sw.lng,sw.lat],[ne.lng, sw.lat]]]}
+                  this.onQueryChanged.emit({location: location});
+                }
+                console.log('delta lat ', delta_lat, 'delta lng ', delta_lng);
+              } else {
+                this.lastBounds = bounds;
+              }
+            }
+          }
         });
 
         /*this.map.on('load', this.onMapLoaded);
@@ -345,24 +414,28 @@ export class RnMapViewComponent extends RnViewComponent implements OnInit, OnDes
   correctBoundingBox(bb: LngLatBounds): LngLatBounds {
     const ne = bb.getNorthEast();
     const sw = bb.getSouthWest();
-    const dlng = Math.abs(ne.lng - sw.lng);
-    const dlat = Math.abs(ne.lat - sw.lat);
-    const delta_lng = 0.001;
-    const delta_lat = 0.001;
-    
-    if (dlng < 0.0001) {
-      bb.extend([ne.lng + delta_lng, ne.lat]);
-      bb.extend([ne.lng - delta_lng, ne.lat]);
-      bb.extend([sw.lng + delta_lng, sw.lat]);
-      bb.extend([sw.lng - delta_lng, sw.lat]);
-    }
 
-    if (dlat < 0.0001) {
-      bb.extend([ne.lng, ne.lat + delta_lat]);
-      bb.extend([ne.lng, ne.lat - delta_lat]);
-      bb.extend([sw.lng, sw.lat + delta_lat]);
-      bb.extend([sw.lng, sw.lat - delta_lat]);
+    if (ne && sw) {
+      const dlng = Math.abs(ne.lng - sw.lng);
+      const dlat = Math.abs(ne.lat - sw.lat);
+      const delta_lng = 0.001;
+      const delta_lat = 0.001;
+      
+      if (dlng < 0.0001) {
+        bb.extend([ne.lng + delta_lng, ne.lat]);
+        bb.extend([ne.lng - delta_lng, ne.lat]);
+        bb.extend([sw.lng + delta_lng, sw.lat]);
+        bb.extend([sw.lng - delta_lng, sw.lat]);
+      }
+
+      if (dlat < 0.0001) {
+        bb.extend([ne.lng, ne.lat + delta_lat]);
+        bb.extend([ne.lng, ne.lat - delta_lat]);
+        bb.extend([sw.lng, sw.lat + delta_lat]);
+        bb.extend([sw.lng, sw.lat - delta_lat]);
+      }
     }
+    
     //////console.loglng, lat);
     return bb;
   }
@@ -412,12 +485,21 @@ export class RnMapViewComponent extends RnViewComponent implements OnInit, OnDes
     //this.map?.setZoom(15);
   }
 
-  loadMarkers(map: Map): void {
-    //////console.log"loading markers")
+  loadMarkers(map: Map, fitToBounds = true): void {
+    //console.log("[*** begin loading markers ***]")
     if(map){
+      //console.log('removing markers', this.markers);
+      this.markers.forEach(m => m.remove());
+      this.markers = [];
+      //console.log('removing layers', this.layers);
+      this.layers.forEach(l => this.map?.removeLayer(l));
+      this.layers = [];
+      //console.log('removing sources', this.sources);
+      this.sources.forEach(s => this.map?.removeSource(s));
+      this.sources = [];
        // Instantiate LatLngBounds object
       const itemsWithPositions = this.getItemsWithPositions();
-      //////console.logitemsWithPositions);
+      console.log(itemsWithPositions);
       if (itemsWithPositions.length > 0) {
         itemsWithPositions.forEach(ip => {
           const loc = this.getItemLocation(ip);
@@ -449,7 +531,7 @@ export class RnMapViewComponent extends RnViewComponent implements OnInit, OnDes
               })
   
               if(ip.id){
-                map.addSource(ip.id,{
+                map.addSource('s' + ip.id,{
                   'type': 'geojson',
                   'data': {
                     'properties': {
@@ -461,17 +543,21 @@ export class RnMapViewComponent extends RnViewComponent implements OnInit, OnDes
                       'coordinates': ip.location.coordinates
                     }
                   }
-                })
+                });
+                console.log('adding source ', 's' + ip.id);
+                this.sources.push('s' + ip.id);
                 map.addLayer({
                   'id': 'l' + ip.id,
                   'type': 'fill',
-                  'source': ip.id, // reference the data source
+                  'source': 's' + ip.id, // reference the data source
                   'layout': {},
                   'paint': {
                     'fill-color': '#0080ff', // blue color fill
                     'fill-opacity': 0.5
                   }
                 });
+                console.log('adding layer ', 'l' + ip.id);
+                this.layers.push('l' + ip.id);
                 map.on('click', 'l' + ip.id, (e) => {
                   if (e) {
                     this.attachPopup(ip, map, { lngLat: e.lngLat });
@@ -480,13 +566,15 @@ export class RnMapViewComponent extends RnViewComponent implements OnInit, OnDes
                 map.addLayer({
                   'id': 'l' + ip.id + 'outline',
                   'type': 'line',
-                  'source': ip.id, // reference the data source
+                  'source': 's' + ip.id, // reference the data source
                   'layout': {},
                   'paint': {
                     'line-color': '#000',
                     'line-width': 3
                   }
-                })
+                });
+                console.log('adding layer ', 'l' + ip.id + 'outline');
+                this.layers.push('l' + ip.id + 'outline');
                 let customMarkerIcon = undefined;
                 let icon = this.getItemIcon(ip);
                 if (icon) {
@@ -511,7 +599,10 @@ export class RnMapViewComponent extends RnViewComponent implements OnInit, OnDes
     } else {
       //////console.log"sequencing error: loadMarkers has occured before the map has loaded.")
     }
-    this.fitMapToBounds();
+    if (fitToBounds) {
+      this.fitMapToBounds();
+    }
+    //console.log("[*** end loading markers ***]")
   }
 
   attachPopup(item: Item, mapOrMarker: Marker | Map, options?: { lngLat: mapboxgl.LngLatLike}): void {
@@ -546,4 +637,23 @@ export class RnMapViewComponent extends RnViewComponent implements OnInit, OnDes
     return new Promise((resolve) => setTimeout(resolve, time));
   }
 
+  override itemsChanged(event: any) {
+    console.log('map view items changed', event, 'changing', this.markersChanging);
+    if (this.markersChanging == false) {
+      //this.markersChanging = true;
+      //console.log(this.markers);
+      this.loadMarkers(this.map!,false);
+      //this.markersChanging = false;
+      /*
+      this.sleep(100).then(() => {
+        if(this.map){
+          
+          this.markersChanging = false;
+        }
+      });*/
+     
+      
+    }
+    
+  }
 }

@@ -89,6 +89,10 @@
                     <mat-icon>qr_code</mat-icon>
                     <span>QRCode</span>
                   </button>
+                  <button mat-menu-item  (click)="onExport()">
+                    <mat-icon>file_download</mat-icon>
+                    <span>Download</span>
+                  </button>
                   <button mat-menu-item (click)="onRefreshClick()">
                     <mat-icon>refresh</mat-icon>
                     <span>Refresh</span>
@@ -128,7 +132,7 @@
               </mat-menu>
             </ng-template>
             <ng-container>
-              <app-rn-view [items]="children" [view]="view" [item]="item" [events]="eventsSubject.asObservable()" [tabIndex]="index" (onEvent)="onItemEvent($event)" (onRefresh)="refreshView()" (onItems)="refreshItems($event)"></app-rn-view>
+              <app-rn-view [items]="children" [view]="view" [item]="item" [events]="eventsSubject.asObservable()" [tabIndex]="index" (onEvent)="onItemEvent($event)" (onRefresh)="refreshView()" (onItems)="refreshItems($event)" (onQueryChanged)="queryChangedHandler($event)"></app-rn-view>
             </ng-container>
           </mat-tab>
         </mat-tab-group>

@@ -296,6 +296,13 @@ export class RnItemViewComponent extends RnViewComponent implements OnInit, OnCh
     //this.sessionService.activateItems(items);
   }
 
+  onExport() {
+    this.itemService.export(this.item!.id!).subscribe(blob => {
+      const url= window.URL.createObjectURL(blob);
+      window.open(url);
+    });
+  }
+
   hierarchyToggleChanged(event: any): void {
     //////console.log"*** hierarchy toggle changed ***", event, this.hierarchy);
     if (this.id) {
@@ -303,5 +310,49 @@ export class RnItemViewComponent extends RnViewComponent implements OnInit, OnCh
     }
     
     //this.sessionService.activateItems(items);
+  }
+
+  override queryChangedHandler(event: any) {
+    /*
+    console.log('*** item view query change handler ***', event);
+    console.log(this);
+    const active_view = this.views[this.activeViewIndex];
+    const view_query = this.getItemQuery(active_view);
+    console.log(view_query);
+    console.log(this.query);
+    if (view_query) {
+      if (view_query.my_items)
+      {
+          view_query.parent_id = this.id;
+      }
+      this.itemService.items(view_query).subscribe(items => {
+        const location_query = new Query();
+        location_query.location = event.location;
+        this.itemService.items(location_query).subscribe(location_items => {
+          this.children = items.concat(location_items);
+        });
+      });
+    } else if (this.query) {
+      this.itemService.items(this.query).subscribe(items => {
+        const location_query = new Query();
+        location_query.location = event.location;
+        this.itemService.items(location_query).subscribe(location_items => {
+          this.children = items.concat(location_items);
+        });
+        
+      });
+    } else if (this.item && this.item!.items && this.item!.items!.length > 0) {
+      const location_query = new Query();
+      location_query.location = event.location;
+      this.itemService.items(location_query).subscribe(location_items => {
+        this.children = this.item!.items!.concat(location_items);
+      });
+    } else {
+      const location_query = new Query();
+      location_query.location = event.location;
+      this.itemService.items(location_query).subscribe(location_items => {
+        this.children = location_items;
+      });
+    }*/
   }
 }
