@@ -50,6 +50,7 @@ export class RnCalendarViewComponent extends RnViewComponent implements OnInit {
       label: '<i class="material-icons">edit</i>',
       a11yLabel: 'Edit',
       onClick: ({ event }: { event: CalendarEvent }): void => {
+        console.log('item edit click')
         this.openEditDialog(event.meta!);
       }
     },
@@ -102,7 +103,7 @@ export class RnCalendarViewComponent extends RnViewComponent implements OnInit {
     this.calendarEvents = [];
 
     if (this.view) {
-      ////console.logthis.view);
+      ////console.log(this.view);
       if(this.view.attributes) {
         if ('view' in this.view.attributes) {
           const viewType = this.view.attributes['view'];
@@ -118,7 +119,7 @@ export class RnCalendarViewComponent extends RnViewComponent implements OnInit {
     }
     if(this.item) {
       if(this.item.valid_from){
-        //console.log'has valid_from',this.item.valid_from)
+        //console.log('has valid_from',this.item.valid_from)
         if(this.item.valid_to){
           ////////console.log'has valid_to',value.valid_to)
           this.calendarEvents.push({
@@ -158,7 +159,7 @@ export class RnCalendarViewComponent extends RnViewComponent implements OnInit {
       const valid_to = this.getItemValidTo(value);
       //console.logvalue)
       if(valid_from){
-        //console.log'has valid_from',value.valid_from)
+        console.log('has valid_from',this.utcToLocal(valid_from))
         if(valid_to){
           ////////console.log'has valid_to',value.valid_to)
           this.calendarEvents.push({
@@ -204,7 +205,7 @@ export class RnCalendarViewComponent extends RnViewComponent implements OnInit {
   }
 
   onItemClick(item: any) {
-    ////////console.logitem);
+    //console.log('item click',item);
     this.onDisplay(item.meta);
   }
 
@@ -218,8 +219,9 @@ export class RnCalendarViewComponent extends RnViewComponent implements OnInit {
     //console.log"calendarclick",event.date.toISOString());
     if (this.canAddItem()) {
       let item: Item = this.item? { ... this.item} : new Item();
-      item.valid_from = event.date;//this.localToUTC(event.date);
-      item.valid_to = event.date; //this.localToUTC(event.date);
+      item.valid_from = event.date;
+      //console.log('calendar click item valid from', item.valid_from)
+      item.valid_to = event.date;
       //////console.logitem);
       this.onAdd(item);
     }
@@ -242,8 +244,11 @@ export class RnCalendarViewComponent extends RnViewComponent implements OnInit {
     newEnd,
   }: CalendarEventTimesChangedEvent): void {
     console.log(event);
-    this.itemService.update(event.meta.id, {valid_from: this.localToUTC(new Date(newStart)).toUTCString(), valid_to: this.localToUTC(new Date(newEnd!)).toUTCString()}).subscribe(item => {
-      //console.log'updated item', item);
+    this.itemService.update(event.meta.id, {
+      valid_from: newStart, 
+      valid_to: newEnd
+    }).subscribe(item => {
+      console.log('updated item', item);
       
       //event.start = newStart;
       //event.end = newEnd;

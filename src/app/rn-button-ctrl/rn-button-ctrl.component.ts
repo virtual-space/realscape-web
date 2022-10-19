@@ -149,11 +149,11 @@ export class RnButtonCtrlComponent extends RnCtrlComponent implements OnInit {
             if (result) {
 
               if ('valid_from' in result) {
-                result['valid_from'] = this.localToUTC(new Date(result['valid_from'])).toUTCString();
+                result['valid_from'] = this.localToUTC(result['valid_from']);
               }
 
               if ('valid_to' in result) {
-                result['valid_to'] = this.localToUTC(new Date(result['valid_to'])).toUTCString();
+                result['valid_to'] = this.localToUTC(result['valid_to']);
             }
 
               //console.logresult);
