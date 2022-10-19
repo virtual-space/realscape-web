@@ -50,8 +50,10 @@ export class RnCalendarViewComponent extends RnViewComponent implements OnInit {
       label: '<i class="material-icons">edit</i>',
       a11yLabel: 'Edit',
       onClick: ({ event }: { event: CalendarEvent }): void => {
-        console.log('item edit click')
-        this.openEditDialog(event.meta!);
+          //console.log('event meta valid from', event.meta.valid_from)
+          event.meta.valid_from = this.utcToLocal(event.meta.valid_from)
+          event.meta.valid_to = this.utcToLocal(event.meta.valid_to)
+          this.openEditDialog(event.meta!);
       }
     },
     {
