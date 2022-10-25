@@ -3,7 +3,7 @@
       <app-rn-list-view [items]="items" (onEvent)="onEvent" (onRefresh)="childRefresh()" [view]="view" (onItems)="childItems" (onItems)="childItems($event)"  [events]="events" fxFlexFill></app-rn-list-view>
   </div>
   <div *ngSwitchCase="'MapView'" fxFlexFill>
-    <app-rn-map-view [items]="items" [item]="item" [events]="events" [tabIndex]="tabIndex" [view]="view" (onEvent)="onEvent" (onRefresh)="childRefresh()" (onItems)="childItems($event)" fxFlexFill></app-rn-map-view>
+    <app-rn-map-view [items]="items" [item]="item" [events]="events" [tabIndex]="tabIndex" [view]="view" (onEvent)="onEvent" (onRefresh)="childRefresh()" (onItems)="childItems($event)" (onQueryChanged)="queryChangedHandler($event)" fxFlexFill></app-rn-map-view>
   </div>
   <div *ngSwitchCase="'CalendarView'" fxFlexFill>
       <app-rn-calendar-view [items]="items" [item]="item" (onEvent)="onEvent" [view]="view"   (onRefresh)="childRefresh()" fxFlexFill></app-rn-calendar-view>
@@ -40,7 +40,7 @@
   <div *ngSwitchCase="'FormView'" fxFlexFill>
     <app-rn-form-view [items]="items"  (onEvent)="onEvent" (onRefresh)="childRefresh()" [events]="events" [view]="view" (onItems)="childItems($event)" fxFlexFill></app-rn-form-view>
   </div>
-  <div *ngSwitchCase="'CardsView'" fxFlexFill>
+  <div *ngSwitchCase="'CardView'" fxFlexFill>
     <app-rn-cards-view [items]="items"  (onEvent)="onEvent" (onRefresh)="childRefresh()" [events]="events" [view]="view" (onItems)="childItems($event)" fxFlexFill></app-rn-cards-view>
   </div>
   <div *ngSwitchCase="'TreeView'" fxFlexFill>

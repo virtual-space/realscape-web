@@ -11,7 +11,10 @@
     <mat-card-content>
       <div fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="4px" *ngIf="item.type">
         <div fxLayoutAlign="center center" class="card-content-center">
-          <mat-icon mat-card-image class="logo">{{getIcon(item)}}</mat-icon>
+          <div *ngIf="hasImage()" fxFlexFill>
+            <app-rn-image-view [item]="item"></app-rn-image-view>
+          </div>
+          <div *ngIf="!hasImage()"><mat-icon mat-card-image class="logo">{{getIcon(item)}}</mat-icon></div>
         </div>
         <div class="card-text-content">
           {{item.type.name}}
@@ -31,6 +34,9 @@
           <span>Delete</span>
         </button>
       </mat-menu>
+      <div *ngIf="hasButtons()">
+        <button mat-button (click)="onQRCode()">HB</button>
+      </div>
       <button mat-button (click)="onQRCode()">QRCode</button>
       <button *ngIf="!isLink() && !isItemLink()" mat-button [routerLink]="['/items', item.id]">Open</button>
       <button *ngIf="isLink() && isItemLink()" mat-button [routerLink]="['/items', getLinkedItemId()]">Open</button>

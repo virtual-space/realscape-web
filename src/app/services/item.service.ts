@@ -266,6 +266,14 @@ export class ItemService {
     );
   }
 
+  public export(id: string): Observable<any> {
+    return this.http.get(this.getEndpoint() + '/' + id + '/export', {responseType: 'blob'});
+    /*
+    return this.http.get(this.getEndpoint() + '/' + id + '/export').pipe(
+      catchError(this.handleError('/export', []))
+    );*/
+  }
+
   public items(query: Query): Observable<[Item]> {
     const httpOptions = {
       params: this.getParams(query)
