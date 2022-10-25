@@ -132,6 +132,7 @@ export class RnCtrlComponent implements OnInit, OnChanges, ItemCallbacks {
     if ('types' in attributes) {
       const names = new Set(attributes['types']);
       const types = this.itemService.getTypes().filter(t => names.has(t.name));
+      //console.log('get  item types', names + ' - '+ types)
       return types;
     }
     if ('query' in attributes) {
@@ -139,23 +140,37 @@ export class RnCtrlComponent implements OnInit, OnChanges, ItemCallbacks {
       if ('types' in query) {
         const names = new Set(query['types']);
         const types = this.itemService.getTypes().filter(t => names.has(t.name));
+        //console.log('get  item types from query', names + ' - '+ types)
         return types;
       }
     }
     return []
   }
+    convertUTCDateToLocalDate(date: any): any {
+    var newDate = new Date(date.getTime()+date.getTimezoneOffset()*60*1000);
+    var offset = date.getTimezoneOffset() / 60;
+    var hours = date.getHours();
+    newDate.setHours(hours - offset);
 
-  utcToLocal(date: Date): Date {
-    const local_date = new Date()
-    return new Date(new Date(date).getTime() - local_date.getTimezoneOffset() * 60000);
+    return newDate;   
+}
+
+
+utcToLocal(date: Date): Date {
+  var newDate = new Date(date);
+  newDate.setMinutes(newDate.getMinutes() - newDate.getTimezoneOffset());
+  //console.log('new date',newDate)
+  return newDate;
+
+}
+
+  localToUTC(date: any): any {
+    const local_date = new Date(date).toISOString();
+    //console.log('date to UTC',local_date)
+    return local_date;
   }
 
-  localToUTC(date: Date): Date {
-    const local_date = new Date(date.getTime() + date.getTimezoneOffset() * 60000);
-    return new Date(Date.UTC(local_date.getUTCFullYear(), local_date.getUTCMonth(),
-                    local_date.getUTCDate(), local_date.getUTCHours(),
-                    local_date.getUTCMinutes(), local_date.getUTCSeconds()));
-  }
+ 
 
   buildItemInstance(instance: Instance): Item {
     const item = new Item();
@@ -528,7 +543,7 @@ export class RnCtrlComponent implements OnInit, OnChanges, ItemCallbacks {
   setValue(value: any) {
     if (this.control && this.item) {
       const control_attributes = this.collectItemAttributes(this.control, {});
-      ////////console.log'** item before', this.item);
+      //console.log('** item before', this.item);
       if ('target' in control_attributes) {
         const key = control_attributes['target'];
         ////////console.logkey);
@@ -667,6 +682,7 @@ export class RnCtrlComponent implements OnInit, OnChanges, ItemCallbacks {
     }
     if(query.valid_from) {
       result.valid_from = query.valid_from;
+      console.log('item from query',result.valid_from)
     }
     if(query.valid_to) {
       result.valid_to = query.valid_to;
@@ -694,10 +710,10 @@ export class RnCtrlComponent implements OnInit, OnChanges, ItemCallbacks {
       result.tags = item.tags;
     }
     if(item.valid_from) {
-      result.valid_from = item.valid_from;
+      result.valid_from = new Date(item.valid_from);
     }
     if(item.valid_to) {
-      result.valid_to = item.valid_to;
+      result.valid_to = new Date(item.valid_to);
     }
     if(item.status) {
       result.status = item.status;
@@ -706,7 +722,7 @@ export class RnCtrlComponent implements OnInit, OnChanges, ItemCallbacks {
   }
 
   getUpdateParams2(data: {[index: string]: any}, add_parent=false) {
-    //console.log"&&& getUpdateParams2 &&&", data, this.item);
+    //console.log("&&& getUpdateParams2 &&&", data, this.item);
     const params: {[index: string]: any} = {};
     let attrs = data['attributes'];
     if (attrs) {
@@ -754,10 +770,10 @@ export class RnCtrlComponent implements OnInit, OnChanges, ItemCallbacks {
       params['location'] = data['location'];
     }
     if ('valid_from' in data  && data['valid_from'] !== undefined) {
-      params['valid_from'] = new Date(data['valid_from']).toISOString();
+      params['valid_from'] = data['valid_from'];
     }
     if ('valid_to' in data && data['valid_to'] !== undefined) {
-      params['valid_to'] = new Date(data['valid_to']).toISOString();
+      params['valid_to'] = data['valid_to'];
     }
     if ('status' in data && data['status'] !== undefined) {
       params['status'] = data['status'];
@@ -770,7 +786,7 @@ export class RnCtrlComponent implements OnInit, OnChanges, ItemCallbacks {
   }
 
   getUpdateParams(data: {[index: string]: any}, add_parent=false) {
-    //console.log"&&& getUpdateParams &&&", data);
+    console.log("&&& getUpdateParams &&&", data);
     const params: {[index: string]: any} = {};
     let attrs = data['attributes'];
     if (attrs) {
