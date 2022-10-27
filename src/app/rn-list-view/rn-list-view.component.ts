@@ -1,9 +1,10 @@
-import { Component, Input, Output, OnInit, EventEmitter, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, Input, Output, OnInit, EventEmitter, OnChanges, SimpleChanges, ViewChild } from '@angular/core';
 import { Item, ItemService } from '../services/item.service';
 import { MatTableDataSource } from "@angular/material/table";
 import { MatDialog } from '@angular/material/dialog';
 import { RnViewComponent } from '../rn-view/rn-view.component';
 import { ItemCallbacks } from '../rn-ctrl/rn-ctrl.component';
+import { MatSort, Sort } from '@angular/material/sort';
 
 export class ListColumn {
   name?: string;
@@ -16,9 +17,24 @@ export class ListColumn {
   templateUrl: './rn-list-view.component.html',
   styleUrls: ['./rn-list-view.component.sass']
 })
-export class RnListViewComponent extends RnViewComponent implements ItemCallbacks {
+export class RnListViewComponent extends RnViewComponent implements ItemCallbacks, OnInit {
 
   dataSource = new MatTableDataSource<any>(this.items);
+
+  @ViewChild(MatSort)
+  private sort: MatSort = new MatSort;
+
+  override ngOnInit() {
+    this.dataSource.sort = this.sort;
+
+    const sortState: Sort = {
+      active: 'name', 
+      direction: 'asc'
+    };
+    this.sort.active = sortState.active;
+    this.sort.direction = sortState.direction;
+    this.sort.sortChange.emit(sortState);
+  }
   //displayedColumns: string[] = ['icon', 'name', 'tags', 'menu'];
 /*
   columns = [
