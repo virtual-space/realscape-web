@@ -1,5 +1,5 @@
 <div fxFlexFill fxLayoutAlign="center center" class="table-container" style="width: 100%;">
-    <table mat-table [dataSource]="dataSource" matSort class="item-list-table" fxFlexFill style="width: 100%;">
+    <table mat-table [dataSource]="dataSource" class="item-list-table" fxFlexFill style="width: 100%;">
   
       <!-- Icon Column -->
       <!--
@@ -70,7 +70,7 @@
       <ng-container *ngFor="let column of columns" [matColumnDef]="column.columnDef">
         <div [ngSwitch]="column.type" fxFlex>
           <ng-container *ngSwitchCase="'icon'">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header> {{column.columnDef}} </th>
+            <th mat-header-cell *matHeaderCellDef> {{column.columnDef}} </th>
             <td mat-cell *matCellDef="let element">
               <a *ngIf="!linkCheck(element) && !itemLinkCheck(element)" mat-button [href]="extractParentRelativeLink(element)"><mat-icon>{{getIcon(element)}}</mat-icon></a>
               <a *ngIf="linkCheck(element) && itemLinkCheck(element)" mat-button [routerLink]="['/items', extractLinkedItemId(element)]"><mat-icon>{{getIcon(element)}}</mat-icon></a>
@@ -78,7 +78,7 @@
             </td>
           </ng-container>
           <ng-container *ngSwitchCase="'menu'">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header> {{column.columnDef}} </th>
+            <th mat-header-cell *matHeaderCellDef> {{column.columnDef}} </th>
             <td mat-cell *matCellDef="let element">
               <button mat-button [matMenuTriggerFor]="menuMore"><mat-icon class="menu">more_vert</mat-icon></button>
               <input hidden type="file" #uploader (change)="importFile($event)"/>
@@ -100,7 +100,7 @@
             </td>
           </ng-container>
           <ng-container *ngSwitchDefault>
-            <th mat-header-cell *matHeaderCellDef mat-sort-header> {{column.header}} </th>
+            <th mat-header-cell *matHeaderCellDef> {{column.header}} </th>
               <td mat-cell *matCellDef="let element">
                 <a *ngIf="!linkCheck(element) && !itemLinkCheck(element)" mat-button [href]="extractParentRelativeLink(element)">{{extractValue(element, column.type)}}</a>
                 <a *ngIf="linkCheck(element) && itemLinkCheck(element)" mat-button [routerLink]="['/items', extractLinkedItemId(element)]">{{extractValue(element, column.type)}}</a>
