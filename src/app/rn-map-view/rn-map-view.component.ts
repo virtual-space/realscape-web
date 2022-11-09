@@ -1,4 +1,4 @@
-import { Component, ElementRef, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, ViewEncapsulation, ElementRef, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Map, NavigationControl, Marker, SymbolLayout, LngLat, Popup, LngLatBounds, LngLatBoundsLike, } from 'mapbox-gl';
 import { Subscription } from 'rxjs';
 // @ts-ignore
@@ -13,7 +13,8 @@ import { RnCardViewComponent } from '../rn-card-view/rn-card-view.component';
 @Component({
   selector: 'app-rn-map-view',
   templateUrl: './rn-map-view.component.html',
-  styleUrls: ['./rn-map-view.component.sass']
+  styleUrls: ['./rn-map-view.component.sass'],
+  encapsulation: ViewEncapsulation.None,
 })
 export class RnMapViewComponent extends RnViewComponent implements OnInit, OnDestroy {
 
@@ -511,7 +512,7 @@ export class RnMapViewComponent extends RnViewComponent implements OnInit, OnDes
               if (icon) {
                 customMarkerIcon = document.createElement('div');
                 customMarkerIcon.className = 'marker';
-                customMarkerIcon.innerHTML = `<div fxLayout='column' fxLayoutAlign='center center'><div class="material-icons">${icon}</div><div>${ip.name}</div></div>`
+                customMarkerIcon.innerHTML = `<div class='center'><i class='material-icons'>${icon} </i><span>${ip.name}</span></div>`
               }
               const m = new Marker(customMarkerIcon);
               this.markers.push(m);
@@ -580,7 +581,7 @@ export class RnMapViewComponent extends RnViewComponent implements OnInit, OnDes
                 if (icon) {
                   customMarkerIcon = document.createElement('div');
                   customMarkerIcon.className = 'marker';
-                  customMarkerIcon.innerHTML = `<div fxLayout='column' fxLayoutAlign='center center'><div class="material-icons">${icon}</div><div>${ip.name}</div></div>`
+                  customMarkerIcon.innerHTML = `<div class='center'><i class='material-icons'>${icon}</i><span>${ip.name}</span></div>`
                 }
                 const m = new Marker(customMarkerIcon);
                 this.markers.push(m);
