@@ -528,7 +528,7 @@ export class RnMapViewComponent extends RnViewComponent implements OnInit, OnDes
               if (icon) {
                 customMarkerIcon = document.createElement('div');
                 customMarkerIcon.className = 'marker';
-                customMarkerIcon.innerHTML = `<div id='markerText' class='center'><i class='material-icons'>${icon} </i><span>${ip.name}</span></div>`
+                customMarkerIcon.innerHTML = `<div class='center'><i class='material-icons'>${icon} </i><span>${ip.name}</span></div>`
               }
               const m = new Marker(customMarkerIcon);
               this.markers.push(m);
@@ -597,7 +597,7 @@ export class RnMapViewComponent extends RnViewComponent implements OnInit, OnDes
                 if (icon) {
                   customMarkerIcon = document.createElement('div');
                   customMarkerIcon.className = 'marker';
-                  customMarkerIcon.innerHTML = `<div id='markerText' class='center'><i class='material-icons'>${icon}</i><span>${ip.name}</span></div>`
+                  customMarkerIcon.innerHTML = `<div class='center'><i class='material-icons'>${icon}</i><span>${ip.name}</span></div>`
                 }
                 const m = new Marker(customMarkerIcon);
                 this.markers.push(m);

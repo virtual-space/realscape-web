@@ -3,6 +3,7 @@ import { FormControl } from '@angular/forms';
 import { MatSelectChange } from '@angular/material/select';
 import { RnCtrlComponent } from '../rn-ctrl/rn-ctrl.component';
 import { isInstanceOf, Item, Type } from '../services/item.service';
+import { OrderByPipe } from '../order-by.pipe';
 
 @Component({
   selector: 'app-rn-type-select-ctrl',
