@@ -1,5 +1,6 @@
 import { Component, ViewEncapsulation, ElementRef, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Map, NavigationControl, Marker, SymbolLayout, LngLat, Popup, LngLatBounds, LngLatBoundsLike, } from 'mapbox-gl';
+import { StylesControl } from 'mapbox-gl-controls';
 import { Subscription } from 'rxjs';
 // @ts-ignore
 import * as MapboxDraw from "mapbox-gl-draw";
@@ -29,7 +30,7 @@ export class RnMapViewComponent extends RnViewComponent implements OnInit, OnDes
   isLoaded = false;
   subscription?: Subscription;
   map?: Map;
-  style = 'mapbox://styles/mapbox/streets-v11';
+  style = 'mapbox://styles/mapbox/streets-v11?optimize=true';
   lat = 45.899977;
   lng = 6.172652;
 
@@ -138,6 +139,21 @@ export class RnMapViewComponent extends RnViewComponent implements OnInit, OnDes
         zoom: this.zoom,
         center: [this.lng, this.lat]
       });
+      this.map.addControl(new StylesControl({
+        styles: [
+          {
+            label: 'Streets',
+            styleName: 'Mapbox Streets',
+            styleUrl: 'mapbox://styles/mapbox/streets-v11?optimize=true',
+          }, {
+            label: 'Satellite',
+            styleName: 'Satellite',
+            styleUrl: 'mapbox://styles/mapbox/satellite-v9?optimize=true',
+          },
+        ],
+       //onChange: (style) => console.log(style),
+      }), 'top-left');
+
       this.map.addControl(new NavigationControl());
         this.draw = new MapboxDraw(
           {
@@ -545,7 +561,7 @@ export class RnMapViewComponent extends RnViewComponent implements OnInit, OnDes
                     }
                   }
                 });
-                console.log('adding source ', 's' + ip.id);
+                //console.log('adding source ', 's' + ip.id);
                 this.sources.push('s' + ip.id);
                 map.addLayer({
                   'id': 'l' + ip.id,
@@ -557,7 +573,7 @@ export class RnMapViewComponent extends RnViewComponent implements OnInit, OnDes
                     'fill-opacity': 0.5
                   }
                 });
-                console.log('adding layer ', 'l' + ip.id);
+                //console.log('adding layer ', 'l' + ip.id);
                 this.layers.push('l' + ip.id);
                 map.on('click', 'l' + ip.id, (e) => {
                   if (e) {
@@ -574,7 +590,7 @@ export class RnMapViewComponent extends RnViewComponent implements OnInit, OnDes
                     'line-width': 3
                   }
                 });
-                console.log('adding layer ', 'l' + ip.id + 'outline');
+                //console.log('adding layer ', 'l' + ip.id + 'outline');
                 this.layers.push('l' + ip.id + 'outline');
                 let customMarkerIcon = undefined;
                 let icon = this.getItemIcon(ip);
@@ -639,7 +655,7 @@ export class RnMapViewComponent extends RnViewComponent implements OnInit, OnDes
   }
 
   override itemsChanged(event: any) {
-    console.log('map view items changed', event, 'changing', this.markersChanging);
+    //console.log('map view items changed', event, 'changing', this.markersChanging);
     if (this.markersChanging == false) {
       //this.markersChanging = true;
       //console.log(this.markers);
