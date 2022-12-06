@@ -110,7 +110,7 @@ export class RnItemViewComponent extends RnViewComponent implements OnInit, OnCh
     const active_view = this.views[this.activeViewIndex];
     const view_query = this.getItemQuery(active_view);
     //////console.log'*** query ', this.query);
-    //////console.log'*** view_query ', view_query);
+    //console.log('*** view_query ', view_query);
     if (view_query) {
       //view_query.parent_id = this.id; 
       if (view_query.my_items)
@@ -186,14 +186,17 @@ export class RnItemViewComponent extends RnViewComponent implements OnInit, OnCh
   }
 
   onChangeTab(event: any) {
-    ////////console.logevent);
+    //console.log(event);
     this.eventsSubject.next({event: 'tab', data: {index: event.index}, item: this.item});
     this.activeViewIndex = event.index;
     const active_view = this.views[this.activeViewIndex];
     const view_query = this.getItemQuery(active_view);
-    ////////console.log'view_query ', view_query, active_view);
+    console.log('view_query ', view_query, active_view);
     if (view_query) {
-      view_query.parent_id = this.id; 
+      if (view_query.my_items)
+      {
+          view_query.parent_id = this.id;
+      }
       this.itemService.items(view_query).subscribe(items => {
         this.children = items;
       });
@@ -294,13 +297,6 @@ export class RnItemViewComponent extends RnViewComponent implements OnInit, OnCh
   override itemsChanged(items?: Item[]): void {
     ////console.log"*** item_view items_changed ***");
     //this.sessionService.activateItems(items);
-  }
-
-  onExport() {
-    this.itemService.export(this.item!.id!).subscribe(blob => {
-      const url= window.URL.createObjectURL(blob);
-      window.open(url);
-    });
   }
 
   hierarchyToggleChanged(event: any): void {

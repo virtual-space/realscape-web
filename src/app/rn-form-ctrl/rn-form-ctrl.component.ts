@@ -23,7 +23,7 @@ export class RnFormCtrlComponent extends RnCtrlComponent implements OnInit {
     
     override initialize(): void {
       ////console.logthis.types);
-      ////////console.logthis);
+      console.log(this);
       if(this.control && this.item) {
         const attrs = this.collectItemAttributes(this.control, {});
         if (attrs && 'query' in attrs) {

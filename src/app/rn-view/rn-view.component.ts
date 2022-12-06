@@ -238,7 +238,7 @@ export class RnViewComponent extends RnCtrlComponent implements OnInit, OnChange
       //console.logog('onAddItems:', item!.type)
       const target_item = item? item : new Item();
       ////console.logtarget_item);
-      this.presentForm('Add', false, null, target_item, this.view!);
+      this.presentForm('Add', false, false, null, target_item, this.view!);
       /*
       if(item) {
         const form = this.getItemForm(item, "add");

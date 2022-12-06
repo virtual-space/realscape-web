@@ -230,7 +230,7 @@ export class RnButtonCtrlComponent extends RnCtrlComponent implements OnInit {
         } else if (command === "Import") {
           //console.log'*** Import ***');
           //console.logthis.uploader);
-          this.presentForm('', true, this.uploader.nativeElement, this.item, undefined)
+          this.presentForm('', true, false, this.uploader.nativeElement, this.item, undefined)
           ////////console.log"*** delete_item ***");
         }
           else if (command === "Delete") {

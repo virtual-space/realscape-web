@@ -811,5 +811,6 @@ export class MenuItem {
   icon?: string;
   form?: string;
   import?: boolean;
+  export?: boolean;
 }
 
