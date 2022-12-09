@@ -842,7 +842,7 @@ utcToLocal(date: Date): Date {
 
   getItemQuery(item: Item): Query | undefined {
     const attributes = this.itemService.collectItemAttributes(item, {});
-    ////////console.logitem, attributes);
+    console.log(item, attributes);
     if ('query' in attributes && Object.keys(attributes['query']).length > 0) {
       let query: Query = new Query();
       ////////console.log'query1:',query);

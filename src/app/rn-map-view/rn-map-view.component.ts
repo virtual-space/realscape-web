@@ -204,11 +204,11 @@ export class RnMapViewComponent extends RnViewComponent implements OnInit, OnDes
                 const delta_lat = Math.abs(ne.lat - ne_old.lat);
                 const delta_lng = Math.abs(sw.lng - sw_old.lng);
                 if (delta_lat > 0.0001 && delta_lng > 0.0001) {
-                  this.lastBounds = bounds;
-                  const location = {type: "Polygon", coordinates: [[[ne.lng, sw.lat],[ne.lng, ne.lat],[sw.lng, ne.lat],[sw.lng,sw.lat],[ne.lng, sw.lat]]]}
-                  this.onQueryChanged.emit({location: location});
+                  //this.lastBounds = bounds;
+                  //const location = {type: "Polygon", coordinates: [[[ne.lng, sw.lat],[ne.lng, ne.lat],[sw.lng, ne.lat],[sw.lng,sw.lat],[ne.lng, sw.lat]]]}
+                  //this.onQueryChanged.emit({location: location});
                 }
-                console.log('delta lat ', delta_lat, 'delta lng ', delta_lng);
+                //console.log('delta lat ', delta_lat, 'delta lng ', delta_lng);
               } else {
                 this.lastBounds = bounds;
               }
@@ -233,11 +233,11 @@ export class RnMapViewComponent extends RnViewComponent implements OnInit, OnDes
                 const delta_lat = Math.abs(ne.lat - ne_old.lat);
                 const delta_lng = Math.abs(sw.lng - sw_old.lng);
                 if (delta_lat > 0.0001 && delta_lng > 0.0001) {
-                  this.lastBounds = bounds;
-                  const location = {type: "Polygon", coordinates: [[[ne.lng, sw.lat],[ne.lng, ne.lat],[sw.lng, ne.lat],[sw.lng,sw.lat],[ne.lng, sw.lat]]]}
-                  this.onQueryChanged.emit({location: location});
+                  //this.lastBounds = bounds;
+                  //const location = {type: "Polygon", coordinates: [[[ne.lng, sw.lat],[ne.lng, ne.lat],[sw.lng, ne.lat],[sw.lng,sw.lat],[ne.lng, sw.lat]]]}
+                  //this.onQueryChanged.emit({location: location});
                 }
-                console.log('delta lat ', delta_lat, 'delta lng ', delta_lng);
+                //console.log('delta lat ', delta_lat, 'delta lng ', delta_lng);
               } else {
                 this.lastBounds = bounds;
               }
@@ -268,7 +268,6 @@ export class RnMapViewComponent extends RnViewComponent implements OnInit, OnDes
             this.loadMarkers(this.map);
           }
         });
-
 
 
     } else {
@@ -462,29 +461,36 @@ export class RnMapViewComponent extends RnViewComponent implements OnInit, OnDes
     //view bounding box overrides the item ones
     ////////console.logthis);
     const viewBounds = this.getViewLocationBounds();
-    //////console.log'viewbounds ', viewBounds);
-    if(viewBounds !== undefined) {
+    //console.log('viewbounds ', viewBounds);
+    if(viewBounds != undefined) {
+      //console.log('viewbounds ok');
       return viewBounds;
     } else {
-      this.getItemsWithPositions().forEach(ip => {
-        //////console.logip);
-        const loc = this.getItemLocation(ip);
-        if (loc) {
-          if(loc.type === 'Point'){
-            bounds = bounds.extend(loc.coordinates);
-          } else {
-            if (loc.type === 'Polygon'){
-              loc.coordinates[0].forEach((coord:any) => {
-                bounds = bounds.extend(coord);
-              })
+      const items = this.getItemsWithPositions();
+      if(items.length > 0) {
+        items.forEach(ip => {
+          console.log(ip);
+          const loc = this.getItemLocation(ip);
+          if (loc) {
+            if(loc.type === 'Point'){
+              bounds = bounds.extend(loc.coordinates);
             } else {
-              //////console.log'Error: an item with a position is neither a point or a polygon.')
+              if (loc.type === 'Polygon'){
+                loc.coordinates[0].forEach((coord:any) => {
+                  bounds = bounds.extend(coord);
+                })
+              } else {
+                //////console.log'Error: an item with a position is neither a point or a polygon.')
+              }
             }
           }
-        }
-      });
+        });
+      } else {
+        bounds = this.map!.getBounds();
+      }
+      
       bounds = this.correctBoundingBox(bounds);
-      //////console.logbounds);
+      //console.log(bounds);
       return bounds;
     }
 
@@ -495,6 +501,7 @@ export class RnMapViewComponent extends RnViewComponent implements OnInit, OnDes
   fitMapToBounds() {
     //////console.log'fitting map to bounds');
     const bb = this.getBoundingBox();
+    console.log(bb);
     if (bb) {
       this.map?.fitBounds(bb, {duration: 0});
     }
@@ -506,14 +513,14 @@ export class RnMapViewComponent extends RnViewComponent implements OnInit, OnDes
     //console.log("[*** begin loading markers ***]")
     if(map){
       //console.log('removing markers', this.markers);
-      this.markers.forEach(m => m.remove());
-      this.markers = [];
+      //this.markers.forEach(m => m.remove());
+      //this.markers = [];
       //console.log('removing layers', this.layers);
-      this.layers.forEach(l => this.map?.removeLayer(l));
-      this.layers = [];
+      //this.layers.forEach(l => this.map?.removeLayer(l));
+      //this.layers = [];
       //console.log('removing sources', this.sources);
-      this.sources.forEach(s => this.map?.removeSource(s));
-      this.sources = [];
+      //this.sources.forEach(s => this.map?.removeSource(s));
+      //this.sources = [];
        // Instantiate LatLngBounds object
       const itemsWithPositions = this.getItemsWithPositions();
       console.log(itemsWithPositions);
@@ -655,11 +662,11 @@ export class RnMapViewComponent extends RnViewComponent implements OnInit, OnDes
   }
 
   override itemsChanged(event: any) {
-    //console.log('map view items changed', event, 'changing', this.markersChanging);
+    console.log('map view items changed', event, 'changing', this.markersChanging);
     if (this.markersChanging == false) {
       //this.markersChanging = true;
       //console.log(this.markers);
-      this.loadMarkers(this.map!,false);
+      //this.loadMarkers(this.map!,false);
       //this.markersChanging = false;
       /*
       this.sleep(100).then(() => {
