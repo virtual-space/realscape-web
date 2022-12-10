@@ -24,7 +24,7 @@ export class RnItemSelectCtrlComponent extends RnCtrlComponent implements OnInit
     @Output() selectedItemChanged = new EventEmitter<Item>();
 
     override ngOnInit(): void {
-      ////console.log'*** item select', this);
+      console.log('*** item select', this);
       if (this.item) {
         const itemQuery = this.getItemQuery(this.item);
         //////console.logthis.item);
@@ -82,9 +82,10 @@ export class RnItemSelectCtrlComponent extends RnCtrlComponent implements OnInit
             }
           });
         } else {
-          //////console.log'no item query');
+          console.log('no item query');
           if (this.control) {
             const ctrlQuery = this.getItemQuery(this.control);
+            console.log(ctrlQuery);
             if (ctrlQuery) {
               this.itemService.items(ctrlQuery).subscribe(items => {
                 this.items = items;

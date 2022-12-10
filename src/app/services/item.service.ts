@@ -213,6 +213,9 @@ export class ItemService {
       if (query.location) {
         params = params.append('location', JSON.stringify(query.location));
       }
+      if (query.children) {
+        params = params.append('children', query.children);
+      }
       if (query.types && query.types.length > 0) {
         query.types.forEach(t => {
           params = params.append('types', t);
@@ -796,6 +799,7 @@ export class Query {
   valid_to?: Date;
   status?: string;
   my_items?: boolean;
+  children?: boolean;
 }
 
 export class ItemEvent {
@@ -811,5 +815,6 @@ export class MenuItem {
   icon?: string;
   form?: string;
   import?: boolean;
+  export?: boolean;
 }
 

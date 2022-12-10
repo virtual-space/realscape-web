@@ -367,10 +367,19 @@ utcToLocal(date: Date): Date {
     return [];
   }
 
-  presentForm(formName: string, importDialog: any, uploader: any, item: Item, view?: Item) {
+  onExport(item: Item) {
+    this.itemService.export(item.id!).subscribe(blob => {
+      const url= window.URL.createObjectURL(blob);
+      window.open(url);
+    });
+  }
+
+  presentForm(formName: string, importDialog: any, exportDialog: any, uploader: any, item: Item, view?: Item) {
     ////console.logformName, item);
     if (importDialog) {
       uploader.click();
+    } else if (exportDialog) {
+      this.onExport(item);
     } else {
       const item_form = this.getItemForm(item, formName);
       if (item_form) {
@@ -833,7 +842,7 @@ utcToLocal(date: Date): Date {
 
   getItemQuery(item: Item): Query | undefined {
     const attributes = this.itemService.collectItemAttributes(item, {});
-    ////////console.logitem, attributes);
+    console.log(item, attributes);
     if ('query' in attributes && Object.keys(attributes['query']).length > 0) {
       let query: Query = new Query();
       ////////console.log'query1:',query);
