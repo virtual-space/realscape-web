@@ -564,7 +564,7 @@ export class RnMapViewComponent extends RnViewComponent implements OnInit, OnDes
                     'type': 'Feature',
                     'geometry': {
                       'type': 'Polygon',
-                      'coordinates': ip.location.coordinates
+                      'coordinates': loc.coordinates
                     }
                   }
                 });
