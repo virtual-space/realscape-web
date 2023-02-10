@@ -7,7 +7,7 @@ import { RnItemViewComponent } from './rn-item-view/rn-item-view.component';
 
 const routes: Routes = [
   { path: '', component: HomeComponent },
-  { path: 'items/:id', component: RnItemViewComponent },
+  { path: ':resource/:id', component: RnItemViewComponent },
   { path: 'callback',  component: CallbackComponent },
 ];
 

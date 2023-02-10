@@ -41,7 +41,7 @@ export class ItemService {
     return (environment['home'] || '') + '/items';
   }
 
-  protected getAccessibleEndpoint(excludePath= false) {
+  protected getAccessibleEndpoint(excludePath= false, resource='items') {
     if (this.authService.isLoggedIn()) {
       if (excludePath) {
         const p = environment['api'];
@@ -55,13 +55,14 @@ export class ItemService {
           return '';
         }
       } else {
-        return (environment['api'] || '') + '/items';
+        //console.log(resource);
+        return (environment['api'] || '') + '/' + resource;
       }
     } else {
       if (excludePath) {
         return environment['api'] || '/public/';
       } else {
-        return (environment['api'] || '') + '/public/items';
+        return (environment['api'] || '') + '/public/' + resource;
       }
     }
   }
@@ -215,6 +216,9 @@ export class ItemService {
       }
       if (query.children) {
         params = params.append('children', query.children);
+      }
+      if (query.any_level) {
+        params = params.append('any_level', query.any_level);
       }
       if (query.types && query.types.length > 0) {
         query.types.forEach(t => {
@@ -406,12 +410,13 @@ export class ItemService {
     );
   }
 
-  public getItem(id: string, hierarchy: boolean=false): Observable<Item> {
+  public getItem(id: string, hierarchy: boolean=false, resource='items'): Observable<Item> {
     let query = '/' + id;
     if (hierarchy) {
       query = query + "?hierarchy=true"
     }
-    return this.http.get<Item>(this.getAccessibleEndpoint() + query).pipe(
+    //console.log(resource);
+    return this.http.get<Item>(this.getAccessibleEndpoint(false, resource) + query).pipe(
       catchError(this.handleError('/items', []))
     );
   }
@@ -577,6 +582,13 @@ export class ItemService {
       }
     }
     return '';
+  }
+
+  public getLinkedItemResource(item: Item): string {
+    if (item.attributes && 'resource' in item.attributes) {
+      return item.attributes['resource'];
+    }
+    return 'items';
   }
 
   isInternalLink(item: Item): boolean {
@@ -800,6 +812,7 @@ export class Query {
   status?: string;
   my_items?: boolean;
   children?: boolean;
+  any_level?: boolean;
 }
 
 export class ItemEvent {

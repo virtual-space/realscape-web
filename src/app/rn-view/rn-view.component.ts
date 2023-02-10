@@ -152,7 +152,8 @@ export class RnViewComponent extends RnCtrlComponent implements OnInit, OnChange
         return '/items/' + item.parent_id + '/items/' + item.id;
       }
 */
-      return '/items/' + item.id;
+      //console.log(this.extractLinkedItemResource(item) );
+      return '/' + this.extractLinkedItemResource(item) + '/' + item.id;
     }
     return '';
   }
@@ -189,6 +190,10 @@ export class RnViewComponent extends RnCtrlComponent implements OnInit, OnChange
 
   extractLinkedItemId(item?: Item): string {
     return item? this.itemService.getLinkedItemId(item) : '';
+  }
+
+  extractLinkedItemResource(item?: Item): string {
+    return item? this.itemService.getLinkedItemResource(item) : 'items';
   }
 
   getLinkedItemId(): string {

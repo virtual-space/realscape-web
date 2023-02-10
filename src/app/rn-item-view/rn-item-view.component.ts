@@ -58,17 +58,18 @@ export class RnItemViewComponent extends RnViewComponent implements OnInit, OnCh
         this.route.paramMap.subscribe(params => {
           //////////console.logparams);
           const id = params.get('id');
+          const resource = params.get('resource');
           if(id && (!this.item || id != this.id)) {
-            this.retrieve(id, this.hierarchy);
+            this.retrieve(id, this.hierarchy, resource ? resource : 'items');
           }
         });
     }
     
   }
 
-  retrieve(id: string, hierarchy:boolean=false): void {
+  retrieve(id: string, hierarchy:boolean=false, resource:string='items'): void {
     ////////console.log'*** retrieve ', id);
-    this.itemService.getItem(id,hierarchy).subscribe(item => {
+    this.itemService.getItem(id,hierarchy, resource).subscribe(item => {
       if (item) {
         this.item = item;
         this.reloadItem(item);
