@@ -22,7 +22,7 @@ export class RnBoardViewComponent  extends RnViewComponent implements OnInit {
   column_items: {[index:string]:Item[]} = {};
 
   override ngOnInit(): void {
-    //console.log(this);
+    ////console.log(this);
     this.rebuildBoard();
   }
 
@@ -31,26 +31,26 @@ export class RnBoardViewComponent  extends RnViewComponent implements OnInit {
     
     //////console.logthis);
     let status_names = ["To Do", "In Progress", "Done", "On Hold"];
-    //console.log('**& status_names_1', status_names);
+    ////console.log('**& status_names_1', status_names);
     if (this.view) {
       const attrs = this.collectItemAttributes(this.view, {});
       if(attrs && 'values' in attrs) {
         status_names = attrs['values'];
       }
     }
-    //console.log('**& status_names_2', status_names);
+    ////console.log('**& status_names_2', status_names);
     let initial_status = status_names[0];
     
     status_names.forEach((ii: string) => {
       statuses.add(ii)
     });
-    //console.log('**& statuses_1', statuses);
+    ////console.log('**& statuses_1', statuses);
     if (this.item && this.item.attributes && this.item.attributes['values']) {
       this.item.attributes['values'].forEach((ii: string) => {
         statuses.add(ii)
       })
     }
-    //console.log('**& statuses_2', statuses);
+    ////console.log('**& statuses_2', statuses);
     this.items.forEach(i => {
       if (i.attributes && i.attributes['values']) {
         i.attributes['values'].forEach((ii: string) => {
@@ -58,7 +58,7 @@ export class RnBoardViewComponent  extends RnViewComponent implements OnInit {
         })
       }
     });
-    //console.log('**& statuses_3', statuses);
+    ////console.log('**& statuses_3', statuses);
     ////////console.log'status',statuses);
     this.columns = [];
     this.column_items = {};

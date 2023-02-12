@@ -26,7 +26,7 @@ export class RnListViewComponent extends RnViewComponent implements ItemCallback
 
   /*
   override ngOnInit() {
-    console.log('*************************************** hello from list view on init!!!');
+    //console.log('*************************************** hello from list view on init!!!');
     this.dataSource.sort = this.sort;
 
     const sortState: Sort = {
@@ -69,7 +69,7 @@ export class RnListViewComponent extends RnViewComponent implements ItemCallback
     this.sort.sortChange.emit(sortState);
 
     this.dataSource.data = this.items;
-    //console.log('*************************************** hello from list view initialized!!!');
+    ////console.log('*************************************** hello from list view initialized!!!');
     ////console.log'list-view init item:', this.item);
     ////console.log'list-view init control:', this.control);
     ////console.log'list-view init view:', this.view);
@@ -126,7 +126,7 @@ export class RnListViewComponent extends RnViewComponent implements ItemCallback
   }
 
   getColumns(): ListColumn[] {
-    //console.log(this.view)
+    ////console.log(this.view)
     if (this.view && this.view.attributes) {
         if ('columns' in this.view.attributes) {
           return this.view.attributes['columns'];

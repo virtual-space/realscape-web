@@ -111,7 +111,7 @@ export class RnItemViewComponent extends RnViewComponent implements OnInit, OnCh
     const active_view = this.views[this.activeViewIndex];
     const view_query = this.getItemQuery(active_view);
     //////console.log'*** query ', this.query);
-    //console.log('*** view_query ', view_query);
+    ////console.log('*** view_query ', view_query);
     if (view_query) {
       //view_query.parent_id = this.id; 
       if (view_query.my_items)
@@ -187,12 +187,12 @@ export class RnItemViewComponent extends RnViewComponent implements OnInit, OnCh
   }
 
   onChangeTab(event: any) {
-    //console.log(event);
+    ////console.log(event);
     this.eventsSubject.next({event: 'tab', data: {index: event.index}, item: this.item});
     this.activeViewIndex = event.index;
     const active_view = this.views[this.activeViewIndex];
     const view_query = this.getItemQuery(active_view);
-    console.log('view_query ', view_query, active_view);
+    //console.log('view_query ', view_query, active_view);
     if (view_query) {
       if (view_query.my_items)
       {
@@ -311,12 +311,12 @@ export class RnItemViewComponent extends RnViewComponent implements OnInit, OnCh
 
   override queryChangedHandler(event: any) {
     /*
-    console.log('*** item view query change handler ***', event);
-    console.log(this);
+    //console.log('*** item view query change handler ***', event);
+    //console.log(this);
     const active_view = this.views[this.activeViewIndex];
     const view_query = this.getItemQuery(active_view);
-    console.log(view_query);
-    console.log(this.query);
+    //console.log(view_query);
+    //console.log(this.query);
     if (view_query) {
       if (view_query.my_items)
       {

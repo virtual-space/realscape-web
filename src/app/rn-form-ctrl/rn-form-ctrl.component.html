@@ -160,6 +160,19 @@
                                                         (onEvent)="onEvent">
                                     </app-rn-tabs-ctrl>
                                 </div>
+                                <div *ngSwitchCase="'HiddenCtrl'" [fxFlex]="getControlAttribute('flex', '1 1 100%', child)"
+                                                                [fxFlexOffset]="getControlAttribute('offset', '1%', child)"
+                                                                [fxFlexAlign]="getControlAttribute('align', 'center', child)">
+                                    <app-rn-hidden-ctrl   [item]="item" 
+                                                        [control]="child"
+                                                        [events]="eventsSubject.asObservable()"
+                                                        [formGroup]="formGroup" 
+                                                        [types]="types" 
+                                                        (onRefresh)="childRefresh()"
+                                                        [fieldName]="getControlAttribute('field_name', '', child)"
+                                                        (onEvent)="onEvent">
+                                    </app-rn-hidden-ctrl>
+                                </div>
                                 <div *ngSwitchDefault>
                                     <div *ngIf="isSteps(child)"  fxFlexFill>
                                         <app-rn-steps-ctrl  [item]="item"  [formItem]="formItem" [control]="child" [types]="types" [formGroup]="formGroup"  [events]="eventsSubject.asObservable()" 

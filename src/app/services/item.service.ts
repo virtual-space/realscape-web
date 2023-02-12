@@ -55,7 +55,7 @@ export class ItemService {
           return '';
         }
       } else {
-        //console.log(resource);
+        ////console.log(resource);
         return (environment['api'] || '') + '/' + resource;
       }
     } else {
@@ -427,7 +427,7 @@ export class ItemService {
     if (hierarchy) {
       query = query + "?hierarchy=true"
     }
-    //console.log(resource);
+    ////console.log(resource);
     return this.http.get<Item>(this.getAccessibleEndpoint(false, resource) + query).pipe(
       catchError(this.handleError('/items', []))
     );

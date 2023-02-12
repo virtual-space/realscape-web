@@ -152,7 +152,7 @@ export class RnViewComponent extends RnCtrlComponent implements OnInit, OnChange
         return '/items/' + item.parent_id + '/items/' + item.id;
       }
 */
-      //console.log(this.extractLinkedItemResource(item) );
+      ////console.log(this.extractLinkedItemResource(item) );
       return '/' + this.extractLinkedItemResource(item) + '/' + item.id;
     }
     return '';
@@ -242,7 +242,7 @@ export class RnViewComponent extends RnCtrlComponent implements OnInit, OnChange
       //console.logog('onAdd:',item);
       //console.logog('onAddItems:', item!.type)
       const target_item = item? item : new Item();
-      ////console.logtarget_item);
+      //console.log(target_item);
       this.presentForm('Add', false, false, null, target_item, this.view!);
       /*
       if(item) {
@@ -723,7 +723,7 @@ export class RnViewComponent extends RnCtrlComponent implements OnInit, OnChange
   }
 
   override itemsChanged(items?: Item[]): void {
-    //console.log('*************************************** hello from view items changed!!! ', items);
+    ////console.log('*************************************** hello from view items changed!!! ', items);
   }
 
   override ngOnChanges(changes: SimpleChanges): void {
@@ -737,7 +737,7 @@ export class RnViewComponent extends RnCtrlComponent implements OnInit, OnChange
   }
 
   queryChangedHandler(event: any) {
-    //console.log(event);
+    ////console.log(event);
     if (this.onQueryChanged) {
       this.onQueryChanged.emit(event);
     }

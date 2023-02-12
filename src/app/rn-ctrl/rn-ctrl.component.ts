@@ -132,7 +132,7 @@ export class RnCtrlComponent implements OnInit, OnChanges, ItemCallbacks {
     if ('types' in attributes) {
       const names = new Set(attributes['types']);
       const types = this.itemService.getTypes().filter(t => names.has(t.name));
-      //console.log('get  item types', names + ' - '+ types)
+      ////console.log('get  item types', names + ' - '+ types)
       return types;
     }
     if ('query' in attributes) {
@@ -140,7 +140,7 @@ export class RnCtrlComponent implements OnInit, OnChanges, ItemCallbacks {
       if ('types' in query) {
         const names = new Set(query['types']);
         const types = this.itemService.getTypes().filter(t => names.has(t.name));
-        //console.log('get  item types from query', names + ' - '+ types)
+        ////console.log('get  item types from query', names + ' - '+ types)
         return types;
       }
     }
@@ -159,14 +159,14 @@ export class RnCtrlComponent implements OnInit, OnChanges, ItemCallbacks {
 utcToLocal(date: Date): Date {
   var newDate = new Date(date);
   newDate.setMinutes(newDate.getMinutes() - newDate.getTimezoneOffset());
-  //console.log('new date',newDate)
+  ////console.log('new date',newDate)
   return newDate;
 
 }
 
   localToUTC(date: any): any {
     const local_date = new Date(date).toISOString();
-    //console.log('date to UTC',local_date)
+    ////console.log('date to UTC',local_date)
     return local_date;
   }
 
@@ -324,7 +324,7 @@ utcToLocal(date: Date): Date {
   getControlType(type: Type): string {
     ////////console.logtype);
     if (type.name && type.name.endsWith('Ctrl')) {
-      //////////console.log'found control type ', type.name);
+      ////console.log('found control type ', type.name);
       return type.name;
     }
     if (type && type.base) {
@@ -375,7 +375,7 @@ utcToLocal(date: Date): Date {
   }
 
   presentForm(formName: string, importDialog: any, exportDialog: any, uploader: any, item: Item, view?: Item) {
-    ////console.logformName, item);
+    //console.log(formName, item);
     if (importDialog) {
       uploader.click();
     } else if (exportDialog) {
@@ -400,6 +400,7 @@ utcToLocal(date: Date): Date {
         });
       } else {
         const forms = this.itemService.getForms();
+        //console.log(formName, item);
         //////console.logforms);
         if (forms) {
           const form = forms.filter(d => d.name === formName);
@@ -479,13 +480,14 @@ utcToLocal(date: Date): Date {
 
   getValue() {
     if (this.control) {
+      console.log('** get value for ', this.control);
       const control_attributes = this.collectItemAttributes(this.control, {});
       if ('value' in control_attributes) {
         return control_attributes['value'];
       }
 
       if (this.item) {
-        ////////console.logthis.item);
+        console.log(this.item);
         const item_attributes = this.collectItemAttributes(this.item, {});
         if (item_attributes && control_attributes) {
 
@@ -530,7 +532,8 @@ utcToLocal(date: Date): Date {
                   } else if (key === "status") {
                     return this.item.status;
                   } else if (key === "parent_id") {
-                    return this.item.parent_id;
+                    console.log('*** parent_id', this.item.id);
+                    return this.item.id;
                   }
               }
             }
@@ -552,7 +555,7 @@ utcToLocal(date: Date): Date {
   setValue(value: any) {
     if (this.control && this.item) {
       const control_attributes = this.collectItemAttributes(this.control, {});
-      //console.log('** item before', this.item);
+      ////console.log('** item before', this.item);
       if ('target' in control_attributes) {
         const key = control_attributes['target'];
         ////////console.logkey);
@@ -691,7 +694,7 @@ utcToLocal(date: Date): Date {
     }
     if(query.valid_from) {
       result.valid_from = query.valid_from;
-      console.log('item from query',result.valid_from)
+      //console.log('item from query',result.valid_from)
     }
     if(query.valid_to) {
       result.valid_to = query.valid_to;
@@ -731,7 +734,7 @@ utcToLocal(date: Date): Date {
   }
 
   getUpdateParams2(data: {[index: string]: any}, add_parent=false) {
-    //console.log("&&& getUpdateParams2 &&&", data, this.item);
+    ////console.log("&&& getUpdateParams2 &&&", data, this.item);
     const params: {[index: string]: any} = {};
     let attrs = data['attributes'];
     if (attrs) {
@@ -795,7 +798,7 @@ utcToLocal(date: Date): Date {
   }
 
   getUpdateParams(data: {[index: string]: any}, add_parent=false) {
-    console.log("&&& getUpdateParams &&&", data);
+    //console.log("&&& getUpdateParams &&&", data);
     const params: {[index: string]: any} = {};
     let attrs = data['attributes'];
     if (attrs) {
@@ -842,7 +845,7 @@ utcToLocal(date: Date): Date {
 
   getItemQuery(item: Item): Query | undefined {
     const attributes = this.itemService.collectItemAttributes(item, {});
-    console.log(item, attributes);
+    //console.log(item, attributes);
     if ('query' in attributes && Object.keys(attributes['query']).length > 0) {
       let query: Query = new Query();
       ////////console.log'query1:',query);

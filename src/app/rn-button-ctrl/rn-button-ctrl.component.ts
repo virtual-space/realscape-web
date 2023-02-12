@@ -21,9 +21,9 @@ export class RnButtonCtrlComponent extends RnCtrlComponent implements OnInit {
     if (this.item && this.formGroup) {
       let target_id = this.item!.id!;
       let result = this.formGroup.value;
-      console.log(this.item);
-      // console.log(result);
-      //console.log(this.formItem);
+      //console.log(this.item);
+      // //console.log(result);
+      ////console.log(this.formItem);
       if (this.formItem && result) {
 
         if (this.formItem.attributes) {
@@ -47,9 +47,9 @@ export class RnButtonCtrlComponent extends RnCtrlComponent implements OnInit {
               result.location = JSON.stringify(this.item.location);
           }
         }
-        console.log(this.item);
+        //console.log(this.item);
         //////console.logthis.control);
-        console.log(this.formItem);
+        //console.log(this.formItem);
         let attrs = this.collectItemAttributes(this.item, {});
 
         if (this.formItem) {
@@ -89,7 +89,7 @@ export class RnButtonCtrlComponent extends RnCtrlComponent implements OnInit {
           //const i = Object.values(items);
           ////console.log'invoked items', JSON.stringify(items));
           //this.sessionService.activateItems(items);
-          console.log('refreshing item');
+          //console.log('refreshing item');
           this.sessionService.refresh();
           
         });
@@ -100,12 +100,12 @@ export class RnButtonCtrlComponent extends RnCtrlComponent implements OnInit {
   }
 
   shouldClose() {
-    //console.log('should close');
+    ////console.log('should close');
     if (this.control) {
-      //console.log('has control', this.control);
+      ////console.log('has control', this.control);
       const attrs = this.collectItemAttributes(this.control, {});
       if ('close' in attrs) {
-        //console.log('has attrs');
+        ////console.log('has attrs');
         return attrs['close'].toLowerCase() === 'true';
       }
     }

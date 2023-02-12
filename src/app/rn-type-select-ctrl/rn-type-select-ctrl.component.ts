@@ -25,7 +25,7 @@ export class RnTypeSelectCtrlComponent  extends RnCtrlComponent implements OnIni
   @Output() initialTypeAssigned = new EventEmitter<Type>();
 
   override ngOnInit(): void {
-    console.log("*** type select on init ***");
+    //console.log("*** type select on init ***");
     const all_types: Type[] = this.itemService.getTypes();
     const all_creatable_types = all_types.filter(t => this.collectTypeAttributes(t, {})['creatable'] !== 'false');
     if (this.types.length === 0) {
@@ -97,7 +97,7 @@ export class RnTypeSelectCtrlComponent  extends RnCtrlComponent implements OnIni
     
     const icon = this.getTypeIcon(t);
     if (t && t.name && t.id) {
-      console.log('*** activating type:', t.name);
+      //console.log('*** activating type:', t.name);
       
       //this.activeType = t;
       this.selectedIcon = icon;
@@ -142,7 +142,7 @@ export class RnTypeSelectCtrlComponent  extends RnCtrlComponent implements OnIni
   }
 
   ngAfterViewInit(): void {
-    console.log("*** type select after view init ***");
+    //console.log("*** type select after view init ***");
     
     /*
     if (this.item) {
@@ -159,7 +159,7 @@ export class RnTypeSelectCtrlComponent  extends RnCtrlComponent implements OnIni
       this.initializing = false;
       if (this.initialTypeAssigned) {
         ////console.logog("*** type select control emitting onType:",t);
-        //console.log(this.onType);
+        ////console.log(this.onType);
         this.initialTypeAssigned.emit(this.activeType);
       }
     }
