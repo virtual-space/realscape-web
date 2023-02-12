@@ -23,17 +23,17 @@ export class ItemService {
 
   protected getInvokePath(endpoint: string) {
     if (this.authService.isLoggedIn()) {
-      return (environment['api'] || '') + '/endpoints/' + endpoint + '/invoke';
+      return (environment['api'] || '') + '/' + endpoint;
     } else {
-      return (environment['api'] || '') + '/public/endpoints/' + endpoint + '/invoke';
+      return (environment['api'] || '') + '/public/' + endpoint;
     }
   }
 
   protected getPostFilePath(endpoint: string) {
     if (this.authService.isLoggedIn()) {
-      return (environment['api'] || '') + '/endpoints/' + endpoint + '/invoke';
+      return (environment['api'] || '') + '/' + endpoint;
     } else {
-      return (environment['api'] || '') + '/public/endpoints/' + endpoint + '/invoke';
+      return (environment['api'] || '') + '/public/' + endpoint;
     }
   }
 
@@ -98,6 +98,18 @@ export class ItemService {
     return this.http.delete(this.getEndpoint() + '/' + id).pipe(
       catchError(this.handleError('/items', []))
     );
+  }
+
+  public deleteItem(item: Item): Observable<Item> {
+    if (item.attributes && 'resource' in item.attributes) {
+      return this.http.delete(this.getAccessibleEndpoint(false, item.attributes['resource']) + '/' + item.id).pipe(
+        catchError(this.handleError('/items', []))
+      );
+    } else {
+      return this.http.delete(this.getEndpoint() + '/' + item.id).pipe(
+        catchError(this.handleError('/items', []))
+      );
+    }
   }
   /*
   public create(id: string, params: any): Observable<Item> {
@@ -494,6 +506,8 @@ export class ItemService {
     if (type ) {
       if (type.icon) {
         return type.icon;
+      } else if (type.attributes && 'icon' in type.attributes) {
+        return type.attributes['icon'];
       } else if (type.base) {
         return this.getTypeIcon(type.base);
       }

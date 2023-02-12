@@ -665,7 +665,7 @@ export class RnViewComponent extends RnCtrlComponent implements OnInit, OnChange
         ////console.logog(result);
         if(result) {
           this.uploading = true;
-            this.itemService.delete(item.id!).subscribe(res => {
+            this.itemService.deleteItem(item).subscribe(res => {
               if(this.onRefresh) {
                 this.onRefresh.emit();
               }

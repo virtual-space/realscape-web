@@ -25,9 +25,9 @@ export class RnTypeSelectCtrlComponent  extends RnCtrlComponent implements OnIni
   @Output() initialTypeAssigned = new EventEmitter<Type>();
 
   override ngOnInit(): void {
-    ////console.logog("*** type select on init ***");
+    console.log("*** type select on init ***");
     const all_types: Type[] = this.itemService.getTypes();
-    const all_creatable_types = all_types.filter(t => this.collectTypeAttributes(t, {})['creatable'] === 'true');
+    const all_creatable_types = all_types.filter(t => this.collectTypeAttributes(t, {})['creatable'] !== 'false');
     if (this.types.length === 0) {
       if(all_types) {
         let attributes: {[index:string]:any} = {};
@@ -86,16 +86,20 @@ export class RnTypeSelectCtrlComponent  extends RnCtrlComponent implements OnIni
       this.types = includedTypes;
     }
     
+    //this.activateType(this.types[0]);
+    /*
     if (!this.activeType && this.types.length > 0) {
       this.activeType = this.types[0];
-    }
+    }*/
   }
 
   activateType(t: Type) {
+    
     const icon = this.getTypeIcon(t);
     if (t && t.name && t.id) {
-      ////console.logog('*** activating type:', t.name);
-      this.activeType = t;
+      console.log('*** activating type:', t.name);
+      
+      //this.activeType = t;
       this.selectedIcon = icon;
       this.selectedName = t.name;
       this.selectedId = t.id;
@@ -138,6 +142,8 @@ export class RnTypeSelectCtrlComponent  extends RnCtrlComponent implements OnIni
   }
 
   ngAfterViewInit(): void {
+    console.log("*** type select after view init ***");
+    
     /*
     if (this.item) {
       if (this.item.type) {
@@ -147,12 +153,13 @@ export class RnTypeSelectCtrlComponent  extends RnCtrlComponent implements OnIni
       }
     }*/
     ////console.logog('*** after_View_init at:',this.activeType);
+    
     if (this.activeType) {
       this.activateType(this.activeType);
       this.initializing = false;
       if (this.initialTypeAssigned) {
         ////console.logog("*** type select control emitting onType:",t);
-        ////console.logog(this.onType);
+        //console.log(this.onType);
         this.initialTypeAssigned.emit(this.activeType);
       }
     }
