@@ -31,6 +31,8 @@ export class RnItemViewComponent extends RnViewComponent implements OnInit, OnCh
   selectedView = new FormControl(0);
   @Input() editable = false;
 
+  resource = 'items';
+
   override ngOnInit(): void {
     this.formGroup = new FormGroup({});
     //////////console.log'item-view init ', this.item);
@@ -58,9 +60,12 @@ export class RnItemViewComponent extends RnViewComponent implements OnInit, OnCh
         this.route.paramMap.subscribe(params => {
           //////////console.logparams);
           const id = params.get('id');
-          const resource = params.get('resource');
+          const res = params.get('resource');
+          if (res) {
+            this.resource = res;
+          }
           if(id && (!this.item || id != this.id)) {
-            this.retrieve(id, this.hierarchy, resource ? resource : 'items');
+            this.retrieve(id, this.hierarchy, this.resource);
           }
         });
     }
@@ -68,7 +73,7 @@ export class RnItemViewComponent extends RnViewComponent implements OnInit, OnCh
   }
 
   retrieve(id: string, hierarchy:boolean=false, resource:string='items'): void {
-    ////////console.log'*** retrieve ', id);
+    console.log('*** retrieve ', id, resource);
     this.itemService.getItem(id,hierarchy, resource).subscribe(item => {
       if (item) {
         this.item = item;
@@ -78,9 +83,9 @@ export class RnItemViewComponent extends RnViewComponent implements OnInit, OnCh
   }
 
   refreshView(): void {
-    //////////console.log'*** refreshView ***');
+    console.log('*** refreshView ***');
     if (this.id) {
-      this.retrieve(this.id, this.hierarchy);
+      this.retrieve(this.id, this.hierarchy, this.resource);
     } else if(this.item) {
       this.reloadItem(this.item);
     }

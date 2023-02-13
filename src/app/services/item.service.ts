@@ -584,6 +584,9 @@ export class ItemService {
 
   public getLinkedItemId(item: Item): string {
     const base = this.getHomeEndpoint();
+    if(itemIsInstanceOf(item, 'Link') && item.linked_item_id) {
+      return item.linked_item_id;
+    }
     if(itemIsInstanceOf(item, 'Link') && item.linked_item) {
       return this.getLinkedItemId(item.linked_item);
     }
@@ -600,13 +603,17 @@ export class ItemService {
 
   public getLinkedItemResource(item: Item): string {
     if (item.attributes && 'resource' in item.attributes) {
-      return item.attributes['resource'];
+      if (item.type && item.type.name !== 'Link')
+        return item.attributes['resource'];
     }
     return 'items';
   }
 
   isInternalLink(item: Item): boolean {
     const base = this.getHomeEndpoint();
+    if(itemIsInstanceOf(item, 'Link') && item.linked_item_id) {
+      return true;
+    }
     if(itemIsInstanceOf(item, 'Link') && item.linked_item) {
       return this.isInternalLink(item.linked_item);
     }
