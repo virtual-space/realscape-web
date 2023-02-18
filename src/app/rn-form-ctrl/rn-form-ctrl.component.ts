@@ -179,7 +179,7 @@ export class RnFormCtrlComponent extends RnCtrlComponent implements OnInit {
           }
           //console.log("formctrl ctrls:",ctrls);
         }
-        //console.log(ctrls);
+        console.log(ctrls);
         return ctrls;
       }
       return ctrls;

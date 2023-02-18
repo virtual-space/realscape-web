@@ -1,0 +1,14 @@
+<div class="code-container" *ngIf="item && item.attributes" fxFlexFill>
+    <mat-toolbar>
+      <span>{{item.name}} code</span>
+      <span class="example-spacer"></span>
+      <button mat-icon-button class="example-icon favorite-icon" aria-label="Example icon-button with heart icon">
+        <mat-icon>save</mat-icon>
+      </button>
+    </mat-toolbar>
+    <ngx-codemirror
+      [(ngModel)]="item.attributes['code']"
+      [options]="getCodemirrorOptions(item)"
+      [height]="'100%'"
+    ></ngx-codemirror>
+</div>

@@ -422,10 +422,10 @@ export class ItemService {
     );
   }
 
-  public getItem(id: string, hierarchy: boolean=false, resource='items'): Observable<Item> {
+  public getItem(id: string, edit: boolean=false, resource='items'): Observable<Item> {
     let query = '/' + id;
-    if (hierarchy) {
-      query = query + "?hierarchy=true"
+    if (edit) {
+      query = query + "?edit=true"
     }
     ////console.log(resource);
     return this.http.get<Item>(this.getAccessibleEndpoint(false, resource) + query).pipe(

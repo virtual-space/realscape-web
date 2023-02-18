@@ -26,11 +26,22 @@ export class RnButtonCtrlComponent extends RnCtrlComponent implements OnInit {
       ////console.log(this.formItem);
       if (this.formItem && result) {
 
-        if (this.formItem.attributes) {
-          if (!('type' in result) && this.formItem.attributes && 'type' in this.formItem.attributes) {
-            result['type'] = this.formItem.attributes['type'];
+        if (!('type' in result)) {
+          if (this.formItem.attributes) {
+            if (typeof this.formItem.attributes['type'] === 'string') {
+              result['type'] = this.formItem.attributes['type'];
+            } else {
+              result['type'] = this.formItem.attributes['type']['name'];
+            }
+          } else if (this.item.attributes && 'type' in this.item.attributes!) {
+            if (typeof this.item.attributes['type'] === 'string') {
+              result['type'] = this.item.attributes['type'];
+            } else {
+              result['type'] = this.item.attributes['type']['name'];
+            }
           }
         }
+      
         
 
         if ('valid_from' in result) {
@@ -59,12 +70,6 @@ export class RnButtonCtrlComponent extends RnCtrlComponent implements OnInit {
         }
         //////console.logattrs);
         //result = this.getUpdateParams2(this.formGroup!.value,false);
-        result = Object.assign(this.formGroup!.value, {});
-        if (!('type' in result)) {
-          if ('type' in this.item.attributes!) {
-            result['type'] = this.item.attributes!['type'];
-          }
-        }
 
         let includeParent = true;
         let includeId = false;

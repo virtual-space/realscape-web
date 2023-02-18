@@ -211,10 +211,19 @@ utcToLocal(date: Date): Date {
   }
 
   getItemControls(item: Item): Item[] {
+    
+    let ctrls: Item[] = [];
+
+    if (item.items) {
+      console.log(item.items);
+      ctrls = ctrls.concat(item.items.filter(c => itemIsInstanceOf(c, "Ctrl")));
+    }
+
     const attributes = this.itemService.collectItemAttributes(item, {});
     ////////console.logattributes);
+    
     if ('controls' in attributes) {
-      const ctrls = attributes['controls'].map((v:any) => {
+      ctrls = ctrls.concat(attributes['controls'].map((v:any) => {
         let item: Item = new Item();
         const type = this.itemService.getTypes().find(t => t.name === v['type']);
         if (type) {
@@ -222,11 +231,11 @@ utcToLocal(date: Date): Date {
           //////////console.log'parsing_ctrl',v, type, item);
         }
         return item;
-      });
+      }));
       ////////console.logctrls);
-      return ctrls;
     }
-    return []
+    console.log(ctrls);
+    return ctrls;
   }
 
   getItemFormControls(item: Item, form_name: string): Item[] {

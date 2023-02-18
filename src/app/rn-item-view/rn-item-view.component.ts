@@ -24,7 +24,7 @@ export class RnItemViewComponent extends RnViewComponent implements OnInit, OnCh
   @Input() allowAddingViews = true;
   @Input() allowEditingViews = true;
 
-  public hierarchy = false;
+  public hierarchy = true;
 
   eventsSubject: Subject<ItemEvent> = new Subject<ItemEvent>();
 
@@ -72,9 +72,9 @@ export class RnItemViewComponent extends RnViewComponent implements OnInit, OnCh
     
   }
 
-  retrieve(id: string, hierarchy:boolean=false, resource:string='items'): void {
+  retrieve(id: string, edit:boolean=false, resource:string='items'): void {
     console.log('*** retrieve ', id, resource);
-    this.itemService.getItem(id,hierarchy, resource).subscribe(item => {
+    this.itemService.getItem(id, edit, resource).subscribe(item => {
       if (item) {
         this.item = item;
         this.reloadItem(item);
