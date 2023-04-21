@@ -29,7 +29,7 @@
               </div>
               
               <mat-menu #menuMore="matMenu" xPosition="before">
-                  <button *ngFor="let menuItem of getItemMenuItems(item!)" mat-menu-item (click)="presentForm(menuItem.form!, menuItem.import, uploader, item!, getActiveView())">
+                  <button *ngFor="let menuItem of getItemMenuItems(item!)" mat-menu-item (click)="presentForm(menuItem.form!, menuItem.import, menuItem.export, uploader, item!, getActiveView())">
                     <mat-icon>{{menuItem.icon}}</mat-icon>
                     <span>{{menuItem.name}}</span>
                   </button>
@@ -88,10 +88,6 @@
                   <button mat-menu-item  (click)="onQRCode()">
                     <mat-icon>qr_code</mat-icon>
                     <span>QRCode</span>
-                  </button>
-                  <button mat-menu-item  (click)="onExport()">
-                    <mat-icon>file_download</mat-icon>
-                    <span>Download</span>
                   </button>
                   <button mat-menu-item (click)="onRefreshClick()">
                     <mat-icon>refresh</mat-icon>
@@ -158,7 +154,7 @@
           <div *ngSwitchCase="'Form'" fxFlexFill>
             <app-rn-form-ctrl [controls]="children" [item]="item" [control]="item" (onEvent)="onItemEvent($event)" (onRefresh)="refreshView()"   (onItems)="refreshItems($event)" [events]="eventsSubject.asObservable()"></app-rn-form-ctrl>
           </div>
-          <div *ngSwitchDefault fxFlexFill>{{item!.type!.name!}} {{views.length}}
+          <div *ngSwitchDefault fxFlexFill>
             <div fxFlexFill *ngIf="children.length > 0">
               <app-rn-list-view [items]="children"  (onEvent)="onItemEvent($event)" (onRefresh)="refreshView()"   (onItems)="refreshItems($event)" [events]="eventsSubject.asObservable()"></app-rn-list-view>
             </div>

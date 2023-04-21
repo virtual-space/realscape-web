@@ -1,5 +1,6 @@
-import { Component, ElementRef, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, ViewEncapsulation, ElementRef, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Map, NavigationControl, Marker, SymbolLayout, LngLat, Popup, LngLatBounds, LngLatBoundsLike, } from 'mapbox-gl';
+import { StylesControl } from 'mapbox-gl-controls';
 import { Subscription } from 'rxjs';
 // @ts-ignore
 import * as MapboxDraw from "mapbox-gl-draw";
@@ -13,7 +14,8 @@ import { RnCardViewComponent } from '../rn-card-view/rn-card-view.component';
 @Component({
   selector: 'app-rn-map-view',
   templateUrl: './rn-map-view.component.html',
-  styleUrls: ['./rn-map-view.component.sass']
+  styleUrls: ['./rn-map-view.component.sass'],
+  encapsulation: ViewEncapsulation.None,
 })
 export class RnMapViewComponent extends RnViewComponent implements OnInit, OnDestroy {
 
@@ -28,7 +30,7 @@ export class RnMapViewComponent extends RnViewComponent implements OnInit, OnDes
   isLoaded = false;
   subscription?: Subscription;
   map?: Map;
-  style = 'mapbox://styles/mapbox/streets-v11';
+  style = 'mapbox://styles/mapbox/streets-v11?optimize=true';
   lat = 45.899977;
   lng = 6.172652;
 
@@ -137,6 +139,21 @@ export class RnMapViewComponent extends RnViewComponent implements OnInit, OnDes
         zoom: this.zoom,
         center: [this.lng, this.lat]
       });
+      this.map.addControl(new StylesControl({
+        styles: [
+          {
+            label: 'Streets',
+            styleName: 'Mapbox Streets',
+            styleUrl: 'mapbox://styles/mapbox/streets-v11?optimize=true',
+          }, {
+            label: 'Satellite',
+            styleName: 'Satellite',
+            styleUrl: 'mapbox://styles/mapbox/satellite-v9?optimize=true',
+          },
+        ],
+       //onChange: (style) => //console.log(style),
+      }), 'top-left');
+
       this.map.addControl(new NavigationControl());
         this.draw = new MapboxDraw(
           {
@@ -169,12 +186,12 @@ export class RnMapViewComponent extends RnViewComponent implements OnInit, OnDes
         });
 
         this.map.on('boxzoomend', event => {
-          console.log('A boxzoomend event occurred.', event);
+          //console.log('A boxzoomend event occurred.', event);
         });
 
         this.map.on('dragend', event => {
-          //console.log('A dragend event occurred.', event);
-          //console.log(this.map?.getBounds());
+          ////console.log('A dragend event occurred.', event);
+          ////console.log(this.map?.getBounds());
           if (this.onQueryChanged) {
             if (this.map) {
               const bounds = this.map.getBounds();
@@ -187,11 +204,11 @@ export class RnMapViewComponent extends RnViewComponent implements OnInit, OnDes
                 const delta_lat = Math.abs(ne.lat - ne_old.lat);
                 const delta_lng = Math.abs(sw.lng - sw_old.lng);
                 if (delta_lat > 0.0001 && delta_lng > 0.0001) {
-                  this.lastBounds = bounds;
-                  const location = {type: "Polygon", coordinates: [[[ne.lng, sw.lat],[ne.lng, ne.lat],[sw.lng, ne.lat],[sw.lng,sw.lat],[ne.lng, sw.lat]]]}
-                  this.onQueryChanged.emit({location: location});
+                  //this.lastBounds = bounds;
+                  //const location = {type: "Polygon", coordinates: [[[ne.lng, sw.lat],[ne.lng, ne.lat],[sw.lng, ne.lat],[sw.lng,sw.lat],[ne.lng, sw.lat]]]}
+                  //this.onQueryChanged.emit({location: location});
                 }
-                console.log('delta lat ', delta_lat, 'delta lng ', delta_lng);
+                ////console.log('delta lat ', delta_lat, 'delta lng ', delta_lng);
               } else {
                 this.lastBounds = bounds;
               }
@@ -202,8 +219,8 @@ export class RnMapViewComponent extends RnViewComponent implements OnInit, OnDes
         });
 
         this.map.on('zoomend', event => {
-          //console.log('A zoomend event occurred.', event);
-          //console.log(this.map?.getBounds());
+          ////console.log('A zoomend event occurred.', event);
+          ////console.log(this.map?.getBounds());
           if (this.onQueryChanged) {
             if (this.map) {
               const bounds = this.map.getBounds();
@@ -216,11 +233,11 @@ export class RnMapViewComponent extends RnViewComponent implements OnInit, OnDes
                 const delta_lat = Math.abs(ne.lat - ne_old.lat);
                 const delta_lng = Math.abs(sw.lng - sw_old.lng);
                 if (delta_lat > 0.0001 && delta_lng > 0.0001) {
-                  this.lastBounds = bounds;
-                  const location = {type: "Polygon", coordinates: [[[ne.lng, sw.lat],[ne.lng, ne.lat],[sw.lng, ne.lat],[sw.lng,sw.lat],[ne.lng, sw.lat]]]}
-                  this.onQueryChanged.emit({location: location});
+                  //this.lastBounds = bounds;
+                  //const location = {type: "Polygon", coordinates: [[[ne.lng, sw.lat],[ne.lng, ne.lat],[sw.lng, ne.lat],[sw.lng,sw.lat],[ne.lng, sw.lat]]]}
+                  //this.onQueryChanged.emit({location: location});
                 }
-                console.log('delta lat ', delta_lat, 'delta lng ', delta_lng);
+                ////console.log('delta lat ', delta_lat, 'delta lng ', delta_lng);
               } else {
                 this.lastBounds = bounds;
               }
@@ -251,7 +268,6 @@ export class RnMapViewComponent extends RnViewComponent implements OnInit, OnDes
             this.loadMarkers(this.map);
           }
         });
-
 
 
     } else {
@@ -445,29 +461,36 @@ export class RnMapViewComponent extends RnViewComponent implements OnInit, OnDes
     //view bounding box overrides the item ones
     ////////console.logthis);
     const viewBounds = this.getViewLocationBounds();
-    //////console.log'viewbounds ', viewBounds);
-    if(viewBounds !== undefined) {
+    ////console.log('viewbounds ', viewBounds);
+    if(viewBounds != undefined) {
+      ////console.log('viewbounds ok');
       return viewBounds;
     } else {
-      this.getItemsWithPositions().forEach(ip => {
-        //////console.logip);
-        const loc = this.getItemLocation(ip);
-        if (loc) {
-          if(loc.type === 'Point'){
-            bounds = bounds.extend(loc.coordinates);
-          } else {
-            if (loc.type === 'Polygon'){
-              loc.coordinates[0].forEach((coord:any) => {
-                bounds = bounds.extend(coord);
-              })
+      const items = this.getItemsWithPositions();
+      if(items.length > 0) {
+        items.forEach(ip => {
+          //console.log(ip);
+          const loc = this.getItemLocation(ip);
+          if (loc) {
+            if(loc.type === 'Point'){
+              bounds = bounds.extend(loc.coordinates);
             } else {
-              //////console.log'Error: an item with a position is neither a point or a polygon.')
+              if (loc.type === 'Polygon'){
+                loc.coordinates[0].forEach((coord:any) => {
+                  bounds = bounds.extend(coord);
+                })
+              } else {
+                //////console.log'Error: an item with a position is neither a point or a polygon.')
+              }
             }
           }
-        }
-      });
+        });
+      } else {
+        bounds = this.map!.getBounds();
+      }
+      
       bounds = this.correctBoundingBox(bounds);
-      //////console.logbounds);
+      ////console.log(bounds);
       return bounds;
     }
 
@@ -478,6 +501,7 @@ export class RnMapViewComponent extends RnViewComponent implements OnInit, OnDes
   fitMapToBounds() {
     //////console.log'fitting map to bounds');
     const bb = this.getBoundingBox();
+    //console.log(bb);
     if (bb) {
       this.map?.fitBounds(bb, {duration: 0});
     }
@@ -486,20 +510,20 @@ export class RnMapViewComponent extends RnViewComponent implements OnInit, OnDes
   }
 
   loadMarkers(map: Map, fitToBounds = true): void {
-    //console.log("[*** begin loading markers ***]")
+    ////console.log("[*** begin loading markers ***]")
     if(map){
-      //console.log('removing markers', this.markers);
-      this.markers.forEach(m => m.remove());
-      this.markers = [];
-      //console.log('removing layers', this.layers);
-      this.layers.forEach(l => this.map?.removeLayer(l));
-      this.layers = [];
-      //console.log('removing sources', this.sources);
-      this.sources.forEach(s => this.map?.removeSource(s));
-      this.sources = [];
+      ////console.log('removing markers', this.markers);
+      //this.markers.forEach(m => m.remove());
+      //this.markers = [];
+      ////console.log('removing layers', this.layers);
+      //this.layers.forEach(l => this.map?.removeLayer(l));
+      //this.layers = [];
+      ////console.log('removing sources', this.sources);
+      //this.sources.forEach(s => this.map?.removeSource(s));
+      //this.sources = [];
        // Instantiate LatLngBounds object
       const itemsWithPositions = this.getItemsWithPositions();
-      console.log(itemsWithPositions);
+      //console.log(itemsWithPositions);
       if (itemsWithPositions.length > 0) {
         itemsWithPositions.forEach(ip => {
           const loc = this.getItemLocation(ip);
@@ -511,7 +535,7 @@ export class RnMapViewComponent extends RnViewComponent implements OnInit, OnDes
               if (icon) {
                 customMarkerIcon = document.createElement('div');
                 customMarkerIcon.className = 'marker';
-                customMarkerIcon.innerHTML = `<div fxLayout='column' fxLayoutAlign='center center'><div class="material-icons">${icon}</div><div>${ip.name}</div></div>`
+                customMarkerIcon.innerHTML = `<div class='center'><i class='material-icons'>${icon} </i><span>${ip.name}</span></div>`
               }
               const m = new Marker(customMarkerIcon);
               this.markers.push(m);
@@ -540,11 +564,11 @@ export class RnMapViewComponent extends RnViewComponent implements OnInit, OnDes
                     'type': 'Feature',
                     'geometry': {
                       'type': 'Polygon',
-                      'coordinates': ip.location.coordinates
+                      'coordinates': loc.coordinates
                     }
                   }
                 });
-                console.log('adding source ', 's' + ip.id);
+                ////console.log('adding source ', 's' + ip.id);
                 this.sources.push('s' + ip.id);
                 map.addLayer({
                   'id': 'l' + ip.id,
@@ -556,7 +580,7 @@ export class RnMapViewComponent extends RnViewComponent implements OnInit, OnDes
                     'fill-opacity': 0.5
                   }
                 });
-                console.log('adding layer ', 'l' + ip.id);
+                ////console.log('adding layer ', 'l' + ip.id);
                 this.layers.push('l' + ip.id);
                 map.on('click', 'l' + ip.id, (e) => {
                   if (e) {
@@ -573,14 +597,14 @@ export class RnMapViewComponent extends RnViewComponent implements OnInit, OnDes
                     'line-width': 3
                   }
                 });
-                console.log('adding layer ', 'l' + ip.id + 'outline');
+                ////console.log('adding layer ', 'l' + ip.id + 'outline');
                 this.layers.push('l' + ip.id + 'outline');
                 let customMarkerIcon = undefined;
                 let icon = this.getItemIcon(ip);
                 if (icon) {
                   customMarkerIcon = document.createElement('div');
                   customMarkerIcon.className = 'marker';
-                  customMarkerIcon.innerHTML = `<div fxLayout='column' fxLayoutAlign='center center'><div class="material-icons">${icon}</div><div>${ip.name}</div></div>`
+                  customMarkerIcon.innerHTML = `<div class='center'><i class='material-icons'>${icon}</i><span>${ip.name}</span></div>`
                 }
                 const m = new Marker(customMarkerIcon);
                 this.markers.push(m);
@@ -602,7 +626,7 @@ export class RnMapViewComponent extends RnViewComponent implements OnInit, OnDes
     if (fitToBounds) {
       this.fitMapToBounds();
     }
-    //console.log("[*** end loading markers ***]")
+    ////console.log("[*** end loading markers ***]")
   }
 
   attachPopup(item: Item, mapOrMarker: Marker | Map, options?: { lngLat: mapboxgl.LngLatLike}): void {
@@ -638,11 +662,11 @@ export class RnMapViewComponent extends RnViewComponent implements OnInit, OnDes
   }
 
   override itemsChanged(event: any) {
-    console.log('map view items changed', event, 'changing', this.markersChanging);
+    //console.log('map view items changed', event, 'changing', this.markersChanging);
     if (this.markersChanging == false) {
       //this.markersChanging = true;
-      //console.log(this.markers);
-      this.loadMarkers(this.map!,false);
+      ////console.log(this.markers);
+      //this.loadMarkers(this.map!,false);
       //this.markersChanging = false;
       /*
       this.sleep(100).then(() => {

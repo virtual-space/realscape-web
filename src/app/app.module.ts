@@ -113,6 +113,10 @@ import { RnStepsCtrlComponent } from './rn-steps-ctrl/rn-steps-ctrl.component';
 import { RnStepCtrlComponent } from './rn-step-ctrl/rn-step-ctrl.component';
 import { RnMediaCtrlComponent } from './rn-media-ctrl/rn-media-ctrl.component';
 import { RnFormViewComponent } from './rn-form-view/rn-form-view.component';
+import { OrderByPipe } from './order-by.pipe';
+import { RnHiddenCtrlComponent } from './rn-hidden-ctrl/rn-hidden-ctrl.component';
+import { RnCodeViewComponent } from './rn-code-view/rn-code-view.component';
+import { RnAttributesViewComponent } from './rn-attributes-view/rn-attributes-view.component';
 
 
 @NgModule({
@@ -180,7 +184,11 @@ import { RnFormViewComponent } from './rn-form-view/rn-form-view.component';
     RnStepsCtrlComponent,
     RnStepCtrlComponent,
     RnMediaCtrlComponent,
-    RnFormViewComponent
+    RnFormViewComponent,
+    OrderByPipe,
+    RnHiddenCtrlComponent,
+    RnCodeViewComponent,
+    RnAttributesViewComponent
   ],
   imports: [
     BrowserModule,

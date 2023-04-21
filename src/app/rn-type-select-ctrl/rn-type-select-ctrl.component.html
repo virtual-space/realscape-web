@@ -6,7 +6,7 @@
                 <mat-icon>{{selectedIcon}}</mat-icon>{{selectedName}}
             </div>
         </mat-select-trigger>
-        <mat-option *ngFor="let type of types" [value]="type.name">
+        <mat-option *ngFor="let type of types | orderBy:'name'" [value]="type.name">
           <mat-icon>{{getTypeIcon(type)}}</mat-icon>{{type.name}}
         </mat-option>
     </mat-select>

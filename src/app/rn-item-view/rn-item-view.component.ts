@@ -31,6 +31,8 @@ export class RnItemViewComponent extends RnViewComponent implements OnInit, OnCh
   selectedView = new FormControl(0);
   @Input() editable = false;
 
+  resource = 'items';
+
   override ngOnInit(): void {
     this.formGroup = new FormGroup({});
     //////////console.log'item-view init ', this.item);
@@ -58,17 +60,21 @@ export class RnItemViewComponent extends RnViewComponent implements OnInit, OnCh
         this.route.paramMap.subscribe(params => {
           //////////console.logparams);
           const id = params.get('id');
+          const res = params.get('resource');
+          if (res) {
+            this.resource = res;
+          }
           if(id && (!this.item || id != this.id)) {
-            this.retrieve(id, this.hierarchy);
+            this.retrieve(id, this.hierarchy, this.resource);
           }
         });
     }
     
   }
 
-  retrieve(id: string, hierarchy:boolean=false): void {
-    ////////console.log'*** retrieve ', id);
-    this.itemService.getItem(id,hierarchy).subscribe(item => {
+  retrieve(id: string, edit:boolean=false, resource:string='items'): void {
+    console.log('*** retrieve ', id, resource);
+    this.itemService.getItem(id, edit, resource).subscribe(item => {
       if (item) {
         this.item = item;
         this.reloadItem(item);
@@ -77,9 +83,9 @@ export class RnItemViewComponent extends RnViewComponent implements OnInit, OnCh
   }
 
   refreshView(): void {
-    //////////console.log'*** refreshView ***');
+    console.log('*** refreshView ***');
     if (this.id) {
-      this.retrieve(this.id, this.hierarchy);
+      this.retrieve(this.id, this.hierarchy, this.resource);
     } else if(this.item) {
       this.reloadItem(this.item);
     }
@@ -109,8 +115,8 @@ export class RnItemViewComponent extends RnViewComponent implements OnInit, OnCh
     this.id = item.id;
     const active_view = this.views[this.activeViewIndex];
     const view_query = this.getItemQuery(active_view);
-    //////console.log'*** query ', this.query);
-    //////console.log'*** view_query ', view_query);
+    //console.log('*** query ', this.query);
+    //console.log('*** view_query ', view_query);
     if (view_query) {
       //view_query.parent_id = this.id; 
       if (view_query.my_items)
@@ -140,7 +146,7 @@ export class RnItemViewComponent extends RnViewComponent implements OnInit, OnCh
         //this.sessionService.activateItems(this.children);
       });
     } else {
-      //////console.log'*** 4 ***', this);
+      console.log('*** 4 ***', this);
       //////////console.log'children = chidlren')
       if (this.hierarchy) {
         this.itemService.children(this.id!).subscribe(children => {
@@ -186,14 +192,17 @@ export class RnItemViewComponent extends RnViewComponent implements OnInit, OnCh
   }
 
   onChangeTab(event: any) {
-    ////////console.logevent);
+    ////console.log(event);
     this.eventsSubject.next({event: 'tab', data: {index: event.index}, item: this.item});
     this.activeViewIndex = event.index;
     const active_view = this.views[this.activeViewIndex];
     const view_query = this.getItemQuery(active_view);
-    ////////console.log'view_query ', view_query, active_view);
+    //console.log('view_query ', view_query, active_view);
     if (view_query) {
-      view_query.parent_id = this.id; 
+      if (view_query.my_items)
+      {
+          view_query.parent_id = this.id;
+      }
       this.itemService.items(view_query).subscribe(items => {
         this.children = items;
       });
@@ -296,13 +305,6 @@ export class RnItemViewComponent extends RnViewComponent implements OnInit, OnCh
     //this.sessionService.activateItems(items);
   }
 
-  onExport() {
-    this.itemService.export(this.item!.id!).subscribe(blob => {
-      const url= window.URL.createObjectURL(blob);
-      window.open(url);
-    });
-  }
-
   hierarchyToggleChanged(event: any): void {
     //////console.log"*** hierarchy toggle changed ***", event, this.hierarchy);
     if (this.id) {
@@ -314,12 +316,12 @@ export class RnItemViewComponent extends RnViewComponent implements OnInit, OnCh
 
   override queryChangedHandler(event: any) {
     /*
-    console.log('*** item view query change handler ***', event);
-    console.log(this);
+    //console.log('*** item view query change handler ***', event);
+    //console.log(this);
     const active_view = this.views[this.activeViewIndex];
     const view_query = this.getItemQuery(active_view);
-    console.log(view_query);
-    console.log(this.query);
+    //console.log(view_query);
+    //console.log(this.query);
     if (view_query) {
       if (view_query.my_items)
       {

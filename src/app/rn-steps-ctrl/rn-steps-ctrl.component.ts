@@ -13,6 +13,8 @@ export class RnStepsCtrlComponent extends RnCtrlComponent implements OnInit {
   override ngOnInit(): void {
     if (this.control) {
       this.steps = this.getItemControls(this.control).filter(i => itemIsInstanceOf(i, 'StepCtrl'));
+      console.log(this.control);
+      console.log(this.getItemControls(this.control));
     }
     //////console.log'stepsctrl item', this.item);
     //////console.log'stepsctrl control', this.control);

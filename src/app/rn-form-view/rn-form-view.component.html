@@ -1,1 +1,7 @@
-<p>rn-form-view works!</p>
+<ng-container *ngIf="formGroup">
+    <div fxFlexFill fxLayoutAlign="center center" style="width: 100%;">
+        <app-rn-ctrl [item]="formItem" [control]="formItem" [formItem]="formItem" [types]="types" [formGroup]="formGroup"></app-rn-ctrl>
+    </div>
+</ng-container>
+
+

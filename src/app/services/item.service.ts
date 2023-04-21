@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import {HttpClient, HttpParams, HttpEvent, HttpEventType} from "@angular/common/http";
+import {HttpClient, HttpParams, HttpEvent, HttpEventType, HttpHeaders} from "@angular/common/http";
 import {Observable, from, of, throwError, scheduled} from "rxjs";
 import {catchError, map, concatMap, mergeMap, tap} from 'rxjs/operators';
 import {Router} from "@angular/router";
@@ -23,17 +23,17 @@ export class ItemService {
 
   protected getInvokePath(endpoint: string) {
     if (this.authService.isLoggedIn()) {
-      return (environment['api'] || '') + '/endpoints/' + endpoint + '/invoke';
+      return (environment['api'] || '') + '/' + endpoint;
     } else {
-      return (environment['api'] || '') + '/public/endpoints/' + endpoint + '/invoke';
+      return (environment['api'] || '') + '/public/' + endpoint;
     }
   }
 
   protected getPostFilePath(endpoint: string) {
     if (this.authService.isLoggedIn()) {
-      return (environment['api'] || '') + '/endpoints/' + endpoint + '/invoke';
+      return (environment['api'] || '') + '/' + endpoint;
     } else {
-      return (environment['api'] || '') + '/public/endpoints/' + endpoint + '/invoke';
+      return (environment['api'] || '') + '/public/' + endpoint;
     }
   }
 
@@ -41,7 +41,7 @@ export class ItemService {
     return (environment['home'] || '') + '/items';
   }
 
-  protected getAccessibleEndpoint(excludePath= false) {
+  protected getAccessibleEndpoint(excludePath= false, resource='items') {
     if (this.authService.isLoggedIn()) {
       if (excludePath) {
         const p = environment['api'];
@@ -55,18 +55,20 @@ export class ItemService {
           return '';
         }
       } else {
-        return (environment['api'] || '') + '/items';
+        ////console.log(resource);
+        return (environment['api'] || '') + '/' + resource;
       }
     } else {
       if (excludePath) {
         return environment['api'] || '/public/';
       } else {
-        return (environment['api'] || '') + '/public/items';
+        return (environment['api'] || '') + '/public/' + resource;
       }
     }
   }
 
   protected handleErrorAndRethrow(operation = 'operation', result?: any) {
+    console.log(result);
     return (error: any): Observable<any> => {
       ////////console.logerror);
       return throwError(error);
@@ -97,6 +99,18 @@ export class ItemService {
     return this.http.delete(this.getEndpoint() + '/' + id).pipe(
       catchError(this.handleError('/items', []))
     );
+  }
+
+  public deleteItem(item: Item): Observable<Item> {
+    if (item.attributes && 'resource' in item.attributes) {
+      return this.http.delete(this.getAccessibleEndpoint(false, item.attributes['resource']) + '/' + item.id).pipe(
+        catchError(this.handleError('/items', []))
+      );
+    } else {
+      return this.http.delete(this.getEndpoint() + '/' + item.id).pipe(
+        catchError(this.handleError('/items', []))
+      );
+    }
   }
   /*
   public create(id: string, params: any): Observable<Item> {
@@ -168,13 +182,46 @@ export class ItemService {
     );
   }
 
-  public invoke(endpoint: string, method: any, params: any, progressFn?: (a: number) => void): Observable<[Item]> {
-    return this.http.post<[Item]>(this.getInvokePath(endpoint), params).pipe(
-      mergeMap((invoked: [Item]) => {
+  public login(endpoint: string, method: any, params: any): Observable<any> {
+    let formData = new FormData();
+    for (let key in params) {
+      formData.append(key, params[key]);
+    }
+    var header = {
+      headers: new HttpHeaders()
+        .set('Authorization',  `Basic ${btoa(params['client_id'] + ":" + params['client_secret'])}`)
+    }
+    return this.http.post(this.getInvokePath(endpoint), formData, header).pipe(
+      mergeMap((invoked: any) => {
         return of(invoked);
       }),
       catchError(this.handleErrorAndRethrow('/endpoints', []))
     );
+  }
+
+  public invoke(endpoint: string, method: any, params: any, form: Boolean, progressFn?: (a: number) => void): Observable<Item[]> {
+    if (form) {
+      console.log('invoke');
+      let formData = new FormData();
+      for (let key in params) {
+        formData.append(key, params[key]);
+      }
+      console.log('before');
+      const ret: Item[] = [];
+      return this.http.post(this.getInvokePath(endpoint), formData).pipe(
+        tap((invoked: any) => {console.log(invoked)}),
+        mergeMap((invoked: any) => {
+          return of(ret);
+        })
+      ); 
+    } else {
+      return this.http.post<[Item]>(this.getInvokePath(endpoint), params).pipe(
+        mergeMap((invoked: [Item]) => {
+          return of(invoked);
+        }),
+        catchError(this.handleErrorAndRethrow('/endpoints', []))
+      );
+    }
   }
   
   /*
@@ -212,6 +259,12 @@ export class ItemService {
       }
       if (query.location) {
         params = params.append('location', JSON.stringify(query.location));
+      }
+      if (query.children) {
+        params = params.append('children', query.children);
+      }
+      if (query.any_level) {
+        params = params.append('any_level', query.any_level);
       }
       if (query.types && query.types.length > 0) {
         query.types.forEach(t => {
@@ -403,12 +456,13 @@ export class ItemService {
     );
   }
 
-  public getItem(id: string, hierarchy: boolean=false): Observable<Item> {
+  public getItem(id: string, edit: boolean=false, resource='items'): Observable<Item> {
     let query = '/' + id;
-    if (hierarchy) {
-      query = query + "?hierarchy=true"
+    if (edit) {
+      query = query + "?edit=true"
     }
-    return this.http.get<Item>(this.getAccessibleEndpoint() + query).pipe(
+    ////console.log(resource);
+    return this.http.get<Item>(this.getAccessibleEndpoint(false, resource) + query).pipe(
       catchError(this.handleError('/items', []))
     );
   }
@@ -486,6 +540,8 @@ export class ItemService {
     if (type ) {
       if (type.icon) {
         return type.icon;
+      } else if (type.attributes && 'icon' in type.attributes) {
+        return type.attributes['icon'];
       } else if (type.base) {
         return this.getTypeIcon(type.base);
       }
@@ -562,6 +618,9 @@ export class ItemService {
 
   public getLinkedItemId(item: Item): string {
     const base = this.getHomeEndpoint();
+    if(itemIsInstanceOf(item, 'Link') && item.linked_item_id) {
+      return item.linked_item_id;
+    }
     if(itemIsInstanceOf(item, 'Link') && item.linked_item) {
       return this.getLinkedItemId(item.linked_item);
     }
@@ -576,8 +635,23 @@ export class ItemService {
     return '';
   }
 
+  public getLinkedItemResource(item: Item): string {
+    //console.log(item);
+    if (item.attributes && 'resource' in item.attributes) {
+      if (item.type && item.type.name === 'Link') {
+        return 'items';
+      } else {
+        return item.attributes['resource'];
+      }
+    }
+    return 'items';
+  }
+
   isInternalLink(item: Item): boolean {
     const base = this.getHomeEndpoint();
+    if(itemIsInstanceOf(item, 'Link') && item.linked_item_id) {
+      return true;
+    }
     if(itemIsInstanceOf(item, 'Link') && item.linked_item) {
       return this.isInternalLink(item.linked_item);
     }
@@ -796,6 +870,8 @@ export class Query {
   valid_to?: Date;
   status?: string;
   my_items?: boolean;
+  children?: boolean;
+  any_level?: boolean;
 }
 
 export class ItemEvent {
@@ -811,5 +887,6 @@ export class MenuItem {
   icon?: string;
   form?: string;
   import?: boolean;
+  export?: boolean;
 }
 
