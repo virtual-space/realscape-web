@@ -3,7 +3,7 @@ import { FormControl, FormGroup } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { DomSanitizer } from '@angular/platform-browser';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { RnDialogComponent } from '../rn-dialog/rn-dialog.component';
 import { SecurePipe6, SecurePipe2 } from '../secure-pipe';
@@ -51,6 +51,7 @@ export class RnCtrlComponent implements OnInit, OnChanges, ItemCallbacks {
               protected rendererService: RendererService,
               protected sanitizer: DomSanitizer,
               protected route: ActivatedRoute,
+              protected router: Router,
               protected dialog: MatDialog,
               protected snackBar: MatSnackBar,
               public viewContainerRef: ViewContainerRef,

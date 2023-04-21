@@ -21,9 +21,9 @@ export class RnButtonCtrlComponent extends RnCtrlComponent implements OnInit {
     if (this.item && this.formGroup) {
       let target_id = this.item!.id!;
       let result = this.formGroup.value;
-      //console.log(this.item);
+      console.log('button on click', this.item);
       // //console.log(result);
-      ////console.log(this.formItem);
+      console.log(this.formItem);
       if (this.formItem && result) {
 
         if (!('type' in result)) {
@@ -81,6 +81,14 @@ export class RnButtonCtrlComponent extends RnCtrlComponent implements OnInit {
           includeParent = 'my_items' in attrs && attrs['my_items'] === 'true';
         }
 
+        if ('client_id' in attrs) { 
+          result['client_id'] = attrs['client_id'];
+        }
+
+        if ('client_secret' in attrs) { 
+          result['client_secret'] = attrs['client_secret'];
+        }
+
         //////console.log'includeParent, includeId:', includeParent, includeId);
 
         if(includeParent) {
@@ -90,14 +98,34 @@ export class RnButtonCtrlComponent extends RnCtrlComponent implements OnInit {
           result['id'] = this.item.id;
         }
 
-        this.itemService.invoke(attrs['path'], attrs['method'], result).subscribe(items => {
-          //const i = Object.values(items);
-          ////console.log'invoked items', JSON.stringify(items));
-          //this.sessionService.activateItems(items);
-          //console.log('refreshing item');
-          this.sessionService.refresh();
-          
-        });
+        console.log('attrs:', attrs);
+        if ('type' in attrs && attrs['type'] === 'Login') {
+          //console.log('using login');
+          this.itemService.login(attrs['path'], attrs['method'], result).subscribe(response => {
+            //console.log(text);
+            //const i = Object.values(items);
+            ////console.log'invoked items', JSON.stringify(items));
+            //this.sessionService.activateItems(items);
+            //console.log('refreshing item');
+            const token = response['access_token'];
+            this.authService.setAccessToken(token);
+            this.router.navigate(['/']);
+            
+          });
+        } else {
+          console.log('using else');
+          this.itemService.invoke(attrs['path'], attrs['method'], result, true).subscribe(items => {
+            //console.log(items);
+            //const i = Object.values(items);
+            ////console.log'invoked items', JSON.stringify(items));
+            //this.sessionService.activateItems(items);
+            //console.log('refreshing item');
+            this.sessionService.refresh();
+            
+          });
+        }
+        
+        
         //result = this.getUpdateParams2(this.formGroup!.value,true);
         
       }

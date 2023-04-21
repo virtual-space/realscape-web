@@ -24,7 +24,7 @@ export class RnItemViewComponent extends RnViewComponent implements OnInit, OnCh
   @Input() allowAddingViews = true;
   @Input() allowEditingViews = true;
 
-  public hierarchy = true;
+  public hierarchy = false;
 
   eventsSubject: Subject<ItemEvent> = new Subject<ItemEvent>();
 
@@ -115,8 +115,8 @@ export class RnItemViewComponent extends RnViewComponent implements OnInit, OnCh
     this.id = item.id;
     const active_view = this.views[this.activeViewIndex];
     const view_query = this.getItemQuery(active_view);
-    //////console.log'*** query ', this.query);
-    ////console.log('*** view_query ', view_query);
+    //console.log('*** query ', this.query);
+    //console.log('*** view_query ', view_query);
     if (view_query) {
       //view_query.parent_id = this.id; 
       if (view_query.my_items)
@@ -146,7 +146,7 @@ export class RnItemViewComponent extends RnViewComponent implements OnInit, OnCh
         //this.sessionService.activateItems(this.children);
       });
     } else {
-      //////console.log'*** 4 ***', this);
+      console.log('*** 4 ***', this);
       //////////console.log'children = chidlren')
       if (this.hierarchy) {
         this.itemService.children(this.id!).subscribe(children => {

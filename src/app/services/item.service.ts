@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import {HttpClient, HttpParams, HttpEvent, HttpEventType} from "@angular/common/http";
+import {HttpClient, HttpParams, HttpEvent, HttpEventType, HttpHeaders} from "@angular/common/http";
 import {Observable, from, of, throwError, scheduled} from "rxjs";
 import {catchError, map, concatMap, mergeMap, tap} from 'rxjs/operators';
 import {Router} from "@angular/router";
@@ -68,6 +68,7 @@ export class ItemService {
   }
 
   protected handleErrorAndRethrow(operation = 'operation', result?: any) {
+    console.log(result);
     return (error: any): Observable<any> => {
       ////////console.logerror);
       return throwError(error);
@@ -181,13 +182,46 @@ export class ItemService {
     );
   }
 
-  public invoke(endpoint: string, method: any, params: any, progressFn?: (a: number) => void): Observable<[Item]> {
-    return this.http.post<[Item]>(this.getInvokePath(endpoint), params).pipe(
-      mergeMap((invoked: [Item]) => {
+  public login(endpoint: string, method: any, params: any): Observable<any> {
+    let formData = new FormData();
+    for (let key in params) {
+      formData.append(key, params[key]);
+    }
+    var header = {
+      headers: new HttpHeaders()
+        .set('Authorization',  `Basic ${btoa(params['client_id'] + ":" + params['client_secret'])}`)
+    }
+    return this.http.post(this.getInvokePath(endpoint), formData, header).pipe(
+      mergeMap((invoked: any) => {
         return of(invoked);
       }),
       catchError(this.handleErrorAndRethrow('/endpoints', []))
     );
+  }
+
+  public invoke(endpoint: string, method: any, params: any, form: Boolean, progressFn?: (a: number) => void): Observable<Item[]> {
+    if (form) {
+      console.log('invoke');
+      let formData = new FormData();
+      for (let key in params) {
+        formData.append(key, params[key]);
+      }
+      console.log('before');
+      const ret: Item[] = [];
+      return this.http.post(this.getInvokePath(endpoint), formData).pipe(
+        tap((invoked: any) => {console.log(invoked)}),
+        mergeMap((invoked: any) => {
+          return of(ret);
+        })
+      ); 
+    } else {
+      return this.http.post<[Item]>(this.getInvokePath(endpoint), params).pipe(
+        mergeMap((invoked: [Item]) => {
+          return of(invoked);
+        }),
+        catchError(this.handleErrorAndRethrow('/endpoints', []))
+      );
+    }
   }
   
   /*
@@ -602,9 +636,13 @@ export class ItemService {
   }
 
   public getLinkedItemResource(item: Item): string {
+    //console.log(item);
     if (item.attributes && 'resource' in item.attributes) {
-      if (item.type && item.type.name !== 'Link')
+      if (item.type && item.type.name === 'Link') {
+        return 'items';
+      } else {
         return item.attributes['resource'];
+      }
     }
     return 'items';
   }

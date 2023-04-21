@@ -9,7 +9,8 @@ import { MatSort, Sort } from '@angular/material/sort';
 export class ListColumn {
   name?: string;
   namespace?: string;
-  target?: string;
+  type?: string;
+  attributes?: any;
 }
 
 @Component({
@@ -74,11 +75,10 @@ export class RnListViewComponent extends RnViewComponent implements ItemCallback
     ////console.log'list-view init control:', this.control);
     ////console.log'list-view init view:', this.view);
     let cols = this.getColumns();
-    cols = cols.filter(c => c.target !== 'name');
+    //console.log(cols);
     if(cols.length > 0) {
       //console.log'list-view columns:', cols);
-      let c1 = cols.filter(c => c.target !== 'name')
-      this.columns = this.base_columns.concat(cols.map(c => { return {columnDef: c.target!, header: c.name!, type: c.target!, cell: (element:any) => `${this.extractValue(element,c.target!)}`} }));
+      this.columns = this.base_columns.concat(cols.map(c => { return {columnDef: c.attributes['target']!, header: c.name!, type: c.type!, cell: (element:any) => `${this.extractValue(element,c.attributes['target']!)}`} }));
       this.displayedColumns  = this.columns.map(c => c.columnDef);
       
     }
