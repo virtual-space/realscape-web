@@ -262,8 +262,8 @@ utcToLocal(date: Date): Date {
 
   getItemForm(item: Item, form_name: string): Item | undefined {
     const attributes = this.itemService.collectItemAttributes(item, {});
-    ////////console.log'*** item form get attrs ***', attributes);
-    if ('forms' in attributes) {
+    console.log('*** item form get attrs, form_name ***', attributes, form_name);
+    if ('forms' in attributes && !!form_name) {
       for(let form in attributes['forms']) {
         let f: any = attributes['forms'].find((f:any) => f.name.toLowerCase() === form_name.toLowerCase());
         if (f && f['name'].toLowerCase() === form_name.toLowerCase()) {
@@ -386,12 +386,14 @@ utcToLocal(date: Date): Date {
 
   presentForm(formName: string, importDialog: any, exportDialog: any, uploader: any, item: Item, view?: Item) {
     //console.log(formName, item);
+    console.log('present form');
     if (importDialog) {
       uploader.click();
     } else if (exportDialog) {
       this.onExport(item);
     } else {
       const item_form = this.getItemForm(item, formName);
+      console.log('item form ', item_form);
       if (item_form) {
         let types = this.getItemTypes(item);
         if (view) {

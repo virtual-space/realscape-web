@@ -27,6 +27,7 @@ export class RnDialogComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    console.log(this);
     this.item = this.data.item;
     this.formItem = this.data.form;
     this.types = this.data.types;

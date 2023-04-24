@@ -888,5 +888,6 @@ export class MenuItem {
   form?: string;
   import?: boolean;
   export?: boolean;
+  attributes?: {[index: string]:any};
 }
 
