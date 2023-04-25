@@ -27,6 +27,7 @@ export class RnSelectCtrlComponent  extends RnCtrlComponent implements OnInit {
   }
 
   rebuildSelect() {
+    console.log('REBUILD_SELECT');
     this.formControl.setValue(this.getValue());
     this.selectItems = [];
     if (this.item) {
@@ -35,10 +36,19 @@ export class RnSelectCtrlComponent  extends RnCtrlComponent implements OnInit {
         for(let v of attrs['values']) {
           this.selectItems.push({value: v, viewValue: v});
         }
+      } else if ('options' in attrs) {
+        for(let v of attrs['options']) {
+          this.selectItems.push({value: v, viewValue: v});
+        }
       } else if (this.control) {
         const ctrlAttrs = this.collectItemAttributes(this.control, {});
         if ('values' in ctrlAttrs) {
           for(let v of ctrlAttrs['values']) {
+            this.selectItems.push({value: v, viewValue: v});
+          }
+        } 
+        else if ('options' in ctrlAttrs) {
+          for(let v of ctrlAttrs['options']) {
             this.selectItems.push({value: v, viewValue: v});
           }
         } 

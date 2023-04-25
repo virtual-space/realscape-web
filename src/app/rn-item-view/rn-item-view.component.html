@@ -29,8 +29,8 @@
               </div>
               
               <mat-menu #menuMore="matMenu" xPosition="before">
-                  <button *ngFor="let menuItem of getItemMenuItems(item!)" mat-menu-item (click)="presentForm(menuItem.attributes!['form'], menuItem.import, menuItem.export, uploader, item!, getActiveView())">
-                    <mat-icon>{{menuItem.icon}}</mat-icon>
+                  <button *ngFor="let menuItem of getItemMenuItems(item!)" mat-menu-item (click)="presentForm(menuItem.attributes!['form'], menuItem.attributes!['import'], menuItem.attributes!['export'], uploader, item!, getActiveView())">
+                    <mat-icon>{{menuItem.attributes!['icon']}}</mat-icon>
                     <span>{{menuItem.name}}</span>
                   </button>
                   <input hidden type="file" #uploader (change)="importFile($event)"/>

@@ -96,13 +96,17 @@ export class ItemService {
   }
 
   public delete(id: string): Observable<Item> {
+    console.log('delete');
     return this.http.delete(this.getEndpoint() + '/' + id).pipe(
       catchError(this.handleError('/items', []))
     );
   }
 
   public deleteItem(item: Item): Observable<Item> {
+    console.log(item);
     if (item.attributes && 'resource' in item.attributes) {
+      console.log('delete resource ', item.attributes['resource']);
+      console.log(this.getAccessibleEndpoint(false, item.attributes['resource']) + '/' + item.id);
       return this.http.delete(this.getAccessibleEndpoint(false, item.attributes['resource']) + '/' + item.id).pipe(
         catchError(this.handleError('/items', []))
       );

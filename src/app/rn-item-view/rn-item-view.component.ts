@@ -105,7 +105,7 @@ export class RnItemViewComponent extends RnViewComponent implements OnInit, OnCh
   }
 
   reloadItem(item: Item): void {
-    //////console.log'*** reloading ',item);
+    console.log('*** reloading ',item);
     this.views = this.getItemViews(item);
     //////console.log'*** controls before reload item:', this.controls);
     this.controls = this.getItemControls(item);
@@ -115,9 +115,13 @@ export class RnItemViewComponent extends RnViewComponent implements OnInit, OnCh
     this.id = item.id;
     const active_view = this.views[this.activeViewIndex];
     const view_query = this.getItemQuery(active_view);
-    //console.log('*** query ', this.query);
-    //console.log('*** view_query ', view_query);
-    if (view_query) {
+    console.log('*** query ', this.query);
+    console.log('*** view_query ', view_query);
+    if (item.items && item.items.length > 0) {
+      //////////console.log'children = items', item.items);
+      this.children = [...item.items];
+      //this.sessionService.activateItems(this.children);
+    } else if (view_query) {
       //view_query.parent_id = this.id; 
       if (view_query.my_items)
       {
@@ -127,11 +131,7 @@ export class RnItemViewComponent extends RnViewComponent implements OnInit, OnCh
         this.children = items;
         //this.sessionService.activateItems(this.children);
       });
-    } else if (item.items && item.items.length > 0) {
-      //////////console.log'children = items', item.items);
-      this.children = [...item.items];
-      //this.sessionService.activateItems(this.children);
-    } else if (this.query) {
+    }  else if (this.query) {
       ////////console.logthis.query.my_items);
       ////////console.logthis.item);
       if (this.query) {

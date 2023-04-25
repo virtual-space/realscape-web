@@ -1,6 +1,6 @@
 <div [ngSwitch]="getViewType(view.type)" fxFlexFill *ngIf="view && view.type">
   <div *ngSwitchCase="'ListView'" fxFlexFill>
-      <app-rn-list-view [items]="items" (onEvent)="onEvent" (onRefresh)="childRefresh()" [view]="view" (onItems)="childItems" (onItems)="childItems($event)"  [events]="events" fxFlexFill></app-rn-list-view>
+    <app-rn-list-view [items]="items" (onEvent)="onEvent" (onRefresh)="childRefresh()" [view]="view" (onItems)="childItems" (onItems)="childItems($event)"  [events]="events" fxFlexFill></app-rn-list-view>
   </div>
   <div *ngSwitchCase="'MapView'" fxFlexFill>
     <app-rn-map-view [items]="items" [item]="item" [events]="events" [tabIndex]="tabIndex" [view]="view" (onEvent)="onEvent" (onRefresh)="childRefresh()" (onItems)="childItems($event)" (onQueryChanged)="queryChangedHandler($event)" fxFlexFill></app-rn-map-view>
