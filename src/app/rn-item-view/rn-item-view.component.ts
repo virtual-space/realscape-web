@@ -123,7 +123,7 @@ export class RnItemViewComponent extends RnViewComponent implements OnInit, OnCh
       //this.sessionService.activateItems(this.children);
     } else if (view_query) {
       //view_query.parent_id = this.id; 
-      if (view_query.my_items)
+      if (view_query.children)
       {
           view_query.parent_id = this.id;
       }
@@ -135,7 +135,7 @@ export class RnItemViewComponent extends RnViewComponent implements OnInit, OnCh
       ////////console.logthis.query.my_items);
       ////////console.logthis.item);
       if (this.query) {
-        if (this.query.my_items)
+        if (this.query.children)
         {
           this.query.parent_id = this.id;
         }
@@ -199,7 +199,7 @@ export class RnItemViewComponent extends RnViewComponent implements OnInit, OnCh
     const view_query = this.getItemQuery(active_view);
     //console.log('view_query ', view_query, active_view);
     if (view_query) {
-      if (view_query.my_items)
+      if (view_query.children)
       {
           view_query.parent_id = this.id;
       }
@@ -312,6 +312,15 @@ export class RnItemViewComponent extends RnViewComponent implements OnInit, OnCh
     }
     
     //this.sessionService.activateItems(items);
+  }
+
+  isLoggedIn() {
+    return this.authService.isLoggedIn();
+  }
+
+  doLogout() {
+    this.authService.logout();
+    this.router.navigate(['']);
   }
 
   override queryChangedHandler(event: any) {

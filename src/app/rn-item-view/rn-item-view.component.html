@@ -98,6 +98,13 @@
                     <mat-icon>delete_forever</mat-icon>
                     <span>Delete</span>
                   </button>
+                  <ng-container *ngIf="isLoggedIn()">
+                    <mat-divider></mat-divider>
+                    <button mat-menu-item  (click)="doLogout()">
+                      <mat-icon>key_off</mat-icon>
+                      <span>Log out</span>
+                    </button>
+                  </ng-container>
                 </mat-menu>
              </nav>
           </div>
